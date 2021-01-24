@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'bison-root',
+  selector: 'bis-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })

@@ -5,7 +5,7 @@
       "projectType": "application",
       "root": "apps/front",
       "sourceRoot": "apps/front/src",
-      "prefix": "bison",
+      "prefix": "bis",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
