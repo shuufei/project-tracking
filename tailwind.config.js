@@ -25,6 +25,25 @@ module.exports = {
         light2: '#707070',
       },
     },
+    fontFamily: {
+      sans: ['Hiragino Sans', 'system-ui', 'sans-serif'],
+    },
+    fontSize: {
+      l4: 'calc(1rem * 8 / 4)',
+      l3: 'calc(1rem * 8 / 5)',
+      l2: 'calc(1rem * 8 / 6)',
+      l1: 'calc(1rem * 8 / 7)',
+      base: 'calc(1rem * 8 / 8)',
+      s1: 'calc(1rem * 8 / 9)',
+      s2: 'calc(1rem * 8 / 10)',
+      s3: 'calc(1rem * 8 / 11)',
+      s4: 'calc(1rem * 8 / 12)',
+      s5: 'calc(1rem * 8 / 13)',
+    },
+    fontWeight: {
+      light: '300',
+      medium: '500',
+    },
     extend: {},
   },
   variants: {
