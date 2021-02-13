@@ -24,6 +24,7 @@ module.exports = {
         light1: '#3A3A3A',
         light2: '#707070',
       },
+      white: '#ffffff',
     },
     fontFamily: {
       sans: ['Hiragino Sans', 'system-ui', 'sans-serif'],
@@ -43,6 +44,11 @@ module.exports = {
     fontWeight: {
       light: '300',
       medium: '500',
+    },
+    boxShadow: {
+      s: '0px 1px 1px rgba(0, 0, 0, 0.12)',
+      m: '0px 3px 6px rgba(0, 0, 0, 0.13)',
+      l: '0px 2px 8px rgba(0, 0, 0, 0.12), 0px 3px 8px rgba(0, 0, 0, 0.12)',
     },
     extend: {},
   },
