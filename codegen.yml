@@ -1,6 +1,5 @@
 overwrite: true
 schema: 'apps/backend/graphql-api/src/schema.gql'
-# documents: "apps/**/*.gql"
 generates:
   ./apps/front/src/app/api.ts:
     plugins:
