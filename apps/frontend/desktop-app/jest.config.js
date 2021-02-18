@@ -1,6 +1,6 @@
 module.exports = {
-  displayName: 'front',
-  preset: '../../jest.preset.js',
+  displayName: 'frontend-desktop-app',
+  preset: '../../../jest.preset.js',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
   globals: {
     'ts-jest': {
@@ -14,7 +14,7 @@ module.exports = {
       },
     },
   },
-  coverageDirectory: '../../coverage/apps/front',
+  coverageDirectory: '../../../coverage/apps/frontend/desktop-app',
   snapshotSerializers: [
     'jest-preset-angular/build/AngularNoNgAttributesSnapshotSerializer.js',
     'jest-preset-angular/build/AngularSnapshotSerializer.js',

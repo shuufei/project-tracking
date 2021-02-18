@@ -1,6 +1,6 @@
 module.exports = {
   projects: [
-    '<rootDir>/apps/front',
+    '<rootDir>/apps/frontend/desktop-app',
     '<rootDir>/libs/shared/ui',
     '<rootDir>/apps/backend/graphql-api',
   ],

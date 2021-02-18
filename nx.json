@@ -1,9 +1,14 @@
 {
   "npmScope": "bison",
-  "affected": { "defaultBase": "main" },
+  "affected": {
+    "defaultBase": "main"
+  },
   "implicitDependencies": {
     "angular.json": "*",
-    "package.json": { "dependencies": "*", "devDependencies": "*" },
+    "package.json": {
+      "dependencies": "*",
+      "devDependencies": "*"
+    },
     "tsconfig.base.json": "*",
     "tslint.json": "*",
     ".eslintrc.json": "*",
@@ -24,10 +29,22 @@
     }
   },
   "projects": {
-    "front": { "tags": [] },
-    "front-e2e": { "tags": [], "implicitDependencies": ["front"] },
-    "shared-ui": { "tags": [] },
-    "shared-ui-e2e": { "tags": [], "implicitDependencies": ["shared-ui"] },
-    "backend-graphql-api": { "tags": [] }
+    "front-e2e": {
+      "tags": [],
+      "implicitDependencies": ["frontend-desktop-app"]
+    },
+    "shared-ui": {
+      "tags": []
+    },
+    "shared-ui-e2e": {
+      "tags": [],
+      "implicitDependencies": ["shared-ui"]
+    },
+    "backend-graphql-api": {
+      "tags": []
+    },
+    "frontend-desktop-app": {
+      "tags": []
+    }
   }
 }

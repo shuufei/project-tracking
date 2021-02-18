@@ -1,7 +1,7 @@
 overwrite: true
 schema: 'apps/backend/graphql-api/src/schema.gql'
 generates:
-  ./apps/front/src/app/api.ts:
+  ./apps/frontend/desktop-app/src/app/api.ts:
     plugins:
       - 'typescript'
       - 'typescript-operations'
