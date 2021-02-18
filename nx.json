@@ -29,10 +29,6 @@
     }
   },
   "projects": {
-    "front-e2e": {
-      "tags": [],
-      "implicitDependencies": ["frontend-desktop-app"]
-    },
     "shared-ui": {
       "tags": []
     },
@@ -45,6 +41,10 @@
     },
     "frontend-desktop-app": {
       "tags": []
+    },
+    "frontend-desktop-app-e2e": {
+      "tags": [],
+      "implicitDependencies": ["frontend-desktop-app"]
     }
   }
 }
