@@ -32,10 +32,6 @@
     "shared-ui": {
       "tags": []
     },
-    "shared-ui-e2e": {
-      "tags": [],
-      "implicitDependencies": ["shared-ui"]
-    },
     "backend-graphql-api": {
       "tags": []
     },
@@ -45,6 +41,10 @@
     "frontend-desktop-app-e2e": {
       "tags": [],
       "implicitDependencies": ["frontend-desktop-app"]
+    },
+    "frontend-shared-ui-e2e": {
+      "tags": [],
+      "implicitDependencies": ["shared-ui"]
     }
   }
 }
