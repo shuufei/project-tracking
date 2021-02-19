@@ -14,10 +14,14 @@ module.exports = {
         light4: 'FAFAFA',
       },
       success: {
-        default: '#74C558',
+        default: '#137717',
+        light1: '#50A753',
+        light2: '#91CF94',
       },
       warn: {
         default: '#D81717',
+        light1: '#E75959',
+        light2: '#EA9090',
       },
       black: {
         default: '#101010',
@@ -49,6 +53,13 @@ module.exports = {
       s: '0px 1px 1px rgba(0, 0, 0, 0.12)',
       m: '0px 3px 6px rgba(0, 0, 0, 0.13)',
       l: '0px 2px 8px rgba(0, 0, 0, 0.12), 0px 3px 8px rgba(0, 0, 0, 0.12)',
+      outline_primary: '0 0 0 1px #202020',
+      outline_success: '0 0 0 1px #137717',
+      outline_warn: '0 0 0 1px #D81717',
+      outline_black: '0 0 0 1px #101010',
+    },
+    outline: {
+      none: ['none'],
     },
     extend: {},
   },

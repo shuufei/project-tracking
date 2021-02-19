@@ -1,0 +1,140 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@mixin define-button-colors {
+  @apply bg-white;
+  @apply text-black-default;
+  &.primary {
+    @apply text-primary-default;
+    &:hover {
+      cursor: pointer;
+      @apply border-primary-default;
+    }
+    &:focus {
+      outline: none;
+      @apply border-primary-default;
+      @apply shadow-outline_primary;
+    }
+  }
+  &.warn {
+    @apply text-warn-default;
+    &:hover {
+      cursor: pointer;
+      @apply border-warn-default;
+    }
+    &:focus {
+      outline: none;
+      @apply border-warn-default;
+      @apply shadow-outline_warn;
+    }
+  }
+  &.success {
+    @apply text-success-default;
+    &:hover {
+      cursor: pointer;
+      @apply border-success-default;
+    }
+    &:focus {
+      outline: none;
+      @apply border-success-default;
+      @apply shadow-outline_success;
+    }
+  }
+  &.basic {
+    @apply text-black-default;
+    &:hover {
+      cursor: pointer;
+      @apply border-black-default;
+    }
+    &:focus {
+      outline: none;
+      @apply border-black-default;
+      @apply shadow-outline_black;
+    }
+  }
+}
+
+@mixin define-fill-button-colors {
+  @apply bg-white;
+  @apply text-black-default;
+  &.primary {
+    @apply bg-primary-default;
+    @apply text-white;
+    @apply border-primary-default;
+  }
+  &.warn {
+    @apply bg-warn-default;
+    @apply text-white;
+    @apply border-warn-default;
+  }
+  &.success {
+    @apply bg-success-default;
+    @apply text-white;
+    @apply border-success-default;
+  }
+  &.basic {
+    @apply bg-white;
+    @apply text-black-default;
+  }
+}
+
+@mixin define-stroked-button-colors {
+  @apply bg-white;
+  @apply text-black-default;
+  @apply border;
+  @apply border-black-light2;
+  &.primary {
+    @apply text-primary-default;
+    @apply border-primary-light2;
+  }
+  &.warn {
+    @apply text-warn-default;
+    @apply border-warn-light2;
+  }
+  &.success {
+    @apply text-success-default;
+    @apply border-success-light2;
+  }
+  &.basic {
+    @apply text-black-default;
+    @apply border-black-light2;
+  }
+}
+
+:host {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  border-radius: 3px;
+  @apply text-s2;
+  @apply font-sans;
+  @apply font-medium;
+  @apply text-black-default;
+  @apply border;
+  @apply border-white;
+  transition: all 0.15s;
+  @include define-button-colors();
+  &:hover {
+    cursor: pointer;
+    @apply border-black-default;
+  }
+  &:focus {
+    outline: none;
+    box-shadow: inset 0 0 0 1px #000000;
+    @apply border-black-default;
+  }
+  &:disabled {
+    @apply text-white;
+    @apply bg-primary-light1;
+  }
+  &[ui-stroked-button] {
+    @apply border;
+    @apply bg-primary-default;
+    @include define-stroked-button-colors();
+  }
+  &[ui-fill-button] {
+    @include define-fill-button-colors();
+  }
+}
