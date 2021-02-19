@@ -1,7 +1,7 @@
 import { ColorsComponent } from './colors.component';
 
 export default {
-  title: 'Colors',
+  title: 'sample/Colors',
 };
 
 export const list = () => ({

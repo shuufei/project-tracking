@@ -1,7 +1,7 @@
 import { TypographyComponent } from './typography.component';
 
 export default {
-  title: 'Typography',
+  title: 'sample/Typography',
 };
 
 export const list = () => ({
