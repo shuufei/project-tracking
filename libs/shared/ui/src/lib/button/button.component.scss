@@ -19,20 +19,9 @@
     &:active {
       @apply bg-primary-light3;
     }
-  }
-  &.warn {
-    @apply text-warn-default;
-    &:hover {
-      cursor: pointer;
-      @apply border-warn-default;
-    }
-    &:focus {
-      outline: none;
-      @apply border-warn-default;
-      @apply shadow-outline_warn;
-    }
-    &:active {
-      @apply bg-warn-light3;
+    &:disabled {
+      @apply text-primary-light2;
+      pointer-events: none;
     }
   }
   &.success {
@@ -49,6 +38,29 @@
     &:active {
       @apply bg-success-light3;
     }
+    &:disabled {
+      @apply text-success-light2;
+      pointer-events: none;
+    }
+  }
+  &.warn {
+    @apply text-warn-default;
+    &:hover {
+      cursor: pointer;
+      @apply border-warn-default;
+    }
+    &:focus {
+      outline: none;
+      @apply border-warn-default;
+      @apply shadow-outline_warn;
+    }
+    &:active {
+      @apply bg-warn-light3;
+    }
+    &:disabled {
+      @apply text-warn-light2;
+      pointer-events: none;
+    }
   }
   &.basic {
     @apply text-black-default;
@@ -64,6 +76,49 @@
     &:active {
       @apply bg-black-light4;
     }
+    &:disabled {
+      @apply text-black-light3;
+      pointer-events: none;
+    }
+  }
+}
+
+@mixin define-stroked-button-colors {
+  @apply bg-white;
+  @apply text-black-default;
+  @apply border;
+  @apply border-black-light2;
+  &.primary {
+    @apply text-primary-default;
+    @apply border-primary-light2;
+    &:disabled {
+      @apply text-primary-light2;
+      @apply border-primary-light3;
+    }
+  }
+  &.success {
+    @apply text-success-default;
+    @apply border-success-light2;
+    &:disabled {
+      @apply text-success-light2;
+      @apply border-success-light3;
+    }
+  }
+  &.warn {
+    @apply text-warn-default;
+    @apply border-warn-light2;
+    &:disabled {
+      @apply text-warn-light2;
+      @apply border-warn-light3;
+    }
+  }
+  &.basic {
+    @apply text-black-default;
+    @apply border-black-light2;
+    &:disabled {
+      @apply text-black-light3;
+      @apply border-black-light4;
+    }
   }
 }
 
@@ -77,13 +132,9 @@
     &:active {
       @apply bg-primary-light1;
     }
-  }
-  &.warn {
-    @apply bg-warn-default;
-    @apply text-white;
-    @apply border-warn-default;
-    &:active {
-      @apply bg-warn-light1;
+    &:disabled {
+      @apply bg-primary-light2;
+      @apply border-primary-light2;
     }
   }
   &.success {
@@ -93,6 +144,22 @@
     &:active {
       @apply bg-success-light1;
     }
+    &:disabled {
+      @apply bg-success-light2;
+      @apply border-success-light2;
+    }
+  }
+  &.warn {
+    @apply bg-warn-default;
+    @apply text-white;
+    @apply border-warn-default;
+    &:active {
+      @apply bg-warn-light1;
+    }
+    &:disabled {
+      @apply bg-warn-light2;
+      @apply border-warn-light2;
+    }
   }
   &.basic {
     @apply bg-white;
@@ -100,29 +167,11 @@
     &:active {
       @apply bg-black-light4;
     }
-  }
-}
-
-@mixin define-stroked-button-colors {
-  @apply bg-white;
-  @apply text-black-default;
-  @apply border;
-  @apply border-black-light2;
-  &.primary {
-    @apply text-primary-default;
-    @apply border-primary-light2;
-  }
-  &.warn {
-    @apply text-warn-default;
-    @apply border-warn-light2;
-  }
-  &.success {
-    @apply text-success-default;
-    @apply border-success-light2;
-  }
-  &.basic {
-    @apply text-black-default;
-    @apply border-black-light2;
+    &:disabled {
+      @apply bg-black-light4;
+      @apply border-black-light4;
+      @apply text-white;
+    }
   }
 }
 
@@ -140,10 +189,6 @@
   @apply border-white;
   transition: all 0.15s;
   @include define-button-colors();
-  &:disabled {
-    @apply text-white;
-    @apply bg-primary-light1;
-  }
   &[ui-stroked-button] {
     @apply border;
     @apply bg-primary-default;
