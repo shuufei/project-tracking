@@ -16,6 +16,9 @@
       @apply border-primary-default;
       @apply shadow-outline_primary;
     }
+    &:active {
+      @apply bg-primary-light3;
+    }
   }
   &.warn {
     @apply text-warn-default;
@@ -27,6 +30,9 @@
       outline: none;
       @apply border-warn-default;
       @apply shadow-outline_warn;
+    }
+    &:active {
+      @apply bg-warn-light3;
     }
   }
   &.success {
@@ -40,6 +46,9 @@
       @apply border-success-default;
       @apply shadow-outline_success;
     }
+    &:active {
+      @apply bg-success-light3;
+    }
   }
   &.basic {
     @apply text-black-default;
@@ -52,6 +61,9 @@
       @apply border-black-default;
       @apply shadow-outline_black;
     }
+    &:active {
+      @apply bg-black-light4;
+    }
   }
 }
 
@@ -62,20 +74,32 @@
     @apply bg-primary-default;
     @apply text-white;
     @apply border-primary-default;
+    &:active {
+      @apply bg-primary-light1;
+    }
   }
   &.warn {
     @apply bg-warn-default;
     @apply text-white;
     @apply border-warn-default;
+    &:active {
+      @apply bg-warn-light1;
+    }
   }
   &.success {
     @apply bg-success-default;
     @apply text-white;
     @apply border-success-default;
+    &:active {
+      @apply bg-success-light1;
+    }
   }
   &.basic {
     @apply bg-white;
     @apply text-black-default;
+    &:active {
+      @apply bg-black-light4;
+    }
   }
 }
 
@@ -116,15 +140,6 @@
   @apply border-white;
   transition: all 0.15s;
   @include define-button-colors();
-  &:hover {
-    cursor: pointer;
-    @apply border-black-default;
-  }
-  &:focus {
-    outline: none;
-    box-shadow: inset 0 0 0 1px #000000;
-    @apply border-black-default;
-  }
   &:disabled {
     @apply text-white;
     @apply bg-primary-light1;
