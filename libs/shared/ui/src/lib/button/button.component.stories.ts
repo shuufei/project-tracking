@@ -1,11 +1,11 @@
-import { ButtonComponent } from './button.component';
+import { ButtonModule } from './button.module';
 
 export default {
   title: 'ButtonComponent',
 };
 
 const moduleMetadata = {
-  declarations: [ButtonComponent],
+  imports: [ButtonModule],
 };
 
 export const Default = () => ({

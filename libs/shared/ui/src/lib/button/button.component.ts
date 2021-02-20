@@ -54,8 +54,3 @@ export class ButtonComponent implements OnInit, OnDestroy, AfterViewInit {
     return this.elementRef.nativeElement as HTMLElement;
   }
 }
-
-// default
-// hover
-// focus
-// disable
