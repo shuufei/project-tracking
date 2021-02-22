@@ -1,5 +1,5 @@
 const { addTailwindPlugin } = require('@ngneat/tailwind');
-const tailwindConfig = require('../tailwind.config.js');
+const tailwindConfig = require('../theme/default/tailwind.config.js');
 
 /**
  * Export a function. Accept the base config as the only param.

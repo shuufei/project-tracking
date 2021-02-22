@@ -149,7 +149,7 @@ a {
 abbr[title] {
   text-decoration: underline; /* 2 */
   -webkit-text-decoration: underline dotted;
-          text-decoration: underline dotted; /* 2 */
+  text-decoration: underline dotted; /* 2 */
 }
 
 /**
@@ -230,7 +230,7 @@ select,
 textarea {
   -webkit-appearance: none;
   -moz-appearance: none;
-       appearance: none;
+  appearance: none;
   vertical-align: middle;
   color: inherit;
   font: inherit;
@@ -249,13 +249,13 @@ textarea {
 [type='checkbox'] {
   -webkit-appearance: checkbox;
   -moz-appearance: checkbox;
-       appearance: checkbox;
+  appearance: checkbox;
 }
 
 [type='radio'] {
   -webkit-appearance: radio;
   -moz-appearance: radio;
-       appearance: radio;
+  appearance: radio;
 }
 
 /**
@@ -291,7 +291,7 @@ button,
   cursor: pointer;
   -webkit-appearance: none;
   -moz-appearance: none;
-       appearance: none;
+  appearance: none;
 }
 
 button[disabled],

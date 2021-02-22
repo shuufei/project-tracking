@@ -1,3 +1,4 @@
+import '../../../global-styles';
 import { ColorsComponent } from './colors.component';
 
 export default {
@@ -6,7 +7,6 @@ export default {
 
 export const list = () => ({
   moduleMetadata: {
-    imports: [],
     declarations: [ColorsComponent],
   },
   component: ColorsComponent,

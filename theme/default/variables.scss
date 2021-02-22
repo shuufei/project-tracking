@@ -1,0 +1,70 @@
+:root {
+  /*
+  * Bison Variables
+  */
+  --bison-primary-default: #202020;
+  --bison-primary-light1: #717171;
+  --bison-primary-light2: #c0c0c0;
+  --bison-primary-light3: #eaeaea;
+  --bison-primary-light4: #fafafa;
+  --bison-success-default: #137717;
+  --bison-success-light1: #50a753;
+  --bison-success-light2: #91cf94;
+  --bison-success-light3: #d9f6da;
+  --bison-warn-default: #d81717;
+  --bison-warn-light1: #e75959;
+  --bison-warn-light2: #ea9090;
+  --bison-warn-light3: #f6cfcf;
+  --bison-black-defult: #101010;
+  --bison-black-light1: #3a3a3a;
+  --bison-black-light2: #707070;
+  --bison-black-light3: #a0a0a0;
+  --bison-black-light4: #cfcfcf;
+  --bison-white: #ffffff;
+  --bison-font-family-sans: 'Hiragino Sans', 'system-ui', 'sans-serif';
+  --bison-font-size-l4: calc(1rem * 8 / 4);
+  --bison-font-size-l3: calc(1rem * 8 / 5);
+  --bison-font-size-l2: calc(1rem * 8 / 6);
+  --bison-font-size-l1: calc(1rem * 8 / 7);
+  --bison-font-size-base: calc(1rem * 8 / 8);
+  --bison-font-size-s1: calc(1rem * 8 / 9);
+  --bison-font-size-s2: calc(1rem * 8 / 10);
+  --bison-font-size-s3: calc(1rem * 8 / 11);
+  --bison-font-size-s4: calc(1rem * 8 / 12);
+  --bison-font-size-s5: calc(1rem * 8 / 13);
+  --bison-font-weight-light: 300;
+  --bison-font-weight-medium: 500;
+  --bison-box-shadow-s: 0px 1px 1px rgba(0, 0, 0, 0.12);
+  --bison-box-shadow-m: 0px 3px 6px rgba(0, 0, 0, 0.13);
+  --bison-box-shadow-l: 0px 2px 8px rgba(0, 0, 0, 0.12),
+    0px 3px 8px rgba(0, 0, 0, 0.12);
+  --bison-box-shadow-outline-primary: 0 0 0 1px #202020;
+  --bison-box-shadow-outline-success: 0 0 0 1px #137717;
+  --bison-box-shadow-outline-warn: 0 0 0 1px #d81717;
+  --bison-box-shadow-outline-black: 0 0 0 1px #101010;
+
+  /*
+  * Taiga UI Variables
+  */
+  --tui-primary: var(--bison-primary-default) !important;
+  --tui-primary-hover: var(--bison-primary-default) !important;
+  --tui-primary-active: var(--bison-primary-default1) !important;
+  --tui-primary-text: var(--bison-white) !important;
+  --tui-error-fill: var(--bison-warn-default) !important;
+  --tui-error-bg: var(--bison-warn-light3) !important;
+  --tui-error-bg-hover: var(--bison-warn-light2) !important;
+  --tui-success-fill: var(--bison-success-default) !important;
+  --tui-success-bg: var(--bison-success-light3) !important;
+  --tui-success-bg-hover: var(--bison-success-light2) !important;
+  --tui-heading-font: 'Hiragino Sans', 'system-ui', 'sans-serif' !important;
+  --tui-text-font: 'Hiragino Sans', 'system-ui', 'sans-serif' !important;
+  --tui-font-text-xl: var(--bison-font-weight-medium) var(--bison-font-size-l2);
+  --tui-font-text-l: var(--bison-font-weight-medium) var(--bison-font-size-l1);
+  --tui-font-text-m: var(--bison-font-weight-medium) var(--bison-font-size-base);
+  --tui-font-text-s: var(--bison-font-weight-medium) var(--bison-font-size-s1);
+  --tui-font-text-xs: var(--bison-font-weight-medium) var(--bison-font-size-s2);
+  --tui-radius-xs: 1px !important;
+  --tui-radius-s: 3px !important;
+  --tui-radius-m: 3px !important;
+  --tui-radius-l: 5px !important;
+}
