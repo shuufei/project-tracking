@@ -1,0 +1,200 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@mixin define-button-colors {
+  @apply bg-white;
+  @apply text-black-default;
+  &.primary {
+    @apply text-primary-default;
+    &:hover {
+      cursor: pointer;
+      @apply border-primary-default;
+    }
+    &:focus {
+      outline: none;
+      @apply border-primary-default;
+      @apply shadow-outline_primary;
+    }
+    &:active {
+      @apply bg-primary-light3;
+    }
+    &:disabled {
+      @apply text-primary-light2;
+      pointer-events: none;
+    }
+  }
+  &.success {
+    @apply text-success-default;
+    &:hover {
+      cursor: pointer;
+      @apply border-success-default;
+    }
+    &:focus {
+      outline: none;
+      @apply border-success-default;
+      @apply shadow-outline_success;
+    }
+    &:active {
+      @apply bg-success-light3;
+    }
+    &:disabled {
+      @apply text-success-light2;
+      pointer-events: none;
+    }
+  }
+  &.warn {
+    @apply text-warn-default;
+    &:hover {
+      cursor: pointer;
+      @apply border-warn-default;
+    }
+    &:focus {
+      outline: none;
+      @apply border-warn-default;
+      @apply shadow-outline_warn;
+    }
+    &:active {
+      @apply bg-warn-light3;
+    }
+    &:disabled {
+      @apply text-warn-light2;
+      pointer-events: none;
+    }
+  }
+  &.basic {
+    @apply text-black-default;
+    &:hover {
+      cursor: pointer;
+      @apply border-black-default;
+    }
+    &:focus {
+      outline: none;
+      @apply border-black-default;
+      @apply shadow-outline_black;
+    }
+    &:active {
+      @apply bg-black-light4;
+    }
+    &:disabled {
+      @apply text-black-light3;
+      pointer-events: none;
+    }
+  }
+}
+
+@mixin define-stroked-button-colors {
+  @apply bg-white;
+  @apply text-black-default;
+  @apply border;
+  @apply border-black-light2;
+  &.primary {
+    @apply text-primary-default;
+    @apply border-primary-light2;
+    &:disabled {
+      @apply text-primary-light2;
+      @apply border-primary-light3;
+    }
+  }
+  &.success {
+    @apply text-success-default;
+    @apply border-success-light2;
+    &:disabled {
+      @apply text-success-light2;
+      @apply border-success-light3;
+    }
+  }
+  &.warn {
+    @apply text-warn-default;
+    @apply border-warn-light2;
+    &:disabled {
+      @apply text-warn-light2;
+      @apply border-warn-light3;
+    }
+  }
+  &.basic {
+    @apply text-black-default;
+    @apply border-black-light2;
+    &:disabled {
+      @apply text-black-light3;
+      @apply border-black-light4;
+    }
+  }
+}
+
+@mixin define-fill-button-colors {
+  @apply bg-white;
+  @apply text-black-default;
+  &.primary {
+    @apply bg-primary-default;
+    @apply text-white;
+    @apply border-primary-default;
+    &:active {
+      @apply bg-primary-light1;
+    }
+    &:disabled {
+      @apply bg-primary-light2;
+      @apply border-primary-light2;
+    }
+  }
+  &.success {
+    @apply bg-success-default;
+    @apply text-white;
+    @apply border-success-default;
+    &:active {
+      @apply bg-success-light1;
+    }
+    &:disabled {
+      @apply bg-success-light2;
+      @apply border-success-light2;
+    }
+  }
+  &.warn {
+    @apply bg-warn-default;
+    @apply text-white;
+    @apply border-warn-default;
+    &:active {
+      @apply bg-warn-light1;
+    }
+    &:disabled {
+      @apply bg-warn-light2;
+      @apply border-warn-light2;
+    }
+  }
+  &.basic {
+    @apply bg-white;
+    @apply text-black-default;
+    &:active {
+      @apply bg-black-light4;
+    }
+    &:disabled {
+      @apply bg-black-light4;
+      @apply border-black-light4;
+      @apply text-white;
+    }
+  }
+}
+
+:host {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  border-radius: 3px;
+  @apply text-s2;
+  @apply font-sans;
+  @apply font-medium;
+  @apply text-black-default;
+  @apply border;
+  @apply border-white;
+  transition: all 0.15s;
+  @include define-button-colors();
+  &[ui-stroked-button] {
+    @apply border;
+    @apply bg-primary-default;
+    @include define-stroked-button-colors();
+  }
+  &[ui-fill-button] {
+    @include define-fill-button-colors();
+  }
+}
