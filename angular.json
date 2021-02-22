@@ -51,9 +51,7 @@
         },
         "test": {
           "builder": "@nrwl/jest:jest",
-          "outputs": [
-            "coverage/libs/shared/ui"
-          ],
+          "outputs": ["coverage/libs/shared/ui"],
           "options": {
             "jestConfig": "libs/shared/ui/jest.config.js",
             "passWithNoTests": true
@@ -99,16 +97,12 @@
       "architect": {
         "build": {
           "builder": "@nrwl/node:build",
-          "outputs": [
-            "{options.outputPath}"
-          ],
+          "outputs": ["{options.outputPath}"],
           "options": {
             "outputPath": "dist/apps/backend/graphql-api",
             "main": "apps/backend/graphql-api/src/main.ts",
             "tsConfig": "apps/backend/graphql-api/tsconfig.app.json",
-            "assets": [
-              "apps/backend/graphql-api/src/assets"
-            ]
+            "assets": ["apps/backend/graphql-api/src/assets"]
           },
           "configurations": {
             "production": {
@@ -133,16 +127,12 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "apps/backend/graphql-api/**/*.ts"
-            ]
+            "lintFilePatterns": ["apps/backend/graphql-api/**/*.ts"]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
-          "outputs": [
-            "coverage/apps/backend/graphql-api"
-          ],
+          "outputs": ["coverage/apps/backend/graphql-api"],
           "options": {
             "jestConfig": "apps/backend/graphql-api/jest.config.js",
             "passWithNoTests": true
@@ -170,7 +160,9 @@
               "apps/frontend/desktop-app/src/assets"
             ],
             "styles": [
-              "apps/frontend/desktop-app/src/styles.scss"
+              "apps/frontend/desktop-app/src/styles.scss",
+              "node_modules/@taiga-ui/core/styles/taiga-ui-global.less",
+              "node_modules/@taiga-ui/core/styles/taiga-ui-theme.less"
             ],
             "scripts": [],
             "customWebpackConfig": {
@@ -235,9 +227,7 @@
         },
         "test": {
           "builder": "@nrwl/jest:jest",
-          "outputs": [
-            "coverage/apps/frontend/desktop-app"
-          ],
+          "outputs": ["coverage/apps/frontend/desktop-app"],
           "options": {
             "jestConfig": "apps/frontend/desktop-app/jest.config.js",
             "passWithNoTests": true
@@ -266,9 +256,7 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "apps/frontend/desktop-app-e2e/**/*.{js,ts}"
-            ]
+            "lintFilePatterns": ["apps/frontend/desktop-app-e2e/**/*.{js,ts}"]
           }
         }
       }
@@ -294,9 +282,7 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "apps/frontend/shared-ui-e2e/**/*.{js,ts}"
-            ]
+            "lintFilePatterns": ["apps/frontend/shared-ui-e2e/**/*.{js,ts}"]
           }
         }
       }
@@ -308,7 +294,7 @@
       "prefix": "bison",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-builders/custom-webpack:browser",
           "options": {
             "outputPath": "dist/apps/docs",
             "index": "apps/docs/src/index.html",
@@ -316,14 +302,16 @@
             "polyfills": "apps/docs/src/polyfills.ts",
             "tsConfig": "apps/docs/tsconfig.app.json",
             "aot": true,
-            "assets": [
-              "apps/docs/src/favicon.ico",
-              "apps/docs/src/assets"
-            ],
+            "assets": ["apps/docs/src/favicon.ico", "apps/docs/src/assets"],
             "styles": [
-              "apps/docs/src/styles.scss"
+              "apps/docs/src/styles.scss",
+              "node_modules/@taiga-ui/core/styles/taiga-ui-global.less",
+              "node_modules/@taiga-ui/core/styles/taiga-ui-theme.less"
             ],
-            "scripts": []
+            "scripts": [],
+            "customWebpackConfig": {
+              "path": "webpack.config.js"
+            }
           },
           "configurations": {
             "production": {
@@ -356,7 +344,7 @@
           }
         },
         "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
+          "builder": "@angular-builders/custom-webpack:dev-server",
           "options": {
             "browserTarget": "docs:build"
           },
@@ -383,9 +371,7 @@
         },
         "test": {
           "builder": "@nrwl/jest:jest",
-          "outputs": [
-            "coverage/apps/docs"
-          ],
+          "outputs": ["coverage/apps/docs"],
           "options": {
             "jestConfig": "apps/docs/jest.config.js",
             "passWithNoTests": true
@@ -395,7 +381,7 @@
           "builder": "@nrwl/storybook:storybook",
           "options": {
             "uiFramework": "@storybook/angular",
-            "port": 4400,
+            "port": 4401,
             "config": {
               "configFolder": "apps/docs/.storybook"
             }
