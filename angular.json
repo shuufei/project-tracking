@@ -16,10 +16,14 @@
       }
     },
     "@nrwl/angular:application": {
+      "style": "scss",
+      "linter": "eslint",
       "unitTestRunner": "jest",
       "e2eTestRunner": "cypress"
     },
     "@nrwl/angular:library": {
+      "style": "scss",
+      "linter": "eslint",
       "unitTestRunner": "jest"
     },
     "@nrwl/angular:component": {
@@ -47,7 +51,9 @@
         },
         "test": {
           "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/shared/ui"],
+          "outputs": [
+            "coverage/libs/shared/ui"
+          ],
           "options": {
             "jestConfig": "libs/shared/ui/jest.config.js",
             "passWithNoTests": true
@@ -93,12 +99,16 @@
       "architect": {
         "build": {
           "builder": "@nrwl/node:build",
-          "outputs": ["{options.outputPath}"],
+          "outputs": [
+            "{options.outputPath}"
+          ],
           "options": {
             "outputPath": "dist/apps/backend/graphql-api",
             "main": "apps/backend/graphql-api/src/main.ts",
             "tsConfig": "apps/backend/graphql-api/tsconfig.app.json",
-            "assets": ["apps/backend/graphql-api/src/assets"]
+            "assets": [
+              "apps/backend/graphql-api/src/assets"
+            ]
           },
           "configurations": {
             "production": {
@@ -123,12 +133,16 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["apps/backend/graphql-api/**/*.ts"]
+            "lintFilePatterns": [
+              "apps/backend/graphql-api/**/*.ts"
+            ]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/backend/graphql-api"],
+          "outputs": [
+            "coverage/apps/backend/graphql-api"
+          ],
           "options": {
             "jestConfig": "apps/backend/graphql-api/jest.config.js",
             "passWithNoTests": true
@@ -155,7 +169,9 @@
               "apps/frontend/desktop-app/src/favicon.ico",
               "apps/frontend/desktop-app/src/assets"
             ],
-            "styles": ["apps/frontend/desktop-app/src/styles.scss"],
+            "styles": [
+              "apps/frontend/desktop-app/src/styles.scss"
+            ],
             "scripts": [],
             "customWebpackConfig": {
               "path": "webpack.config.js"
@@ -219,7 +235,9 @@
         },
         "test": {
           "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/frontend/desktop-app"],
+          "outputs": [
+            "coverage/apps/frontend/desktop-app"
+          ],
           "options": {
             "jestConfig": "apps/frontend/desktop-app/jest.config.js",
             "passWithNoTests": true
@@ -248,7 +266,9 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["apps/frontend/desktop-app-e2e/**/*.{js,ts}"]
+            "lintFilePatterns": [
+              "apps/frontend/desktop-app-e2e/**/*.{js,ts}"
+            ]
           }
         }
       }
@@ -274,7 +294,131 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["apps/frontend/shared-ui-e2e/**/*.{js,ts}"]
+            "lintFilePatterns": [
+              "apps/frontend/shared-ui-e2e/**/*.{js,ts}"
+            ]
+          }
+        }
+      }
+    },
+    "docs": {
+      "projectType": "application",
+      "root": "apps/docs",
+      "sourceRoot": "apps/docs/src",
+      "prefix": "bison",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/apps/docs",
+            "index": "apps/docs/src/index.html",
+            "main": "apps/docs/src/main.ts",
+            "polyfills": "apps/docs/src/polyfills.ts",
+            "tsConfig": "apps/docs/tsconfig.app.json",
+            "aot": true,
+            "assets": [
+              "apps/docs/src/favicon.ico",
+              "apps/docs/src/assets"
+            ],
+            "styles": [
+              "apps/docs/src/styles.scss"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/docs/src/environments/environment.ts",
+                  "with": "apps/docs/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "docs:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "docs:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "docs:build"
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "apps/docs/src/**/*.ts",
+              "apps/docs/src/**/*.html"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/apps/docs"
+          ],
+          "options": {
+            "jestConfig": "apps/docs/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "storybook": {
+          "builder": "@nrwl/storybook:storybook",
+          "options": {
+            "uiFramework": "@storybook/angular",
+            "port": 4400,
+            "config": {
+              "configFolder": "apps/docs/.storybook"
+            }
+          },
+          "configurations": {
+            "ci": {
+              "quiet": true
+            }
+          }
+        },
+        "build-storybook": {
+          "builder": "@nrwl/storybook:build",
+          "options": {
+            "uiFramework": "@storybook/angular",
+            "outputPath": "dist/storybook/docs",
+            "config": {
+              "configFolder": "apps/docs/.storybook"
+            }
+          },
+          "configurations": {
+            "ci": {
+              "quiet": true
+            }
           }
         }
       }
