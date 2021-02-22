@@ -29,23 +29,22 @@
     }
   },
   "projects": {
-    "front": {
-      "tags": []
-    },
-    "front-e2e": {
-      "tags": [],
-      "implicitDependencies": [
-        "front"
-      ]
-    },
     "shared-ui": {
       "tags": []
     },
-    "shared-ui-e2e": {
+    "backend-graphql-api": {
+      "tags": []
+    },
+    "frontend-desktop-app": {
+      "tags": []
+    },
+    "frontend-desktop-app-e2e": {
       "tags": [],
-      "implicitDependencies": [
-        "shared-ui"
-      ]
+      "implicitDependencies": ["frontend-desktop-app"]
+    },
+    "frontend-shared-ui-e2e": {
+      "tags": [],
+      "implicitDependencies": ["shared-ui"]
     }
   }
 }
