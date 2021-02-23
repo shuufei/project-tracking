@@ -1,7 +1,7 @@
 import { ShadowComponent } from './shadow.component';
 
 export default {
-  title: 'sample/Shadow',
+  title: 'Theme/Default/Shadow',
 };
 
 export const list = () => ({

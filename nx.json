@@ -40,11 +40,18 @@
     },
     "frontend-desktop-app-e2e": {
       "tags": [],
-      "implicitDependencies": ["frontend-desktop-app"]
+      "implicitDependencies": [
+        "frontend-desktop-app"
+      ]
     },
     "frontend-shared-ui-e2e": {
       "tags": [],
-      "implicitDependencies": ["shared-ui"]
+      "implicitDependencies": [
+        "shared-ui"
+      ]
+    },
+    "docs": {
+      "tags": []
     }
   }
 }
