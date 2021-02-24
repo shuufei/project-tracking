@@ -157,7 +157,12 @@
             "aot": true,
             "assets": [
               "apps/frontend/desktop-app/src/favicon.ico",
-              "apps/frontend/desktop-app/src/assets"
+              "apps/frontend/desktop-app/src/assets",
+              {
+                "glob": "feather-sprite.svg",
+                "input": "node_modules/feather-icons/dist",
+                "output": "/assets/"
+              }
             ],
             "styles": [
               "apps/frontend/desktop-app/src/styles.scss",
