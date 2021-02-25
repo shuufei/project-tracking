@@ -1,0 +1,57 @@
+:host {
+  display: inline-block;
+}
+
+.icon {
+  width: 24px;
+  height: 24px;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+}
+
+// size
+.m {
+  width: 24px;
+  height: 24px;
+  stroke-width: 2;
+}
+.s {
+  width: 17px;
+  height: 17px;
+  stroke-width: 2;
+}
+
+// color
+.basic {
+  stroke: var(--bison-black-default);
+}
+.primary {
+  stroke: var(--bison-primary-default);
+}
+.success {
+  stroke: var(--bison-success-default);
+}
+.warn {
+  stroke: var(--bison-warn-default);
+}
+
+.play,
+.more-horizontal,
+.more-vertical,
+.pause {
+  &.basic {
+    fill: var(--bison-black-default);
+  }
+  &.primary {
+    fill: var(--bison-primary-default);
+  }
+  &.success {
+    fill: var(--bison-success-default);
+  }
+  &.warn {
+    fill: var(--bison-warn-default);
+  }
+}
