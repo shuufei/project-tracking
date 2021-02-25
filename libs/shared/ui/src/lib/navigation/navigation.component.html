@@ -1,1 +1,15 @@
-<p>navigation works!</p>
+<div>Logo</div>
+
+<div class="mt-6">
+  <ng-container *ngFor="let navigation of list">
+    <div
+      class="navigation-button"
+      [ngClass]="{
+        selected: (selectedNavigation$ | async)?.menu === navigation.menu
+      }"
+      (click)="onClickNavigation$.next(navigation)"
+    >
+      {{ navigation.menu }}
+    </div>
+  </ng-container>
+</div>
