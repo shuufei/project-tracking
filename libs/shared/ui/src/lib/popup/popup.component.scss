@@ -1,0 +1,29 @@
+:host {
+  display: block;
+  position: absolute;
+  transform: translateY(2px);
+}
+
+.popup {
+  display: none;
+}
+
+.open {
+  display: block;
+  animation: ease-out 0.15s openPopup forwards;
+}
+
+@keyframes openPopup {
+  0% {
+    display: none;
+    opacity: 0;
+  }
+  1% {
+    display: block;
+  }
+  100% {
+    display: block;
+    opacity: 1;
+    transform: translateY(4px);
+  }
+}
