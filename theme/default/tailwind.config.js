@@ -65,6 +65,13 @@ module.exports = {
     outline: {
       none: ['none'],
     },
+    borderRadius: {
+      none: '0px',
+      xs: 'var(--bison-radius-xs)',
+      s: 'var(--bison-radius-s)',
+      m: 'var(--bison-radius-m)',
+      l: 'var(--bison-radius-l)',
+    },
     extend: {},
   },
   variants: {

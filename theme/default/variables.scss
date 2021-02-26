@@ -42,6 +42,10 @@
   --bison-box-shadow-outline-success: 0 0 0 1px #137717;
   --bison-box-shadow-outline-warn: 0 0 0 1px #d81717;
   --bison-box-shadow-outline-black: 0 0 0 1px #101010;
+  --bison-radius-xs: 1px;
+  --bison-radius-s: 3px;
+  --bison-radius-m: 3px;
+  --bison-radius-l: 5px;
 
   /*
   * Taiga UI Variables
@@ -63,8 +67,8 @@
   --tui-font-text-m: var(--bison-font-weight-medium) var(--bison-font-size-base) !important;
   --tui-font-text-s: var(--bison-font-weight-medium) var(--bison-font-size-s1) !important;
   --tui-font-text-xs: var(--bison-font-weight-medium) var(--bison-font-size-s2) !important;
-  --tui-radius-xs: 1px !important;
-  --tui-radius-s: 3px !important;
-  --tui-radius-m: 3px !important;
-  --tui-radius-l: 5px !important;
+  --tui-radius-xs: var(--bison-radius-xs) !important;
+  --tui-radius-s: var(--bison-radius-s) !important;
+  --tui-radius-m: var(--bison-radius-m) !important;
+  --tui-radius-l: var(--bison-radius-l) !important;
 }
