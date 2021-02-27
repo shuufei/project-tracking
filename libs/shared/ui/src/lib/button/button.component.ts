@@ -7,9 +7,9 @@ import {
   OnDestroy,
   OnInit,
 } from '@angular/core';
+import type { Color } from '@bison/shared/ui';
 import { merge, Subject } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
-import type { Color } from '../types';
 
 @Component({
   selector:
