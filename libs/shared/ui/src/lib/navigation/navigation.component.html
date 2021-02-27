@@ -1,6 +1,6 @@
 <ng-container *ngFor="let navigation of list">
   <div
-    class="navigation-button font-sans text-s1 font-medium leading-5 py-1 px-3 my-1 rounded border-2"
+    class="navigation-button font-sans text-s1 font-medium leading-5 py-1 px-3 my-1 rounded-m border-2"
     [ngClass]="[
       (selectedNavigation$ | async)?.menu === navigation.menu
         ? 'border-primary-default text-black-default'
