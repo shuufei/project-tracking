@@ -1,5 +1,6 @@
 import { Project } from './project';
 import { Task } from './task';
+import { createId } from './utils/create-id';
 
 export type Board = {
   id: string;
@@ -7,5 +8,19 @@ export type Board = {
   description?: string;
   tasks: Task[];
   isArchived: boolean;
-  project: Project;
+  projectId: Project['id'];
 };
+
+export const createBoard = (
+  name: Board['name'],
+  projectId: Board['projectId'],
+  tasks: Board['tasks'] = [],
+  description?: Board['description']
+): Board => ({
+  id: createId(),
+  name,
+  description,
+  tasks,
+  isArchived: false,
+  projectId,
+});
