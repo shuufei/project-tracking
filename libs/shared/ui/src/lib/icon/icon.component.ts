@@ -34,4 +34,5 @@ export type IconName =
   | 'play'
   | 'user'
   | 'calendar'
-  | 'check';
+  | 'check'
+  | 'x-circle';

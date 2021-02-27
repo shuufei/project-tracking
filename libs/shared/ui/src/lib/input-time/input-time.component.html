@@ -1,0 +1,29 @@
+<form class="flex items-center time-form" [formGroup]="time">
+  <input
+    #hoursInput
+    type="number"
+    class="focus:outline-none inline-block"
+    formControlName="hours"
+    max="99"
+    min="0"
+    (input)="inputedHoursValue$.next($event)"
+  />
+  <span class="colon">:</span>
+  <input
+    #minutesInput
+    type="number"
+    class="focus:outline-none inline-block"
+    formControlName="minutes"
+    max="59"
+    min="0"
+    (input)="inputedMinutesValue$.next($event)"
+  />
+</form>
+<ui-icon
+  #resetButton
+  class="cursor-pointer"
+  [icon]="'x-circle'"
+  [size]="'s'"
+  [color]="'primary-light1'"
+  (click)="resetTime$.next()"
+></ui-icon>

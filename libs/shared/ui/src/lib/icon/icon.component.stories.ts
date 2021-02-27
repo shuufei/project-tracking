@@ -28,6 +28,7 @@ export const default_s = () => ({
     <ui-icon size="s" icon="play"></ui-icon>
     <ui-icon size="s" icon="user"></ui-icon>
     <ui-icon size="s" icon="calendar"></ui-icon>
+    <ui-icon size="s" icon="check"></ui-icon>
   `,
   props: {},
 });
@@ -56,6 +57,7 @@ export const default_m = () => ({
     <ui-icon size="m" icon="play"></ui-icon>
     <ui-icon size="m" icon="user"></ui-icon>
     <ui-icon size="m" icon="calendar"></ui-icon>
+    <ui-icon size="m" icon="check"></ui-icon>
   `,
   props: {},
 });
@@ -84,6 +86,7 @@ export const primary_s = () => ({
     <ui-icon size="s" color="primary" icon="play"></ui-icon>
     <ui-icon size="s" color="primary" icon="user"></ui-icon>
     <ui-icon size="s" color="primary" icon="calendar"></ui-icon>
+    <ui-icon size="s" color="check" icon="check"></ui-icon>
   `,
   props: {},
 });
@@ -112,6 +115,7 @@ export const primary_m = () => ({
     <ui-icon size="m" color="primary" icon="play"></ui-icon>
     <ui-icon size="m" color="primary" icon="user"></ui-icon>
     <ui-icon size="m" color="primary" icon="calendar"></ui-icon>
+    <ui-icon size="m" color="primary" icon="check"></ui-icon>
   `,
   props: {},
 });
@@ -140,6 +144,7 @@ export const success_s = () => ({
     <ui-icon size="s" color="success" icon="play"></ui-icon>
     <ui-icon size="s" color="success" icon="user"></ui-icon>
     <ui-icon size="s" color="success" icon="calendar"></ui-icon>
+    <ui-icon size="s" color="success" icon="check"></ui-icon>
   `,
   props: {},
 });
@@ -168,6 +173,7 @@ export const success_m = () => ({
     <ui-icon size="m" color="success" icon="play"></ui-icon>
     <ui-icon size="m" color="success" icon="user"></ui-icon>
     <ui-icon size="m" color="success" icon="calendar"></ui-icon>
+    <ui-icon size="m" color="success" icon="check"></ui-icon>
   `,
   props: {},
 });
@@ -196,6 +202,7 @@ export const warn_s = () => ({
     <ui-icon size="s" color="warn" icon="play"></ui-icon>
     <ui-icon size="s" color="warn" icon="user"></ui-icon>
     <ui-icon size="s" color="warn" icon="calendar"></ui-icon>
+    <ui-icon size="s" color="warn" icon="check"></ui-icon>
   `,
   props: {},
 });
@@ -224,6 +231,7 @@ export const warn_m = () => ({
     <ui-icon size="m" color="warn" icon="play"></ui-icon>
     <ui-icon size="m" color="warn" icon="user"></ui-icon>
     <ui-icon size="m" color="warn" icon="calendar"></ui-icon>
+    <ui-icon size="m" color="warn" icon="check"></ui-icon>
   `,
   props: {},
 });

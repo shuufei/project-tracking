@@ -1,1 +1,1 @@
-export type Color = 'basic' | 'primary' | 'success' | 'warn';
+export type Color = 'basic' | 'primary' | 'primary-light1' | 'success' | 'warn';
