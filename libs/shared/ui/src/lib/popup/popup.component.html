@@ -1,0 +1,8 @@
+<div
+  class="bg-white shadow-l rounded-m p-3 popup"
+  [ngClass]="{
+    open: isOpen$ | async
+  }"
+>
+  <ng-content></ng-content>
+</div>
