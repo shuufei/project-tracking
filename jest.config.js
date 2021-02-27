@@ -4,5 +4,6 @@ module.exports = {
     '<rootDir>/libs/shared/ui',
     '<rootDir>/apps/backend/graphql-api',
     '<rootDir>/apps/docs',
+    '<rootDir>/libs/shared/domain',
   ],
 };
