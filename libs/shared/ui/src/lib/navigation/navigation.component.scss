@@ -1,23 +1,7 @@
 :host {
   display: block;
-  @apply font-sans;
-  @apply p-6;
-  @apply text-s1;
-  @apply font-medium;
-  @apply leading-5;
 }
 
 .navigation-button {
   cursor: pointer;
-  @apply py-1;
-  @apply px-3;
-  @apply my-1;
-  @apply rounded;
-  @apply border-2;
-  @apply border-white;
-  @apply text-black-light2;
-  &.selected {
-    @apply text-black-default;
-    @apply border-primary-default;
-  }
 }

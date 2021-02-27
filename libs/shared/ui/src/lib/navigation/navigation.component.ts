@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output
 import { merge, Subject } from 'rxjs';
 import { shareReplay, takeUntil, tap } from 'rxjs/operators';
 
-export interface Navigation {
+export type Navigation = {
   menu: string,
   routerLink: string,
 }
@@ -15,7 +15,7 @@ export interface Navigation {
 })
 export class NavigationComponent implements OnInit {
   @Input() list: Navigation[] = [];
-  @Output() clickNav = new EventEmitter();
+  @Output() clickNav = new EventEmitter<Navigation>();
 
   private readonly onDestroy$ = new Subject<void>();
   readonly onClickNavigation$ = new Subject<Navigation>();
