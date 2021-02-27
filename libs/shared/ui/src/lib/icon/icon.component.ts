@@ -33,4 +33,5 @@ export type IconName =
   | 'pause'
   | 'play'
   | 'user'
-  | 'calendar';
+  | 'calendar'
+  | 'check';

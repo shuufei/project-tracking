@@ -1,0 +1,19 @@
+<ui-popup [triggerEl]="triggerEl" class="py-1">
+  <ng-container *ngFor="let status of statusList; index as i">
+    <div
+      class="px-2 py-1 cursor-pointer text-s2 text-black-default flex items-center justify-between status-item rounded-s"
+      [ngClass]="{
+        'bg-primary-light3': (currentStatus$ | async) === status,
+        'mt-2': i !== 0
+      }"
+      (click)="onClickedStatus$.next(status)"
+    >
+      <span class="status-text">
+        {{ status }}
+      </span>
+      <ng-container *ngIf="(currentStatus$ | async) === status">
+        <ui-icon class="ml-6" [icon]="'check'" [size]="'s'"></ui-icon>
+      </ng-container>
+    </div>
+  </ng-container>
+</ui-popup>
