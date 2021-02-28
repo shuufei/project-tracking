@@ -18,6 +18,16 @@
     min="0"
     (input)="inputedMinutesValue$.next($event)"
   />
+  <span class="colon">:</span>
+  <input
+    #secondsInput
+    type="number"
+    class="focus:outline-none inline-block"
+    formControlName="seconds"
+    max="59"
+    min="0"
+    (input)="inputedSecondsValue$.next($event)"
+  />
 </form>
 <ui-icon
   #resetButton
