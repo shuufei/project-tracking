@@ -2,14 +2,22 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  EventEmitter,
   HostListener,
   Input,
+  Output,
   ViewChild,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@ngneat/reactive-forms';
 import { RxState } from '@rx-angular/state';
-import { Subject } from 'rxjs';
-import { filter, tap } from 'rxjs/operators';
+import { combineLatest, Subject } from 'rxjs';
+import {
+  distinctUntilChanged,
+  filter,
+  map,
+  startWith,
+  tap,
+} from 'rxjs/operators';
 
 @Component({
   selector: 'ui-input-time',
@@ -42,12 +50,25 @@ export class InputTimeComponent {
       }
     );
   }
+  @Output() changedTime = new EventEmitter<{
+    hours: number;
+    minutes: number;
+    seconds: number;
+  }>();
   @ViewChild('hoursInput', { static: true }) hoursInput: ElementRef;
   @ViewChild('minutesInput', { static: true }) minutesInput: ElementRef;
   @ViewChild('secondsInput', { static: true }) secondsInput: ElementRef;
   @ViewChild('resetButton', { static: true, read: ElementRef })
   resetButton: ElementRef;
 
+  // Events
+  readonly inputedHoursValue$ = new Subject<InputEvent>();
+  readonly inputedMinutesValue$ = new Subject<InputEvent>();
+  readonly inputedSecondsValue$ = new Subject<InputEvent>();
+  readonly resetTime$ = new Subject<void>();
+  private readonly onClickedHostEl$ = new Subject<Event>();
+
+  // State
   readonly time = new FormGroup<{
     hours: number | string;
     minutes: number | string;
@@ -57,79 +78,48 @@ export class InputTimeComponent {
     minutes: new FormControl('00'),
     seconds: new FormControl('00'),
   });
-
-  readonly inputedHoursValue$ = new Subject<InputEvent>();
-  readonly inputedMinutesValue$ = new Subject<InputEvent>();
-  readonly inputedSecondsValue$ = new Subject<InputEvent>();
-  readonly resetTime$ = new Subject<void>();
-  private readonly onClickedHostEl$ = new Subject<Event>();
-
-  private readonly formatHoursValueHandler$ = this.inputedHoursValue$.pipe(
-    tap((event) => {
+  private readonly formatedHours$ = this.inputedHoursValue$.pipe(
+    map((event) => {
       const currentValue = this.time.value.hours;
-      if (this.isOneDigit(currentValue)) {
-        this.time.controls.hours.setValue(`0${currentValue}`, {
-          emitEvent: false,
-        });
-      } else if (currentValue > 99) {
-        this.time.controls.hours.setValue(`0${event.data}`, {
-          emitEvent: false,
-        });
-      } else if (currentValue < 0) {
-        this.time.controls.hours.setValue('00', {
-          emitEvent: false,
-        });
-      } else {
-        this.time.controls.hours.setValue(currentValue, {
-          emitEvent: false,
-        });
-      }
+      return this.formatValue(event.data, Number(currentValue), 99);
     })
   );
-
-  private readonly formatMinutesValueHandler$ = this.inputedMinutesValue$.pipe(
-    tap((event) => {
+  private readonly formatedMinutes$ = this.inputedMinutesValue$.pipe(
+    map((event) => {
       const currentValue = this.time.value.minutes;
-      if (this.isOneDigit(currentValue)) {
-        this.time.controls.minutes.setValue(`0${currentValue}`, {
-          emitEvent: false,
-        });
-      } else if (currentValue > 60) {
-        this.time.controls.minutes.setValue(`0${event.data}`, {
-          emitEvent: false,
-        });
-      } else if (currentValue < 0) {
-        this.time.controls.minutes.setValue('00', {
-          emitEvent: false,
-        });
-      } else {
-        this.time.controls.minutes.setValue(currentValue, {
-          emitEvent: false,
-        });
-      }
+      return this.formatValue(event.data, Number(currentValue), 59);
+    })
+  );
+  private readonly formatedSeconds$ = this.inputedSecondsValue$.pipe(
+    map((event) => {
+      const currentValue = this.time.value.seconds;
+      return this.formatValue(event.data, Number(currentValue), 59);
     })
   );
 
-  private readonly formatSecondsValueHandler$ = this.inputedSecondsValue$.pipe(
-    tap((event) => {
-      const currentValue = this.time.value.seconds;
-      if (this.isOneDigit(currentValue)) {
-        this.time.controls.seconds.setValue(`0${currentValue}`, {
-          emitEvent: false,
-        });
-      } else if (currentValue > 60) {
-        this.time.controls.seconds.setValue(`0${event.data}`, {
-          emitEvent: false,
-        });
-      } else if (currentValue < 0) {
-        this.time.controls.seconds.setValue('00', {
-          emitEvent: false,
-        });
-      } else {
-        this.time.controls.seconds.setValue(currentValue, {
-          emitEvent: false,
-        });
-      }
+  // Event Handlers
+  private readonly formatHoursValueHandler$ = this.formatedHours$.pipe(
+    distinctUntilChanged((prev, current) => Number(prev) === Number(current)),
+    tap((value) => {
+      this.time.controls.hours.setValue(value, {
+        emitEvent: false,
+      });
+    })
+  );
+
+  private readonly formatMinutesValueHandler$ = this.formatedMinutes$.pipe(
+    distinctUntilChanged((prev, current) => Number(prev) === Number(current)),
+    tap((value) => {
+      this.time.controls.minutes.setValue(value, {
+        emitEvent: false,
+      });
+    })
+  );
+
+  private readonly formatSecondsValueHandler$ = this.formatedSeconds$.pipe(
+    distinctUntilChanged((prev, current) => Number(prev) === Number(current)),
+    tap((value) => {
+      this.time.controls.seconds.setValue(value, { emitEvent: false });
     })
   );
 
@@ -161,11 +151,34 @@ export class InputTimeComponent {
     })
   );
 
+  private readonly emitTimeValue$ = combineLatest([
+    this.formatedHours$.pipe(startWith(this.time.value.hours)),
+    this.formatedMinutes$.pipe(startWith(this.time.value.minutes)),
+    this.formatedSeconds$.pipe(startWith(this.time.value.seconds)),
+  ]).pipe(
+    distinctUntilChanged((prev, current) => {
+      return (
+        prev[0] === current[0] &&
+        prev[1] === current[1] &&
+        prev[2] === current[2]
+      );
+    }),
+    tap(([hours, minutes, seconds]) => {
+      this.changedTime.emit({
+        hours: Number(hours),
+        minutes: Number(minutes),
+        seconds: Number(seconds),
+      });
+    })
+  );
+
   constructor(private state: RxState<{ [key: string]: never }>) {
     this.state.hold(this.formatHoursValueHandler$);
     this.state.hold(this.formatMinutesValueHandler$);
+    this.state.hold(this.formatSecondsValueHandler$);
     this.state.hold(this.resetTimeHandler$);
     this.state.hold(this.focusHoursInputHandler$);
+    this.state.hold(this.emitTimeValue$);
   }
 
   @HostListener('click', ['$event'])
@@ -173,7 +186,17 @@ export class InputTimeComponent {
     this.onClickedHostEl$.next(event);
   }
 
-  private isOneDigit(value) {
+  private isOneDigit(value: number) {
     return value > 0 && value < 10;
+  }
+
+  private formatValue(inputedValue: string, value: number, maxValue: number) {
+    if (value > maxValue) {
+      return `0${inputedValue}`;
+    } else if (value < 0) {
+      return '00';
+    } else {
+      return value;
+    }
   }
 }

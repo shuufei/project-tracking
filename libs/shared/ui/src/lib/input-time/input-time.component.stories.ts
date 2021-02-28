@@ -20,7 +20,7 @@ export const Set_Default_Value = () => ({
     imports: [InputTimeModule],
   },
   template: `
-    <ui-input-time [hours]="3" [minutes]="45">
+    <ui-input-time [hours]="3" [minutes]="45" [seconds]="30">
     </ui-input-time>
   `,
   props: {},
