@@ -1,0 +1,19 @@
+<ui-popup [triggerEl]="triggerEl">
+  <div class="flex">
+    <div>
+      <p class="text-s4 text-black-light2">作業時間</p>
+      <ui-input-time
+        class="mt-2"
+        (changedTime)="onChangedTime($event)"
+      ></ui-input-time>
+    </div>
+    <div class="ml-6">
+      <p class="text-s4 text-black-light2">作業予定時間</p>
+      <ui-input-time
+        class="mt-2"
+        [isEnableZero]="false"
+        (changedTime)="onChangedTime($event)"
+      ></ui-input-time>
+    </div>
+  </div>
+</ui-popup>
