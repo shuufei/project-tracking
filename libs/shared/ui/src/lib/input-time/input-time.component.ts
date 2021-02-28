@@ -101,7 +101,6 @@ export class InputTimeComponent {
 
   // Event Handlers
   private readonly formatHoursValueHandler$ = this.formatedHours$.pipe(
-    distinctUntilChanged((prev, current) => prev === current),
     tap((value) => {
       this.time.controls.hours.setValue(value, {
         emitEvent: false,
@@ -110,7 +109,6 @@ export class InputTimeComponent {
   );
 
   private readonly formatMinutesValueHandler$ = this.formatedMinutes$.pipe(
-    distinctUntilChanged((prev, current) => prev === current),
     tap((value) => {
       this.time.controls.minutes.setValue(value, {
         emitEvent: false,
@@ -119,7 +117,6 @@ export class InputTimeComponent {
   );
 
   private readonly formatSecondsValueHandler$ = this.formatedSeconds$.pipe(
-    distinctUntilChanged((prev, current) => prev === current),
     tap((value) => {
       this.time.controls.seconds.setValue(value, { emitEvent: false });
     })
@@ -212,8 +209,14 @@ export class InputTimeComponent {
     return value > 0 && value < 10;
   }
 
-  private formatValue(inputedValue: string, value: number, maxValue: number) {
-    if (value >= maxValue) {
+  private formatValue(
+    inputedValue: string | null,
+    value: number,
+    maxValue: number
+  ) {
+    if (inputedValue != null && this.isOneDigit(value)) {
+      return `0${value}`;
+    } else if (value >= maxValue) {
       return `0${inputedValue}`;
     } else if (value < 0) {
       return '00';
