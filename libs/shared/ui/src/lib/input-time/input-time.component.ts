@@ -56,11 +56,11 @@ export class InputTimeComponent {
     this.isEnableZero$.next(value);
   }
   @Output() changedTime = new EventEmitter<ChangedTimeEvent>();
-  @ViewChild('hoursInput', { static: true }) hoursInput: ElementRef;
-  @ViewChild('minutesInput', { static: true }) minutesInput: ElementRef;
-  @ViewChild('secondsInput', { static: true }) secondsInput: ElementRef;
+  @ViewChild('hoursInput', { static: true }) hoursInput?: ElementRef;
+  @ViewChild('minutesInput', { static: true }) minutesInput?: ElementRef;
+  @ViewChild('secondsInput', { static: true }) secondsInput?: ElementRef;
   @ViewChild('resetButton', { static: true, read: ElementRef })
-  resetButton: ElementRef;
+  resetButton?: ElementRef;
 
   // Events
   readonly inputedHoursValue$ = new Subject<InputEvent>();
@@ -136,18 +136,18 @@ export class InputTimeComponent {
   private readonly focusHoursInputHandler$ = this.onClickedHostEl$.pipe(
     filter(
       (event) =>
-        !(this.minutesInput.nativeElement as HTMLElement).contains(
+        !(this.minutesInput?.nativeElement as HTMLElement)?.contains(
           event.target as Node
         ) &&
-        !(this.resetButton.nativeElement as HTMLElement).contains(
+        !(this.resetButton?.nativeElement as HTMLElement)?.contains(
           event.target as Node
         ) &&
-        !(this.secondsInput.nativeElement as HTMLElement).contains(
+        !(this.secondsInput?.nativeElement as HTMLElement)?.contains(
           event.target as Node
         )
     ),
     tap(() => {
-      (this.hoursInput.nativeElement as HTMLInputElement).focus();
+      (this.hoursInput?.nativeElement as HTMLInputElement)?.focus();
     })
   );
 

@@ -46,6 +46,9 @@ export class PopupComponent implements OnInit, OnDestroy {
   }
 
   private enableOpenPopupHandler() {
+    if (this.triggerEl == null) {
+      return;
+    }
     fromEvent(this.triggerEl, 'click')
       .pipe(
         tap(() => {
@@ -62,8 +65,8 @@ export class PopupComponent implements OnInit, OnDestroy {
         .pipe(
           filter((event) => {
             const isHostClicked = (this.elementRef
-              .nativeElement as HTMLElement).contains(event.target as Node);
-            const isTriggerCliked = this.triggerEl.contains(
+              .nativeElement as HTMLElement)?.contains(event.target as Node);
+            const isTriggerCliked = this.triggerEl?.contains(
               event.target as Node
             );
             return !isHostClicked && !isTriggerCliked;
