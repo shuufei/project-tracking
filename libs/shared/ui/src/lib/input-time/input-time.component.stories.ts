@@ -15,17 +15,6 @@ export const Default = () => ({
   props: {},
 });
 
-export const Is_Disable_Zero = () => ({
-  moduleMetadata: {
-    imports: [InputTimeModule],
-  },
-  template: `
-    <ui-input-time [isEnableZero]="false">
-    </ui-input-time>
-  `,
-  props: {},
-});
-
 export const Set_Default_Value = () => ({
   moduleMetadata: {
     imports: [InputTimeModule],
