@@ -1,6 +1,9 @@
 <ui-popup [triggerEl]="triggerEl">
   <div class="flex">
-    <ui-tracking-time-controller class="column"></ui-tracking-time-controller>
+    <ui-tracking-time-controller
+      class="column"
+      (changedTime)="onChangedTime($event)"
+    ></ui-tracking-time-controller>
     <ui-planned-time-controller
       class="ml-6 column"
     ></ui-planned-time-controller>

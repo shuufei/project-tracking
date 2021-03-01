@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import { RxState } from '@rx-angular/state';
 import { Subject } from 'rxjs';
+import { distinctUntilChanged } from 'rxjs/operators';
 import { ChangedTimeEvent } from '../../input-time/input-time.component';
 
 type State = {
@@ -90,6 +91,20 @@ export class TrackingTimeControllerComponent {
           minutes,
           seconds,
         };
+      }
+    );
+
+    this.state.hold(
+      this.state.$.pipe(
+        distinctUntilChanged(
+          (prev, current) =>
+            prev.hours === current.hours &&
+            prev.minutes === current.minutes &&
+            prev.seconds === current.seconds
+        )
+      ),
+      (state) => {
+        this.changedTime.emit(state);
       }
     );
 
