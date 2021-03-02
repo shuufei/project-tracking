@@ -1,7 +1,7 @@
 import { TrackingLogChangePopupModule } from './tracking-log-change-popup.module';
 
 export default {
-  title: 'TrackingLogChangePopupComponent',
+  title: 'TrackingLogChangePopup',
 };
 
 export const Default = () => ({

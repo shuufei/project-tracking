@@ -2,7 +2,7 @@ import { Navigation } from './navigation.component';
 import { NavigationModule } from './navigation.module';
 
 export default {
-  title: 'NavigationModule',
+  title: 'Navigation',
 };
 
 const moduleMetadata = {
@@ -16,12 +16,12 @@ export const Default = () => ({
   `,
   props: {
     list: [
-      { menu: 'プロジェクト', routerLink: 'hoge', },
-      { menu: 'スケジュール', routerLink: 'fuga', },
-      { menu: 'レポート', routerLink: 'piyo', },
+      { menu: 'プロジェクト', routerLink: 'hoge' },
+      { menu: 'スケジュール', routerLink: 'fuga' },
+      { menu: 'レポート', routerLink: 'piyo' },
     ],
     onClickNavigation: (navigation: Navigation) => {
       console.log(navigation);
     },
   },
-})
+});

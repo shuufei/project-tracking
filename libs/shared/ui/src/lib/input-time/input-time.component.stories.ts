@@ -1,7 +1,7 @@
 import { InputTimeModule } from './input-time.module';
 
 export default {
-  title: 'InputTimeComponent',
+  title: 'InputTime',
 };
 
 export const Default = () => ({

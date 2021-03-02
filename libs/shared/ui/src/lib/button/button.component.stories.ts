@@ -1,7 +1,7 @@
 import { ButtonModule } from './button.module';
 
 export default {
-  title: 'ButtonComponent',
+  title: 'Button',
 };
 
 const moduleMetadata = {

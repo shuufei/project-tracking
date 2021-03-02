@@ -1,7 +1,7 @@
 import { StatusSelectPopupModule } from './status-select-popup.module';
 
 export default {
-  title: 'StatusSelectPopupComponent',
+  title: 'StatusSelectPopup',
 };
 
 export const Not_Select = () => ({

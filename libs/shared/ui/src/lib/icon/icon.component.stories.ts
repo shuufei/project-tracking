@@ -2,7 +2,7 @@ import { Icons } from './icon.component';
 import { IconModule } from './icon.module';
 
 export default {
-  title: 'IconComponent',
+  title: 'Icon',
 };
 
 const defaultSTemplate = Icons.map(

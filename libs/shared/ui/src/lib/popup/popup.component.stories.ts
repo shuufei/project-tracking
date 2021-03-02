@@ -1,7 +1,7 @@
 import { PopupModule } from './popup.module';
 
 export default {
-  title: 'PopupComponent',
+  title: 'Popup',
 };
 
 export const Default = () => ({
