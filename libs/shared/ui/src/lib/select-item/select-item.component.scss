@@ -1,0 +1,11 @@
+:host {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 8px;
+  font-family: var(--bison-font-family-sans);
+  font-size: var(--bison-font-size-s2);
+  color: var(--bison-black-default);
+  border-radius: var(--bison-radius-s);
+  line-height: 17px;
+}
