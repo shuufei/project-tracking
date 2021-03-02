@@ -1,0 +1,41 @@
+<ui-popup [triggerEl]="triggerEl">
+  <div class="flex pb-3">
+    <div>
+      <p class="text-s4 text-black-light2">プロジェクト</p>
+      <div class="mt-2">
+        <ng-container *ngFor="let project of projects$ | async; index as i">
+          <ui-select-item
+            class="select-item cursor-pointer"
+            [ngClass]="{
+              'mt-1': i !== 0
+            }"
+            [selected]="project.id === (selectedProjectId$ | async)"
+            (click)="onClickedProejct$.next(project.id)"
+          >
+            <p class="select-item-text">
+              <ui-color-icon [color]="project.color"></ui-color-icon>
+              <span class="ml-1">{{ project.name }}</span>
+            </p>
+          </ui-select-item>
+        </ng-container>
+      </div>
+    </div>
+    <div class="ml-4">
+      <p class="text-s4 text-black-light2">ボード</p>
+      <div class="mt-2">
+        <ng-container *ngFor="let board of boards$ | async; index as i">
+          <ui-select-item
+            class="select-item cursor-pointer"
+            [ngClass]="{
+              'mt-1': i !== 0
+            }"
+            [selected]="board.id === (selectedBoardId$ | async)"
+            (click)="onClickedBoard$.next(board.id)"
+          >
+            <span class="ml-1 select-item-text">{{ board.name }}</span>
+          </ui-select-item>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</ui-popup>

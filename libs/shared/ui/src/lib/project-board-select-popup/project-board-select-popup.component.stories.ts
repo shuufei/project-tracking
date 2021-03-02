@@ -1,0 +1,82 @@
+import type { Board, Project } from './project-board-select-popup.component';
+import { ProjectBoardSelectPopupModule } from './project-board-select-popup.module';
+
+export default {
+  title: 'ProjectBoardSelectPopup',
+};
+
+const projects: Project[] = [
+  {
+    id: '1',
+    name: 'Bison',
+    color: 'green',
+  },
+  {
+    id: '2',
+    name: 'Arowana',
+    color: 'red',
+  },
+  {
+    id: '3',
+    name: 'CapibaraCapibaraCapibaraCapibara',
+    color: 'yellow',
+  },
+];
+const boards: Board[] = [
+  {
+    id: '1',
+    name: 'バックログ',
+  },
+  {
+    id: '2',
+    name: 'スプリント11',
+  },
+  {
+    id: '3',
+    name: 'スプリント12',
+  },
+  {
+    id: '4',
+    name: 'スプリント13スプリント13スプリント13',
+  },
+];
+
+export const Default = () => ({
+  moduleMetadata: {
+    imports: [ProjectBoardSelectPopupModule],
+  },
+  template: `
+    <button #trigger class="text-s1">open</button>
+    <ui-project-board-select-popup
+      [triggerEl]="trigger"
+      [projects]="projects"
+      [boards]="boards"
+    ></ui-project-board-select-popup>
+  `,
+  props: {
+    projects,
+    boards,
+  },
+});
+
+export const Set_Selected_Value = () => ({
+  moduleMetadata: {
+    imports: [ProjectBoardSelectPopupModule],
+  },
+  template: `
+    <button #trigger class="text-s1">open</button>
+    <ui-project-board-select-popup
+      [triggerEl]="trigger"
+      [projects]="projects"
+      [boards]="boards"
+      [selectedProjectId]="selectedProjectId"
+      [selectedBoardId]="selectedBoardId"
+    ></ui-project-board-select-popup>
+  `,
+  props: {
+    projects,
+    boards,
+    selectedProjectId: projects[0].id,
+    selectedBoardId: boards[1].id,
+  },
+});
