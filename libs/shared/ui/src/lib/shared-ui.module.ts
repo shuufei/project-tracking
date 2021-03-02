@@ -4,8 +4,16 @@ import { ButtonModule } from './button/button.module';
 import { IconModule } from './icon/icon.module';
 import { NavigationModule } from './navigation/navigation.module';
 import { PopupModule } from './popup/popup.module';
+import { StatusSelectPopupModule } from './status-select-popup/status-select-popup.module';
 
 @NgModule({
-  imports: [CommonModule, ButtonModule, IconModule, PopupModule, NavigationModule],
+  imports: [
+    CommonModule,
+    ButtonModule,
+    IconModule,
+    PopupModule,
+    NavigationModule,
+    StatusSelectPopupModule,
+  ],
 })
-export class SharedUiModule { }
+export class SharedUiModule {}

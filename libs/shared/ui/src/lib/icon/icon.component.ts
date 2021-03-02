@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { Color } from '../types';
+import type { Color } from '@bison/shared/ui';
 
 @Component({
   selector: 'ui-icon',
@@ -33,4 +33,5 @@ export type IconName =
   | 'pause'
   | 'play'
   | 'user'
-  | 'calendar';
+  | 'calendar'
+  | 'check';
