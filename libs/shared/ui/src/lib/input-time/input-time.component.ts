@@ -11,7 +11,13 @@ import {
 import { FormControl, FormGroup } from '@ngneat/reactive-forms';
 import { RxState } from '@rx-angular/state';
 import { Subject } from 'rxjs';
-import { distinctUntilChanged, filter, map, tap } from 'rxjs/operators';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  filter,
+  map,
+  tap,
+} from 'rxjs/operators';
 
 @Component({
   selector: 'ui-input-time',
@@ -144,6 +150,10 @@ export class InputTimeComponent {
       Number(minutes),
       Number(seconds),
     ]),
+    filter(
+      ([hours, minutes, seconds]) =>
+        !isNaN(hours) && !isNaN(minutes) && !isNaN(seconds)
+    ),
     distinctUntilChanged((prev, current) => {
       return (
         prev[0] === current[0] &&
@@ -151,6 +161,7 @@ export class InputTimeComponent {
         prev[2] === current[2]
       );
     }),
+    debounceTime(0),
     tap(([hours, minutes, seconds]) => {
       this.changedTime.emit({
         hours,
