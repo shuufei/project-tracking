@@ -1,7 +1,7 @@
 import { SelectItemModule } from './select-item.module';
 
 export default {
-  title: 'SelectItemComponent',
+  title: 'SelectItem',
 };
 
 export const Default = () => ({
