@@ -1,22 +1,62 @@
 <p class="text-s4 text-black-light2">作業予定時間</p>
-<ui-input-time class="mt-2"></ui-input-time>
+<ui-input-time
+  class="mt-2"
+  [hours]="hours$ | async"
+  [minutes]="minutes$ | async"
+  [seconds]="seconds$ | async"
+  (changedTime)="onChangedInput$.next($event)"
+></ui-input-time>
 <div class="mt-2 adjust-button-block">
-  <ui-adjust-button>15分</ui-adjust-button>
-  <ui-adjust-button class="mt-1">30分</ui-adjust-button>
-  <ui-adjust-button class="mt-1">1時間</ui-adjust-button>
-  <ui-adjust-button class="mt-1">1時間30分</ui-adjust-button>
-  <ui-adjust-button class="mt-1">2時間</ui-adjust-button>
-  <ui-adjust-button class="mt-1">2時間30分</ui-adjust-button>
-  <ui-adjust-button class="mt-1">3時間</ui-adjust-button>
-  <ui-adjust-button class="mt-1">3時間30分</ui-adjust-button>
-  <ui-adjust-button class="mt-1">4時間</ui-adjust-button>
-  <ui-adjust-button class="mt-1">4時間30分</ui-adjust-button>
-  <ui-adjust-button class="mt-1">5時間</ui-adjust-button>
-  <ui-adjust-button class="mt-1">5時間30分</ui-adjust-button>
-  <ui-adjust-button class="mt-1">6時間</ui-adjust-button>
-  <ui-adjust-button class="mt-1">6時間30分</ui-adjust-button>
-  <ui-adjust-button class="mt-1">7時間</ui-adjust-button>
-  <ui-adjust-button class="mt-1">7時間30分</ui-adjust-button>
-  <ui-adjust-button class="mt-1">8時間</ui-adjust-button>
-  <ui-adjust-button class="mt-1">8時間30分</ui-adjust-button>
+  <ui-adjust-button (click)="onSetSec$.next(60 * 15)">15分</ui-adjust-button>
+  <ui-adjust-button (click)="onSetSec$.next(60 * 30)" class="mt-1"
+    >30分</ui-adjust-button
+  >
+  <ui-adjust-button (click)="onSetSec$.next(60 * 60 * 1)" class="mt-1"
+    >1時間</ui-adjust-button
+  >
+  <ui-adjust-button (click)="onSetSec$.next(60 * 60 * 1.5)" class="mt-1"
+    >1時間30分</ui-adjust-button
+  >
+  <ui-adjust-button (click)="onSetSec$.next(60 * 60 * 2)" class="mt-1"
+    >2時間</ui-adjust-button
+  >
+  <ui-adjust-button (click)="onSetSec$.next(60 * 60 * 2.5)" class="mt-1"
+    >2時間30分</ui-adjust-button
+  >
+  <ui-adjust-button (click)="onSetSec$.next(60 * 60 * 3)" class="mt-1"
+    >3時間</ui-adjust-button
+  >
+  <ui-adjust-button (click)="onSetSec$.next(60 * 60 * 3.5)" class="mt-1"
+    >3時間30分</ui-adjust-button
+  >
+  <ui-adjust-button (click)="onSetSec$.next(60 * 60 * 4)" class="mt-1"
+    >4時間</ui-adjust-button
+  >
+  <ui-adjust-button (click)="onSetSec$.next(60 * 60 * 4.5)" class="mt-1"
+    >4時間30分</ui-adjust-button
+  >
+  <ui-adjust-button (click)="onSetSec$.next(60 * 60 * 5)" class="mt-1"
+    >5時間</ui-adjust-button
+  >
+  <ui-adjust-button (click)="onSetSec$.next(60 * 60 * 5.5)" class="mt-1"
+    >5時間30分</ui-adjust-button
+  >
+  <ui-adjust-button (click)="onSetSec$.next(60 * 60 * 6)" class="mt-1"
+    >6時間</ui-adjust-button
+  >
+  <ui-adjust-button (click)="onSetSec$.next(60 * 60 * 6.5)" class="mt-1"
+    >6時間30分</ui-adjust-button
+  >
+  <ui-adjust-button (click)="onSetSec$.next(60 * 60 * 7)" class="mt-1"
+    >7時間</ui-adjust-button
+  >
+  <ui-adjust-button (click)="onSetSec$.next(60 * 60 * 7.5)" class="mt-1"
+    >7時間30分</ui-adjust-button
+  >
+  <ui-adjust-button (click)="onSetSec$.next(60 * 60 * 8)" class="mt-1"
+    >8時間</ui-adjust-button
+  >
+  <ui-adjust-button (click)="onSetSec$.next(60 * 60 * 8.5)" class="mt-1"
+    >8時間30分</ui-adjust-button
+  >
 </div>

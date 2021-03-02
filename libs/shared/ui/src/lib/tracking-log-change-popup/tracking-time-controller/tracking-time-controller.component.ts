@@ -9,6 +9,7 @@ import { RxState } from '@rx-angular/state';
 import { Subject } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 import { ChangedTimeEvent } from '../../input-time/input-time.component';
+import { convertToSecFromTime, convertToTimeFromSec } from '../convert-time';
 
 type State = {
   hours: number;
@@ -50,12 +51,12 @@ export class TrackingTimeControllerComponent {
 
   constructor(private state: RxState<State>) {
     this.state.connect(this.onAddSec$, (state, sec) => {
-      const currentSec = this.convertToSecFromTime(
+      const currentSec = convertToSecFromTime(
         state.hours,
         state.minutes,
         state.seconds
       );
-      const { hours, minutes, seconds } = this.convertToTimeFromSec(
+      const { hours, minutes, seconds } = convertToTimeFromSec(
         currentSec + sec
       );
       return {
@@ -66,12 +67,12 @@ export class TrackingTimeControllerComponent {
     });
 
     this.state.connect(this.onSubstractSec$, (state, sec) => {
-      const currentSec = this.convertToSecFromTime(
+      const currentSec = convertToSecFromTime(
         state.hours,
         state.minutes,
         state.seconds
       );
-      const { hours, minutes, seconds } = this.convertToTimeFromSec(
+      const { hours, minutes, seconds } = convertToTimeFromSec(
         currentSec - sec
       );
       return {
@@ -113,26 +114,5 @@ export class TrackingTimeControllerComponent {
       minutes: 0,
       seconds: 0,
     });
-  }
-
-  private convertToSecFromTime(
-    hours: number,
-    minutes: number,
-    seconds: number
-  ) {
-    return hours * 60 * 60 + minutes * 60 + seconds;
-  }
-
-  private convertToTimeFromSec(
-    sec: number
-  ): { hours: number; minutes: number; seconds: number } {
-    const hours = Math.trunc(sec / (60 * 60));
-    const minutes = Math.trunc((sec - hours * 60 * 60) / 60);
-    const seconds = sec - hours * 60 * 60 - minutes * 60;
-    return {
-      hours,
-      minutes,
-      seconds,
-    };
   }
 }

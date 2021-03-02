@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+} from '@angular/core';
 import { ChangedTimeEvent } from '../input-time/input-time.component';
 
 @Component({
@@ -9,8 +15,18 @@ import { ChangedTimeEvent } from '../input-time/input-time.component';
 })
 export class TrackingLogChangePopupComponent {
   @Input() triggerEl?: HTMLElement;
-
-  onChangedTime(time: ChangedTimeEvent) {
-    console.log('change time: ', time);
-  }
+  @Input() trackingTime: Time = {
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+  };
+  @Input() plannedTime?: Time;
+  @Output() changedTrackingTime = new EventEmitter<ChangedTimeEvent>();
+  @Output() changedPlannedTime = new EventEmitter<ChangedTimeEvent>();
 }
+
+export type Time = {
+  hours: number;
+  minutes: number;
+  seconds: number;
+};
