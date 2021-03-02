@@ -1,0 +1,48 @@
+<ng-container *ngIf="true">
+  <p class="text-s4 text-black-light2">作業時間</p>
+  <ui-input-time
+    class="mt-2"
+    [hours]="hours$ | async"
+    [minutes]="minutes$ | async"
+    [seconds]="seconds$ | async"
+    (changedTime)="onChangedInput$.next($event)"
+  ></ui-input-time>
+  <div class="mt-2 flex adjust-button-block">
+    <div>
+      <ui-adjust-button (click)="onSubstractSec$.next(60 * 5)">
+        <ui-icon [icon]="'minus'" [size]="'s'"></ui-icon>
+        5分
+      </ui-adjust-button>
+      <ui-adjust-button class="mt-1" (click)="onSubstractSec$.next(60 * 15)">
+        <ui-icon [icon]="'minus'" [size]="'s'"></ui-icon>
+        15分
+      </ui-adjust-button>
+      <ui-adjust-button class="mt-1" (click)="onSubstractSec$.next(60 * 30)">
+        <ui-icon [icon]="'minus'" [size]="'s'"></ui-icon>
+        30分
+      </ui-adjust-button>
+      <ui-adjust-button class="mt-1" (click)="onSubstractSec$.next(60 * 60)">
+        <ui-icon [icon]="'minus'" [size]="'s'"></ui-icon>
+        1時間
+      </ui-adjust-button>
+    </div>
+    <div class="ml-1">
+      <ui-adjust-button (click)="onAddSec$.next(60 * 5)">
+        <ui-icon [icon]="'plus'" [size]="'s'"></ui-icon>
+        5分
+      </ui-adjust-button>
+      <ui-adjust-button class="mt-1" (click)="onAddSec$.next(60 * 15)">
+        <ui-icon [icon]="'plus'" [size]="'s'"></ui-icon>
+        15分
+      </ui-adjust-button>
+      <ui-adjust-button class="mt-1" (click)="onAddSec$.next(60 * 30)">
+        <ui-icon [icon]="'plus'" [size]="'s'"></ui-icon>
+        30分
+      </ui-adjust-button>
+      <ui-adjust-button class="mt-1" (click)="onAddSec$.next(60 * 60)">
+        <ui-icon [icon]="'plus'" [size]="'s'"></ui-icon>
+        1時間
+      </ui-adjust-button>
+    </div>
+  </div>
+</ng-container>

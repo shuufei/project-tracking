@@ -1,0 +1,18 @@
+<ui-popup [triggerEl]="triggerEl">
+  <div class="flex">
+    <ui-tracking-time-controller
+      class="column"
+      [hours]="trackingTime.hours"
+      [minutes]="trackingTime.minutes"
+      [seconds]="trackingTime.seconds"
+      (changedTime)="changedTrackingTime.next($event)"
+    ></ui-tracking-time-controller>
+    <ui-planned-time-controller
+      class="ml-4 column"
+      [hours]="plannedTime?.hours"
+      [minutes]="plannedTime?.minutes"
+      [seconds]="plannedTime?.seconds"
+      (changedTime)="changedPlannedTime.next($event)"
+    ></ui-planned-time-controller>
+  </div>
+</ui-popup>

@@ -14,24 +14,30 @@ export class IconComponent {
 }
 
 export type IconSize = 'm' | 's';
-export type IconName =
-  | 'arrow-down'
-  | 'arrow-up'
-  | 'arrow-left'
-  | 'arrow-right'
-  | 'chevron-down'
-  | 'chevron-up'
-  | 'chevron-left'
-  | 'chevron-right'
-  | 'chevrons-down'
-  | 'chevrons-up'
-  | 'chevrons-left'
-  | 'chevrons-right'
-  | 'columns'
-  | 'more-horizontal'
-  | 'more-vertical'
-  | 'pause'
-  | 'play'
-  | 'user'
-  | 'calendar'
-  | 'check';
+
+export const Icons = [
+  'arrow-down',
+  'arrow-up',
+  'arrow-left',
+  'arrow-right',
+  'chevron-down',
+  'chevron-up',
+  'chevron-left',
+  'chevron-right',
+  'chevrons-down',
+  'chevrons-up',
+  'chevrons-left',
+  'chevrons-right',
+  'columns',
+  'more-horizontal',
+  'more-vertical',
+  'pause',
+  'play',
+  'user',
+  'calendar',
+  'check',
+  'x-circle',
+  'plus',
+  'minus',
+] as const;
+export type IconName = typeof Icons;
