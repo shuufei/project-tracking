@@ -203,7 +203,7 @@ export class InputTimeComponent {
   ) {
     if (inputedValue != null && this.isOneDigit(value)) {
       return `0${value}`;
-    } else if (value >= maxValue) {
+    } else if (value > maxValue) {
       return `0${inputedValue}`;
     } else if (value < 0) {
       return '00';
