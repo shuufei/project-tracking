@@ -9,6 +9,7 @@ import { PopupModule } from './popup/popup.module';
 import { ProjectBoardSelectPopupModule } from './project-board-select-popup/project-board-select-popup.module';
 import { SelectItemModule } from './select-item/select-item.module';
 import { StatusSelectPopupModule } from './status-select-popup/status-select-popup.module';
+import { TooltipModule } from './tooltip/tooltip.module';
 import { TrackingLogChangePopupModule } from './tracking-log-change-popup/tracking-log-change-popup.module';
 
 @NgModule({
@@ -24,6 +25,8 @@ import { TrackingLogChangePopupModule } from './tracking-log-change-popup/tracki
     ColorIconModule,
     SelectItemModule,
     ProjectBoardSelectPopupModule,
+    TooltipModule,
   ],
+  declarations: [],
 })
 export class SharedUiModule {}

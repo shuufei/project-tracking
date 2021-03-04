@@ -1,0 +1,54 @@
+:host {
+  display: inline-block;
+  position: relative;
+  cursor: pointer;
+}
+
+:host:hover {
+  .tooltip {
+    display: inline-block;
+  }
+}
+
+.tooltip {
+  height: min-content;
+  white-space: nowrap;
+  display: none;
+  position: absolute;
+
+  &.left {
+    top: 0;
+    left: 0;
+    transform: translateX(calc(-100% - 6px));
+  }
+
+  &.right {
+    top: 0;
+    right: 0;
+    transform: translateX(calc(100% + 6px));
+  }
+
+  &.bottom-left {
+    bottom: 0;
+    left: 0;
+    transform: translateY(calc(100% + 6px));
+  }
+
+  &.bottom-right {
+    bottom: 0;
+    right: 0;
+    transform: translateY(calc(100% + 6px));
+  }
+
+  &.top-left {
+    top: 0;
+    left: 0;
+    transform: translateY(calc(-100% - 6px));
+  }
+
+  &.top-right {
+    top: 0;
+    right: 0;
+    transform: translateY(calc(-100% - 6px));
+  }
+}
