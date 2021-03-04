@@ -10,7 +10,7 @@ export const Default = () => ({
   },
   template: `
     <button #triggerEl class="text-s1">open</button>
-    <ui-color-select-popup [triggerEl]="triggerEl"><ui-color-select-popup>
+    <ui-color-select-popup [triggerEl]="triggerEl"></ui-color-select-popup>
   `,
   props: {},
 });
