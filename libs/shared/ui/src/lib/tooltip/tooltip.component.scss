@@ -15,6 +15,7 @@
   white-space: nowrap;
   display: none;
   position: absolute;
+  z-index: 999;
 
   &.left {
     top: 0;
