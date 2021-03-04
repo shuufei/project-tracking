@@ -1,0 +1,14 @@
+:host {
+  display: block;
+}
+
+.select-item {
+  width: 160px;
+}
+
+.select-item-text {
+  text-overflow: ellipsis;
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+}
