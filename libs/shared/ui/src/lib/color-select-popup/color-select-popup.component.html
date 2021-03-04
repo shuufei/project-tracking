@@ -1,0 +1,15 @@
+<ui-popup [triggerEl]="triggerEl">
+  <ng-container *ngFor="let color of colors; index as i">
+    <ui-select-item
+      class="select-item cursor-pointer"
+      [ngClass]="{ 'mt-1': i !== 0 }"
+      [selected]="(currentColor$ | async) === color"
+      (click)="onClickedColor$.next(color)"
+    >
+      <p class="flex items-center">
+        <ui-color-icon class="w-4 h-4" [color]="color"></ui-color-icon>
+        <span class="ml-2">{{ colorNames[color] }}</span>
+      </p>
+    </ui-select-item>
+  </ng-container>
+</ui-popup>

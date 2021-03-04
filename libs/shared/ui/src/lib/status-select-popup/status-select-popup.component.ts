@@ -34,7 +34,7 @@ export class StatusSelectPopupComponent {
   }
   @Output() changedStatus = new EventEmitter<Status>();
 
-  currentStatus$ = this.state.select('currentStatus');
+  readonly currentStatus$ = this.state.select('currentStatus');
 
   readonly onClickedStatus$ = new Subject<Status>();
 
