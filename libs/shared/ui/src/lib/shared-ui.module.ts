@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ButtonModule } from './button/button.module';
 import { ColorIconModule } from './color-icon/color-icon.module';
+import { ColorSelectPopupModule } from './color-select-popup/color-select-popup.module';
 import { IconModule } from './icon/icon.module';
 import { InputTimeModule } from './input-time/input-time.module';
 import { NavigationModule } from './navigation/navigation.module';
@@ -26,7 +27,7 @@ import { TrackingLogChangePopupModule } from './tracking-log-change-popup/tracki
     SelectItemModule,
     ProjectBoardSelectPopupModule,
     TooltipModule,
+    ColorSelectPopupModule,
   ],
-  declarations: [],
 })
 export class SharedUiModule {}
