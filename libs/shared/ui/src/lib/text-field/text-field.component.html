@@ -1,4 +1,9 @@
 <ng-container *ngIf="icon">
   <ui-icon [icon]="icon" [size]="'s'" class="mr-2"></ui-icon>
 </ng-container>
-<input type="text" class="outline-none w-full" [formControl]="textFormCtrl" />
+<input
+  type="text"
+  class="outline-none w-full"
+  [placeholder]="placeholder"
+  [formControl]="textFormCtrl"
+/>

@@ -27,6 +27,7 @@ export class TextFieldComponent implements OnInit {
     this.textFormCtrl.setValue(value, { emitEvent: false });
   }
   @Input() icon?: IconName;
+  @Input() placeholder = '';
   @Output() changedValue = new EventEmitter<string>();
 
   readonly textFormCtrl = new FormControl('');
