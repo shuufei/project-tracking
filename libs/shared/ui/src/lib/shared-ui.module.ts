@@ -12,6 +12,7 @@ import { SelectItemModule } from './select-item/select-item.module';
 import { StatusSelectPopupModule } from './status-select-popup/status-select-popup.module';
 import { TooltipModule } from './tooltip/tooltip.module';
 import { TrackingLogChangePopupModule } from './tracking-log-change-popup/tracking-log-change-popup.module';
+import { UserIconListModule } from './user-icon-list/user-icon-list.module';
 import { UserIconModule } from './user-icon/user-icon.module';
 
 @NgModule({
@@ -30,6 +31,7 @@ import { UserIconModule } from './user-icon/user-icon.module';
     TooltipModule,
     ColorSelectPopupModule,
     UserIconModule,
+    UserIconListModule,
   ],
 })
 export class SharedUiModule {}

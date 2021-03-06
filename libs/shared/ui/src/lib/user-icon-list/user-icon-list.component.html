@@ -1,0 +1,10 @@
+<ng-container *ngFor="let src of srcList; index as i">
+  <ui-user-icon
+    class="relative"
+    [src]="src"
+    [style.width]="size + 'px'"
+    [style.height]="size + 'px'"
+    [style.zIndex]="srcList.length - i"
+    [style.transform]="'translateX(' + -8 * i + 'px)'"
+  ></ui-user-icon>
+</ng-container>
