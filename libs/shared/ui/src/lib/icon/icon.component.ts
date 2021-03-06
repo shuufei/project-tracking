@@ -43,5 +43,6 @@ export const Icons = [
   'x-circle',
   'plus',
   'minus',
+  'search',
 ] as const;
 export type IconName = typeof Icons;
