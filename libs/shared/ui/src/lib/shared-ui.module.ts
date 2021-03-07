@@ -10,8 +10,12 @@ import { PopupModule } from './popup/popup.module';
 import { ProjectBoardSelectPopupModule } from './project-board-select-popup/project-board-select-popup.module';
 import { SelectItemModule } from './select-item/select-item.module';
 import { StatusSelectPopupModule } from './status-select-popup/status-select-popup.module';
+import { TextFieldModule } from './text-field/text-field.module';
 import { TooltipModule } from './tooltip/tooltip.module';
 import { TrackingLogChangePopupModule } from './tracking-log-change-popup/tracking-log-change-popup.module';
+import { UserIconListModule } from './user-icon-list/user-icon-list.module';
+import { UserIconModule } from './user-icon/user-icon.module';
+import { UserSelectPopupModule } from './user-select-popup/user-select-popup.module';
 
 @NgModule({
   imports: [
@@ -28,6 +32,10 @@ import { TrackingLogChangePopupModule } from './tracking-log-change-popup/tracki
     ProjectBoardSelectPopupModule,
     TooltipModule,
     ColorSelectPopupModule,
+    UserIconModule,
+    UserIconListModule,
+    TextFieldModule,
+    UserSelectPopupModule,
   ],
 })
 export class SharedUiModule {}

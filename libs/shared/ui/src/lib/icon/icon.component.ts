@@ -11,6 +11,10 @@ export class IconComponent {
   @Input() size: IconSize = 'm';
   @Input() icon!: IconName;
   @Input() color: Color = 'basic';
+
+  get src() {
+    return `assets/feather-sprite.svg#${this.icon}`;
+  }
 }
 
 export type IconSize = 'm' | 's';
@@ -39,5 +43,6 @@ export const Icons = [
   'x-circle',
   'plus',
   'minus',
+  'search',
 ] as const;
 export type IconName = typeof Icons;
