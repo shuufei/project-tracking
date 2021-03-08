@@ -9,7 +9,7 @@ import { RxState } from '@rx-angular/state';
 import { Subject } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 import { ChangedTimeEvent } from '../../input-time/input-time.component';
-import { convertToTimeFromSec } from '../convert-time';
+import { convertToTimeFromSec } from '../../utils/convert-time';
 
 type State = {
   hours: number;
