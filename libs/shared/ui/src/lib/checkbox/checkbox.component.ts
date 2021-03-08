@@ -35,7 +35,7 @@ export class CheckboxComponent implements OnInit, OnDestroy {
   private readonly onDestroy$ = new Subject<void>();
 
   ngOnInit() {
-    this.emitCheckHandler$.pipe(takeUntil(this.onDestroy$));
+    this.emitCheckHandler$.pipe(takeUntil(this.onDestroy$)).subscribe();
   }
 
   ngOnDestroy(): void {
