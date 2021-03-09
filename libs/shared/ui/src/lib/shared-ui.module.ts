@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ButtonModule } from './button/button.module';
+import { CheckboxModule } from './checkbox/checkbox.module';
 import { ColorIconModule } from './color-icon/color-icon.module';
 import { ColorSelectPopupModule } from './color-select-popup/color-select-popup.module';
 import { IconModule } from './icon/icon.module';
@@ -40,6 +41,7 @@ import { UserSelectPopupModule } from './user-select-popup/user-select-popup.mod
     UserSelectPopupModule,
     SubtaskModule,
     TimeLabelModule,
+    CheckboxModule,
   ],
 })
 export class SharedUiModule {}

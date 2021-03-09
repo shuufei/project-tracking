@@ -1,0 +1,19 @@
+:host {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px;
+  border-radius: var(--bison-radius-s);
+  background-color: var(--bison-white);
+  &:hover {
+    background-color: var(--bison-primary-light3);
+  }
+}
+
+.strikethrought {
+  text-decoration-line: line-through;
+}
+
+.visibility-hidden {
+  visibility: hidden;
+}
