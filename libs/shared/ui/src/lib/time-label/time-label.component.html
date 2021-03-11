@@ -1,0 +1,22 @@
+<ng-container *ngIf="status$ | async as status">
+  <div
+    class="inline-block text-s2 rounded-s p-1 time-label font-medium"
+    [ngClass]="[
+      status === 'editable'
+        ? 'text-black-default bg-primary-light3'
+        : status === 'readonly'
+        ? 'text-black-light2 bg-white'
+        : status === 'tracking'
+        ? 'text-white bg-primary-default'
+        : 'hoge'
+    ]"
+  >
+    <span>{{ hours$ | async | number: '2.0-2' }}</span>
+    <span class="colon">:</span>
+    <span>{{ minutes$ | async | number: '2.0-2' }}</span>
+    <ng-container *ngIf="isShowSec$ | async">
+      <span class="colon">:</span>
+      <span>{{ seconds$ | async | number: '2.0-2' }}</span>
+    </ng-container>
+  </div>
+</ng-container>

@@ -10,7 +10,7 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { BehaviorSubject, fromEvent, Subject } from 'rxjs';
+import { BehaviorSubject, fromEvent, merge, Subject } from 'rxjs';
 import { filter, takeUntil, tap } from 'rxjs/operators';
 
 @Component({
@@ -27,6 +27,23 @@ export class PopupComponent implements OnInit, OnDestroy {
 
   private readonly onDestroy$ = new Subject<void>();
 
+  private readonly changePopupPositionHandler$ = this.isOpen$.pipe(
+    filter((isOpen) => isOpen),
+    tap(() => {
+      if (this.triggerEl === undefined) {
+        return;
+      }
+      const triggerRect = this.triggerEl.getBoundingClientRect();
+      const leftSpace = triggerRect.x;
+      // TODO: windowをDI経由で利用するようにする
+      const rightSpace =
+        window.innerWidth - (triggerRect.x + triggerRect.width);
+      (this.elementRef.nativeElement as HTMLElement).style[
+        leftSpace > rightSpace ? 'right' : 'left'
+      ] = '0';
+    })
+  );
+
   constructor(
     private elementRef: ElementRef,
     private zone: NgZone,
@@ -37,6 +54,9 @@ export class PopupComponent implements OnInit, OnDestroy {
     if (this.triggerEl == null) {
       throw new Error('trigger element is undefined.');
     }
+    merge(this.changePopupPositionHandler$)
+      .pipe(takeUntil(this.onDestroy$))
+      .subscribe();
     this.enableOpenPopupHandler();
     this.enableClosePopupHandler();
   }

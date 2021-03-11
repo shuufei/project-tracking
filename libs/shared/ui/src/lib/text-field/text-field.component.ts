@@ -24,6 +24,9 @@ type State = {
 export class TextFieldComponent implements OnInit {
   @Input()
   set text(value: string) {
+    if (value === this.textFormCtrl.value) {
+      return;
+    }
     this.textFormCtrl.setValue(value, { emitEvent: false });
   }
   @Input() icon?: IconName;
