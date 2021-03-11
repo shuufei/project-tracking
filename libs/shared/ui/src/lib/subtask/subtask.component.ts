@@ -187,7 +187,7 @@ export class SubtaskComponent implements OnInit, AfterViewInit {
       switchMap((status) => (status === COMPOSITION_END ? onEnter$ : EMPTY))
     );
 
-    this.state.hold(onInputComplete$, (e) => {
+    this.state.hold(onInputComplete$, () => {
       this.changedTitle.emit(this.state.get('title'));
     });
   }
