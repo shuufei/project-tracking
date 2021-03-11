@@ -23,6 +23,7 @@ export function iconsPath(name: string): string {
     CheckboxModule,
     TimeLabelModule,
     TrackingLogChangePopupModule,
+    TextFieldModule,
   ],
   exports: [SubtaskComponent],
 })

@@ -1,20 +1,34 @@
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   EventEmitter,
   Input,
   OnInit,
   Output,
+  ViewChild,
 } from '@angular/core';
 import { RxState } from '@rx-angular/state';
-import { combineLatest, Observable, Subject } from 'rxjs';
-import { filter, map, startWith } from 'rxjs/operators';
+import {
+  combineLatest,
+  EMPTY,
+  fromEvent,
+  merge,
+  Observable,
+  Subject,
+} from 'rxjs';
+import { filter, map, mapTo, startWith, switchMap } from 'rxjs/operators';
 import { ChangedTimeEvent } from '../input-time/input-time.component';
 import { Status } from '../time-label/time-label.component';
 import {
   convertToSecFromTime,
   convertToTimeFromSec,
 } from '../utils/convert-time';
+
+const COMPOSITION_START = 'start' as const;
+const COMPOSITION_END = 'end' as const;
+type CompositionStatus = typeof COMPOSITION_START | typeof COMPOSITION_END;
 
 type State = {
   title: string;
@@ -33,7 +47,7 @@ type State = {
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [RxState],
 })
-export class SubtaskComponent implements OnInit {
+export class SubtaskComponent implements OnInit, AfterViewInit {
   @Input()
   set title(value: string) {
     this.state.set('title', () => value);
@@ -68,6 +82,7 @@ export class SubtaskComponent implements OnInit {
   @Output() clickedPause = new EventEmitter<void>();
   @Output() changedTrackingTimeSec = new EventEmitter<number>();
   @Output() changedPlannedTimeSec = new EventEmitter<number>();
+  @ViewChild('titleField', { read: ElementRef }) titleField?: ElementRef;
 
   // State
   readonly state$ = this.state.select();
@@ -103,6 +118,7 @@ export class SubtaskComponent implements OnInit {
   readonly onChangedSelfPlannedTime$ = new Subject<ChangedTimeEvent>();
   readonly onClickedPlay$ = new Subject<void>();
   readonly onClickedPause$ = new Subject<void>();
+  readonly onChangedTitle$ = new Subject<State['title']>();
 
   constructor(private state: RxState<State>) {
     this.state.set({
@@ -125,6 +141,7 @@ export class SubtaskComponent implements OnInit {
       this.onChangedSelfPlannedTime$,
       (_, time) => convertToSecFromTime(time.hours, time.minutes, time.seconds)
     );
+    this.state.connect('title', this.onChangedTitle$);
     this.state.hold(this.onClickedPlay$, () => {
       this.clickedPlay.emit();
     });
@@ -139,6 +156,39 @@ export class SubtaskComponent implements OnInit {
     });
     this.state.hold(this.state.select('selfPlannedTimeSec'), (sec) => {
       this.changedPlannedTimeSec.emit(sec);
+    });
+  }
+
+  ngAfterViewInit() {
+    this.setEmitChangedTitleHandler();
+  }
+
+  private setEmitChangedTitleHandler() {
+    if (this.titleField === undefined) {
+      return;
+    }
+    // テキスト変換中ステータス
+    const compositionStatus$: Observable<CompositionStatus> = merge(
+      fromEvent(this.titleField.nativeElement, 'compositionstart').pipe(
+        mapTo(COMPOSITION_START)
+      ),
+      fromEvent(this.titleField.nativeElement, 'compositionend').pipe(
+        mapTo(COMPOSITION_END)
+      )
+    );
+    // Enterキー押下イベント
+    const onEnter$ = fromEvent<KeyboardEvent>(
+      this.titleField.nativeElement as HTMLElement,
+      'keydown'
+    ).pipe(filter((event) => event.code === 'Enter'));
+    // 入力完了イベント。テキスト変換が完了した状態でEnterキーが押下された場合に発火する
+    const onInputComplete$ = compositionStatus$.pipe(
+      startWith(COMPOSITION_END),
+      switchMap((status) => (status === COMPOSITION_END ? onEnter$ : EMPTY))
+    );
+
+    this.state.hold(onInputComplete$, (e) => {
+      this.changedTitle.emit(this.state.get('title'));
     });
   }
 }

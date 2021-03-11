@@ -44,7 +44,7 @@ export const Editing = () => ({
     imports: [SubtaskModule],
   },
   template: `
-    <ui-subtask [isEditing]="isEditing"></ui-subtask>
+    <ui-subtask [isEditing]="isEditing" title="subtask"></ui-subtask>
   `,
   props: {
     isEditing: true,

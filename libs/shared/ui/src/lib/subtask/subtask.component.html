@@ -1,58 +1,71 @@
 <ng-container *ngIf="state$ | async as state">
-  <div class="flex items-center">
+  <div class="flex items-center w-full">
     <ui-checkbox
       [checked]="state.done"
       (changedCheck)="onChangedChecked$.next($event)"
     ></ui-checkbox>
-    <span
-      class="text-s2 text-black-default ml-2"
-      [ngClass]="[state.done ? 'strikethrought text-black-light2' : '']"
-      >subtask</span
-    >
-  </div>
 
-  <div class="flex items-center">
-    <ng-container *ngIf="(trackingTimeSec$ | async) !== undefined">
-      <ng-container *ngIf="timeLabelStatus$ | async as status">
-        <div #trigger>
-          <ui-time-label
-            [ngClass]="[
-              status !== 'readonly'
-                ? 'rounded-s hover:shadow-outline_primary cursor-pointer'
-                : ''
-            ]"
-            [status]="status"
-            [sec]="trackingTimeSec$ | async"
-          ></ui-time-label>
-          <ng-container *ngIf="status !== 'readonly'">
-            <ui-tracking-log-change-popup
-              class="a relative"
-              [triggerEl]="trigger"
-              [trackingTime]="selfTrackingTime$ | async"
-              [plannedTime]="selfPlannedTime$ | async"
-              (changedTrackingTime)="onChangedSelfTrackingTime$.next($event)"
-              (changedPlannedTime)="onChangedSelfPlannedTime$.next($event)"
-            ></ui-tracking-log-change-popup>
-          </ng-container>
-        </div>
-      </ng-container>
+    <ng-container *ngIf="!state.isEditing; else editing">
+      <span
+        class="text-s2 text-black-default ml-2"
+        [ngClass]="[state.done ? 'strikethrought text-black-light2' : '']"
+        >subtask</span
+      >
     </ng-container>
-
-    <ng-container *ngIf="state.isTracking; else isPause">
-      <ui-icon
-        class="cursor-pointer ml-2"
-        [ngClass]="state.done ? 'visibility-hidden' : ''"
-        [icon]="'pause'"
-        [size]="'s'"
-      ></ui-icon>
-    </ng-container>
-    <ng-template #isPause>
-      <ui-icon
-        class="cursor-pointer ml-2"
-        [ngClass]="state.done ? 'visibility-hidden' : ''"
-        [icon]="'play'"
-        [size]="'s'"
-      ></ui-icon>
+    <ng-template #editing>
+      <ui-text-field
+        #titleField
+        class="ml-2 w-full"
+        [text]="state.title"
+        (changedValue)="onChangedTitle$.next($event)"
+      ></ui-text-field>
     </ng-template>
   </div>
+
+  <ng-container *ngIf="!state.isEditing">
+    <div class="flex items-center">
+      <ng-container *ngIf="(trackingTimeSec$ | async) !== undefined">
+        <ng-container *ngIf="timeLabelStatus$ | async as status">
+          <div #trigger>
+            <ui-time-label
+              [ngClass]="[
+                status !== 'readonly'
+                  ? 'rounded-s hover:shadow-outline_primary cursor-pointer'
+                  : ''
+              ]"
+              [status]="status"
+              [sec]="trackingTimeSec$ | async"
+            ></ui-time-label>
+            <ng-container *ngIf="status !== 'readonly'">
+              <ui-tracking-log-change-popup
+                class="a relative"
+                [triggerEl]="trigger"
+                [trackingTime]="selfTrackingTime$ | async"
+                [plannedTime]="selfPlannedTime$ | async"
+                (changedTrackingTime)="onChangedSelfTrackingTime$.next($event)"
+                (changedPlannedTime)="onChangedSelfPlannedTime$.next($event)"
+              ></ui-tracking-log-change-popup>
+            </ng-container>
+          </div>
+        </ng-container>
+      </ng-container>
+
+      <ng-container *ngIf="state.isTracking; else isPause">
+        <ui-icon
+          class="cursor-pointer ml-2"
+          [ngClass]="state.done ? 'visibility-hidden' : ''"
+          [icon]="'pause'"
+          [size]="'s'"
+        ></ui-icon>
+      </ng-container>
+      <ng-template #isPause>
+        <ui-icon
+          class="cursor-pointer ml-2"
+          [ngClass]="state.done ? 'visibility-hidden' : ''"
+          [icon]="'play'"
+          [size]="'s'"
+        ></ui-icon>
+      </ng-template>
+    </div>
+  </ng-container>
 </ng-container>
