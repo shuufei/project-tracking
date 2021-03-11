@@ -35,6 +35,7 @@ export class PopupComponent implements OnInit, OnDestroy {
       }
       const triggerRect = this.triggerEl.getBoundingClientRect();
       const leftSpace = triggerRect.x;
+      // TODO: windowをDI経由で利用するようにする
       const rightSpace =
         window.innerWidth - (triggerRect.x + triggerRect.width);
       (this.elementRef.nativeElement as HTMLElement).style[

@@ -74,6 +74,7 @@ export class SubtaskComponent implements OnInit, AfterViewInit {
   }
   @Input()
   set isEditing(value: boolean) {
+    // TODO: 編集モードとそれ以外の状態とでコンポーネントを分割したい
     this.state.set('isEditing', () => value);
   }
   @Output() changedTitle = new EventEmitter<string>();
@@ -175,7 +176,7 @@ export class SubtaskComponent implements OnInit, AfterViewInit {
       fromEvent(this.titleField.nativeElement, 'compositionend').pipe(
         mapTo(COMPOSITION_END)
       )
-    );
+    ).pipe(startWith(COMPOSITION_END));
     // Enterキー押下イベント
     const onEnter$ = fromEvent<KeyboardEvent>(
       this.titleField.nativeElement as HTMLElement,
@@ -183,7 +184,6 @@ export class SubtaskComponent implements OnInit, AfterViewInit {
     ).pipe(filter((event) => event.code === 'Enter'));
     // 入力完了イベント。テキスト変換が完了した状態でEnterキーが押下された場合に発火する
     const onInputComplete$ = compositionStatus$.pipe(
-      startWith(COMPOSITION_END),
       switchMap((status) => (status === COMPOSITION_END ? onEnter$ : EMPTY))
     );
 
