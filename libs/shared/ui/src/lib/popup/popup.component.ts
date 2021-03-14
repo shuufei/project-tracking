@@ -21,6 +21,7 @@ import { filter, takeUntil, tap } from 'rxjs/operators';
 })
 export class PopupComponent implements OnInit, OnDestroy {
   @Input() triggerEl?: HTMLElement;
+  @Input() isCloseWhenPopupAction = false;
   @Output() closed = new EventEmitter<void>();
 
   readonly isOpen$ = new BehaviorSubject<boolean>(false);
@@ -89,7 +90,10 @@ export class PopupComponent implements OnInit, OnDestroy {
             const isTriggerCliked = this.triggerEl?.contains(
               event.target as Node
             );
-            return !isHostClicked && !isTriggerCliked;
+            return (
+              (this.isCloseWhenPopupAction ? true : !isHostClicked) &&
+              !isTriggerCliked
+            );
           }),
           tap(() => {
             this.isOpen$.next(false);

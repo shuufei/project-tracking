@@ -1,0 +1,54 @@
+<ng-container *ngIf="state$ | async as state">
+  <div class="task-card-content">
+    <div class="flex justify-between items-center px-3 pt-2">
+      <span class="text-s2 text-black-default font-medium">{{
+        state.title
+      }}</span>
+      <ui-menu-popup
+        class="menu"
+        [isTaskCardHover]="state.isHover"
+      ></ui-menu-popup>
+    </div>
+
+    <div class="py-1 px-3">
+      <ng-content></ng-content>
+    </div>
+  </div>
+
+  <ng-container
+    *ngIf="
+      state.selfTrackingTimeSec !== undefined ||
+      state.otherTrackingTimeSec !== undefined ||
+      state.plannedTimeSec !== undefined
+    "
+  >
+    <hr class="bg-primary-light3" />
+    <div class="flex items-center justify-between py-2 px-3">
+      <ui-icon
+        [icon]="'clock'"
+        [size]="'s'"
+        [color]="'primary-light2'"
+      ></ui-icon>
+      <div class="flex items-center">
+        <ng-container *ngIf="state.otherTrackingTimeSec !== undefined">
+          <ui-time-label
+            [status]="'readonly'"
+            [sec]="state.otherTrackingTimeSec"
+          ></ui-time-label>
+        </ng-container>
+        <ng-container
+          *ngIf="state.selfTrackingTimeSec !== undefined || state.isTracking"
+        >
+          <ui-tracking-log-change-controller
+            class="ml-2"
+            [trackingTimeSec]="state.selfTrackingTimeSec || 0"
+            [plannedTimeSec]="state.plannedTimeSec || 0"
+            [isTracking]="state.isTracking"
+            (changedTrackingTimeSec)="onChangedTrackingTimeSec$.next($event)"
+            (changedPlannedTimeSec)="onChangedPlannedTimeSec$.next($event)"
+          ></ui-tracking-log-change-controller>
+        </ng-container>
+      </div>
+    </div>
+  </ng-container>
+</ng-container>

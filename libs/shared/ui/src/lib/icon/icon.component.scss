@@ -34,6 +34,9 @@
 .primary-light1 {
   stroke: var(--bison-primary-light1);
 }
+.primary-light2 {
+  stroke: var(--bison-primary-light2);
+}
 .success {
   stroke: var(--bison-success-default);
 }
@@ -51,10 +54,36 @@
   &.primary {
     fill: var(--bison-primary-default);
   }
+  .primary-light1 {
+    fill: var(--bison-primary-light1);
+  }
+  .primary-light2 {
+    fill: var(--bison-primary-light2);
+  }
   &.success {
     fill: var(--bison-success-default);
   }
   &.warn {
     fill: var(--bison-warn-default);
   }
+}
+
+// hover-color
+.hover-basic:hover {
+  stroke: var(--bison-black-default);
+}
+.hover-primary:hover {
+  stroke: var(--bison-primary-default);
+}
+.hover-primary-light1:hover {
+  stroke: var(--bison-primary-light1);
+}
+.hover-primary-light2:hover {
+  stroke: var(--bison-primary-light2);
+}
+.hover-success:hover {
+  stroke: var(--bison-success-default);
+}
+.hover-warn:hover {
+  stroke: var(--bison-warn-default);
 }
