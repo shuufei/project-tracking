@@ -10,21 +10,8 @@ import {
   ViewChild,
 } from '@angular/core';
 import { RxState } from '@rx-angular/state';
-import {
-  combineLatest,
-  EMPTY,
-  fromEvent,
-  merge,
-  Observable,
-  Subject,
-} from 'rxjs';
-import { filter, map, mapTo, startWith, switchMap } from 'rxjs/operators';
-import { ChangedTimeEvent } from '../input-time/input-time.component';
-import { Status } from '../time-label/time-label.component';
-import {
-  convertToSecFromTime,
-  convertToTimeFromSec,
-} from '../utils/convert-time';
+import { EMPTY, fromEvent, merge, Observable, Subject } from 'rxjs';
+import { filter, mapTo, startWith, switchMap } from 'rxjs/operators';
 
 const COMPOSITION_START = 'start' as const;
 const COMPOSITION_END = 'end' as const;
@@ -87,36 +74,11 @@ export class SubtaskComponent implements OnInit, AfterViewInit {
 
   // State
   readonly state$ = this.state.select();
-  readonly trackingTimeSec$: Observable<number | undefined> = combineLatest([
-    this.state.select('selfTrackingTimeSec').pipe(startWith(undefined)),
-    this.state.select('otherTrackingTimeSec').pipe(startWith(undefined)),
-  ]).pipe(map(([self, other]) => (self !== undefined ? self : other)));
-  readonly timeLabelStatus$: Observable<Status> = combineLatest([
-    this.state.select('isTracking'),
-    this.state.select('selfTrackingTimeSec').pipe(startWith(undefined)),
-    this.state.select('otherTrackingTimeSec').pipe(startWith(undefined)),
-  ]).pipe(
-    map(([isTracking, selfTrackingTimeSec]) => {
-      return isTracking
-        ? 'tracking'
-        : selfTrackingTimeSec !== undefined
-        ? 'editable'
-        : 'readonly';
-    })
-  );
-  readonly selfTrackingTime$ = this.state.select('selfTrackingTimeSec').pipe(
-    filter((v): v is number => v !== undefined),
-    map((sec) => convertToTimeFromSec(sec))
-  );
-  readonly selfPlannedTime$ = this.state.select('selfPlannedTimeSec').pipe(
-    filter((v): v is number => v !== undefined),
-    map((sec) => convertToTimeFromSec(sec))
-  );
 
   // Events
   readonly onChangedChecked$ = new Subject<boolean>();
-  readonly onChangedSelfTrackingTime$ = new Subject<ChangedTimeEvent>();
-  readonly onChangedSelfPlannedTime$ = new Subject<ChangedTimeEvent>();
+  readonly onChangedSelfTrackingTimeSec$ = new Subject<number>();
+  readonly onChangedSelfPlannedTimeSec$ = new Subject<number>();
   readonly onClickedPlay$ = new Subject<void>();
   readonly onClickedPause$ = new Subject<void>();
   readonly onChangedTitle$ = new Subject<State['title']>();
@@ -134,14 +96,9 @@ export class SubtaskComponent implements OnInit, AfterViewInit {
     this.state.connect('done', this.onChangedChecked$);
     this.state.connect(
       'selfTrackingTimeSec',
-      this.onChangedSelfTrackingTime$,
-      (_, time) => convertToSecFromTime(time.hours, time.minutes, time.seconds)
+      this.onChangedSelfTrackingTimeSec$
     );
-    this.state.connect(
-      'selfPlannedTimeSec',
-      this.onChangedSelfPlannedTime$,
-      (_, time) => convertToSecFromTime(time.hours, time.minutes, time.seconds)
-    );
+    this.state.connect('selfPlannedTimeSec', this.onChangedSelfPlannedTimeSec$);
     this.state.connect('title', this.onChangedTitle$);
     this.state.hold(this.onClickedPlay$, () => {
       this.clickedPlay.emit();

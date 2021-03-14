@@ -24,30 +24,25 @@
 
   <ng-container *ngIf="!state.isEditing">
     <div class="flex items-center">
-      <ng-container *ngIf="(trackingTimeSec$ | async) !== undefined">
-        <ng-container *ngIf="timeLabelStatus$ | async as status">
-          <div #trigger>
-            <ui-time-label
-              [ngClass]="[
-                status !== 'readonly'
-                  ? 'rounded-s hover:shadow-outline_primary cursor-pointer'
-                  : ''
-              ]"
-              [status]="status"
-              [sec]="trackingTimeSec$ | async"
-            ></ui-time-label>
-            <ng-container *ngIf="status !== 'readonly'">
-              <ui-tracking-log-change-popup
-                class="a relative"
-                [triggerEl]="trigger"
-                [trackingTime]="selfTrackingTime$ | async"
-                [plannedTime]="selfPlannedTime$ | async"
-                (changedTrackingTime)="onChangedSelfTrackingTime$.next($event)"
-                (changedPlannedTime)="onChangedSelfPlannedTime$.next($event)"
-              ></ui-tracking-log-change-popup>
-            </ng-container>
-          </div>
-        </ng-container>
+      <ng-container *ngIf="state.selfTrackingTimeSec !== undefined">
+        <ui-tracking-log-change-controller
+          [trackingTimeSec]="state.selfTrackingTimeSec"
+          [plannedTimeSec]="state.selfPlannedTimeSec"
+          [isTracking]="state.isTracking"
+          (changedTrackingTimeSec)="onChangedSelfTrackingTimeSec$.next($event)"
+          (changedPlannedTimeSec)="onChangedSelfPlannedTimeSec$.next($event)"
+        ></ui-tracking-log-change-controller>
+      </ng-container>
+      <ng-container
+        *ngIf="
+          state.selfTrackingTimeSec === undefined &&
+          state.otherTrackingTimeSec !== undefined
+        "
+      >
+        <ui-time-label
+          [status]="'readonly'"
+          [sec]="state.otherTrackingTimeSec"
+        ></ui-time-label>
       </ng-container>
 
       <ng-container *ngIf="state.isTracking; else isPause">
