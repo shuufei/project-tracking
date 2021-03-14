@@ -1,0 +1,17 @@
+<ng-container *ngIf="state$ | async as state">
+  <div #trigger class="inline-block">
+    <ui-time-label
+      class="rounded-s hover:shadow-outline_primary cursor-pointer"
+      [status]="state.isTracking ? 'tracking' : 'editable'"
+      [sec]="state.trackingTimeSec"
+    ></ui-time-label>
+    <ui-tracking-log-change-popup
+      class="relative"
+      [triggerEl]="trigger"
+      [trackingTime]="trackingTime$ | async"
+      [plannedTime]="plannedTime$ | async"
+      (changedTrackingTime)="onChangedTrackingTime$.next($event)"
+      (changedPlannedTime)="onChangedPlannedTime$.next($event)"
+    ></ui-tracking-log-change-popup>
+  </div>
+</ng-container>
