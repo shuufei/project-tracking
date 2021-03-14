@@ -11,9 +11,14 @@ export class IconComponent {
   @Input() size: IconSize = 'm';
   @Input() icon!: IconName;
   @Input() color: Color = 'basic';
+  @Input() hoverColor?: Color;
 
   get src() {
     return `assets/feather-sprite.svg#${this.icon}`;
+  }
+
+  get hoverColorClass() {
+    return this.hoverColor !== undefined ? `hover-${this.hoverColor}` : '';
   }
 }
 
@@ -44,5 +49,9 @@ export const Icons = [
   'plus',
   'minus',
   'search',
+  'edit-2',
+  'tag',
+  'clock',
+  'trash-2',
 ] as const;
 export type IconName = typeof Icons;

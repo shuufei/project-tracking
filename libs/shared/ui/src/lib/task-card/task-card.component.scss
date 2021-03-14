@@ -1,0 +1,17 @@
+:host {
+  display: block;
+  background-color: var(--bison-white);
+  border-radius: var(--bison-radius-s);
+  box-shadow: var(--bison-box-shadow-s);
+  border: solid 1px var(--bison-primary-light3);
+  transition: 0.2s ease-out;
+  min-height: 48px;
+  &:hover {
+    cursor: pointer;
+    box-shadow: var(--bison-box-shadow-m);
+  }
+}
+
+.task-card-content {
+  min-height: 40px;
+}

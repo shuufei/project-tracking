@@ -1,0 +1,29 @@
+:host {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  border-radius: var(--bison-radius-s);
+  border: solid 1px transparent;
+  &:hover {
+    border: solid 1px var(--bison-primary-default);
+  }
+}
+
+.basic {
+  color: var(--bison-black-default);
+}
+.primary {
+  color: var(--bison-primary-default);
+}
+.primary-light1 {
+  color: var(--bison-primary-light1);
+}
+.primary-light2 {
+  color: var(--bison-primary-light2);
+}
+.success {
+  color: var(--bison-success-default);
+}
+.warn {
+  color: var(--bison-warn-default);
+}

@@ -4,7 +4,7 @@ import { CheckboxModule } from '../checkbox/checkbox.module';
 import { IconModule } from '../icon/icon.module';
 import { TextFieldModule } from '../text-field/text-field.module';
 import { TimeLabelModule } from '../time-label/time-label.module';
-import { TrackingLogChangePopupModule } from '../tracking-log-change-popup/tracking-log-change-popup.module';
+import { TrackingLogChangeControllerModule } from '../tracking-log-change-controller/tracking-log-change-controller.module';
 import { SubtaskComponent } from './subtask.component';
 
 const MAPPER: Record<string, string> = {
@@ -22,8 +22,8 @@ export function iconsPath(name: string): string {
     IconModule,
     CheckboxModule,
     TimeLabelModule,
-    TrackingLogChangePopupModule,
     TextFieldModule,
+    TrackingLogChangeControllerModule,
   ],
   exports: [SubtaskComponent],
 })

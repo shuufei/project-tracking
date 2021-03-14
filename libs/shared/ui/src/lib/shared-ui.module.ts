@@ -12,9 +12,11 @@ import { ProjectBoardSelectPopupModule } from './project-board-select-popup/proj
 import { SelectItemModule } from './select-item/select-item.module';
 import { StatusSelectPopupModule } from './status-select-popup/status-select-popup.module';
 import { SubtaskModule } from './subtask/subtask.module';
+import { TaskCardModule } from './task-card/task-card.module';
 import { TextFieldModule } from './text-field/text-field.module';
 import { TimeLabelModule } from './time-label/time-label.module';
 import { TooltipModule } from './tooltip/tooltip.module';
+import { TrackingLogChangeControllerModule } from './tracking-log-change-controller/tracking-log-change-controller.module';
 import { TrackingLogChangePopupModule } from './tracking-log-change-popup/tracking-log-change-popup.module';
 import { UserIconListModule } from './user-icon-list/user-icon-list.module';
 import { UserIconModule } from './user-icon/user-icon.module';
@@ -42,6 +44,8 @@ import { UserSelectPopupModule } from './user-select-popup/user-select-popup.mod
     SubtaskModule,
     TimeLabelModule,
     CheckboxModule,
+    TaskCardModule,
+    TrackingLogChangeControllerModule,
   ],
 })
 export class SharedUiModule {}
