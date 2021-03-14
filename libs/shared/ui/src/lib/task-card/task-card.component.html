@@ -39,14 +39,14 @@
         <ng-container
           *ngIf="state.selfTrackingTimeSec !== undefined || state.isTracking"
         >
-          <ui-tracking-log-change-controller
+          <ui-tracking-log-change-button
             class="ml-2"
             [trackingTimeSec]="state.selfTrackingTimeSec || 0"
             [plannedTimeSec]="state.plannedTimeSec || 0"
             [isTracking]="state.isTracking"
             (changedTrackingTimeSec)="onChangedTrackingTimeSec$.next($event)"
             (changedPlannedTimeSec)="onChangedPlannedTimeSec$.next($event)"
-          ></ui-tracking-log-change-controller>
+          ></ui-tracking-log-change-button>
         </ng-container>
       </div>
     </div>

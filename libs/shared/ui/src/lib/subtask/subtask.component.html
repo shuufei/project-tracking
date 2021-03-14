@@ -25,13 +25,13 @@
   <ng-container *ngIf="!state.isEditing">
     <div class="flex items-center">
       <ng-container *ngIf="state.selfTrackingTimeSec !== undefined">
-        <ui-tracking-log-change-controller
+        <ui-tracking-log-change-button
           [trackingTimeSec]="state.selfTrackingTimeSec"
           [plannedTimeSec]="state.selfPlannedTimeSec"
           [isTracking]="state.isTracking"
           (changedTrackingTimeSec)="onChangedSelfTrackingTimeSec$.next($event)"
           (changedPlannedTimeSec)="onChangedSelfPlannedTimeSec$.next($event)"
-        ></ui-tracking-log-change-controller>
+        ></ui-tracking-log-change-button>
       </ng-container>
       <ng-container
         *ngIf="

@@ -16,7 +16,7 @@ import { TaskCardModule } from './task-card/task-card.module';
 import { TextFieldModule } from './text-field/text-field.module';
 import { TimeLabelModule } from './time-label/time-label.module';
 import { TooltipModule } from './tooltip/tooltip.module';
-import { TrackingLogChangeControllerModule } from './tracking-log-change-controller/tracking-log-change-controller.module';
+import { TrackingLogChangeButtonModule } from './tracking-log-change-button/tracking-log-change-button.module';
 import { TrackingLogChangePopupModule } from './tracking-log-change-popup/tracking-log-change-popup.module';
 import { UserIconListModule } from './user-icon-list/user-icon-list.module';
 import { UserIconModule } from './user-icon/user-icon.module';
@@ -45,7 +45,7 @@ import { UserSelectPopupModule } from './user-select-popup/user-select-popup.mod
     TimeLabelModule,
     CheckboxModule,
     TaskCardModule,
-    TrackingLogChangeControllerModule,
+    TrackingLogChangeButtonModule,
   ],
 })
 export class SharedUiModule {}

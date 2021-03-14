@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { IconModule } from '../icon/icon.module';
 import { PopupModule } from '../popup/popup.module';
 import { TimeLabelModule } from '../time-label/time-label.module';
-import { TrackingLogChangeControllerModule } from '../tracking-log-change-controller/tracking-log-change-controller.module';
+import { TrackingLogChangeButtonModule } from '../tracking-log-change-button/tracking-log-change-button.module';
 import { MenuItemComponent } from './menu-popup/menu-item/menu-item.component';
 import { MenuPopupComponent } from './menu-popup/menu-popup.component';
 import { TaskCardComponent } from './task-card.component';
@@ -15,7 +15,7 @@ import { TaskCardComponent } from './task-card.component';
     IconModule,
     PopupModule,
     TimeLabelModule,
-    TrackingLogChangeControllerModule,
+    TrackingLogChangeButtonModule,
   ],
   exports: [TaskCardComponent],
 })

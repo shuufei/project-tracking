@@ -1,28 +1,28 @@
-import { TrackingLogChangeControllerModule } from './tracking-log-change-controller.module';
+import { TrackingLogChangeButtonModule } from './tracking-log-change-button.module';
 
 export default {
-  title: 'TrackingLogChangeController',
+  title: 'TrackingLogChangeButton',
 };
 
 export const Default = () => ({
   moduleMetadata: {
-    imports: [TrackingLogChangeControllerModule],
+    imports: [TrackingLogChangeButtonModule],
   },
   template: `
-    <ui-tracking-log-change-controller></ui-tracking-log-change-controller>
+    <ui-tracking-log-change-button></ui-tracking-log-change-button>
   `,
   props: {},
 });
 
 export const Set_Value = () => ({
   moduleMetadata: {
-    imports: [TrackingLogChangeControllerModule],
+    imports: [TrackingLogChangeButtonModule],
   },
   template: `
-    <ui-tracking-log-change-controller
+    <ui-tracking-log-change-button
       [trackingTimeSec]="trackingTimeSec"
       [plannedTimeSec]="plannedTimeSec"
-    ></ui-tracking-log-change-controller>
+    ></ui-tracking-log-change-button>
   `,
   props: {
     trackingTimeSec: 60 * 60 * 2 + 60 * 30 + 45,
@@ -32,14 +32,14 @@ export const Set_Value = () => ({
 
 export const Tracking = () => ({
   moduleMetadata: {
-    imports: [TrackingLogChangeControllerModule],
+    imports: [TrackingLogChangeButtonModule],
   },
   template: `
-    <ui-tracking-log-change-controller
+    <ui-tracking-log-change-button
       [trackingTimeSec]="trackingTimeSec"
       [plannedTimeSec]="plannedTimeSec"
       [isTracking]="isTracking"
-    ></ui-tracking-log-change-controller>
+    ></ui-tracking-log-change-button>
   `,
   props: {
     trackingTimeSec: 60 * 60 * 2 + 60 * 30 + 45,
