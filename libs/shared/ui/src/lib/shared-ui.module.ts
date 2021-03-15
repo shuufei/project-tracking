@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { AssignChangeButtonModule } from './assign-change-button/assign-change-button.module';
 import { ButtonModule } from './button/button.module';
 import { CheckboxModule } from './checkbox/checkbox.module';
 import { ColorIconModule } from './color-icon/color-icon.module';
@@ -10,6 +11,7 @@ import { NavigationModule } from './navigation/navigation.module';
 import { PopupModule } from './popup/popup.module';
 import { ProjectBoardSelectPopupModule } from './project-board-select-popup/project-board-select-popup.module';
 import { SelectItemModule } from './select-item/select-item.module';
+import { StatusChangeButtonModule } from './status-change-button/status-change-button.module';
 import { StatusSelectPopupModule } from './status-select-popup/status-select-popup.module';
 import { SubtaskModule } from './subtask/subtask.module';
 import { TaskCardModule } from './task-card/task-card.module';
@@ -46,6 +48,8 @@ import { UserSelectPopupModule } from './user-select-popup/user-select-popup.mod
     CheckboxModule,
     TaskCardModule,
     TrackingLogChangeButtonModule,
+    StatusChangeButtonModule,
+    AssignChangeButtonModule,
   ],
 })
 export class SharedUiModule {}
