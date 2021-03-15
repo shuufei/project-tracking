@@ -18,7 +18,8 @@
     "paths": {
       "@bison/shared/ui": ["libs/shared/ui/src/index.ts"],
       "@bison/shared/domain": ["libs/shared/domain/src/index.ts"],
-      "@bison/project/ui": ["libs/project/ui/src/index.ts"]
+      "@bison/project/ui": ["libs/project/ui/src/index.ts"],
+      "@bison/schedule/ui": ["libs/schedule/ui/src/index.ts"]
     },
     "allowSyntheticDefaultImports": true
   },

@@ -516,6 +516,31 @@
           }
         }
       }
+    },
+    "schedule-ui": {
+      "projectType": "library",
+      "root": "libs/schedule/ui",
+      "sourceRoot": "libs/schedule/ui/src",
+      "prefix": "bison",
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/schedule/ui/src/**/*.ts",
+              "libs/schedule/ui/src/**/*.html"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/schedule/ui"],
+          "options": {
+            "jestConfig": "libs/schedule/ui/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
     }
   }
 }
