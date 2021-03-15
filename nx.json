@@ -1,9 +1,14 @@
 {
   "npmScope": "bison",
-  "affected": { "defaultBase": "main" },
+  "affected": {
+    "defaultBase": "main"
+  },
   "implicitDependencies": {
     "angular.json": "*",
-    "package.json": { "dependencies": "*", "devDependencies": "*" },
+    "package.json": {
+      "dependencies": "*",
+      "devDependencies": "*"
+    },
     "tsconfig.base.json": "*",
     "tslint.json": "*",
     ".eslintrc.json": "*",
@@ -24,9 +29,15 @@
     }
   },
   "projects": {
-    "shared-ui": { "tags": [] },
-    "backend-graphql-api": { "tags": [] },
-    "frontend-desktop-app": { "tags": [] },
+    "shared-ui": {
+      "tags": []
+    },
+    "backend-graphql-api": {
+      "tags": []
+    },
+    "frontend-desktop-app": {
+      "tags": []
+    },
     "frontend-desktop-app-e2e": {
       "tags": [],
       "implicitDependencies": ["frontend-desktop-app"]
@@ -35,13 +46,25 @@
       "tags": [],
       "implicitDependencies": ["shared-ui"]
     },
-    "docs": { "tags": [] },
-    "shared-domain": { "tags": [] },
-    "project-ui": { "tags": [] },
+    "docs": {
+      "tags": []
+    },
+    "shared-domain": {
+      "tags": []
+    },
+    "project-ui": {
+      "tags": []
+    },
     "frontend-project-ui-e2e": {
       "tags": [],
       "implicitDependencies": ["project-ui"]
     },
-    "schedule-ui": { "tags": [] }
+    "schedule-ui": {
+      "tags": []
+    },
+    "frontend-schedule-ui-e2e": {
+      "tags": [],
+      "implicitDependencies": ["schedule-ui"]
+    }
   }
 }
