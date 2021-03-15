@@ -24,7 +24,8 @@
     "@nrwl/angular:library": {
       "style": "scss",
       "linter": "eslint",
-      "unitTestRunner": "jest"
+      "unitTestRunner": "jest",
+      "strict": true
     },
     "@nrwl/angular:component": {
       "style": "scss",
@@ -430,6 +431,31 @@
           "outputs": ["coverage/libs/shared/domain"],
           "options": {
             "jestConfig": "libs/shared/domain/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "project-ui": {
+      "projectType": "library",
+      "root": "libs/project/ui",
+      "sourceRoot": "libs/project/ui/src",
+      "prefix": "bison",
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/project/ui/src/**/*.ts",
+              "libs/project/ui/src/**/*.html"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/project/ui"],
+          "options": {
+            "jestConfig": "libs/project/ui/jest.config.js",
             "passWithNoTests": true
           }
         }

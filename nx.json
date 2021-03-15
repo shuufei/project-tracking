@@ -36,6 +36,7 @@
       "implicitDependencies": ["shared-ui"]
     },
     "docs": { "tags": [] },
-    "shared-domain": { "tags": [] }
+    "shared-domain": { "tags": [] },
+    "project-ui": { "tags": [] }
   }
 }
