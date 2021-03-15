@@ -22,13 +22,13 @@ type State = {
 };
 
 @Component({
-  selector: 'ui-tracking-log-change-controller',
-  templateUrl: './tracking-log-change-controller.component.html',
-  styleUrls: ['./tracking-log-change-controller.component.scss'],
+  selector: 'ui-tracking-log-change-button',
+  templateUrl: './tracking-log-change-button.component.html',
+  styleUrls: ['./tracking-log-change-button.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [RxState],
 })
-export class TrackingLogChangeControllerComponent implements OnInit {
+export class TrackingLogChangeButtonComponent implements OnInit {
   @Input()
   set trackingTimeSec(value: number) {
     this.state.set('trackingTimeSec', () => value);
