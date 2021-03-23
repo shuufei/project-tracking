@@ -1,4 +1,5 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'ui-tracking-log-popup',
@@ -6,11 +7,20 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
   styleUrls: ['./tracking-log-popup.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TrackingLogPopupComponent implements OnInit {
-
-  constructor() { }
-
-  ngOnInit(): void {
+export class TrackingLogPopupComponent {
+  @Input() triggerEl?: HTMLElement;
+  @Input() set userTrackingInfoList(list: UserTrackingInfo[]) {
+    this.userTrackingInfoList$.next(list);
   }
+  readonly userTrackingInfoList$ = new BehaviorSubject<UserTrackingInfo[]>([]);
+}
 
+export type UserTrackingInfo = {
+  id: string;
+  name: string;
+  imageSrc?: string;
+  trackingTime: {
+    hours: number,
+    minutes: number,
+  };
 }
