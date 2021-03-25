@@ -1,0 +1,22 @@
+<ui-popup [triggerEl]="triggerEl" class="w-60">
+  <ul>
+    <ng-container
+      *ngFor="let user of userTrackingInfoList$ | async; index as i"
+    >
+      <li class="flex items-center px-3 py-2" [ngClass]="{ 'mt-1': i !== 0 }">
+        <p class="flex items-center w-full">
+          <ui-user-icon
+            [src]="user.imageSrc"
+            style="width: 35px; height: 35px"
+          ></ui-user-icon>
+          <span class="ml-3 text-s2 text-black-default">{{ user.name }}</span>
+        </p>
+        <p class="text-s2 text-black-default font-medium">
+          <span>{{ user.trackingTime.hours | number: '2.0-2' }}</span>
+          <span>:</span>
+          <span>{{ user.trackingTime.minutes | number: '2.0-2' }}</span>
+        </p>
+      </li>
+    </ng-container>
+  </ul>
+</ui-popup>
