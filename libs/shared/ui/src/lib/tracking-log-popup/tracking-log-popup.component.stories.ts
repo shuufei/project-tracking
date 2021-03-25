@@ -1,9 +1,8 @@
-
 import { UserTrackingInfo } from './tracking-log-popup.component';
 import { TrackingLogPopupModule } from './tracking-log-popup.module';
 
 export default {
-  title: 'TrackingLogPopupComponent'
+  title: 'TrackingLogPopup'
 }
 
 const userTrackingInfoList: UserTrackingInfo[] = [
