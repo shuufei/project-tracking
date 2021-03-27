@@ -1,0 +1,22 @@
+@tailwind utilities;
+
+:host {
+  display: block;
+}
+
+.item {
+  &:hover {
+    @apply rounded-s;
+    @apply ring-1;
+    @apply ring-primary-default;
+    @apply bg-primary-light4;
+
+    & + .under-divide {
+      background-color: transparent;
+    }
+  }
+}
+
+.description {
+  color: #303030;
+}
