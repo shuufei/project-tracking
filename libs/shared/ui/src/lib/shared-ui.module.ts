@@ -7,6 +7,7 @@ import { ColorIconModule } from './color-icon/color-icon.module';
 import { ColorSelectPopupModule } from './color-select-popup/color-select-popup.module';
 import { IconModule } from './icon/icon.module';
 import { InputTimeModule } from './input-time/input-time.module';
+import { MenuPopupModule } from './menu-popup/menu-popup.module';
 import { NavigationModule } from './navigation/navigation.module';
 import { PopupModule } from './popup/popup.module';
 import { ProjectBoardSelectPopupModule } from './project-board-select-popup/project-board-select-popup.module';
@@ -50,6 +51,7 @@ import { UserSelectPopupModule } from './user-select-popup/user-select-popup.mod
     TrackingLogChangeButtonModule,
     StatusChangeButtonModule,
     AssignChangeButtonModule,
+    MenuPopupModule,
   ],
 })
 export class SharedUiModule {}

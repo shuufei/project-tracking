@@ -13,10 +13,19 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MenuPopupComponent {
-  @Input() isTaskCardHover = false;
+  @Input() featureOption: MenuPopupFeatureOption = {};
+  @Input() triggerVisible = false;
   @Output() clickedEdit = new EventEmitter<void>();
   @Output() clickedAddSubtask = new EventEmitter<void>();
   @Output() clickedEditPlannedTime = new EventEmitter<void>();
   @Output() clickedMoveBoard = new EventEmitter<void>();
   @Output() clickedDelete = new EventEmitter<void>();
 }
+
+export type MenuPopupFeatureOption = {
+  edit?: boolean;
+  addSubtask?: boolean;
+  editPlannedTime?: boolean;
+  moveBoard?: boolean;
+  delete?: boolean;
+};

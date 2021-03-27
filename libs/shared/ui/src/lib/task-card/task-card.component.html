@@ -6,7 +6,14 @@
       }}</span>
       <ui-menu-popup
         class="menu"
-        [isTaskCardHover]="state.isHover"
+        [featureOption]="{
+          edit: true,
+          addSubtask: true,
+          editPlannedTime: true,
+          moveBoard: true,
+          delete: true
+        }"
+        [triggerVisible]="state.isHover"
       ></ui-menu-popup>
     </div>
 

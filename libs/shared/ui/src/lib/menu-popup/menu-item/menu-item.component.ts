@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import type { IconName } from '../../../icon/icon.component';
-import type { Color } from '../../../types';
+import type { IconName } from '../../icon/icon.component';
+import type { Color } from '../../types';
 
 @Component({
   selector: 'ui-menu-item',

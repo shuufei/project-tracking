@@ -1,3 +1,5 @@
+@tailwind utilities;
+
 :host {
   display: inline-block;
   position: relative;
@@ -6,6 +8,10 @@
 
 .menu-items {
   min-width: 180px;
+}
+
+.menu-item:not(:first-child) {
+  @apply mt-2;
 }
 
 .hide {
