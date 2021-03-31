@@ -618,6 +618,29 @@
           }
         }
       }
+    },
+    "backend-infrastructure-repository": {
+      "root": "libs/backend/infrastructure/repository",
+      "sourceRoot": "libs/backend/infrastructure/repository/src",
+      "projectType": "library",
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/backend/infrastructure/repository/**/*.ts"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/backend/infrastructure/repository"],
+          "options": {
+            "jestConfig": "libs/backend/infrastructure/repository/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
     }
   }
 }
