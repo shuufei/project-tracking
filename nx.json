@@ -25,7 +25,6 @@
   },
   "projects": {
     "shared-ui": { "tags": [] },
-    "backend-graphql-api": { "tags": [] },
     "frontend-desktop-app": { "tags": [] },
     "frontend-desktop-app-e2e": {
       "tags": [],
@@ -47,8 +46,11 @@
       "tags": [],
       "implicitDependencies": ["schedule-ui"]
     },
-    "backend-feature-shell": { "tags": [] },
-    "backend-infrastructure-repository": { "tags": [] },
-    "backend-domain": { "tags": [] }
+    "backend-graphql-api": { "tags": ["scope:backend-presentation"] },
+    "backend-feature-shell": { "tags": ["scope:backend-feature"] },
+    "backend-infrastructure-repository": {
+      "tags": ["scope:backend-infrastructure-repository"]
+    },
+    "backend-domain": { "tags": ["scope:backend-domain"] }
   }
 }
