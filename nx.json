@@ -35,7 +35,7 @@
       "implicitDependencies": ["shared-ui"]
     },
     "docs": { "tags": [] },
-    "shared-domain": { "tags": [] },
+    "shared-domain": { "tags": ["scope:shared-domain"] },
     "project-ui": { "tags": [] },
     "frontend-project-ui-e2e": {
       "tags": [],
@@ -51,6 +51,7 @@
     "backend-infrastructure-repository": {
       "tags": ["scope:backend-infrastructure-repository"]
     },
-    "backend-domain": { "tags": ["scope:backend-domain"] }
+    "backend-domain": { "tags": ["scope:backend-domain"] },
+    "backend-application": { "tags": ["scope:backend-application"] }
   }
 }

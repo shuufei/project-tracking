@@ -10,5 +10,6 @@ module.exports = {
     '<rootDir>/libs/backend/feature-shell',
     '<rootDir>/libs/backend/infrastructure/repository',
     '<rootDir>/libs/backend/domain',
+    '<rootDir>/libs/backend/application',
   ],
 };
