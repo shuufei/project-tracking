@@ -22,6 +22,9 @@
       "@bison/schedule/ui": ["libs/schedule/ui/src/index.ts"],
       "@bison/project/backend/feature-shell": [
         "libs/project/backend/feature-shell/src/index.ts"
+      ],
+      "@bison/project/backend/repository": [
+        "libs/project/backend/repository/src/index.ts"
       ]
     },
     "allowSyntheticDefaultImports": true

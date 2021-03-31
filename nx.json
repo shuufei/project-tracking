@@ -47,6 +47,7 @@
       "tags": [],
       "implicitDependencies": ["schedule-ui"]
     },
-    "project-backend-feature-shell": { "tags": [] }
+    "project-backend-feature-shell": { "tags": [] },
+    "project-backend-repository": { "tags": [] }
   }
 }
