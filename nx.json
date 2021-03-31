@@ -46,7 +46,6 @@
     "frontend-schedule-ui-e2e": {
       "tags": [],
       "implicitDependencies": ["schedule-ui"]
-    },
-    "project-backend-repository": { "tags": [] }
+    }
   }
 }
