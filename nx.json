@@ -46,6 +46,7 @@
     "frontend-schedule-ui-e2e": {
       "tags": [],
       "implicitDependencies": ["schedule-ui"]
-    }
+    },
+    "backend-feature-shell": { "tags": [] }
   }
 }

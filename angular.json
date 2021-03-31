@@ -597,6 +597,27 @@
           }
         }
       }
+    },
+    "backend-feature-shell": {
+      "root": "libs/backend/feature-shell",
+      "sourceRoot": "libs/backend/feature-shell/src",
+      "projectType": "library",
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/backend/feature-shell/**/*.ts"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/backend/feature-shell"],
+          "options": {
+            "jestConfig": "libs/backend/feature-shell/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
     }
   }
 }
