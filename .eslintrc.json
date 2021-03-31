@@ -14,22 +14,21 @@
             "depConstraints": [
               {
                 "sourceTag": "scope:backend-presentation",
-                "onlyDependOnLibsWithTags": ["scope:backend-feature"]
+                "onlyDependOnLibsWithTags": ["scope:backend-usecase"]
               },
               {
                 "sourceTag": "scope:backend-infrastructure-repository",
                 "onlyDependOnLibsWithTags": [
                   "scope:backend-domain",
-                  "scope:backend-feature"
+                  "scope:backend-usecase"
                 ]
               },
               {
-                "sourceTag": "scope:backend-feature",
-                "onlyDependOnLibsWithTags": ["scope:backend-domain"]
-              },
-              {
-                "sourceTag": "scope:backend-feature",
-                "onlyDependOnLibsWithTags": []
+                "sourceTag": "scope:backend-usecase",
+                "onlyDependOnLibsWithTags": [
+                  "scope:backend-domain",
+                  "scope:shared-domain"
+                ]
               }
             ]
           }

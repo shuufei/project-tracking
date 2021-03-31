@@ -598,27 +598,6 @@
         }
       }
     },
-    "backend-feature-shell": {
-      "root": "libs/backend/feature-shell",
-      "sourceRoot": "libs/backend/feature-shell/src",
-      "projectType": "library",
-      "architect": {
-        "lint": {
-          "builder": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["libs/backend/feature-shell/**/*.ts"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/backend/feature-shell"],
-          "options": {
-            "jestConfig": "libs/backend/feature-shell/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
     "backend-infrastructure-repository": {
       "root": "libs/backend/infrastructure/repository",
       "sourceRoot": "libs/backend/infrastructure/repository/src",
@@ -663,22 +642,22 @@
         }
       }
     },
-    "backend-application": {
-      "root": "libs/backend/application",
-      "sourceRoot": "libs/backend/application/src",
+    "backend-usecase": {
+      "root": "libs/backend/usecase",
+      "sourceRoot": "libs/backend/usecase/src",
       "projectType": "library",
       "architect": {
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["libs/backend/application/**/*.ts"]
+            "lintFilePatterns": ["libs/backend/usecase/**/*.ts"]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/backend/application"],
+          "outputs": ["coverage/libs/backend/usecase"],
           "options": {
-            "jestConfig": "libs/backend/application/jest.config.js",
+            "jestConfig": "libs/backend/usecase/jest.config.js",
             "passWithNoTests": true
           }
         }

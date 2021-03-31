@@ -20,14 +20,11 @@
       "@bison/shared/domain": ["libs/shared/domain/src/index.ts"],
       "@bison/project/ui": ["libs/project/ui/src/index.ts"],
       "@bison/schedule/ui": ["libs/schedule/ui/src/index.ts"],
-      "@bison/backend/feature-shell": [
-        "libs/backend/feature-shell/src/index.ts"
-      ],
       "@bison/backend/infrastructure/repository": [
         "libs/backend/infrastructure/repository/src/index.ts"
       ],
       "@bison/backend/domain": ["libs/backend/domain/src/index.ts"],
-      "@bison/backend/application": ["libs/backend/application/src/index.ts"]
+      "@bison/backend/usecase": ["libs/backend/usecase/src/index.ts"]
     },
     "allowSyntheticDefaultImports": true
   },

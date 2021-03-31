@@ -7,9 +7,8 @@ module.exports = {
     '<rootDir>/libs/shared/domain',
     '<rootDir>/libs/project/ui',
     '<rootDir>/libs/schedule/ui',
-    '<rootDir>/libs/backend/feature-shell',
     '<rootDir>/libs/backend/infrastructure/repository',
     '<rootDir>/libs/backend/domain',
-    '<rootDir>/libs/backend/application',
+    '<rootDir>/libs/backend/usecase',
   ],
 };

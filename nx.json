@@ -47,11 +47,10 @@
       "implicitDependencies": ["schedule-ui"]
     },
     "backend-graphql-api": { "tags": ["scope:backend-presentation"] },
-    "backend-feature-shell": { "tags": ["scope:backend-feature"] },
     "backend-infrastructure-repository": {
       "tags": ["scope:backend-infrastructure-repository"]
     },
     "backend-domain": { "tags": ["scope:backend-domain"] },
-    "backend-application": { "tags": ["scope:backend-application"] }
+    "backend-usecase": { "tags": ["scope:backend-usecase"] }
   }
 }
