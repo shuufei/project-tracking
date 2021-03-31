@@ -25,7 +25,8 @@
       ],
       "@bison/backend/infrastructure/repository": [
         "libs/backend/infrastructure/repository/src/index.ts"
-      ]
+      ],
+      "@bison/backend/domain": ["libs/backend/domain/src/index.ts"]
     },
     "allowSyntheticDefaultImports": true
   },

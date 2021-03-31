@@ -9,5 +9,6 @@ module.exports = {
     '<rootDir>/libs/schedule/ui',
     '<rootDir>/libs/backend/feature-shell',
     '<rootDir>/libs/backend/infrastructure/repository',
+    '<rootDir>/libs/backend/domain',
   ],
 };
