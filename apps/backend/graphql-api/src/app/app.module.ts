@@ -1,19 +1,21 @@
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { BacklogModule } from './backlog/backlog.module';
+import { ProjectModule } from './project/project.module';
 
 @Module({
   imports: [
+    ProjectModule,
+    BacklogModule,
     GraphQLModule.forRoot({
-      autoSchemaFile: join(
-        process.cwd(),
-        'apps/backend/graphql-api/src/schema.gql'
-      ),
+      typePaths: [join(process.cwd(), 'apps/backend/graphql-api/src/**/*.gql')],
+      definitions: {
+        path: join(process.cwd(), 'apps/backend/graphql-api/src/types.ts'),
+      },
     }),
   ],
   controllers: [],
-  providers: [AppService, AppController],
+  providers: [],
 })
 export class AppModule {}
