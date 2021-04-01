@@ -1,6 +1,6 @@
 import { Parent, ResolveField, Resolver } from '@nestjs/graphql';
-import type { Backlog, Project } from '../../types';
-import { Color } from '../../types';
+import type { Backlog, Project } from '../../schema-types';
+import { Color } from '../../schema-types';
 
 @Resolver('Backlog')
 export class BacklogReolver {

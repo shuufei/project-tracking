@@ -11,7 +11,10 @@ import { ProjectModule } from './project/project.module';
     GraphQLModule.forRoot({
       typePaths: [join(process.cwd(), 'apps/backend/graphql-api/src/**/*.gql')],
       definitions: {
-        path: join(process.cwd(), 'apps/backend/graphql-api/src/types.ts'),
+        path: join(
+          process.cwd(),
+          'apps/backend/graphql-api/src/schema-types.ts'
+        ),
       },
     }),
   ],

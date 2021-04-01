@@ -2,13 +2,9 @@ import type { IListProjectsUsecase } from '@bison/backend/usecase';
 import { LIST_PROJECTS_USECASE } from '@bison/backend/usecase';
 import { Inject } from '@nestjs/common';
 import { Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
-import type {
-  Connection,
-  PageInfo,
-  Project,
-  ProjectConnection,
-} from '../../types';
-import { Color } from '../../types';
+import { OmitForConnectionNode } from '../../helper-types';
+import type { Project, ProjectConnection } from '../../schema-types';
+import { Color } from '../../schema-types';
 
 @Resolver('Project')
 export class ProjectResolver {
@@ -49,19 +45,3 @@ export class ProjectResolver {
     };
   }
 }
-
-type OmitForConnectionNode<
-  T extends Connection,
-  K extends keyof T['edges'][number]['node']
-> = {
-  pageInfo: PageInfo;
-  edges: {
-    cursor: string;
-    node: {
-      [key in keyof Omit<
-        T['edges'][number]['node'],
-        K
-      >]: T['edges'][number]['node'][key];
-    };
-  }[];
-};
