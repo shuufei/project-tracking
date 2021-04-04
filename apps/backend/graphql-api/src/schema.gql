@@ -1,5 +1,5 @@
 type Query {
-  projects: ProjectConnection!
+  projects(first: Int! = 10, after: ID): ProjectConnection!
 }
 
 type Mutation {
@@ -74,7 +74,7 @@ type Project implements Node {
 }
 
 type ProjectEdge implements Edge {
-  cursor: String!
+  cursor: String
   node: Project!
 }
 
@@ -88,16 +88,14 @@ enum Color {
   BLUE
   GREEN
   YELLOW
-  ORANGE
+  BROWN
   PINK
   GRAY
 }
 
 type PageInfo {
-  startCursor: String!
-  endCursor: String!
+  endCursor: String
   hasNextPage: Boolean!
-  hasPreviousPage: Boolean!
 }
 
 interface Connection {
@@ -106,7 +104,7 @@ interface Connection {
 }
 
 interface Edge {
-  cursor: String!
+  cursor: String
   node: Node!
 }
 

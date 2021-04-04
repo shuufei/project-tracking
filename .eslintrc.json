@@ -14,7 +14,11 @@
             "depConstraints": [
               {
                 "sourceTag": "scope:backend-presentation",
-                "onlyDependOnLibsWithTags": ["scope:backend-usecase"]
+                "onlyDependOnLibsWithTags": [
+                  "scope:backend-usecase",
+                  "scope:backend-domain",
+                  "scope:shared-domain"
+                ]
               },
               {
                 "sourceTag": "scope:backend-infrastructure-repository",

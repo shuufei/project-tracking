@@ -11,7 +11,7 @@ export enum Color {
     BLUE = "BLUE",
     GREEN = "GREEN",
     YELLOW = "YELLOW",
-    ORANGE = "ORANGE",
+    BROWN = "BROWN",
     PINK = "PINK",
     GRAY = "GRAY"
 }
@@ -39,7 +39,7 @@ export interface Connection {
 }
 
 export interface Edge {
-    cursor: string;
+    cursor?: string;
     node: Node;
 }
 
@@ -48,7 +48,7 @@ export interface Node {
 }
 
 export interface IQuery {
-    projects(): ProjectConnection | Promise<ProjectConnection>;
+    projects(first: number, after?: string): ProjectConnection | Promise<ProjectConnection>;
 }
 
 export interface IMutation {
@@ -106,7 +106,7 @@ export interface Project extends Node {
 }
 
 export interface ProjectEdge extends Edge {
-    cursor: string;
+    cursor?: string;
     node: Project;
 }
 
@@ -116,8 +116,6 @@ export interface ProjectConnection extends Connection {
 }
 
 export interface PageInfo {
-    startCursor: string;
-    endCursor: string;
+    endCursor?: string;
     hasNextPage: boolean;
-    hasPreviousPage: boolean;
 }
