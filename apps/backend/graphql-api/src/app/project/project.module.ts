@@ -17,7 +17,7 @@ class MockListProjectsUsecase implements IListProjectsUsecase {
   async execute() {
     return {
       projects: [],
-      nextCursor: '',
+      nextEntityId: '',
     };
   }
 }
@@ -60,7 +60,7 @@ class MockProjectRepository implements IProjectRepository {
           color: 'green' as Color,
         },
       ],
-      nextCursor: 'project999',
+      nextEntityId: 'project999',
     };
   }
 }

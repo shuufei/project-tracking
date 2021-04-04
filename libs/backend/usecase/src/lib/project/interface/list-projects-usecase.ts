@@ -10,5 +10,5 @@ export const LIST_PROJECTS_USECASE = Symbol('ListProjectsUsecase');
 
 export type ListProjectsResponse = {
   projects: Pick<Project, 'id' | 'name' | 'description' | 'color'>[];
-  nextCursor?: Project['id'];
+  nextEntityId?: Project['id'];
 };

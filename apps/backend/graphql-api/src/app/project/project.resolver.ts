@@ -1,4 +1,7 @@
-import type { IListProjectsUsecase } from '@bison/backend/usecase';
+import type {
+  IListProjectsUsecase,
+  ListProjectsResponse,
+} from '@bison/backend/usecase';
 import { LIST_PROJECTS_USECASE } from '@bison/backend/usecase';
 import type { Color as DomainColor } from '@bison/shared/domain';
 import { Inject } from '@nestjs/common';
@@ -11,6 +14,7 @@ import {
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
+import { last } from 'lodash/fp';
 import { OmitConnectionNode } from '../../helper-types';
 import type { Project, ProjectConnection } from '../../schema-types';
 import { Color } from '../../schema-types';
@@ -53,7 +57,7 @@ export class ProjectResolver {
       ProjectConnection,
       'backlog' | 'boards' | 'users'
     >['edges'] = response.projects.map((project, i, self) => ({
-      cursor: self[i] != null ? self[i].id : response.nextCursor,
+      cursor: i !== 0 ? self[i - 1].id : after,
       node: {
         id: project.id,
         name: project.name,
@@ -63,8 +67,10 @@ export class ProjectResolver {
     }));
     return {
       pageInfo: {
-        endCursor: response.nextCursor,
-        hasNextPage: response.nextCursor !== undefined,
+        endCursor: last<ListProjectsResponse['projects'][number]>(
+          response.projects
+        )?.id,
+        hasNextPage: response.nextEntityId !== undefined,
       },
       edges,
     };

@@ -18,5 +18,5 @@ export type GetResponse = {
 
 export type ListResponse = {
   entities: ProjectEntity[];
-  nextCursor?: ProjectEntity['id'];
+  nextEntityId?: string;
 };

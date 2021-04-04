@@ -19,7 +19,7 @@ export class ListProjectsUsecase implements IListProjectsUsecase {
     const listRes = await this.repository.list(first, after);
     return {
       projects: listRes.entities,
-      nextCursor: listRes.nextCursor,
+      nextEntityId: listRes.nextEntityId,
     };
   }
 }
