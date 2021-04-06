@@ -1,7 +1,6 @@
 import {
   IProjectRepository,
   ListResponse,
-  ProjectEntity,
   PROJECT_REPOSITORY,
 } from '@bison/backend/domain';
 import type { IListProjectsUsecase } from '@bison/backend/usecase';
@@ -16,8 +15,8 @@ import { ProjectResolver } from './project.resolver';
 class MockListProjectsUsecase implements IListProjectsUsecase {
   async execute() {
     return {
-      projects: [],
-      nextEntityId: '',
+      edges: [],
+      hasNextPage: true,
     };
   }
 }
@@ -26,7 +25,7 @@ class MockProjectRepository implements IProjectRepository {
   async getById() {
     const color: Color = 'blue';
     return {
-      entity: {
+      node: {
         id: 'project001',
         name: 'project name 001',
         description: 'project description 001',
@@ -35,32 +34,37 @@ class MockProjectRepository implements IProjectRepository {
     };
   }
 
-  async list(
-    first: number,
-    after?: ProjectEntity['id']
-  ): Promise<ListResponse> {
+  async list(): Promise<ListResponse> {
     return {
-      entities: [
+      edges: [
         {
-          id: 'project001',
-          name: 'project name 001',
-          description: 'project description 001',
-          color: 'red' as Color,
+          cursor: '',
+          node: {
+            id: 'project001',
+            name: 'project name 001',
+            description: 'project description 001',
+            color: 'red' as Color,
+          },
         },
         {
-          id: 'project002',
-          name: 'project name 002',
-          description: 'project description 002',
-          color: 'blue' as Color,
+          cursor: '',
+          node: {
+            id: 'project002',
+            name: 'project name 002',
+            description: 'project description 002',
+            color: 'blue' as Color,
+          },
         },
         {
-          id: 'project003',
-          name: 'project name 003',
-          description: 'project description 003',
-          color: 'green' as Color,
+          cursor: '',
+          node: {
+            id: 'project003',
+            name: 'project name 003',
+            description: 'project description 003',
+            color: 'green' as Color,
+          },
         },
       ],
-      nextEntityId: 'project999',
     };
   }
 }

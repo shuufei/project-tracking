@@ -13,13 +13,15 @@ export class ListProjectsUsecase implements IListProjectsUsecase {
   ) {}
 
   async execute(
-    first: number,
+    count: number,
     after?: Project['id']
   ): Promise<ListProjectsResponse> {
-    const listRes = await this.repository.list(first, after);
+    // 後続に取得するべき項目があるかどうかを判定するため、クライアントで指定された件数より1つ多く取得する
+    const maxCount = count + 1;
+    const listRes = await this.repository.list(maxCount, after);
     return {
-      projects: listRes.entities,
-      nextEntityId: listRes.nextEntityId,
+      edges: listRes.edges,
+      hasNextPage: listRes.edges.length === maxCount,
     };
   }
 }

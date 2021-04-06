@@ -1,22 +1,26 @@
 import { Project } from '@bison/shared/domain';
 
 export interface IProjectRepository {
-  getById: (id: ProjectEntity['id']) => Promise<GetResponse>;
-  list: (first: number, cursor?: ProjectEntity['id']) => Promise<ListResponse>;
+  getById: (id: ProjectNode['id']) => Promise<GetResponse>;
+  list: (count: number, cursor?: ProjectNode['id']) => Promise<ListResponse>;
 }
 
-export type ProjectEntity = Pick<
+export type ProjectNode = Pick<
   Project,
   'id' | 'name' | 'description' | 'color'
 >;
 
+export type ProjectEdge = {
+  node: ProjectNode;
+  cursor: string;
+};
+
 export const PROJECT_REPOSITORY = Symbol('ProjectRepository');
 
 export type GetResponse = {
-  entity: ProjectEntity;
+  node: ProjectNode;
 };
 
 export type ListResponse = {
-  entities: ProjectEntity[];
-  nextEntityId?: string;
+  edges: ProjectEdge[];
 };

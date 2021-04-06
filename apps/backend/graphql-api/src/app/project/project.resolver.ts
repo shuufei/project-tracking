@@ -56,21 +56,20 @@ export class ProjectResolver {
     const edges: OmitConnectionNode<
       ProjectConnection,
       'backlog' | 'boards' | 'users'
-    >['edges'] = response.projects.map((project, i, self) => ({
-      cursor: i !== 0 ? self[i - 1].id : after,
+    >['edges'] = response.edges.map((edge) => ({
+      cursor: edge.cursor,
       node: {
-        id: project.id,
-        name: project.name,
-        description: project.description,
-        color: convertToApiColorFromDomainColor(project.color),
+        id: edge.node.id,
+        name: edge.node.name,
+        description: edge.node.description,
+        color: convertToApiColorFromDomainColor(edge.node.color),
       },
     }));
     return {
       pageInfo: {
-        endCursor: last<ListProjectsResponse['projects'][number]>(
-          response.projects
-        )?.id,
-        hasNextPage: response.nextEntityId !== undefined,
+        endCursor: last<ListProjectsResponse['edges'][number]>(response.edges)
+          ?.node.id,
+        hasNextPage: response.hasNextPage,
       },
       edges,
     };

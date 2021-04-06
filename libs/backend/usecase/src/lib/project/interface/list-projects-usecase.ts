@@ -1,3 +1,4 @@
+import { ProjectEdge } from '@bison/backend/domain';
 import { Project } from '@bison/shared/domain';
 
 export interface IListProjectsUsecase {
@@ -9,6 +10,6 @@ export interface IListProjectsUsecase {
 export const LIST_PROJECTS_USECASE = Symbol('ListProjectsUsecase');
 
 export type ListProjectsResponse = {
-  projects: Pick<Project, 'id' | 'name' | 'description' | 'color'>[];
-  nextEntityId?: Project['id'];
+  edges: ProjectEdge[];
+  hasNextPage: boolean;
 };
