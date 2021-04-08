@@ -1,0 +1,40 @@
+<div
+  class="box group flex items-center justify-between cursor-pointer rounded-s bg-primary-light3 px-3 py-2"
+>
+  <div>
+    <span class="text-s1 font-medium">{{ boardName }}</span>
+  </div>
+  <div class="flex items-center">
+    <span class="text-s3 font-medium mr-4">
+      {{ date | date: 'yyyy/MM/dd' }}
+    </span>
+    <div class="relative">
+      <div #triggerEl class="menu-trigger flex invisible">
+        <ui-icon
+          class="menu-icon cursor-pointer"
+          [icon]="'more-horizontal'"
+          [size]="'s'"
+          [color]="'primary-light2'"
+          [hoverColor]="'primary'"
+        ></ui-icon>
+      </div>
+      <ui-popup [triggerEl]="triggerEl" [isCloseWhenPopupAction]="true">
+        <div class="menu-items">
+          <ui-menu-item
+            [itemName]="'編集'"
+            [color]="'primary'"
+            [icon]="'edit-2'"
+            (click)="clickedEdit.emit()"
+          ></ui-menu-item>
+          <ui-menu-item
+            class="mt-2"
+            [itemName]="'削除'"
+            [color]="'warn'"
+            [icon]="'trash-2'"
+            (click)="clickedDelete.emit()"
+          ></ui-menu-item>
+        </div>
+      </ui-popup>
+    </div>
+  </div>
+</div>
