@@ -48,7 +48,7 @@
     },
     "backend-graphql-api": { "tags": ["scope:backend-presentation"] },
     "backend-infrastructure-repository": {
-      "tags": ["scope:backend-infrastructure-repository"]
+      "tags": ["scope:backend-infrastructure"]
     },
     "backend-domain": { "tags": ["scope:backend-domain"] },
     "backend-application": { "tags": ["scope:backend-application"] }

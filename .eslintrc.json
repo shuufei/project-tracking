@@ -21,7 +21,7 @@
                 ]
               },
               {
-                "sourceTag": "scope:backend-infrastructure-repository",
+                "sourceTag": "scope:backend-infrastructure",
                 "onlyDependOnLibsWithTags": [
                   "scope:backend-domain",
                   "scope:backend-application"
