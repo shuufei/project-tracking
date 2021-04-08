@@ -12,10 +12,7 @@ export class ListProjectsService implements IListProjectsService {
     @Inject(PROJECT_REPOSITORY) private repository: IProjectRepository
   ) {}
 
-  async handle(
-    count: number,
-    after?: Project['id']
-  ): Promise<ListProjectsResponse> {
+  async handle(count: number, after?: Project['id']): ListProjectsResponse {
     // 後続に取得するべき項目があるかどうかを判定するため、クライアントで指定された件数より1つ多く取得する
     const maxCount = count + 1;
     const listRes = await this.repository.list(maxCount, after);

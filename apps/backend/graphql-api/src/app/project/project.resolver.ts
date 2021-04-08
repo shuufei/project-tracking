@@ -1,8 +1,12 @@
 import type {
+  IGetBacklogByProjectIdService,
   IListProjectsService,
-  ListProjectsResponse,
 } from '@bison/backend/application';
-import { LIST_PROJECTS_SERVICE } from '@bison/backend/application';
+import {
+  GET_BACKLOG_BY_PROJECT_ID_SERVICE,
+  LIST_PROJECTS_SERVICE,
+} from '@bison/backend/application';
+import { ProjectEdge } from '@bison/backend/domain';
 import type { Color as DomainColor } from '@bison/shared/domain';
 import { Inject } from '@nestjs/common';
 import {
@@ -16,7 +20,7 @@ import {
 } from '@nestjs/graphql';
 import { last } from 'lodash/fp';
 import { OmitConnectionNode } from '../../helper-types';
-import type { Project, ProjectConnection } from '../../schema-types';
+import type { Backlog, Project, ProjectConnection } from '../../schema-types';
 import { Color } from '../../schema-types';
 
 // TODO: presentationレイヤに共通処理として定義する
@@ -43,7 +47,9 @@ export const convertToApiColorFromDomainColor = (color: DomainColor): Color => {
 export class ProjectResolver {
   constructor(
     @Inject(LIST_PROJECTS_SERVICE)
-    private listProjectsUsecase: IListProjectsService
+    private listProjectsService: IListProjectsService,
+    @Inject(GET_BACKLOG_BY_PROJECT_ID_SERVICE)
+    private getBacklogByProjectIdService: IGetBacklogByProjectIdService
   ) {}
 
   @Query()
@@ -53,7 +59,7 @@ export class ProjectResolver {
   ): Promise<
     OmitConnectionNode<ProjectConnection, 'backlog' | 'boards' | 'users'>
   > {
-    const response = await this.listProjectsUsecase.handle(first, after);
+    const response = await this.listProjectsService.handle(first, after);
     const edges: OmitConnectionNode<
       ProjectConnection,
       'backlog' | 'boards' | 'users'
@@ -68,8 +74,7 @@ export class ProjectResolver {
     }));
     return {
       pageInfo: {
-        endCursor: last<ListProjectsResponse['edges'][number]>(response.edges)
-          ?.node.id,
+        endCursor: last<ProjectEdge[][number]>(response.edges)?.node.id,
         hasNextPage: response.hasNextPage,
       },
       edges,
@@ -77,9 +82,7 @@ export class ProjectResolver {
   }
 
   @ResolveField()
-  async backlog(@Parent() project: Project) {
-    return {
-      id: 'sample_backlog_001',
-    };
+  async backlog(@Parent() project: Project): Promise<Omit<Backlog, 'project'>> {
+    return this.getBacklogByProjectIdService.handle(project.id);
   }
 }
