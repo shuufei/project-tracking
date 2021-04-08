@@ -1,9 +1,11 @@
 import type {
   IGetBacklogByProjectIdService,
+  IListBoardsByProjectIdService,
   IListProjectsService,
 } from '@bison/backend/application';
 import {
   GET_BACKLOG_BY_PROJECT_ID_SERVICE,
+  LIST_BOARDS_BY_PROJECT_ID_SERVICE,
   LIST_PROJECTS_SERVICE,
 } from '@bison/backend/application';
 import { ProjectEdge } from '@bison/backend/domain';
@@ -20,7 +22,12 @@ import {
 } from '@nestjs/graphql';
 import { last } from 'lodash/fp';
 import { OmitConnectionNode } from '../../helper-types';
-import type { Backlog, Project, ProjectConnection } from '../../schema-types';
+import type {
+  Backlog,
+  Board,
+  Project,
+  ProjectConnection,
+} from '../../schema-types';
 import { Color } from '../../schema-types';
 
 // TODO: presentationレイヤに共通処理として定義する
@@ -49,7 +56,9 @@ export class ProjectResolver {
     @Inject(LIST_PROJECTS_SERVICE)
     private listProjectsService: IListProjectsService,
     @Inject(GET_BACKLOG_BY_PROJECT_ID_SERVICE)
-    private getBacklogByProjectIdService: IGetBacklogByProjectIdService
+    private getBacklogByProjectIdService: IGetBacklogByProjectIdService,
+    @Inject(LIST_BOARDS_BY_PROJECT_ID_SERVICE)
+    private listBoardsByProjectIdService: IListBoardsByProjectIdService
   ) {}
 
   @Query()
@@ -84,5 +93,14 @@ export class ProjectResolver {
   @ResolveField()
   async backlog(@Parent() project: Project): Promise<Omit<Backlog, 'project'>> {
     return this.getBacklogByProjectIdService.handle(project.id);
+  }
+
+  @ResolveField()
+  async boards(
+    @Parent() project: Project,
+    @Args('first', { type: () => Int }) first: number,
+    @Args('after', { type: () => ID }) after?: Board['id']
+  ) {
+    return this.listBoardsByProjectIdService.handle(project.id, first, after);
   }
 }

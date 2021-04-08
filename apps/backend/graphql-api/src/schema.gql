@@ -69,7 +69,7 @@ type Project implements Node {
   description: String
   color: Color!
   backlog: Backlog!
-  boards: BoardConnection!
+  boards(first: Int! = 10, after: ID): BoardConnection!
   users: UserConnection!
 }
 
