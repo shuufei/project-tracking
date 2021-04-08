@@ -22,18 +22,6 @@ class MockListProjectsUsecase implements IListProjectsUsecase {
 }
 
 class MockProjectRepository implements IProjectRepository {
-  async getById() {
-    const color: Color = 'blue';
-    return {
-      node: {
-        id: 'project001',
-        name: 'project name 001',
-        description: 'project description 001',
-        color,
-      },
-    };
-  }
-
   async list(): Promise<ListResponse> {
     return {
       edges: [
