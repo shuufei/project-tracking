@@ -72,8 +72,9 @@ export class PopupComponent implements OnInit, OnDestroy {
     }
     fromEvent(this.triggerEl, 'click')
       .pipe(
-        tap(() => {
+        tap((e) => {
           this.isOpen$.next(true);
+          e.stopPropagation();
         }),
         takeUntil(this.onDestroy$)
       )
