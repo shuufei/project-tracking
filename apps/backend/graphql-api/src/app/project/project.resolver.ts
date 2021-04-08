@@ -2,11 +2,13 @@ import type {
   IGetBacklogByProjectIdService,
   IListBoardsByProjectIdService,
   IListProjectsService,
+  IListUsersByProjectIdService,
 } from '@bison/backend/application';
 import {
   GET_BACKLOG_BY_PROJECT_ID_SERVICE,
   LIST_BOARDS_BY_PROJECT_ID_SERVICE,
   LIST_PROJECTS_SERVICE,
+  LIST_USERS_BY_PROJECT_ID_SERVICE,
 } from '@bison/backend/application';
 import { ProjectEdge } from '@bison/backend/domain';
 import type { Color as DomainColor } from '@bison/shared/domain';
@@ -58,7 +60,9 @@ export class ProjectResolver {
     @Inject(GET_BACKLOG_BY_PROJECT_ID_SERVICE)
     private getBacklogByProjectIdService: IGetBacklogByProjectIdService,
     @Inject(LIST_BOARDS_BY_PROJECT_ID_SERVICE)
-    private listBoardsByProjectIdService: IListBoardsByProjectIdService
+    private listBoardsByProjectIdService: IListBoardsByProjectIdService,
+    @Inject(LIST_USERS_BY_PROJECT_ID_SERVICE)
+    private listUsersByProjectIdService: IListUsersByProjectIdService
   ) {}
 
   @Query()
@@ -102,5 +106,14 @@ export class ProjectResolver {
     @Args('after', { type: () => ID }) after?: Board['id']
   ) {
     return this.listBoardsByProjectIdService.handle(project.id, first, after);
+  }
+
+  @ResolveField()
+  async users(
+    @Parent() project: Project,
+    @Args('first', { type: () => Int }) first: number,
+    @Args('after', { type: () => ID }) after?: Board['id']
+  ) {
+    return this.listUsersByProjectIdService.handle(project.id, first, after);
   }
 }

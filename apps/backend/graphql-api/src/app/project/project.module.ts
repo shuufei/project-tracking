@@ -2,9 +2,12 @@ import {
   GET_BACKLOG_BY_PROJECT_ID_SERVICE,
   IGetBacklogByProjectIdService,
   IListBoardsByProjectIdService,
+  IListUsersByProjectIdService,
   ListBoardsResponse,
   ListProjectsService,
+  ListUsersResponse,
   LIST_PROJECTS_SERVICE,
+  LIST_USERS_BY_PROJECT_ID_SERVICE,
 } from '@bison/backend/application';
 import {
   IProjectRepository,
@@ -101,6 +104,40 @@ class MockListBoardsByProjectIdService
   }
 }
 
+class MockListUsersByProjectIdService implements IListUsersByProjectIdService {
+  handle(): ListUsersResponse {
+    return Promise.resolve({
+      edges: [
+        {
+          cursor: '',
+          node: {
+            id: `user${getRandom()}`,
+            name: `user name ${getRandom()}`,
+            icon: `user description ${getRandom()}`,
+          },
+        },
+        {
+          cursor: '',
+          node: {
+            id: `user${getRandom()}`,
+            name: `user name ${getRandom()}`,
+            icon: `user icon ${getRandom()}`,
+          },
+        },
+        {
+          cursor: '',
+          node: {
+            id: `user${getRandom()}`,
+            name: `user name ${getRandom()}`,
+            icon: `user icon ${getRandom()}`,
+          },
+        },
+      ],
+      hasNextPage: false,
+    });
+  }
+}
+
 @Module({
   providers: [
     ProjectResolver,
@@ -119,6 +156,10 @@ class MockListBoardsByProjectIdService
     {
       provide: LIST_BOARDS_BY_PROJECT_ID_SERVICE,
       useValue: new MockListBoardsByProjectIdService(),
+    },
+    {
+      provide: LIST_USERS_BY_PROJECT_ID_SERVICE,
+      useValue: new MockListUsersByProjectIdService(),
     },
   ],
 })
