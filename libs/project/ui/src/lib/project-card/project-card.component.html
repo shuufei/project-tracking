@@ -7,11 +7,27 @@
         </div>
         <ui-color-icon [color]="state.color" class="h-3 w-3"></ui-color-icon>
       </div>
-      <ui-menu-popup
-        [triggerVisible]="state.isHover"
-        [featureOption]="{ delete: true }"
-        (clickedDelete)="clickedDelete.emit()"
-      ></ui-menu-popup>
+      <div class="relative">
+        <div #triggerEl class="menu-trigger flex invisible">
+          <ui-icon
+            class="menu-icon cursor-pointer"
+            [icon]="'more-horizontal'"
+            [size]="'s'"
+            [color]="'primary-light2'"
+            [hoverColor]="'primary'"
+          ></ui-icon>
+        </div>
+        <ui-popup [triggerEl]="triggerEl" [isCloseWhenPopupAction]="true">
+          <div class="menu-items">
+            <ui-menu-item
+              [itemName]="'削除'"
+              [color]="'warn'"
+              [icon]="'trash-2'"
+              (click)="clickedDelete.emit()"
+            ></ui-menu-item>
+          </div>
+        </ui-popup>
+      </div>
     </div>
     <p
       class="description text-s2 font-medium leading-normal whitespace-pre-line mt-1"

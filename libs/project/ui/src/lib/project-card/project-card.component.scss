@@ -14,9 +14,21 @@
     & + .under-divide {
       background-color: transparent;
     }
+
+    .menu-trigger {
+      visibility: visible;
+    }
   }
 }
 
 .description {
   color: #303030;
+}
+
+.menu-icon {
+  padding: 1px;
+}
+
+.menu-items {
+  min-width: 180px;
 }

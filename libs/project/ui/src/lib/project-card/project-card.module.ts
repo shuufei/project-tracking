@@ -2,7 +2,9 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import {
   ColorIconModule,
-  MenuPopupModule,
+  IconModule,
+  MenuItemModule,
+  PopupModule,
   UserIconListModule,
   UserIconModule,
 } from '@bison/shared/ui';
@@ -13,7 +15,9 @@ import { ProjectCardComponent } from './project-card.component';
   imports: [
     CommonModule,
     ColorIconModule,
-    MenuPopupModule,
+    IconModule,
+    PopupModule,
+    MenuItemModule,
     UserIconModule,
     UserIconListModule,
   ],

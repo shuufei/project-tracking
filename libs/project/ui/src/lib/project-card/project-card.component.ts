@@ -2,7 +2,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
-  HostListener,
   Input,
   Output,
 } from '@angular/core';
@@ -16,7 +15,6 @@ type State = {
   adminImg?: string;
   memberImgs: (string | undefined)[];
   underDivide: boolean;
-  isHover: boolean;
 };
 
 @Component({
@@ -64,15 +62,5 @@ export class ProjectCardComponent {
       memberImgs: [],
       underDivide: false,
     });
-  }
-
-  @HostListener('mouseenter', [])
-  onMouseEnter() {
-    this.state.set('isHover', () => true);
-  }
-
-  @HostListener('mouseleave', [])
-  onMouseLeave() {
-    this.state.set('isHover', () => false);
   }
 }

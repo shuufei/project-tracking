@@ -14,4 +14,18 @@
 
 .task-card-content {
   min-height: 40px;
+
+  &:hover {
+    .menu-trigger {
+      visibility: visible;
+    }
+  }
+}
+
+.menu-icon {
+  padding: 1px;
+}
+
+.menu-items {
+  min-width: 180px;
 }

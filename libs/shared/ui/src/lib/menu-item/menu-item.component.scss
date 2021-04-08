@@ -4,6 +4,7 @@
   padding: 8px;
   border-radius: var(--bison-radius-s);
   border: solid 1px transparent;
+  cursor: pointer;
   &:hover {
     border: solid 1px var(--bison-primary-default);
   }
