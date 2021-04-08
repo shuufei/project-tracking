@@ -1,8 +1,10 @@
 import type {
+  BoardEdge,
   IGetBacklogByProjectIdService,
   IListBoardsByProjectIdService,
   IListProjectsService,
   IListUsersByProjectIdService,
+  UserEdge,
 } from '@bison/backend/application';
 import {
   GET_BACKLOG_BY_PROJECT_ID_SERVICE,
@@ -27,8 +29,10 @@ import { OmitConnectionNode } from '../../helper-types';
 import type {
   Backlog,
   Board,
+  BoardConnection,
   Project,
   ProjectConnection,
+  UserConnection,
 } from '../../schema-types';
 import { Color } from '../../schema-types';
 
@@ -104,8 +108,19 @@ export class ProjectResolver {
     @Parent() project: Project,
     @Args('first', { type: () => Int }) first: number,
     @Args('after', { type: () => ID }) after?: Board['id']
-  ) {
-    return this.listBoardsByProjectIdService.handle(project.id, first, after);
+  ): Promise<OmitConnectionNode<BoardConnection, 'project'>> {
+    const response = await this.listBoardsByProjectIdService.handle(
+      project.id,
+      first,
+      after
+    );
+    return {
+      edges: response.edges,
+      pageInfo: {
+        endCursor: last<BoardEdge[][number]>(response.edges)?.node.id,
+        hasNextPage: response.hasNextPage,
+      },
+    };
   }
 
   @ResolveField()
@@ -113,7 +128,18 @@ export class ProjectResolver {
     @Parent() project: Project,
     @Args('first', { type: () => Int }) first: number,
     @Args('after', { type: () => ID }) after?: Board['id']
-  ) {
-    return this.listUsersByProjectIdService.handle(project.id, first, after);
+  ): Promise<OmitConnectionNode<UserConnection, 'projects'>> {
+    const response = await this.listUsersByProjectIdService.handle(
+      project.id,
+      first,
+      after
+    );
+    return {
+      edges: response.edges,
+      pageInfo: {
+        endCursor: last<UserEdge[][number]>(response.edges)?.node.id,
+        hasNextPage: response.hasNextPage,
+      },
+    };
   }
 }

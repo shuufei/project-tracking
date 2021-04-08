@@ -81,7 +81,7 @@ export interface Board extends Node {
     id: string;
     name: string;
     description?: string;
-    isArchive: boolean;
+    isArchived: boolean;
     project: Project;
 }
 
