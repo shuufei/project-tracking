@@ -3,16 +3,16 @@ import { PROJECT_REPOSITORY } from '@bison/backend/domain';
 import type { Project } from '@bison/shared/domain';
 import { Inject } from '@nestjs/common';
 import type {
-  IListProjectsUsecase,
+  IListProjectsService,
   ListProjectsResponse,
-} from './interface/list-projects-usecase';
+} from './interface/list-projects-service';
 
-export class ListProjectsUsecase implements IListProjectsUsecase {
+export class ListProjectsService implements IListProjectsService {
   constructor(
     @Inject(PROJECT_REPOSITORY) private repository: IProjectRepository
   ) {}
 
-  async execute(
+  async handle(
     count: number,
     after?: Project['id']
   ): Promise<ListProjectsResponse> {

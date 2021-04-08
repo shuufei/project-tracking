@@ -642,22 +642,22 @@
         }
       }
     },
-    "backend-usecase": {
-      "root": "libs/backend/usecase",
-      "sourceRoot": "libs/backend/usecase/src",
+    "backend-application": {
+      "root": "libs/backend/application",
+      "sourceRoot": "libs/backend/application/src",
       "projectType": "library",
       "architect": {
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["libs/backend/usecase/**/*.ts"]
+            "lintFilePatterns": ["libs/backend/application/**/*.ts"]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/backend/usecase"],
+          "outputs": ["coverage/libs/backend/application"],
           "options": {
-            "jestConfig": "libs/backend/usecase/jest.config.js",
+            "jestConfig": "libs/backend/application/jest.config.js",
             "passWithNoTests": true
           }
         }

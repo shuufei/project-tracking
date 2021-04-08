@@ -1,8 +1,8 @@
 import type {
-  IListProjectsUsecase,
+  IListProjectsService,
   ListProjectsResponse,
-} from '@bison/backend/usecase';
-import { LIST_PROJECTS_USECASE } from '@bison/backend/usecase';
+} from '@bison/backend/application';
+import { LIST_PROJECTS_SERVICE } from '@bison/backend/application';
 import type { Color as DomainColor } from '@bison/shared/domain';
 import { Inject } from '@nestjs/common';
 import {
@@ -19,6 +19,7 @@ import { OmitConnectionNode } from '../../helper-types';
 import type { Project, ProjectConnection } from '../../schema-types';
 import { Color } from '../../schema-types';
 
+// TODO: presentationレイヤに共通処理として定義する
 export const convertToApiColorFromDomainColor = (color: DomainColor): Color => {
   switch (color) {
     case 'blue':
@@ -41,8 +42,8 @@ export const convertToApiColorFromDomainColor = (color: DomainColor): Color => {
 @Resolver('Project')
 export class ProjectResolver {
   constructor(
-    @Inject(LIST_PROJECTS_USECASE)
-    private listProjectsUsecase: IListProjectsUsecase
+    @Inject(LIST_PROJECTS_SERVICE)
+    private listProjectsUsecase: IListProjectsService
   ) {}
 
   @Query()
@@ -52,7 +53,7 @@ export class ProjectResolver {
   ): Promise<
     OmitConnectionNode<ProjectConnection, 'backlog' | 'boards' | 'users'>
   > {
-    const response = await this.listProjectsUsecase.execute(first, after);
+    const response = await this.listProjectsUsecase.handle(first, after);
     const edges: OmitConnectionNode<
       ProjectConnection,
       'backlog' | 'boards' | 'users'

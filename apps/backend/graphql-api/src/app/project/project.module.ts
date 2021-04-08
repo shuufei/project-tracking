@@ -1,25 +1,15 @@
 import {
+  ListProjectsService,
+  LIST_PROJECTS_SERVICE,
+} from '@bison/backend/application';
+import {
   IProjectRepository,
   ListResponse,
   PROJECT_REPOSITORY,
 } from '@bison/backend/domain';
-import type { IListProjectsUsecase } from '@bison/backend/usecase';
-import {
-  ListProjectsUsecase,
-  LIST_PROJECTS_USECASE,
-} from '@bison/backend/usecase';
 import type { Color } from '@bison/shared/domain';
 import { Module } from '@nestjs/common';
 import { ProjectResolver } from './project.resolver';
-
-class MockListProjectsUsecase implements IListProjectsUsecase {
-  async execute() {
-    return {
-      edges: [],
-      hasNextPage: true,
-    };
-  }
-}
 
 class MockProjectRepository implements IProjectRepository {
   async list(): Promise<ListResponse> {
@@ -61,8 +51,8 @@ class MockProjectRepository implements IProjectRepository {
   providers: [
     ProjectResolver,
     {
-      provide: LIST_PROJECTS_USECASE,
-      useClass: ListProjectsUsecase,
+      provide: LIST_PROJECTS_SERVICE,
+      useClass: ListProjectsService,
     },
     {
       provide: PROJECT_REPOSITORY,

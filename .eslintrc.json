@@ -15,7 +15,7 @@
               {
                 "sourceTag": "scope:backend-presentation",
                 "onlyDependOnLibsWithTags": [
-                  "scope:backend-usecase",
+                  "scope:backend-application",
                   "scope:backend-domain",
                   "scope:shared-domain"
                 ]
@@ -24,15 +24,19 @@
                 "sourceTag": "scope:backend-infrastructure-repository",
                 "onlyDependOnLibsWithTags": [
                   "scope:backend-domain",
-                  "scope:backend-usecase"
+                  "scope:backend-application"
                 ]
               },
               {
-                "sourceTag": "scope:backend-usecase",
+                "sourceTag": "scope:backend-application",
                 "onlyDependOnLibsWithTags": [
                   "scope:backend-domain",
                   "scope:shared-domain"
                 ]
+              },
+              {
+                "sourceTag": "scope:backend-domain",
+                "onlyDependOnLibsWithTags": ["scope:shared-domain"]
               }
             ]
           }
