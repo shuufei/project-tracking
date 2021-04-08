@@ -1,0 +1,62 @@
+<ng-container *ngIf="state$ | async as state">
+  <div class="item px-6 pt-4 pb-8 font-sans cursor-pointer duration-100">
+    <div class="flex justify-between items-center">
+      <div class="flex items-center">
+        <div class="text-l2 text-black-default font-medium leading-8 mr-2">
+          {{ state.title }}
+        </div>
+        <ui-color-icon [color]="state.color" class="h-3 w-3"></ui-color-icon>
+      </div>
+      <div class="relative">
+        <div #triggerEl class="menu-trigger flex invisible">
+          <ui-icon
+            class="menu-icon cursor-pointer"
+            [icon]="'more-horizontal'"
+            [size]="'s'"
+            [color]="'primary-light2'"
+            [hoverColor]="'primary'"
+          ></ui-icon>
+        </div>
+        <ui-popup [triggerEl]="triggerEl" [isCloseWhenPopupAction]="true">
+          <div class="menu-items">
+            <ui-menu-item
+              [itemName]="'削除'"
+              [color]="'warn'"
+              [icon]="'trash-2'"
+              (click)="clickedDelete.emit()"
+            ></ui-menu-item>
+          </div>
+        </ui-popup>
+      </div>
+    </div>
+    <p
+      class="description text-s2 font-medium leading-normal whitespace-pre-line mt-1"
+    >
+      {{ state.description }}
+    </p>
+    <div class="flex text-s3 text-black-light2 font-medium mt-3">
+      <div class="mr-6 text-center">
+        <label class="leading-normal">管理者</label>
+        <div class="mt-1">
+          <ui-user-icon
+            style="width: 35px; height: 35px"
+            [src]="state.adminImg"
+          ></ui-user-icon>
+        </div>
+      </div>
+      <div>
+        <label class="leading-normal">メンバー</label>
+        <div class="mt-1">
+          <ui-user-icon-list
+            [srcList]="state.memberImgs"
+            [size]="35"
+          ></ui-user-icon-list>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr
+    *ngIf="state.underDivide"
+    class="under-divide h-0.5 bg-primary-light2 duration-100"
+  />
+</ng-container>

@@ -1,0 +1,34 @@
+@tailwind utilities;
+
+:host {
+  display: block;
+}
+
+.item {
+  &:hover {
+    @apply rounded-s;
+    @apply ring-1;
+    @apply ring-primary-default;
+    @apply bg-primary-light4;
+
+    & + .under-divide {
+      background-color: transparent;
+    }
+
+    .menu-trigger {
+      visibility: visible;
+    }
+  }
+}
+
+.description {
+  color: #303030;
+}
+
+.menu-icon {
+  padding: 1px;
+}
+
+.menu-items {
+  min-width: 180px;
+}

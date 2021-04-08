@@ -440,7 +440,7 @@
       "projectType": "library",
       "root": "libs/project/ui",
       "sourceRoot": "libs/project/ui/src",
-      "prefix": "bison",
+      "prefix": "ui",
       "architect": {
         "lint": {
           "builder": "@nrwl/linter:eslint",
