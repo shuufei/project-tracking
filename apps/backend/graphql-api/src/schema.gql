@@ -27,7 +27,7 @@ type User implements Node {
   id: ID!
   name: String!
   icon: String
-  projects: ProjectConnection!
+  projects(first: Int! = 10, after: ID): ProjectConnection!
 }
 
 type UserEdge implements Edge {
