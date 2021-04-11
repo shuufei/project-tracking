@@ -7,7 +7,7 @@ import { Module } from '@nestjs/common';
 import { getRandom } from '../util/get-random-number';
 import { BoardResolver } from './board.resolver';
 
-class MockGetProjectByBoardId implements IGetProjectByBoardIdService {
+class MockGetProjectByBoardIdService implements IGetProjectByBoardIdService {
   async handle() {
     return {
       id: `project${getRandom()}`,
@@ -23,7 +23,7 @@ class MockGetProjectByBoardId implements IGetProjectByBoardIdService {
     BoardResolver,
     {
       provide: GET_PROJECT_BY_BOARD_ID_SERVICE,
-      useValue: new MockGetProjectByBoardId(),
+      useValue: new MockGetProjectByBoardIdService(),
     },
   ],
 })
