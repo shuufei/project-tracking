@@ -5,7 +5,7 @@ export interface IListUsersByProjectIdService {
     projectId: Project['id'],
     first: number,
     after?: Board['id']
-  ) => ListUsersResponse;
+  ) => ListUsersByProjectIdResponse;
 }
 
 export const LIST_USERS_BY_PROJECT_ID_SERVICE = Symbol(
@@ -19,7 +19,7 @@ export type UserEdge = {
   cursor: string;
 };
 
-export type ListUsersResponse = Promise<{
+export type ListUsersByProjectIdResponse = Promise<{
   edges: UserEdge[];
   hasNextPage: boolean;
 }>;

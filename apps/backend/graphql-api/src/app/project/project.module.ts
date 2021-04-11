@@ -3,9 +3,9 @@ import {
   IGetBacklogByProjectIdService,
   IListBoardsByProjectIdService,
   IListUsersByProjectIdService,
-  ListBoardsResponse,
+  ListBoardsByProjectIdResponse,
   ListProjectsService,
-  ListUsersResponse,
+  ListUsersByProjectIdResponse,
   LIST_PROJECTS_SERVICE,
   LIST_USERS_BY_PROJECT_ID_SERVICE,
 } from '@bison/backend/application';
@@ -17,9 +17,8 @@ import {
 import type { Color } from '@bison/shared/domain';
 import { Module } from '@nestjs/common';
 import { LIST_BOARDS_BY_PROJECT_ID_SERVICE } from '../../../../../../libs/backend/application/src/lib/board/interface/list-boards-by-project-id-service';
+import { getRandom } from '../util/get-random-number';
 import { ProjectResolver } from './project.resolver';
-
-const getRandom = () => Math.floor(Math.random() * 1000);
 
 class MockProjectRepository implements IProjectRepository {
   async list(): Promise<ListResponse> {
@@ -68,7 +67,7 @@ class MockGetBacklogByProjectIdService
 
 class MockListBoardsByProjectIdService
   implements IListBoardsByProjectIdService {
-  handle(): ListBoardsResponse {
+  handle(): ListBoardsByProjectIdResponse {
     return Promise.resolve({
       edges: [
         {
@@ -105,7 +104,7 @@ class MockListBoardsByProjectIdService
 }
 
 class MockListUsersByProjectIdService implements IListUsersByProjectIdService {
-  handle(): ListUsersResponse {
+  handle(): ListUsersByProjectIdResponse {
     return Promise.resolve({
       edges: [
         {
