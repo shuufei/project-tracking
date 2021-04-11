@@ -4,9 +4,8 @@ import {
 } from '@bison/backend/application';
 import { Color } from '@bison/shared/domain';
 import { Module } from '@nestjs/common';
+import { getRandom } from '../util/get-random-number';
 import { BoardResolver } from './board.resolver';
-
-const getRandom = () => Math.floor(Math.random() * 1000);
 
 class MockGetProjectByBoardId implements IGetProjectByBoardIdService {
   async handle() {
