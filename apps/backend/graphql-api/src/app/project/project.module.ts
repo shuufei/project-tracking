@@ -67,8 +67,8 @@ class MockGetBacklogByProjectIdService
 
 class MockListBoardsByProjectIdService
   implements IListBoardsByProjectIdService {
-  handle(): ListBoardsByProjectIdResponse {
-    return Promise.resolve({
+  async handle(): ListBoardsByProjectIdResponse {
+    return {
       edges: [
         {
           cursor: '',
@@ -99,13 +99,13 @@ class MockListBoardsByProjectIdService
         },
       ],
       hasNextPage: false,
-    });
+    };
   }
 }
 
 class MockListUsersByProjectIdService implements IListUsersByProjectIdService {
-  handle(): ListUsersByProjectIdResponse {
-    return Promise.resolve({
+  async handle(): ListUsersByProjectIdResponse {
+    return {
       edges: [
         {
           cursor: '',
@@ -133,7 +133,7 @@ class MockListUsersByProjectIdService implements IListUsersByProjectIdService {
         },
       ],
       hasNextPage: false,
-    });
+    };
   }
 }
 

@@ -70,7 +70,7 @@ export class ProjectResolver {
     }));
     return {
       pageInfo: {
-        endCursor: last<ProjectEdge[][number]>(response.edges)?.node.id,
+        endCursor: last<ProjectEdge>(response.edges)?.node.id,
         hasNextPage: response.hasNextPage,
       },
       edges,
