@@ -13,7 +13,6 @@ import {
   LIST_USERS_BY_PROJECT_ID_SERVICE,
 } from '@bison/backend/application';
 import { ProjectEdge } from '@bison/backend/domain';
-import type { Color as DomainColor } from '@bison/shared/domain';
 import { Inject } from '@nestjs/common';
 import {
   Args,
@@ -34,27 +33,7 @@ import type {
   ProjectConnection,
   UserConnection,
 } from '../../schema-types';
-import { Color } from '../../schema-types';
-
-// TODO: presentationレイヤに共通処理として定義する
-export const convertToApiColorFromDomainColor = (color: DomainColor): Color => {
-  switch (color) {
-    case 'blue':
-      return Color.BLUE;
-    case 'green':
-      return Color.GREEN;
-    case 'red':
-      return Color.RED;
-    case 'yellow':
-      return Color.YELLOW;
-    case 'brown':
-      return Color.BROWN;
-    case 'pink':
-      return Color.PINK;
-    case 'gray':
-      return Color.GRAY;
-  }
-};
+import { convertToApiColorFromDomainColor } from '../util/convert-to-color-from-domain-color';
 
 @Resolver('Project')
 export class ProjectResolver {
