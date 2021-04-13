@@ -138,6 +138,14 @@
             "jestConfig": "apps/backend/graphql-api/jest.config.js",
             "passWithNoTests": true
           }
+        },
+        "e2e": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/apps/backend/graphql-api-e2e"],
+          "options": {
+            "jestConfig": "apps/backend/graphql-api/jest-e2e.config.js",
+            "passWithNoTests": true
+          }
         }
       }
     },
