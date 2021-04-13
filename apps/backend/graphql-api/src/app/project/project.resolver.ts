@@ -14,15 +14,7 @@ import {
 } from '@bison/backend/application';
 import { ProjectEdge } from '@bison/backend/domain';
 import { Inject } from '@nestjs/common';
-import {
-  Args,
-  ID,
-  Int,
-  Parent,
-  Query,
-  ResolveField,
-  Resolver,
-} from '@nestjs/graphql';
+import { Args, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
 import { last } from 'lodash/fp';
 import { OmitConnectionNode } from '../../helper-types';
 import type {
@@ -50,8 +42,8 @@ export class ProjectResolver {
 
   @Query()
   async projects(
-    @Args('first', { type: () => Int }) first: number,
-    @Args('after', { type: () => ID }) after?: Project['id']
+    @Args('first') first: number,
+    @Args('after') after?: Project['id']
   ): Promise<
     OmitConnectionNode<ProjectConnection, 'backlog' | 'boards' | 'users'>
   > {
@@ -85,8 +77,8 @@ export class ProjectResolver {
   @ResolveField()
   async boards(
     @Parent() project: Project,
-    @Args('first', { type: () => Int }) first: number,
-    @Args('after', { type: () => ID }) after?: Board['id']
+    @Args('first') first: number,
+    @Args('after') after?: Board['id']
   ): Promise<OmitConnectionNode<BoardConnection, 'project'>> {
     const response = await this.listBoardsByProjectIdService.handle(
       project.id,
@@ -105,8 +97,8 @@ export class ProjectResolver {
   @ResolveField()
   async users(
     @Parent() project: Project,
-    @Args('first', { type: () => Int }) first: number,
-    @Args('after', { type: () => ID }) after?: Board['id']
+    @Args('first') first: number,
+    @Args('after') after?: Board['id']
   ): Promise<OmitConnectionNode<UserConnection, 'projects'>> {
     const response = await this.listUsersByProjectIdService.handle(
       project.id,
