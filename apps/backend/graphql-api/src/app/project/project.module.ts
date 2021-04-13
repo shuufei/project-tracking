@@ -3,9 +3,7 @@ import {
   IGetBacklogByProjectIdService,
   IListBoardsByProjectIdService,
   IListUsersByProjectIdService,
-  ListBoardsByProjectIdResponse,
   ListProjectsService,
-  ListUsersByProjectIdResponse,
   LIST_PROJECTS_SERVICE,
   LIST_USERS_BY_PROJECT_ID_SERVICE,
 } from '@bison/backend/application';
@@ -67,7 +65,7 @@ class MockGetBacklogByProjectIdService
 
 class MockListBoardsByProjectIdService
   implements IListBoardsByProjectIdService {
-  async handle(): ListBoardsByProjectIdResponse {
+  async handle(): ReturnType<IListBoardsByProjectIdService['handle']> {
     return {
       edges: [
         {
@@ -104,7 +102,7 @@ class MockListBoardsByProjectIdService
 }
 
 class MockListUsersByProjectIdService implements IListUsersByProjectIdService {
-  async handle(): ListUsersByProjectIdResponse {
+  async handle(): ReturnType<IListUsersByProjectIdService['handle']> {
     return {
       edges: [
         {

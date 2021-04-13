@@ -6,13 +6,13 @@ export interface IListProjectsByUserIdService {
     userId: User['id'],
     first: number,
     after?: Project['id']
-  ) => ListProjectsByUserIdResponse;
+  ) => Promise<ListProjectsByUserIdResponse>;
 }
 export const LIST_PROJECTS_BY_USER_ID_SERVICE = Symbol(
   'ListProjectsByUserIdService'
 );
 
-export type ListProjectsByUserIdResponse = Promise<{
+export type ListProjectsByUserIdResponse = {
   edges: ProjectEdge[];
   hasNextPage: boolean;
-}>;
+};
