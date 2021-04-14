@@ -1,7 +1,8 @@
+import { Cursor } from '@bison/backend/domain';
 import { Project } from '@bison/shared/domain';
 
 export interface IProjectRepository {
-  list: (count: number, cursor?: ProjectNode['id']) => Promise<ListResponse>;
+  list: (count: number, cursor?: Cursor) => Promise<ListResponse>;
 }
 
 export type ProjectNode = Pick<
@@ -11,7 +12,7 @@ export type ProjectNode = Pick<
 
 export type ProjectEdge = {
   node: ProjectNode;
-  cursor: string;
+  cursor: Cursor;
 };
 
 export const PROJECT_REPOSITORY = Symbol('ProjectRepository');

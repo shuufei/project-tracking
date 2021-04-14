@@ -12,14 +12,13 @@ import {
   LIST_PROJECTS_SERVICE,
   LIST_USERS_BY_PROJECT_ID_SERVICE,
 } from '@bison/backend/application';
-import { ProjectEdge } from '@bison/backend/domain';
+import type { Cursor, ProjectEdge } from '@bison/backend/domain';
 import { Inject } from '@nestjs/common';
 import { Args, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
 import { last } from 'lodash/fp';
 import { OmitConnectionNode } from '../../helper-types';
 import type {
   Backlog,
-  Board,
   BoardConnection,
   Project,
   ProjectConnection,
@@ -43,7 +42,7 @@ export class ProjectResolver {
   @Query()
   async projects(
     @Args('first') first: number,
-    @Args('after') after?: Project['id']
+    @Args('after') after?: Cursor
   ): Promise<
     OmitConnectionNode<ProjectConnection, 'backlog' | 'boards' | 'users'>
   > {
@@ -78,7 +77,7 @@ export class ProjectResolver {
   async boards(
     @Parent() project: Project,
     @Args('first') first: number,
-    @Args('after') after?: Board['id']
+    @Args('after') after?: Cursor
   ): Promise<OmitConnectionNode<BoardConnection, 'project'>> {
     const response = await this.listBoardsByProjectIdService.handle(
       project.id,
@@ -98,7 +97,7 @@ export class ProjectResolver {
   async users(
     @Parent() project: Project,
     @Args('first') first: number,
-    @Args('after') after?: Board['id']
+    @Args('after') after?: Cursor
   ): Promise<OmitConnectionNode<UserConnection, 'projects'>> {
     const response = await this.listUsersByProjectIdService.handle(
       project.id,

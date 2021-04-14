@@ -1,11 +1,7 @@
-import { ProjectEdge } from '@bison/backend/domain';
-import { Project } from '@bison/shared/domain';
+import { Cursor, ProjectEdge } from '@bison/backend/domain';
 
 export interface IListProjectsService {
-  handle: (
-    first: number,
-    after?: Project['id']
-  ) => Promise<ListProjectsResponse>;
+  handle: (first: number, after?: Cursor) => Promise<ListProjectsResponse>;
 }
 export const LIST_PROJECTS_SERVICE = Symbol('ListProjectsService');
 

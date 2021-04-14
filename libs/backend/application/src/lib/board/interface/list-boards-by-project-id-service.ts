@@ -1,9 +1,10 @@
+import { Cursor } from '@bison/backend/domain';
 import { Board, Project } from '@bison/shared/domain';
 export interface IListBoardsByProjectIdService {
   handle: (
     projectId: Project['id'],
     first: number,
-    after?: Board['id']
+    after?: Cursor
   ) => Promise<ListBoardsByProjectIdResponse>;
 }
 
@@ -18,7 +19,7 @@ export type BoardNode = Pick<
 
 export type BoardEdge = {
   node: BoardNode;
-  cursor: string;
+  cursor: Cursor;
 };
 
 export type ListBoardsByProjectIdResponse = {

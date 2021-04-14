@@ -1,4 +1,5 @@
 import {
+  Cursor,
   IProjectRepository,
   ListResponse,
   PROJECT_REPOSITORY,
@@ -21,7 +22,7 @@ const mockProjects: ListResponse = {
 };
 
 class MockProjectRepository implements IProjectRepository {
-  async list(count: number, cursor?: string) {
+  async list(count: number, cursor?: Cursor) {
     return mockProjects;
   }
 }

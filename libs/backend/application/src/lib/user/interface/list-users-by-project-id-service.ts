@@ -1,10 +1,11 @@
-import { Board, Project, User } from '@bison/shared/domain';
+import { Cursor } from '@bison/backend/domain';
+import { Project, User } from '@bison/shared/domain';
 
 export interface IListUsersByProjectIdService {
   handle: (
     projectId: Project['id'],
     first: number,
-    after?: Board['id']
+    after?: Cursor
   ) => Promise<ListUsersByProjectIdResponse>;
 }
 
@@ -16,7 +17,7 @@ export type UserNode = Pick<User, 'id' | 'name' | 'icon'>;
 
 export type UserEdge = {
   node: UserNode;
-  cursor: string;
+  cursor: Cursor;
 };
 
 export type ListUsersByProjectIdResponse = {
