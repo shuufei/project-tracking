@@ -62,7 +62,7 @@ export class ProjectResolver {
     }));
     return {
       pageInfo: {
-        endCursor: last<ProjectEdge>(response.edges)?.node.id,
+        endCursor: last<ProjectEdge>(response.edges)?.cursor,
         hasNextPage: response.hasNextPage,
       },
       edges,
@@ -88,7 +88,7 @@ export class ProjectResolver {
     return {
       edges: response.edges,
       pageInfo: {
-        endCursor: last<BoardEdge[][number]>(response.edges)?.node.id,
+        endCursor: last<BoardEdge[][number]>(response.edges)?.cursor,
         hasNextPage: response.hasNextPage,
       },
     };
@@ -108,7 +108,7 @@ export class ProjectResolver {
     return {
       edges: response.edges,
       pageInfo: {
-        endCursor: last<UserEdge[][number]>(response.edges)?.node.id,
+        endCursor: last<UserEdge[][number]>(response.edges)?.cursor,
         hasNextPage: response.hasNextPage,
       },
     };
