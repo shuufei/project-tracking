@@ -12,7 +12,32 @@
             "enforceBuildableLibDependency": true,
             "allow": [],
             "depConstraints": [
-              { "sourceTag": "*", "onlyDependOnLibsWithTags": ["*"] }
+              {
+                "sourceTag": "scope:backend-presentation",
+                "onlyDependOnLibsWithTags": [
+                  "scope:backend-application",
+                  "scope:backend-domain",
+                  "scope:shared-domain"
+                ]
+              },
+              {
+                "sourceTag": "scope:backend-infrastructure",
+                "onlyDependOnLibsWithTags": [
+                  "scope:backend-domain",
+                  "scope:backend-application"
+                ]
+              },
+              {
+                "sourceTag": "scope:backend-application",
+                "onlyDependOnLibsWithTags": [
+                  "scope:backend-domain",
+                  "scope:shared-domain"
+                ]
+              },
+              {
+                "sourceTag": "scope:backend-domain",
+                "onlyDependOnLibsWithTags": ["scope:shared-domain"]
+              }
             ]
           }
         ]

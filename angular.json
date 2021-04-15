@@ -138,6 +138,14 @@
             "jestConfig": "apps/backend/graphql-api/jest.config.js",
             "passWithNoTests": true
           }
+        },
+        "e2e": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/apps/backend/graphql-api-e2e"],
+          "options": {
+            "jestConfig": "apps/backend/graphql-api/jest-e2e.config.js",
+            "passWithNoTests": true
+          }
         }
       }
     },
@@ -594,6 +602,71 @@
           "builder": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": ["apps/frontend/schedule-ui-e2e/**/*.{js,ts}"]
+          }
+        }
+      }
+    },
+    "backend-infrastructure-repository": {
+      "root": "libs/backend/infrastructure/repository",
+      "sourceRoot": "libs/backend/infrastructure/repository/src",
+      "projectType": "library",
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/backend/infrastructure/repository/**/*.ts"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/backend/infrastructure/repository"],
+          "options": {
+            "jestConfig": "libs/backend/infrastructure/repository/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "backend-domain": {
+      "root": "libs/backend/domain",
+      "sourceRoot": "libs/backend/domain/src",
+      "projectType": "library",
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/backend/domain/**/*.ts"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/backend/domain"],
+          "options": {
+            "jestConfig": "libs/backend/domain/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "backend-application": {
+      "root": "libs/backend/application",
+      "sourceRoot": "libs/backend/application/src",
+      "projectType": "library",
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/backend/application/**/*.ts"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/backend/application"],
+          "options": {
+            "jestConfig": "libs/backend/application/jest.config.js",
+            "passWithNoTests": true
           }
         }
       }

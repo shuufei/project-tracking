@@ -1,12 +1,113 @@
-# ------------------------------------------------------
-# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
-# ------------------------------------------------------
-
-type SampleObject {
-  id: ID!
-  name: String!
+type Query {
+  projects(first: Int! = 10, after: ID): ProjectConnection!
 }
 
-type Query {
-  sample: SampleObject!
+type Mutation {
+  createProject(input: CreateProjectInput!): Project!
+}
+
+input CreateProjectInput {
+  name: String!
+  description: String
+  color: Color!
+  adminUserId: ID!
+  memberUserIds: [ID!]!
+}
+
+input UpdateProjectInput {
+  id: ID!
+  name: String!
+  description: String
+  color: Color!
+  adminUserId: ID!
+  memberUserIds: [ID!]!
+}
+
+type User implements Node {
+  id: ID!
+  name: String!
+  icon: String
+  projects(first: Int! = 10, after: ID): ProjectConnection!
+}
+
+type UserEdge implements Edge {
+  cursor: String!
+  node: User!
+}
+
+type UserConnection implements Connection {
+  pageInfo: PageInfo!
+  edges: [UserEdge!]!
+}
+
+type Backlog implements Node {
+  id: ID!
+  project: Project!
+}
+
+type Board implements Node {
+  id: ID!
+  name: String!
+  description: String
+  isArchived: Boolean!
+  project: Project!
+}
+
+type BoardEdge implements Edge {
+  cursor: String!
+  node: Board!
+}
+
+type BoardConnection implements Connection {
+  pageInfo: PageInfo!
+  edges: [BoardEdge!]!
+}
+
+type Project implements Node {
+  id: ID!
+  name: String!
+  description: String
+  color: Color!
+  backlog: Backlog!
+  boards(first: Int! = 10, after: ID): BoardConnection!
+  users(first: Int! = 10, after: ID): UserConnection!
+}
+
+type ProjectEdge implements Edge {
+  cursor: String
+  node: Project!
+}
+
+type ProjectConnection implements Connection {
+  pageInfo: PageInfo!
+  edges: [ProjectEdge!]!
+}
+
+enum Color {
+  RED
+  BLUE
+  GREEN
+  YELLOW
+  BROWN
+  PINK
+  GRAY
+}
+
+type PageInfo {
+  endCursor: String
+  hasNextPage: Boolean!
+}
+
+interface Connection {
+  pageInfo: PageInfo!
+  edges: [Edge!]!
+}
+
+interface Edge {
+  cursor: String
+  node: Node!
+}
+
+interface Node {
+  id: ID!
 }
