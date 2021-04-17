@@ -13,17 +13,17 @@ import {
   LIST_USERS_BY_PROJECT_ID_SERVICE,
 } from '@bison/backend/application';
 import type { Cursor, ProjectEdge } from '@bison/backend/domain';
-import { Inject } from '@nestjs/common';
-import { Args, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
-import { last } from 'lodash/fp';
-import { OmitConnectionNode } from '../../helper-types';
 import type {
   Backlog,
   BoardConnection,
   Project,
   ProjectConnection,
   UserConnection,
-} from '../../schema-types';
+} from '@bison/shared/schema';
+import { Inject } from '@nestjs/common';
+import { Args, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
+import { last } from 'lodash/fp';
+import { OmitConnectionNode } from '../../helper-types';
 import { convertToApiColorFromDomainColor } from '../util/convert-to-color-from-domain-color';
 
 @Resolver('Project')

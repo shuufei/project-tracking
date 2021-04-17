@@ -13,13 +13,7 @@ import { UserModule } from './user/user.module';
     BoardModule,
     UserModule,
     GraphQLModule.forRoot({
-      typePaths: [join(process.cwd(), 'apps/backend/graphql-api/src/**/*.gql')],
-      definitions: {
-        path: join(
-          process.cwd(),
-          'apps/backend/graphql-api/src/schema-types.ts'
-        ),
-      },
+      typePaths: [join(process.cwd(), 'libs/shared/schema/src/**/*.gql')],
     }),
   ],
   controllers: [],

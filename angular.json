@@ -746,6 +746,37 @@
           }
         }
       }
+    },
+    "shared-schema": {
+      "root": "libs/shared/schema",
+      "sourceRoot": "libs/shared/schema/src",
+      "projectType": "library",
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/shared/schema/**/*.ts"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/shared/schema"],
+          "options": {
+            "jestConfig": "libs/shared/schema/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "generate-typings": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "commands": [
+              {
+                "command": "npx ts-node libs/shared/schema/generate-typings.ts"
+              }
+            ]
+          }
+        }
+      }
     }
   }
 }

@@ -56,6 +56,7 @@
     "frontend-domain": { "tags": ["scope:frontend-domain"] },
     "frontend-infrastructure-repository": {
       "tags": ["scope:frontend-infrastructure"]
-    }
+    },
+    "shared-schema": { "tags": [] }
   }
 }

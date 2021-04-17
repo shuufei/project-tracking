@@ -1,11 +1,11 @@
 import type { IListProjectsByUserIdService } from '@bison/backend/application';
 import { LIST_PROJECTS_BY_USER_ID_SERVICE } from '@bison/backend/application';
 import { ProjectEdge } from '@bison/backend/domain';
+import type { Project, ProjectConnection, User } from '@bison/shared/schema';
 import { Inject } from '@nestjs/common';
 import { Args, ID, Int, Parent, ResolveField, Resolver } from '@nestjs/graphql';
 import { last } from 'lodash/fp';
 import { OmitConnectionNode } from '../../helper-types';
-import type { Project, ProjectConnection, User } from '../../schema-types';
 import { convertToApiColorFromDomainColor } from '../util/convert-to-color-from-domain-color';
 
 @Resolver('User')

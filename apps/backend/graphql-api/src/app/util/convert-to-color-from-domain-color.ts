@@ -1,5 +1,5 @@
 import type { Color as DomainColor } from '@bison/shared/domain';
-import { Color } from '../../schema-types';
+import { Color } from '@bison/shared/schema';
 
 export const convertToApiColorFromDomainColor = (color: DomainColor): Color => {
   switch (color) {
