@@ -1,5 +1,7 @@
 import {
+  GetAdminResponse,
   GetBacklogByProjectIdResponse,
+  IGetAdminService,
   IGetBacklogByProjectIdService,
   IListBoardsByProjectIdService,
   IListProjectsService,
@@ -111,6 +113,12 @@ export const listUsersByProjectIdResponse: ListUsersByProjectIdResponse = {
   hasNextPage: false,
 };
 
+export const getAdminResponse: GetAdminResponse = {
+  id: 'admin0001',
+  name: 'admin name 0001',
+  icon: 'admin icon 0001',
+};
+
 export class MockProjectRepository implements IProjectRepository {
   async list() {
     return {
@@ -143,5 +151,11 @@ export class MockListUsersByProjectIdService
   implements IListUsersByProjectIdService {
   async handle() {
     return listUsersByProjectIdResponse;
+  }
+}
+
+export class MockGetAdminService implements IGetAdminService {
+  async handle() {
+    return getAdminResponse;
   }
 }

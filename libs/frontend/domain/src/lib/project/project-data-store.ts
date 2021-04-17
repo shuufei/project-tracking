@@ -14,6 +14,6 @@ export type Project = Pick<
   DomainProject,
   'id' | 'name' | 'description' | 'color'
 > & {
-  // admin: Pick<User, 'id' | 'name' | 'icon'>; // TODO
+  admin: Pick<User, 'id' | 'name' | 'icon'>;
   members: Pick<User, 'id' | 'name' | 'icon'>[];
 };

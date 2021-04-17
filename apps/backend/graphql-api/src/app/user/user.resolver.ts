@@ -21,7 +21,10 @@ export class UserResolver {
     @Args('first', { type: () => Int }) first: number,
     @Args('after', { type: () => ID }) after?: Project['id']
   ): Promise<
-    OmitConnectionNode<ProjectConnection, 'backlog' | 'boards' | 'members'>
+    OmitConnectionNode<
+      ProjectConnection,
+      'backlog' | 'boards' | 'members' | 'admin'
+    >
   > {
     const response = await this.listProjectsByUserIdService.handle(
       user.id,

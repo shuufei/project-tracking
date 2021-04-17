@@ -1,5 +1,6 @@
 import type {
   BoardEdge,
+  IGetAdminService,
   IGetBacklogByProjectIdService,
   IListBoardsByProjectIdService,
   IListProjectsService,
@@ -7,6 +8,7 @@ import type {
   UserEdge,
 } from '@bison/backend/application';
 import {
+  GET_ADMIN_SERVICE,
   GET_BACKLOG_BY_PROJECT_ID_SERVICE,
   LIST_BOARDS_BY_PROJECT_ID_SERVICE,
   LIST_PROJECTS_SERVICE,
@@ -18,6 +20,7 @@ import type {
   BoardConnection,
   Project,
   ProjectConnection,
+  User,
   UserConnection,
 } from '@bison/shared/schema';
 import { Inject } from '@nestjs/common';
@@ -36,7 +39,9 @@ export class ProjectResolver {
     @Inject(LIST_BOARDS_BY_PROJECT_ID_SERVICE)
     private listBoardsByProjectIdService: IListBoardsByProjectIdService,
     @Inject(LIST_USERS_BY_PROJECT_ID_SERVICE)
-    private listUsersByProjectIdService: IListUsersByProjectIdService
+    private listUsersByProjectIdService: IListUsersByProjectIdService,
+    @Inject(GET_ADMIN_SERVICE)
+    private getAdminService: IGetAdminService
   ) {}
 
   @Query()
@@ -44,12 +49,15 @@ export class ProjectResolver {
     @Args('first') first: number,
     @Args('after') after?: Cursor
   ): Promise<
-    OmitConnectionNode<ProjectConnection, 'backlog' | 'boards' | 'members'>
+    OmitConnectionNode<
+      ProjectConnection,
+      'backlog' | 'boards' | 'members' | 'admin'
+    >
   > {
     const response = await this.listProjectsService.handle(first, after);
     const edges: OmitConnectionNode<
       ProjectConnection,
-      'backlog' | 'boards' | 'members'
+      'backlog' | 'boards' | 'members' | 'admin'
     >['edges'] = response.edges.map((edge) => ({
       cursor: edge.cursor,
       node: {
@@ -111,5 +119,10 @@ export class ProjectResolver {
         hasNextPage: response.hasNextPage,
       },
     };
+  }
+
+  @ResolveField()
+  async admin(@Parent() project: Project): Promise<Omit<User, 'projects'>> {
+    return this.getAdminService.handle(project.id);
   }
 }

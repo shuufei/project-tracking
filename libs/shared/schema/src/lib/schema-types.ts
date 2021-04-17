@@ -103,6 +103,7 @@ export interface Project extends Node {
     backlog: Backlog;
     boards: BoardConnection;
     members: UserConnection;
+    admin: User;
 }
 
 export interface ProjectEdge extends Edge {

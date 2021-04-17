@@ -28,11 +28,11 @@ export const LIST_PROJECTS = gql`
               id
             }
           }
-          # admin {
-          #   id
-          #   name
-          #   icon
-          # }
+          admin {
+            id
+            name
+            icon
+          }
           members {
             edges {
               node {

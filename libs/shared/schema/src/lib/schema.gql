@@ -71,6 +71,7 @@ type Project implements Node {
   backlog: Backlog!
   boards(first: Int! = 10, after: ID): BoardConnection!
   members(first: Int! = 10, after: ID): UserConnection!
+  admin: User!
 }
 
 type ProjectEdge implements Edge {
