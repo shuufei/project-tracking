@@ -44,12 +44,12 @@ export class ProjectResolver {
     @Args('first') first: number,
     @Args('after') after?: Cursor
   ): Promise<
-    OmitConnectionNode<ProjectConnection, 'backlog' | 'boards' | 'users'>
+    OmitConnectionNode<ProjectConnection, 'backlog' | 'boards' | 'members'>
   > {
     const response = await this.listProjectsService.handle(first, after);
     const edges: OmitConnectionNode<
       ProjectConnection,
-      'backlog' | 'boards' | 'users'
+      'backlog' | 'boards' | 'members'
     >['edges'] = response.edges.map((edge) => ({
       cursor: edge.cursor,
       node: {
@@ -94,7 +94,7 @@ export class ProjectResolver {
   }
 
   @ResolveField()
-  async users(
+  async members(
     @Parent() project: Project,
     @Args('first') first: number,
     @Args('after') after?: Cursor

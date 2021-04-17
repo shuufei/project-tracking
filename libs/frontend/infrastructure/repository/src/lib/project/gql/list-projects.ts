@@ -33,7 +33,7 @@ export const LIST_PROJECTS = gql`
           #   name
           #   icon
           # }
-          users {
+          members {
             edges {
               node {
                 id

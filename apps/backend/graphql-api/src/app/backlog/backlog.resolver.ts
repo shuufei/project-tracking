@@ -15,7 +15,7 @@ export class BacklogReolver {
   @ResolveField()
   async project(
     @Parent() backlog: Backlog
-  ): Promise<Omit<Project, 'backlog' | 'boards' | 'users'>> {
+  ): Promise<Omit<Project, 'backlog' | 'boards' | 'members'>> {
     const project = await this.getProjectByBacklogIdService.handle(backlog.id);
     return {
       ...project,

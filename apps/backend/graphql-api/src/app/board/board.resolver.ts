@@ -15,7 +15,7 @@ export class BoardResolver {
   @ResolveField()
   async project(
     @Parent() board: Board
-  ): Promise<Omit<Project, 'backlog' | 'boards' | 'users'>> {
+  ): Promise<Omit<Project, 'backlog' | 'boards' | 'members'>> {
     const project = await this.getProjectByBoardIdService.handle(board.id);
     return {
       ...project,

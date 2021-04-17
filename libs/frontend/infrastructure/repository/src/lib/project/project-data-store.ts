@@ -19,16 +19,16 @@ export class ProjectDataStore implements IProjectDataStore {
         map((response) => {
           const projects: Project[] = response.data.projects.edges.map(
             (edge) => {
-              const { id, name, description, color, users } = edge.node;
+              const { id, name, description, color, members } = edge.node;
               const project: Project = {
                 id,
                 name,
                 description,
                 color: convertToDomainColorFromApiColor(color),
-                members: users.edges.map((userEdge) => ({
-                  id: userEdge.node.id,
-                  name: userEdge.node.name,
-                  icon: userEdge.node.icon,
+                members: members.edges.map((memberEdge) => ({
+                  id: memberEdge.node.id,
+                  name: memberEdge.node.name,
+                  icon: memberEdge.node.icon,
                 })),
               };
               return project;
