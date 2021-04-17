@@ -5,8 +5,6 @@ import {
   OnInit,
 } from '@angular/core';
 import {
-  FETCH_PROJECTS_SERVICE,
-  IFetchProjectsService,
   IProjectStateQueryService,
   Projects,
   PROJECT_STATE_QUERY_SERVICE,
@@ -32,9 +30,7 @@ export class ProjectPageComponent implements OnInit {
   constructor(
     private state: RxState<State>,
     @Inject(PROJECT_STATE_QUERY_SERVICE)
-    private stateQueryService: IProjectStateQueryService,
-    @Inject(FETCH_PROJECTS_SERVICE)
-    private fetchProjectsService: IFetchProjectsService
+    private stateQueryService: IProjectStateQueryService
   ) {}
 
   ngOnInit() {
@@ -43,7 +39,6 @@ export class ProjectPageComponent implements OnInit {
   }
 
   private setupEventHandler() {
-    this.state.hold(this.onInit$, () => this.fetchProjectsService.handle$());
     this.state.connect('projects', this.stateQueryService.projects$());
   }
 }

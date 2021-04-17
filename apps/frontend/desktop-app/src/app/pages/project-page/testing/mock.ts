@@ -1,7 +1,4 @@
-import {
-  IFetchProjectsService,
-  IProjectStateQueryService,
-} from '@bison/frontend/application';
+import { IProjectStateQueryService } from '@bison/frontend/application';
 import { Project } from '@bison/shared/domain';
 import { of } from 'rxjs';
 
@@ -43,12 +40,6 @@ export const mockProjects: Project[] = [
     },
   },
 ];
-
-export class MockFetchProjectsService implements IFetchProjectsService {
-  handle$() {
-    return of(undefined);
-  }
-}
 
 export class MockProjectStateQueryService implements IProjectStateQueryService {
   projects$() {
