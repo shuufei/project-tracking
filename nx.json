@@ -57,6 +57,6 @@
     "frontend-infrastructure-repository": {
       "tags": ["scope:frontend-infrastructure"]
     },
-    "shared-schema": { "tags": [] }
+    "shared-schema": { "tags": ["scope:shared-schema"] }
   }
 }
