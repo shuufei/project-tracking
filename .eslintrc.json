@@ -51,7 +51,10 @@
               },
               {
                 "sourceTag": "scope:frontend-presentation",
-                "onlyDependOnLibsWithTags": ["scope:frontend-application"]
+                "onlyDependOnLibsWithTags": [
+                  "scope:frontend-application",
+                  "scope:shared-domain"
+                ]
               }
             ]
           }

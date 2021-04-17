@@ -25,9 +25,9 @@
   },
   "projects": {
     "shared-ui": { "tags": [] },
-    "frontend-desktop-app": { "tags": [] },
+    "frontend-desktop-app": { "tags": ["scope:frontend-presentation"] },
     "frontend-desktop-app-e2e": {
-      "tags": ["scope:frontend-presentation"],
+      "tags": [],
       "implicitDependencies": ["frontend-desktop-app"]
     },
     "frontend-shared-ui-e2e": {
