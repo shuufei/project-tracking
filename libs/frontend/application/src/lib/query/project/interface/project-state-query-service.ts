@@ -1,5 +1,5 @@
 import { InjectionToken } from '@angular/core';
-import { Project } from '@bison/shared/domain';
+import { Project } from '@bison/frontend/domain';
 import { Observable } from 'rxjs';
 
 export interface IProjectStateQueryService {

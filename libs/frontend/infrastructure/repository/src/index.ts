@@ -1,1 +1,1 @@
-export * from './lib/frontend-infrastructure-repository.module';
+export * from './lib/project/project-data-store';

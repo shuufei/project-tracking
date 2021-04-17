@@ -54,15 +54,17 @@
                 "sourceTag": "scope:frontend-presentation",
                 "onlyDependOnLibsWithTags": [
                   "scope:frontend-application",
-                  "scope:shared-domain",
-                  "scope:shared-schema"
+                  "scope:frontend-domain",
+                  "scope:frontend-infrastructure",
+                  "scope:shared-domain"
                 ]
               },
               {
                 "sourceTag": "scope:frontend-infrastructure",
                 "onlyDependOnLibsWithTags": [
                   "scope:frontend-domain",
-                  "scope:shared-domain"
+                  "scope:shared-domain",
+                  "scope:shared-schema"
                 ]
               }
             ]
