@@ -721,6 +721,31 @@
           }
         }
       }
+    },
+    "frontend-infrastructure-repository": {
+      "projectType": "library",
+      "root": "libs/frontend/infrastructure/repository",
+      "sourceRoot": "libs/frontend/infrastructure/repository/src",
+      "prefix": "bison",
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/frontend/infrastructure/repository/src/**/*.ts",
+              "libs/frontend/infrastructure/repository/src/**/*.html"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/frontend/infrastructure/repository"],
+          "options": {
+            "jestConfig": "libs/frontend/infrastructure/repository/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
     }
   }
 }

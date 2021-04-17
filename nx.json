@@ -53,6 +53,7 @@
     "backend-domain": { "tags": ["scope:backend-domain"] },
     "backend-application": { "tags": ["scope:backend-application"] },
     "frontend-application": { "tags": ["scope:frontend-application"] },
-    "frontend-domain": { "tags": ["scope:frontend-domain"] }
+    "frontend-domain": { "tags": ["scope:frontend-domain"] },
+    "frontend-infrastructure-repository": { "tags": [] }
   }
 }
