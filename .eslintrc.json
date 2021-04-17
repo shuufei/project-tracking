@@ -55,6 +55,13 @@
                   "scope:frontend-application",
                   "scope:shared-domain"
                 ]
+              },
+              {
+                "sourceTag": "scope:frontend-infrastructure",
+                "onlyDependOnLibsWithTags": [
+                  "scope:frontend-domain",
+                  "scope:shared-domain"
+                ]
               }
             ]
           }
