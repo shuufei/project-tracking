@@ -27,7 +27,7 @@
     "shared-ui": { "tags": [] },
     "frontend-desktop-app": { "tags": [] },
     "frontend-desktop-app-e2e": {
-      "tags": [],
+      "tags": ["scope:frontend-presentation"],
       "implicitDependencies": ["frontend-desktop-app"]
     },
     "frontend-shared-ui-e2e": {
@@ -52,7 +52,7 @@
     },
     "backend-domain": { "tags": ["scope:backend-domain"] },
     "backend-application": { "tags": ["scope:backend-application"] },
-    "frontend-application": { "tags": [] },
-    "frontend-domain": { "tags": [] }
+    "frontend-application": { "tags": ["scope:frontend-application"] },
+    "frontend-domain": { "tags": ["scope:frontend-domain"] }
   }
 }
