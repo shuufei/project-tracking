@@ -51,6 +51,7 @@
       "tags": ["scope:backend-infrastructure"]
     },
     "backend-domain": { "tags": ["scope:backend-domain"] },
-    "backend-application": { "tags": ["scope:backend-application"] }
+    "backend-application": { "tags": ["scope:backend-application"] },
+    "frontend-application": { "tags": [] }
   }
 }

@@ -671,6 +671,31 @@
           }
         }
       }
+    },
+    "frontend-application": {
+      "projectType": "library",
+      "root": "libs/frontend/application",
+      "sourceRoot": "libs/frontend/application/src",
+      "prefix": "bison",
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/frontend/application/src/**/*.ts",
+              "libs/frontend/application/src/**/*.html"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/frontend/application"],
+          "options": {
+            "jestConfig": "libs/frontend/application/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
     }
   }
 }
