@@ -25,7 +25,8 @@
       ],
       "@bison/backend/domain": ["libs/backend/domain/src/index.ts"],
       "@bison/backend/application": ["libs/backend/application/src/index.ts"],
-      "@bison/frontend/application": ["libs/frontend/application/src/index.ts"]
+      "@bison/frontend/application": ["libs/frontend/application/src/index.ts"],
+      "@bison/frontend/domain": ["libs/frontend/domain/src/index.ts"]
     },
     "allowSyntheticDefaultImports": true
   },

@@ -52,6 +52,7 @@
     },
     "backend-domain": { "tags": ["scope:backend-domain"] },
     "backend-application": { "tags": ["scope:backend-application"] },
-    "frontend-application": { "tags": [] }
+    "frontend-application": { "tags": [] },
+    "frontend-domain": { "tags": [] }
   }
 }
