@@ -21,7 +21,7 @@ export const mockProjects: Project[] = [
     admin: {
       id: 'user0001',
       name: 'user 0001',
-      projects: [],
+      projectIds: [],
     },
   },
   {
@@ -39,7 +39,7 @@ export const mockProjects: Project[] = [
     admin: {
       id: 'user0002',
       name: 'user 0002',
-      projects: [],
+      projectIds: [],
     },
   },
 ];
