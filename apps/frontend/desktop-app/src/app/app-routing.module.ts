@@ -9,6 +9,10 @@ const routes: Routes = [
         (m) => m.ProjectPageModule
       ),
   },
+  {
+    path: '**',
+    redirectTo: '/project',
+  },
 ];
 
 @NgModule({
