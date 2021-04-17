@@ -3,16 +3,16 @@ import type {
   IGetAdminService,
   IGetBacklogByProjectIdService,
   IListBoardsByProjectIdService,
+  IListMembersService,
   IListProjectsService,
-  IListUsersByProjectIdService,
   UserEdge,
 } from '@bison/backend/application';
 import {
   GET_ADMIN_SERVICE,
   GET_BACKLOG_BY_PROJECT_ID_SERVICE,
   LIST_BOARDS_BY_PROJECT_ID_SERVICE,
+  LIST_MEMBERS_SERVICE,
   LIST_PROJECTS_SERVICE,
-  LIST_USERS_BY_PROJECT_ID_SERVICE,
 } from '@bison/backend/application';
 import type { Cursor, ProjectEdge } from '@bison/backend/domain';
 import type {
@@ -38,8 +38,8 @@ export class ProjectResolver {
     private getBacklogByProjectIdService: IGetBacklogByProjectIdService,
     @Inject(LIST_BOARDS_BY_PROJECT_ID_SERVICE)
     private listBoardsByProjectIdService: IListBoardsByProjectIdService,
-    @Inject(LIST_USERS_BY_PROJECT_ID_SERVICE)
-    private listUsersByProjectIdService: IListUsersByProjectIdService,
+    @Inject(LIST_MEMBERS_SERVICE)
+    private listMembersService: IListMembersService,
     @Inject(GET_ADMIN_SERVICE)
     private getAdminService: IGetAdminService
   ) {}
@@ -107,7 +107,7 @@ export class ProjectResolver {
     @Args('first') first: number,
     @Args('after') after?: Cursor
   ): Promise<OmitConnectionNode<UserConnection, 'projects'>> {
-    const response = await this.listUsersByProjectIdService.handle(
+    const response = await this.listMembersService.handle(
       project.id,
       first,
       after

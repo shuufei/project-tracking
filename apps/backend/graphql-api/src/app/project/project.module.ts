@@ -3,8 +3,8 @@ import {
   GET_BACKLOG_BY_PROJECT_ID_SERVICE,
   ListProjectsService,
   LIST_BOARDS_BY_PROJECT_ID_SERVICE,
+  LIST_MEMBERS_SERVICE,
   LIST_PROJECTS_SERVICE,
-  LIST_USERS_BY_PROJECT_ID_SERVICE,
 } from '@bison/backend/application';
 import { PROJECT_REPOSITORY } from '@bison/backend/domain';
 import { Module } from '@nestjs/common';
@@ -13,7 +13,7 @@ import {
   MockGetAdminService,
   MockGetBacklogByProjectIdService,
   MockListBoardsByProjectIdService,
-  MockListUsersByProjectIdService,
+  MockListMembersService,
   MockProjectRepository,
 } from './testing/mock';
 
@@ -37,8 +37,8 @@ import {
       useValue: new MockListBoardsByProjectIdService(),
     },
     {
-      provide: LIST_USERS_BY_PROJECT_ID_SERVICE,
-      useValue: new MockListUsersByProjectIdService(),
+      provide: LIST_MEMBERS_SERVICE,
+      useValue: new MockListMembersService(),
     },
     {
       provide: GET_ADMIN_SERVICE,

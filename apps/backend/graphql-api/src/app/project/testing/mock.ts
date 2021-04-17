@@ -4,11 +4,11 @@ import {
   IGetAdminService,
   IGetBacklogByProjectIdService,
   IListBoardsByProjectIdService,
+  IListMembersService,
   IListProjectsService,
-  IListUsersByProjectIdService,
   ListBoardsByProjectIdResponse,
+  ListMembersResponse,
   ListProjectsResponse,
-  ListUsersByProjectIdResponse,
 } from '@bison/backend/application';
 import { IProjectRepository } from '@bison/backend/domain';
 import { Color } from '@bison/shared/domain';
@@ -83,7 +83,7 @@ export const listBoardsByProjectIdResponse: ListBoardsByProjectIdResponse = {
   hasNextPage: false,
 };
 
-export const listUsersByProjectIdResponse: ListUsersByProjectIdResponse = {
+export const listMembersResponse: ListMembersResponse = {
   edges: [
     {
       cursor: 'user_cursor_0001',
@@ -147,10 +147,9 @@ export class MockListBoardsByProjectIdService
   }
 }
 
-export class MockListUsersByProjectIdService
-  implements IListUsersByProjectIdService {
+export class MockListMembersService implements IListMembersService {
   async handle() {
-    return listUsersByProjectIdResponse;
+    return listMembersResponse;
   }
 }
 
