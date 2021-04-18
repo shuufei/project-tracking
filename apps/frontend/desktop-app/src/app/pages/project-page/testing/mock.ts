@@ -1,4 +1,5 @@
 import { IProjectStateQueryService } from '@bison/frontend/application';
+import { IProjectDataStore } from '@bison/frontend/domain';
 import { Project } from '@bison/shared/domain';
 import { of } from 'rxjs';
 
@@ -42,6 +43,12 @@ export const mockProjects: Project[] = [
 ];
 
 export class MockProjectStateQueryService implements IProjectStateQueryService {
+  projects$() {
+    return of(mockProjects);
+  }
+}
+
+export class MockProjectDataStoreService implements IProjectDataStore {
   projects$() {
     return of(mockProjects);
   }

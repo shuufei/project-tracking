@@ -12,6 +12,7 @@ import { ProjectPageComponent } from './project-page.component';
 @NgModule({
   declarations: [ProjectPageComponent],
   imports: [CommonModule, ProjectPageRoutingModule],
+  exports: [ProjectPageComponent],
   providers: [
     {
       provide: PROJECT_STATE_QUERY_SERVICE,

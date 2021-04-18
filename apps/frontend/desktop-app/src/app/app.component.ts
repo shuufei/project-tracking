@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { Apollo } from 'apollo-angular';
 
 @Component({
   selector: 'bis-root',
@@ -8,6 +7,4 @@ import { Apollo } from 'apollo-angular';
 })
 export class AppComponent {
   title = 'Bison';
-
-  constructor(private apollo: Apollo) {}
 }
