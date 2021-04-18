@@ -13,8 +13,8 @@ import {
   LIST_USERS_BY_PROJECT_ID_SERVICE,
 } from '@bison/backend/application';
 import { Color as DomainColor } from '@bison/shared/domain';
+import { Color, Project } from '@bison/shared/schema';
 import { Test, TestingModule } from '@nestjs/testing';
-import { Color, Project } from '../../../schema-types';
 import { ProjectModule } from '../project.module';
 import { ProjectResolver } from '../project.resolver';
 import {

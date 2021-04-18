@@ -1,12 +1,14 @@
 import {
+  GetAdminResponse,
   GetBacklogByProjectIdResponse,
+  IGetAdminService,
   IGetBacklogByProjectIdService,
   IListBoardsByProjectIdService,
+  IListMembersService,
   IListProjectsService,
-  IListUsersByProjectIdService,
   ListBoardsByProjectIdResponse,
+  ListMembersResponse,
   ListProjectsResponse,
-  ListUsersByProjectIdResponse,
 } from '@bison/backend/application';
 import { IProjectRepository } from '@bison/backend/domain';
 import { Color } from '@bison/shared/domain';
@@ -81,7 +83,7 @@ export const listBoardsByProjectIdResponse: ListBoardsByProjectIdResponse = {
   hasNextPage: false,
 };
 
-export const listUsersByProjectIdResponse: ListUsersByProjectIdResponse = {
+export const listMembersResponse: ListMembersResponse = {
   edges: [
     {
       cursor: 'user_cursor_0001',
@@ -109,6 +111,12 @@ export const listUsersByProjectIdResponse: ListUsersByProjectIdResponse = {
     },
   ],
   hasNextPage: false,
+};
+
+export const getAdminResponse: GetAdminResponse = {
+  id: 'admin0001',
+  name: 'admin name 0001',
+  icon: 'admin icon 0001',
 };
 
 export class MockProjectRepository implements IProjectRepository {
@@ -139,9 +147,14 @@ export class MockListBoardsByProjectIdService
   }
 }
 
-export class MockListUsersByProjectIdService
-  implements IListUsersByProjectIdService {
+export class MockListMembersService implements IListMembersService {
   async handle() {
-    return listUsersByProjectIdResponse;
+    return listMembersResponse;
+  }
+}
+
+export class MockGetAdminService implements IGetAdminService {
+  async handle() {
+    return getAdminResponse;
   }
 }

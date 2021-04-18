@@ -70,7 +70,8 @@ type Project implements Node {
   color: Color!
   backlog: Backlog!
   boards(first: Int! = 10, after: ID): BoardConnection!
-  users(first: Int! = 10, after: ID): UserConnection!
+  members(first: Int! = 10, after: ID): UserConnection!
+  admin: User!
 }
 
 type ProjectEdge implements Edge {

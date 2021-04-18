@@ -1,0 +1,11 @@
+<ng-container *ngIf="state$ | async as state">
+  <p>project-page works!</p>
+
+  <ul>
+    <ng-container *ngFor="let project of state.projects">
+      <li class="mt-4">
+        {{ project | json }}
+      </li>
+    </ng-container>
+  </ul>
+</ng-container>

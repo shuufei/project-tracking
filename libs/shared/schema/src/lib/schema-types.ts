@@ -102,7 +102,8 @@ export interface Project extends Node {
     color: Color;
     backlog: Backlog;
     boards: BoardConnection;
-    users: UserConnection;
+    members: UserConnection;
+    admin: User;
 }
 
 export interface ProjectEdge extends Edge {

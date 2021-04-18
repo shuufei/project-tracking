@@ -1,5 +1,4 @@
-import type { Connection } from './schema-types';
-import { Edge } from './schema-types';
+import type { Connection, Edge } from '@bison/shared/schema';
 
 export type OmitConnectionNode<
   T extends Connection,

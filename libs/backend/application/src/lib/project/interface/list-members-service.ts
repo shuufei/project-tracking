@@ -1,17 +1,15 @@
 import { Cursor } from '@bison/backend/domain';
 import { Project, User } from '@bison/shared/domain';
 
-export interface IListUsersByProjectIdService {
+export interface IListMembersService {
   handle: (
     projectId: Project['id'],
     first: number,
     after?: Cursor
-  ) => Promise<ListUsersByProjectIdResponse>;
+  ) => Promise<ListMembersResponse>;
 }
 
-export const LIST_USERS_BY_PROJECT_ID_SERVICE = Symbol(
-  'ListUsersByProjectIdService'
-);
+export const LIST_MEMBERS_SERVICE = Symbol('ListMembersService');
 
 export type UserNode = Pick<User, 'id' | 'name' | 'icon'>;
 
@@ -20,7 +18,7 @@ export type UserEdge = {
   cursor: Cursor;
 };
 
-export type ListUsersByProjectIdResponse = {
+export type ListMembersResponse = {
   edges: UserEdge[];
   hasNextPage: boolean;
 };

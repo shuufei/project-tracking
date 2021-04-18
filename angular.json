@@ -181,7 +181,8 @@
             "scripts": [],
             "customWebpackConfig": {
               "path": "webpack.config.js"
-            }
+            },
+            "allowedCommonJsDependencies": ["zen-observable"]
           },
           "configurations": {
             "production": {
@@ -667,6 +668,112 @@
           "options": {
             "jestConfig": "libs/backend/application/jest.config.js",
             "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "frontend-application": {
+      "projectType": "library",
+      "root": "libs/frontend/application",
+      "sourceRoot": "libs/frontend/application/src",
+      "prefix": "bison",
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/frontend/application/src/**/*.ts",
+              "libs/frontend/application/src/**/*.html"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/frontend/application"],
+          "options": {
+            "jestConfig": "libs/frontend/application/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "frontend-domain": {
+      "projectType": "library",
+      "root": "libs/frontend/domain",
+      "sourceRoot": "libs/frontend/domain/src",
+      "prefix": "bison",
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/frontend/domain/src/**/*.ts",
+              "libs/frontend/domain/src/**/*.html"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/frontend/domain"],
+          "options": {
+            "jestConfig": "libs/frontend/domain/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "frontend-infrastructure-repository": {
+      "projectType": "library",
+      "root": "libs/frontend/infrastructure/repository",
+      "sourceRoot": "libs/frontend/infrastructure/repository/src",
+      "prefix": "bison",
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/frontend/infrastructure/repository/src/**/*.ts",
+              "libs/frontend/infrastructure/repository/src/**/*.html"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/frontend/infrastructure/repository"],
+          "options": {
+            "jestConfig": "libs/frontend/infrastructure/repository/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "shared-schema": {
+      "root": "libs/shared/schema",
+      "sourceRoot": "libs/shared/schema/src",
+      "projectType": "library",
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/shared/schema/**/*.ts"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/shared/schema"],
+          "options": {
+            "jestConfig": "libs/shared/schema/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "generate-typings": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "commands": [
+              {
+                "command": "npx ts-node libs/shared/schema/generate-typings.ts"
+              }
+            ]
           }
         }
       }
