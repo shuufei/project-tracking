@@ -1,9 +1,14 @@
 {
   "npmScope": "bison",
-  "affected": { "defaultBase": "main" },
+  "affected": {
+    "defaultBase": "main"
+  },
   "implicitDependencies": {
     "angular.json": "*",
-    "package.json": { "dependencies": "*", "devDependencies": "*" },
+    "package.json": {
+      "dependencies": "*",
+      "devDependencies": "*"
+    },
     "tsconfig.base.json": "*",
     "tslint.json": "*",
     ".eslintrc.json": "*",
@@ -24,8 +29,12 @@
     }
   },
   "projects": {
-    "shared-ui": { "tags": [] },
-    "frontend-desktop-app": { "tags": ["scope:frontend-presentation"] },
+    "shared-ui": {
+      "tags": []
+    },
+    "frontend-desktop-app": {
+      "tags": ["scope:frontend-presentation"]
+    },
     "frontend-desktop-app-e2e": {
       "tags": [],
       "implicitDependencies": ["frontend-desktop-app"]
@@ -34,29 +43,49 @@
       "tags": [],
       "implicitDependencies": ["shared-ui"]
     },
-    "docs": { "tags": [] },
-    "shared-domain": { "tags": ["scope:shared-domain"] },
-    "project-ui": { "tags": [] },
+    "docs": {
+      "tags": []
+    },
+    "shared-domain": {
+      "tags": ["scope:shared-domain"]
+    },
+    "project-ui": {
+      "tags": []
+    },
     "frontend-project-ui-e2e": {
       "tags": [],
       "implicitDependencies": ["project-ui"]
     },
-    "schedule-ui": { "tags": [] },
+    "schedule-ui": {
+      "tags": []
+    },
     "frontend-schedule-ui-e2e": {
       "tags": [],
       "implicitDependencies": ["schedule-ui"]
     },
-    "backend-graphql-api": { "tags": ["scope:backend-presentation"] },
+    "backend-graphql-api": {
+      "tags": ["scope:backend-presentation"]
+    },
     "backend-infrastructure-repository": {
       "tags": ["scope:backend-infrastructure"]
     },
-    "backend-domain": { "tags": ["scope:backend-domain"] },
-    "backend-application": { "tags": ["scope:backend-application"] },
-    "frontend-application": { "tags": ["scope:frontend-application"] },
-    "frontend-domain": { "tags": ["scope:frontend-domain"] },
-    "frontend-infrastructure-repository": {
-      "tags": ["scope:frontend-infrastructure"]
+    "backend-domain": {
+      "tags": ["scope:backend-domain"]
     },
-    "shared-schema": { "tags": ["scope:shared-schema"] }
+    "backend-application": {
+      "tags": ["scope:backend-application"]
+    },
+    "frontend-application": {
+      "tags": ["scope:frontend-application"]
+    },
+    "frontend-domain": {
+      "tags": ["scope:frontend-domain"]
+    },
+    "shared-schema": {
+      "tags": ["scope:shared-schema"]
+    },
+    "frontend-infrastructure-data-store": {
+      "tags": ["scope:frontend-infrastructure"]
+    }
   }
 }

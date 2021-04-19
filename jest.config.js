@@ -12,7 +12,7 @@ module.exports = {
     '<rootDir>/libs/backend/application',
     '<rootDir>/libs/frontend/application',
     '<rootDir>/libs/frontend/domain',
-    '<rootDir>/libs/frontend/infrastructure/repository',
+    '<rootDir>/libs/frontend/infrastructure/data-store',
     '<rootDir>/libs/shared/schema',
   ],
 };

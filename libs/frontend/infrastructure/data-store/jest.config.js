@@ -1,5 +1,5 @@
 module.exports = {
-  displayName: 'frontend-infrastructure-repository',
+  displayName: 'frontend-infrastructure-data-store',
   preset: '../../../../jest.preset.js',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
   globals: {
@@ -15,7 +15,7 @@ module.exports = {
     },
   },
   coverageDirectory:
-    '../../../../coverage/libs/frontend/infrastructure/repository',
+    '../../../../coverage/libs/frontend/infrastructure/data-store',
   snapshotSerializers: [
     'jest-preset-angular/build/AngularNoNgAttributesSnapshotSerializer.js',
     'jest-preset-angular/build/AngularSnapshotSerializer.js',

@@ -5,7 +5,7 @@ import {
   PROJECT_STATE_QUERY_SERVICE,
 } from '@bison/frontend/application';
 import { PROJECT_DATA_STOR } from '@bison/frontend/domain';
-import { ProjectDataStore } from '@bison/frontend/infrastructure/repository';
+import { ProjectDataStore } from '@bison/frontend/infrastructure/data-store';
 import { ProjectPageRoutingModule } from './project-page-routing.module';
 import { ProjectPageComponent } from './project-page.component';
 
