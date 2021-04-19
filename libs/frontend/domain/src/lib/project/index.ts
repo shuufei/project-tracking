@@ -1,1 +1,1 @@
-export * from './project-data-store';
+export * from './interface/project-data-store';
