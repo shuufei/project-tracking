@@ -3,24 +3,21 @@ import {
   GET_BACKLOG_BY_PROJECT_ID_SERVICE,
   IGetBacklogByProjectIdService,
   IListBoardsByProjectIdService,
+  IListMembersService,
   IListProjectsService,
-  IListUsersByProjectIdService,
   ListBoardsByProjectIdResponse,
+  ListMembersResponse,
   ListProjectsResponse,
-  ListUsersByProjectIdResponse,
   LIST_BOARDS_BY_PROJECT_ID_SERVICE,
+  LIST_MEMBERS_SERVICE,
   LIST_PROJECTS_SERVICE,
-  LIST_USERS_BY_PROJECT_ID_SERVICE,
 } from '@bison/backend/application';
 import { Color as DomainColor } from '@bison/shared/domain';
 import { Color, Project } from '@bison/shared/schema';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ProjectModule } from '../project.module';
 import { ProjectResolver } from '../project.resolver';
-import {
-  listBoardsByProjectIdResponse,
-  listUsersByProjectIdResponse,
-} from './mock';
+import { listBoardsByProjectIdResponse, listMembersResponse } from './mock';
 
 describe('ProjectResolver', () => {
   let moduleRef: TestingModule;
@@ -28,7 +25,7 @@ describe('ProjectResolver', () => {
   let listProjectsService: IListProjectsService;
   let getBacklogByProjectIdService: IGetBacklogByProjectIdService;
   let listBoardsByProjectIdService: IListBoardsByProjectIdService;
-  let listUsersByProjectIdService: IListUsersByProjectIdService;
+  let listMembersService: IListMembersService;
 
   beforeEach(async () => {
     moduleRef = await Test.createTestingModule({
@@ -46,9 +43,7 @@ describe('ProjectResolver', () => {
     listBoardsByProjectIdService = moduleRef.get(
       LIST_BOARDS_BY_PROJECT_ID_SERVICE
     );
-    listUsersByProjectIdService = moduleRef.get(
-      LIST_USERS_BY_PROJECT_ID_SERVICE
-    );
+    listMembersService = moduleRef.get(LIST_MEMBERS_SERVICE);
   });
 
   describe('projects', () => {
@@ -217,11 +212,11 @@ describe('ProjectResolver', () => {
 
   describe('users', () => {
     describe('正常系', () => {
-      const listUsersResponse: ListUsersByProjectIdResponse = {
+      const listMembersServiceResponse: ListMembersResponse = {
         hasNextPage: true,
-        edges: [listUsersByProjectIdResponse.edges[0]],
+        edges: [listMembersResponse.edges[0]],
       };
-      let users: PromiseType<ReturnType<ProjectResolver['users']>>;
+      let users: PromiseType<ReturnType<ProjectResolver['members']>>;
       const project = {
         id: 'project0001',
         name: 'project0001',
@@ -231,9 +226,9 @@ describe('ProjectResolver', () => {
       const after = 'cursor';
       beforeEach(async () => {
         jest
-          .spyOn(listUsersByProjectIdService, 'handle')
-          .mockResolvedValue(listUsersResponse);
-        users = await resolver.users(project, first, after);
+          .spyOn(listMembersService, 'handle')
+          .mockResolvedValue(listMembersServiceResponse);
+        users = await resolver.members(project, first, after);
       });
       test('親要素のprojectのidとfirst, afterをもとにApplicationServiceが呼ばれる', () => {
         expect(listBoardsByProjectIdService.handle).toHaveBeenCalledWith(
@@ -245,20 +240,20 @@ describe('ProjectResolver', () => {
       test('schema定義のUserConnectionの形式でレスポンスを返す(UserNodeのproject fieldはレスポンスに含まれない)', () => {
         expect(users).toEqual({
           pageInfo: {
-            hasNextPage: listUsersResponse.hasNextPage,
-            endCursor: listUsersResponse.edges[0].cursor,
+            hasNextPage: listMembersServiceResponse.hasNextPage,
+            endCursor: listMembersServiceResponse.edges[0].cursor,
           },
-          edges: listUsersResponse.edges,
+          edges: listMembersServiceResponse.edges,
         });
       });
     });
 
-    describe('userが1件もない時', () => {
-      const listUsersResponse: ListUsersByProjectIdResponse = {
+    describe('memberが1件もない時', () => {
+      const listMembersServiceResponse: ListMembersResponse = {
         hasNextPage: false,
         edges: [],
       };
-      let users: PromiseType<ReturnType<ProjectResolver['users']>>;
+      let members: PromiseType<ReturnType<ProjectResolver['members']>>;
       const project = {
         id: 'project0001',
         name: 'project0001',
@@ -268,12 +263,12 @@ describe('ProjectResolver', () => {
       const after = 'cursor';
       beforeEach(async () => {
         jest
-          .spyOn(listUsersByProjectIdService, 'handle')
-          .mockResolvedValue(listUsersResponse);
-        users = await resolver.users(project, first, after);
+          .spyOn(listMembersService, 'handle')
+          .mockResolvedValue(listMembersServiceResponse);
+        members = await resolver.members(project, first, after);
       });
       test('pageInfoのendCursorがundefinedになる', () => {
-        expect(users.pageInfo).toEqual({
+        expect(members.pageInfo).toEqual({
           endCursor: undefined,
           hasNextPage: false,
         });
