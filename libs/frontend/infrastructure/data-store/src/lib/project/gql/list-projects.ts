@@ -3,46 +3,34 @@ import { gql } from 'apollo-angular';
 export const LIST_PROJECTS = gql`
   query ProjectsQuery {
     projects {
-      edges {
-        node {
+      id
+      name
+      description
+      color
+      boards {
+        id
+        name
+        description
+        isArchived
+        project {
           id
-          name
-          description
-          color
-          boards {
-            edges {
-              node {
-                id
-                name
-                description
-                isArchived
-                project {
-                  id
-                }
-              }
-            }
-          }
-          backlog {
-            id
-            project {
-              id
-            }
-          }
-          admin {
-            id
-            name
-            icon
-          }
-          members {
-            edges {
-              node {
-                id
-                name
-                icon
-              }
-            }
-          }
         }
+      }
+      backlog {
+        id
+        project {
+          id
+        }
+      }
+      admin {
+        id
+        name
+        icon
+      }
+      members {
+        id
+        name
+        icon
       }
     }
   }

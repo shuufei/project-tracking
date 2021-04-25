@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
-import { IProjectDataStore, Project } from '@bison/frontend/domain';
-import { ProjectConnection } from '@bison/shared/schema';
+import {
+  IProjectDataStore,
+  Project as DomainProject,
+} from '@bison/frontend/domain';
+import { Project } from '@bison/shared/schema';
 import { Apollo } from 'apollo-angular';
 import { map } from 'rxjs/operators';
 import { convertToDomainColorFromApiColor } from '../util/convert-to-domain-color-from-api-color';
@@ -12,22 +15,15 @@ export class ProjectDataStore implements IProjectDataStore {
 
   projects$() {
     return this.apollo
-      .watchQuery<{ projects: ProjectConnection }>({
+      .watchQuery<{ projects: Project[] }>({
         query: LIST_PROJECTS,
       })
       .valueChanges.pipe(
         map((response) => {
-          const projects: Project[] = response.data.projects.edges.map(
-            (edge) => {
-              const {
-                id,
-                name,
-                description,
-                color,
-                members,
-                admin,
-              } = edge.node;
-              const project: Project = {
+          const projects: DomainProject[] = response.data.projects.map(
+            (project) => {
+              const { id, name, description, color, members, admin } = project;
+              const convertedProject: DomainProject = {
                 id,
                 name,
                 description,
@@ -37,13 +33,13 @@ export class ProjectDataStore implements IProjectDataStore {
                   name: admin.name,
                   icon: admin.icon,
                 },
-                members: members.edges.map((memberEdge) => ({
-                  id: memberEdge.node.id,
-                  name: memberEdge.node.name,
-                  icon: memberEdge.node.icon,
+                members: members.map((member) => ({
+                  id: member.id,
+                  name: member.name,
+                  icon: member.icon,
                 })),
               };
-              return project;
+              return convertedProject;
             }
           );
           return projects;
