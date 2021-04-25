@@ -62,8 +62,8 @@ export class ProjectResolver {
     return response.users;
   }
 
-  // @ResolveField()
-  // async admin(@Parent() project: Project): Promise<Omit<User, 'projects'>> {
-  //   return this.getAdminService.handle(project.id);
-  // }
+  @ResolveField()
+  async admin(@Parent() project: Project): Promise<Omit<User, 'projects'>> {
+    return this.getAdminService.handle(project.id);
+  }
 }
