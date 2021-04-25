@@ -32,11 +32,8 @@
     "shared-ui": {
       "tags": []
     },
-    "backend-graphql-api": {
-      "tags": []
-    },
     "frontend-desktop-app": {
-      "tags": []
+      "tags": ["scope:frontend-presentation"]
     },
     "frontend-desktop-app-e2e": {
       "tags": [],
@@ -50,7 +47,7 @@
       "tags": []
     },
     "shared-domain": {
-      "tags": []
+      "tags": ["scope:shared-domain"]
     },
     "project-ui": {
       "tags": []
@@ -65,6 +62,30 @@
     "frontend-schedule-ui-e2e": {
       "tags": [],
       "implicitDependencies": ["schedule-ui"]
+    },
+    "backend-graphql-api": {
+      "tags": ["scope:backend-presentation"]
+    },
+    "backend-infrastructure-repository": {
+      "tags": ["scope:backend-infrastructure"]
+    },
+    "backend-domain": {
+      "tags": ["scope:backend-domain"]
+    },
+    "backend-application": {
+      "tags": ["scope:backend-application"]
+    },
+    "frontend-application": {
+      "tags": ["scope:frontend-application"]
+    },
+    "frontend-domain": {
+      "tags": ["scope:frontend-domain"]
+    },
+    "shared-schema": {
+      "tags": ["scope:shared-schema"]
+    },
+    "frontend-infrastructure-data-store": {
+      "tags": ["scope:frontend-infrastructure"]
     }
   }
 }

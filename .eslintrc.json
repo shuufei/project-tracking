@@ -12,7 +12,61 @@
             "enforceBuildableLibDependency": true,
             "allow": [],
             "depConstraints": [
-              { "sourceTag": "*", "onlyDependOnLibsWithTags": ["*"] }
+              {
+                "sourceTag": "scope:backend-presentation",
+                "onlyDependOnLibsWithTags": [
+                  "scope:backend-application",
+                  "scope:backend-domain",
+                  "scope:shared-domain",
+                  "scope:shared-schema"
+                ]
+              },
+              {
+                "sourceTag": "scope:backend-infrastructure",
+                "onlyDependOnLibsWithTags": [
+                  "scope:backend-domain",
+                  "scope:backend-application"
+                ]
+              },
+              {
+                "sourceTag": "scope:backend-application",
+                "onlyDependOnLibsWithTags": [
+                  "scope:backend-domain",
+                  "scope:shared-domain"
+                ]
+              },
+              {
+                "sourceTag": "scope:backend-domain",
+                "onlyDependOnLibsWithTags": ["scope:shared-domain"]
+              },
+              {
+                "sourceTag": "scope:frontend-application",
+                "onlyDependOnLibsWithTags": [
+                  "scope:frontend-domain",
+                  "scope:shared-domain"
+                ]
+              },
+              {
+                "sourceTag": "scope:frontend-domain",
+                "onlyDependOnLibsWithTags": ["scope:shared-domain"]
+              },
+              {
+                "sourceTag": "scope:frontend-presentation",
+                "onlyDependOnLibsWithTags": [
+                  "scope:frontend-application",
+                  "scope:frontend-domain",
+                  "scope:frontend-infrastructure",
+                  "scope:shared-domain"
+                ]
+              },
+              {
+                "sourceTag": "scope:frontend-infrastructure",
+                "onlyDependOnLibsWithTags": [
+                  "scope:frontend-domain",
+                  "scope:shared-domain",
+                  "scope:shared-schema"
+                ]
+              }
             ]
           }
         ]

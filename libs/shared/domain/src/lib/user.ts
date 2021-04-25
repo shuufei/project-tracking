@@ -5,16 +5,16 @@ export type User = {
   id: string;
   name: string;
   icon?: string;
-  projects: Project[];
+  projectIds: Project['id'][];
 };
 
 export const createUser = (
   name: User['name'],
-  projects: User['projects'] = [],
+  projectIds: User['projectIds'] = [],
   icon?: User['icon']
 ): User => ({
   id: createId(),
   name,
   icon,
-  projects,
+  projectIds,
 });
