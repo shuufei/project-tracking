@@ -38,7 +38,7 @@ export interface Node {
 }
 
 export interface IQuery {
-    projects(): Project[] | Promise<Project[]>;
+    viewer(): User | Promise<User>;
 }
 
 export interface IMutation {

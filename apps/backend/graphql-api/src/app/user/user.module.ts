@@ -1,5 +1,9 @@
-import type { IListProjectsByUserIdService } from '@bison/backend/application';
-import { LIST_PROJECTS_BY_USER_ID_SERVICE } from '@bison/backend/application';
+import {
+  GET_ME_SERVICE,
+  IGetMeService,
+  IListProjectsByUserIdService,
+  LIST_PROJECTS_BY_USER_ID_SERVICE,
+} from '@bison/backend/application';
 import { Color } from '@bison/shared/domain';
 import { Module } from '@nestjs/common';
 import { getRandom } from '../util/get-random-number';
@@ -32,12 +36,26 @@ class MockListProjectsByUserIdService implements IListProjectsByUserIdService {
   }
 }
 
+class MockGetMeService implements IGetMeService {
+  async handle() {
+    return {
+      id: 'admin0001',
+      name: 'admin name 0001',
+      icon: 'admin icon 0001',
+    };
+  }
+}
+
 @Module({
   providers: [
     UserResolver,
     {
       provide: LIST_PROJECTS_BY_USER_ID_SERVICE,
       useValue: new MockListProjectsByUserIdService(),
+    },
+    {
+      provide: GET_ME_SERVICE,
+      useValue: new MockGetMeService(),
     },
   ],
 })

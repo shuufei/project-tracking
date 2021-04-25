@@ -1,5 +1,5 @@
 type Query {
-  projects: [Project!]!
+  viewer: User!
 }
 
 type Mutation {

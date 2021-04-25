@@ -14,8 +14,7 @@ import {
 } from '@bison/backend/application';
 import type { Backlog, Board, Project, User } from '@bison/shared/schema';
 import { Inject } from '@nestjs/common';
-import { Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
-import { convertToApiColorFromDomainColor } from '../util/convert-to-color-from-domain-color';
+import { Parent, ResolveField, Resolver } from '@nestjs/graphql';
 
 @Resolver('Project')
 export class ProjectResolver {
@@ -31,19 +30,6 @@ export class ProjectResolver {
     @Inject(GET_ADMIN_SERVICE)
     private getAdminService: IGetAdminService
   ) {}
-
-  @Query()
-  async projects(): Promise<
-    Omit<Project, 'backlog' | 'boards' | 'members' | 'admin'>[]
-  > {
-    const response = await this.listProjectsService.handle();
-    return response.projects.map((project) => ({
-      id: project.id,
-      name: project.name,
-      description: project.description,
-      color: convertToApiColorFromDomainColor(project.color),
-    }));
-  }
 
   @ResolveField()
   async backlog(@Parent() project: Project): Promise<Omit<Backlog, 'project'>> {
