@@ -36,7 +36,7 @@ describe('ProjectDataStore', () => {
           take(1),
           tap((projects) => {
             expect(projects.length).toBe(
-              mockProjectsQueryRresponse.projects.edges.length
+              mockProjectsQueryRresponse.projects.length
             );
           })
         )
