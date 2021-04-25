@@ -41,36 +41,26 @@ export const getBacklogByProjectIdResponse: GetBacklogByProjectIdResponse = {
 };
 
 export const listBoardsByProjectIdResponse: ListBoardsByProjectIdResponse = {
-  edges: [
+  boards: [
     {
-      cursor: 'board_cursor_0001',
-      node: {
-        id: `board0001`,
-        name: `board name 0001`,
-        description: `board description 0001`,
-        isArchived: false,
-      },
+      id: `board0001`,
+      name: `board name 0001`,
+      description: `board description 0001`,
+      isArchived: false,
     },
     {
-      cursor: 'board_cursor_0002',
-      node: {
-        id: `board0002`,
-        name: `board name 0002`,
-        description: `board description 0002`,
-        isArchived: false,
-      },
+      id: `board0002`,
+      name: `board name 0002`,
+      description: `board description 0002`,
+      isArchived: false,
     },
     {
-      cursor: 'board_cursor_0003',
-      node: {
-        id: `board0003`,
-        name: `board name 0003`,
-        description: `board description 0003`,
-        isArchived: false,
-      },
+      id: `board0003`,
+      name: `board name 0003`,
+      description: `board description 0003`,
+      isArchived: false,
     },
   ],
-  hasNextPage: false,
 };
 
 export const listMembersResponse: ListMembersResponse = {

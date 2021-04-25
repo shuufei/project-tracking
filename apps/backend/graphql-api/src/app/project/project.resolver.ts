@@ -12,9 +12,9 @@ import {
   LIST_MEMBERS_SERVICE,
   LIST_PROJECTS_SERVICE,
 } from '@bison/backend/application';
-import type { Project } from '@bison/shared/schema';
+import type { Backlog, Board, Project } from '@bison/shared/schema';
 import { Inject } from '@nestjs/common';
-import { Query, Resolver } from '@nestjs/graphql';
+import { Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
 import { convertToApiColorFromDomainColor } from '../util/convert-to-color-from-domain-color';
 
 @Resolver('Project')
@@ -45,30 +45,16 @@ export class ProjectResolver {
     }));
   }
 
-  // @ResolveField()
-  // async backlog(@Parent() project: Project): Promise<Omit<Backlog, 'project'>> {
-  //   return this.getBacklogByProjectIdService.handle(project.id);
-  // }
+  @ResolveField()
+  async backlog(@Parent() project: Project): Promise<Omit<Backlog, 'project'>> {
+    return this.getBacklogByProjectIdService.handle(project.id);
+  }
 
-  // @ResolveField()
-  // async boards(
-  //   @Parent() project: Project,
-  //   @Args('first') first: number,
-  //   @Args('after') after?: Cursor
-  // ): Promise<OmitConnectionNode<BoardConnection, 'project'>> {
-  //   const response = await this.listBoardsByProjectIdService.handle(
-  //     project.id,
-  //     first,
-  //     after
-  //   );
-  //   return {
-  //     edges: response.edges,
-  //     pageInfo: {
-  //       endCursor: last<BoardEdge[][number]>(response.edges)?.cursor,
-  //       hasNextPage: response.hasNextPage,
-  //     },
-  //   };
-  // }
+  @ResolveField()
+  async boards(@Parent() project: Project): Promise<Omit<Board, 'project'>[]> {
+    const response = await this.listBoardsByProjectIdService.handle(project.id);
+    return response.boards;
+  }
 
   // @ResolveField()
   // async members(
