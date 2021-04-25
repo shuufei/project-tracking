@@ -3,11 +3,11 @@ import {
   IProjectDataStore,
   Project as DomainProject,
 } from '@bison/frontend/domain';
-import { Project } from '@bison/shared/schema';
+import { User } from '@bison/shared/schema';
 import { Apollo } from 'apollo-angular';
 import { map } from 'rxjs/operators';
 import { convertToDomainColorFromApiColor } from '../util/convert-to-domain-color-from-api-color';
-import { LIST_PROJECTS } from './gql/list-projects';
+import { LIST_ME_PROJECTS } from './gql/list-me-projects';
 
 @Injectable()
 export class ProjectDataStore implements IProjectDataStore {
@@ -15,12 +15,12 @@ export class ProjectDataStore implements IProjectDataStore {
 
   projects$() {
     return this.apollo
-      .watchQuery<{ projects: Project[] }>({
-        query: LIST_PROJECTS,
+      .watchQuery<{ viewer: User }>({
+        query: LIST_ME_PROJECTS,
       })
       .valueChanges.pipe(
         map((response) => {
-          const projects: DomainProject[] = response.data.projects.map(
+          const projects: DomainProject[] = response.data.viewer.projects.map(
             (project) => {
               const { id, name, description, color, members, admin } = project;
               const convertedProject: DomainProject = {
