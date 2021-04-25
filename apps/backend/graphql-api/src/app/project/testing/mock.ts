@@ -13,35 +13,25 @@ import {
 import { IProjectRepository } from '@bison/backend/domain';
 import { Color } from '@bison/shared/domain';
 
-export const listProjectsResponse: ListProjectsResponse = {
-  hasNextPage: true,
-  edges: [
+export const mockListProjectsResponse: ListProjectsResponse = {
+  projects: [
     {
-      cursor: 'project_cursor_0001',
-      node: {
-        id: `project0001`,
-        name: `project name 0001`,
-        description: `project description 0001`,
-        color: 'red' as Color,
-      },
+      id: `project0001`,
+      name: `project name 0001`,
+      description: `project description 0001`,
+      color: 'red' as Color,
     },
     {
-      cursor: 'project_cursor_0002',
-      node: {
-        id: `project0002`,
-        name: `project name 0002`,
-        description: `project description 0002`,
-        color: 'blue' as Color,
-      },
+      id: `project0002`,
+      name: `project name 0002`,
+      description: `project description 0002`,
+      color: 'blue' as Color,
     },
     {
-      cursor: 'project_cursor_0003',
-      node: {
-        id: `project0003`,
-        name: `project name 0003`,
-        description: `project description 0003`,
-        color: 'green' as Color,
-      },
+      id: `project0003`,
+      name: `project name 0003`,
+      description: `project description 0003`,
+      color: 'green' as Color,
     },
   ],
 };
@@ -121,15 +111,13 @@ export const getAdminResponse: GetAdminResponse = {
 
 export class MockProjectRepository implements IProjectRepository {
   async list() {
-    return {
-      edges: listProjectsResponse.edges,
-    };
+    return mockListProjectsResponse;
   }
 }
 
 export class MockListProjectsService implements IListProjectsService {
   async handle() {
-    return listProjectsResponse;
+    return mockListProjectsResponse;
   }
 }
 

@@ -1,22 +1,16 @@
-import { Cursor } from '@bison/backend/domain';
-import { Project } from '@bison/shared/domain';
+import { Project as DomainProject } from '@bison/shared/domain';
 
 export interface IProjectRepository {
-  list: (count: number, cursor?: Cursor) => Promise<ListResponse>;
+  list: () => Promise<ListResponse>;
 }
 
-export type ProjectNode = Pick<
-  Project,
+export type Project = Pick<
+  DomainProject,
   'id' | 'name' | 'description' | 'color'
 >;
-
-export type ProjectEdge = {
-  node: ProjectNode;
-  cursor: Cursor;
-};
 
 export const PROJECT_REPOSITORY = Symbol('ProjectRepository');
 
 export type ListResponse = {
-  edges: ProjectEdge[];
+  projects: Project[];
 };
