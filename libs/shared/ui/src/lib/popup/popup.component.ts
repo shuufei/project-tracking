@@ -83,7 +83,8 @@ export class PopupComponent implements OnInit, OnDestroy {
 
   private enableClosePopupHandler() {
     this.zone.runOutsideAngular(() => {
-      fromEvent(document, 'click')
+      // stopPropagation()しているイベントも捕捉するため、capture: trueをつける。
+      fromEvent(document, 'click', { capture: true })
         .pipe(
           filter((event) => {
             const isHostClicked = (this.elementRef
