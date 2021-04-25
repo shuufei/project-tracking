@@ -1,0 +1,32 @@
+:host {
+  display: block;
+}
+
+.box {
+  border: 1.5px solid transparent;
+
+  &.selected {
+    border-color: var(--bison-primary-default);
+  }
+
+  &:hover {
+    background-color: #dfdfdf;
+
+    .menu-trigger {
+      visibility: visible;
+    }
+  }
+}
+
+.color-icon {
+  min-width: 8px;
+  min-height: 8px;
+}
+
+.menu-icon {
+  padding: 1px;
+}
+
+.menu-items {
+  min-width: 180px;
+}

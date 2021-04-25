@@ -1,0 +1,56 @@
+<div
+  class="box flex items-center justify-between rounded-s px-3 py-1 cursor-pointer"
+  [class.selected]="isSelected"
+  (click)="clickedProject.emit()"
+>
+  <div class="flex items-center">
+    <span class="text-s1 font-medium mr-1">{{ projectName }}</span>
+    <ui-color-icon class="color-icon" [color]="color"></ui-color-icon>
+  </div>
+  <div class="flex items-center">
+    <div class="mr-1" uiTooltip="メニューを開く">
+      <div class="relative">
+        <div #triggerEl class="menu-trigger flex invisible">
+          <ui-icon
+            class="menu-icon cursor-pointer"
+            [icon]="'more-horizontal'"
+            [size]="'s'"
+            [color]="'primary-light2'"
+            [hoverColor]="'primary'"
+          ></ui-icon>
+        </div>
+        <ui-popup [triggerEl]="triggerEl" [isCloseWhenPopupAction]="true">
+          <div class="menu-items">
+            <ui-menu-item
+              [itemName]="'削除'"
+              [color]="'warn'"
+              [icon]="'trash-2'"
+              (clickedItem)="clickedDelete.emit()"
+            ></ui-menu-item>
+          </div>
+        </ui-popup>
+      </div>
+    </div>
+    <div
+      uiTooltip="{{ isOpen ? 'ボード一覧を閉じる' : 'ボード一覧を開く' }}"
+      (click)="clickedOpenToggle.emit(); $event.stopPropagation()"
+    >
+      <ui-icon
+        class="transform duration-100"
+        [class.rotate-90]="isOpen"
+        size="s"
+        icon="chevron-right"
+        color="primary-light1"
+        hoverColor="basic"
+      ></ui-icon>
+    </div>
+  </div>
+</div>
+<div
+  class="transform duration-200"
+  [ngClass]="{
+    'opacity-0 -translate-y-3': !isOpen
+  }"
+>
+  <ng-content *ngIf="isOpen"></ng-content>
+</div>

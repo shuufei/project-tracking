@@ -1,0 +1,34 @@
+<ui-nav-project-item
+  *ngIf="project"
+  [isOpen]="isOpen"
+  [isSelected]="project.id === selectedProjectId"
+  [projectName]="project.name"
+  [color]="project.color"
+  (clickedProject)="clickedProject.emit(project.id)"
+  (clickedOpenToggle)="isOpen = !isOpen"
+  (clickedDelete)="clickedDeleteProject.emit(project.id)"
+>
+  <div class="ml-2">
+    <ui-nav-board-item
+      *ngFor="let board of boards"
+      class="my-2"
+      [boardName]="board.name"
+      [isSelected]="board.id === selectedBoardId"
+      (click)="clickedBoard.emit(board.id)"
+      (clickedEdit)="clickedEditBoard.emit(board.id)"
+      (clickedDelete)="clickedDeleteBoard.emit(board.id)"
+    ></ui-nav-board-item>
+    <span
+      class="inline-flex items-center text-s3 text-black-light2 font-medium px-3 py-1 cursor-pointer"
+      (click)="clickedCreateBoard.emit()"
+    >
+      <ui-icon
+        class="mr-1"
+        size="s"
+        icon="plus"
+        color="primary-light1"
+      ></ui-icon>
+      ボードを作成
+    </span>
+  </div>
+</ui-nav-project-item>
