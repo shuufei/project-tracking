@@ -8,36 +8,26 @@ import { UserResolver } from './user.resolver';
 class MockListProjectsByUserIdService implements IListProjectsByUserIdService {
   async handle() {
     return {
-      edges: [
+      projects: [
         {
-          cursor: '',
-          node: {
-            id: `project${getRandom()}`,
-            name: `project name ${getRandom()}`,
-            description: `project description ${getRandom()}`,
-            color: 'red' as Color,
-          },
+          id: `project${getRandom()}`,
+          name: `project name ${getRandom()}`,
+          description: `project description ${getRandom()}`,
+          color: 'red' as Color,
         },
         {
-          cursor: '',
-          node: {
-            id: `project${getRandom()}`,
-            name: `project name ${getRandom()}`,
-            description: `project description ${getRandom()}`,
-            color: 'blue' as Color,
-          },
+          id: `project${getRandom()}`,
+          name: `project name ${getRandom()}`,
+          description: `project description ${getRandom()}`,
+          color: 'blue' as Color,
         },
         {
-          cursor: '',
-          node: {
-            id: `project${getRandom()}`,
-            name: `project name ${getRandom()}`,
-            description: `project description ${getRandom()}`,
-            color: 'green' as Color,
-          },
+          id: `project${getRandom()}`,
+          name: `project name ${getRandom()}`,
+          description: `project description ${getRandom()}`,
+          color: 'green' as Color,
         },
       ],
-      hasNextPage: false,
     };
   }
 }

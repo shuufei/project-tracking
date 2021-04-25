@@ -64,33 +64,23 @@ export const listBoardsByProjectIdResponse: ListBoardsByProjectIdResponse = {
 };
 
 export const listMembersResponse: ListMembersResponse = {
-  edges: [
+  users: [
     {
-      cursor: 'user_cursor_0001',
-      node: {
-        id: `user0001`,
-        name: `user name 0001`,
-        icon: `user description 0001`,
-      },
+      id: `user0001`,
+      name: `user name 0001`,
+      icon: `user description 0001`,
     },
     {
-      cursor: 'user_cursor_0002',
-      node: {
-        id: `user0002`,
-        name: `user name 0002`,
-        icon: `user icon 0002`,
-      },
+      id: `user0002`,
+      name: `user name 0002`,
+      icon: `user icon 0002`,
     },
     {
-      cursor: 'user_cursor_0003',
-      node: {
-        id: `user0003`,
-        name: `user name 0003`,
-        icon: `user icon 0003`,
-      },
+      id: `user0003`,
+      name: `user name 0003`,
+      icon: `user icon 0003`,
     },
   ],
-  hasNextPage: false,
 };
 
 export const getAdminResponse: GetAdminResponse = {

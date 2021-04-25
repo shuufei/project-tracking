@@ -12,7 +12,7 @@ import {
   LIST_MEMBERS_SERVICE,
   LIST_PROJECTS_SERVICE,
 } from '@bison/backend/application';
-import type { Backlog, Board, Project } from '@bison/shared/schema';
+import type { Backlog, Board, Project, User } from '@bison/shared/schema';
 import { Inject } from '@nestjs/common';
 import { Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
 import { convertToApiColorFromDomainColor } from '../util/convert-to-color-from-domain-color';
@@ -56,25 +56,11 @@ export class ProjectResolver {
     return response.boards;
   }
 
-  // @ResolveField()
-  // async members(
-  //   @Parent() project: Project,
-  //   @Args('first') first: number,
-  //   @Args('after') after?: Cursor
-  // ): Promise<OmitConnectionNode<UserConnection, 'projects'>> {
-  //   const response = await this.listMembersService.handle(
-  //     project.id,
-  //     first,
-  //     after
-  //   );
-  //   return {
-  //     edges: response.edges,
-  //     pageInfo: {
-  //       endCursor: last<UserEdge[][number]>(response.edges)?.cursor,
-  //       hasNextPage: response.hasNextPage,
-  //     },
-  //   };
-  // }
+  @ResolveField()
+  async members(@Parent() project: Project): Promise<Omit<User, 'projects'>[]> {
+    const response = await this.listMembersService.handle(project.id);
+    return response.users;
+  }
 
   // @ResolveField()
   // async admin(@Parent() project: Project): Promise<Omit<User, 'projects'>> {
