@@ -4,7 +4,7 @@ import {
   ApolloTestingModule,
 } from 'apollo-angular/testing';
 import { take, tap } from 'rxjs/operators';
-import { LIST_PROJECTS } from '../gql/list-projects';
+import { LIST_ME_PROJECTS } from '../gql/list-me-projects';
 import { ProjectDataStore } from '../project-data-store';
 import { mockProjectsQueryRresponse } from '../testing/mock';
 
@@ -36,12 +36,12 @@ describe('ProjectDataStore', () => {
           take(1),
           tap((projects) => {
             expect(projects.length).toBe(
-              mockProjectsQueryRresponse.projects.length
+              mockProjectsQueryRresponse.viewer.projects.length
             );
           })
         )
         .subscribe();
-      const op = testingController.expectOne(LIST_PROJECTS);
+      const op = testingController.expectOne(LIST_ME_PROJECTS);
       op.flush({
         data: mockProjectsQueryRresponse,
       });
