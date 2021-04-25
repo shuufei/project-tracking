@@ -11,4 +11,5 @@ module.exports = {
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
   coverageDirectory: '../../../coverage/apps/backend/graphql-api-e2e',
+  testMatch: ['**/+(*.)+(e2e-spec|test).+(ts|js)?(x)'],
 };

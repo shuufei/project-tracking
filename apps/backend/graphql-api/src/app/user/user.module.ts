@@ -1,46 +1,11 @@
-import type { IListProjectsByUserIdService } from '@bison/backend/application';
-import { LIST_PROJECTS_BY_USER_ID_SERVICE } from '@bison/backend/application';
-import { Color } from '@bison/shared/domain';
+import {
+  GET_ME_SERVICE,
+  LIST_PROJECTS_BY_USER_ID_SERVICE,
+} from '@bison/backend/application';
 import { Module } from '@nestjs/common';
-import { getRandom } from '../util/get-random-number';
+import { MockGetMeService } from '../../mock';
+import { MockListProjectsByUserIdService } from '../../mock/list-projects-by-user-id-service';
 import { UserResolver } from './user.resolver';
-
-class MockListProjectsByUserIdService implements IListProjectsByUserIdService {
-  async handle() {
-    return {
-      edges: [
-        {
-          cursor: '',
-          node: {
-            id: `project${getRandom()}`,
-            name: `project name ${getRandom()}`,
-            description: `project description ${getRandom()}`,
-            color: 'red' as Color,
-          },
-        },
-        {
-          cursor: '',
-          node: {
-            id: `project${getRandom()}`,
-            name: `project name ${getRandom()}`,
-            description: `project description ${getRandom()}`,
-            color: 'blue' as Color,
-          },
-        },
-        {
-          cursor: '',
-          node: {
-            id: `project${getRandom()}`,
-            name: `project name ${getRandom()}`,
-            description: `project description ${getRandom()}`,
-            color: 'green' as Color,
-          },
-        },
-      ],
-      hasNextPage: false,
-    };
-  }
-}
 
 @Module({
   providers: [
@@ -48,6 +13,10 @@ class MockListProjectsByUserIdService implements IListProjectsByUserIdService {
     {
       provide: LIST_PROJECTS_BY_USER_ID_SERVICE,
       useValue: new MockListProjectsByUserIdService(),
+    },
+    {
+      provide: GET_ME_SERVICE,
+      useValue: new MockGetMeService(),
     },
   ],
 })

@@ -7,7 +7,6 @@ export type Board = {
   name: string;
   description?: string;
   tasks: Task[];
-  isArchived: boolean;
   projectId: Project['id'];
 };
 
@@ -21,6 +20,5 @@ export const createBoard = (
   name,
   description,
   tasks,
-  isArchived: false,
   projectId,
 });

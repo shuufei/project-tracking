@@ -33,22 +33,12 @@ export interface UpdateProjectInput {
     memberUserIds: string[];
 }
 
-export interface Connection {
-    pageInfo: PageInfo;
-    edges: Edge[];
-}
-
-export interface Edge {
-    cursor?: string;
-    node: Node;
-}
-
 export interface Node {
     id: string;
 }
 
 export interface IQuery {
-    projects(first: number, after?: string): ProjectConnection | Promise<ProjectConnection>;
+    viewer(): User | Promise<User>;
 }
 
 export interface IMutation {
@@ -59,17 +49,7 @@ export interface User extends Node {
     id: string;
     name: string;
     icon?: string;
-    projects: ProjectConnection;
-}
-
-export interface UserEdge extends Edge {
-    cursor: string;
-    node: User;
-}
-
-export interface UserConnection extends Connection {
-    pageInfo: PageInfo;
-    edges: UserEdge[];
+    projects: Project[];
 }
 
 export interface Backlog extends Node {
@@ -81,18 +61,7 @@ export interface Board extends Node {
     id: string;
     name: string;
     description?: string;
-    isArchived: boolean;
     project: Project;
-}
-
-export interface BoardEdge extends Edge {
-    cursor: string;
-    node: Board;
-}
-
-export interface BoardConnection extends Connection {
-    pageInfo: PageInfo;
-    edges: BoardEdge[];
 }
 
 export interface Project extends Node {
@@ -101,22 +70,7 @@ export interface Project extends Node {
     description?: string;
     color: Color;
     backlog: Backlog;
-    boards: BoardConnection;
-    members: UserConnection;
+    boards: Board[];
+    members: User[];
     admin: User;
-}
-
-export interface ProjectEdge extends Edge {
-    cursor?: string;
-    node: Project;
-}
-
-export interface ProjectConnection extends Connection {
-    pageInfo: PageInfo;
-    edges: ProjectEdge[];
-}
-
-export interface PageInfo {
-    endCursor?: string;
-    hasNextPage: boolean;
 }

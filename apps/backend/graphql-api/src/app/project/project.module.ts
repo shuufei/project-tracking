@@ -8,14 +8,14 @@ import {
 } from '@bison/backend/application';
 import { PROJECT_REPOSITORY } from '@bison/backend/domain';
 import { Module } from '@nestjs/common';
-import { ProjectResolver } from './project.resolver';
 import {
   MockGetAdminService,
   MockGetBacklogByProjectIdService,
   MockListBoardsByProjectIdService,
   MockListMembersService,
   MockProjectRepository,
-} from './testing/mock';
+} from '../../mock';
+import { ProjectResolver } from './project.resolver';
 
 @Module({
   providers: [

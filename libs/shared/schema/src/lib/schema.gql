@@ -1,5 +1,5 @@
 type Query {
-  projects(first: Int! = 10, after: ID): ProjectConnection!
+  viewer: User!
 }
 
 type Mutation {
@@ -27,17 +27,7 @@ type User implements Node {
   id: ID!
   name: String!
   icon: String
-  projects(first: Int! = 10, after: ID): ProjectConnection!
-}
-
-type UserEdge implements Edge {
-  cursor: String!
-  node: User!
-}
-
-type UserConnection implements Connection {
-  pageInfo: PageInfo!
-  edges: [UserEdge!]!
+  projects: [Project!]!
 }
 
 type Backlog implements Node {
@@ -49,18 +39,7 @@ type Board implements Node {
   id: ID!
   name: String!
   description: String
-  isArchived: Boolean!
   project: Project!
-}
-
-type BoardEdge implements Edge {
-  cursor: String!
-  node: Board!
-}
-
-type BoardConnection implements Connection {
-  pageInfo: PageInfo!
-  edges: [BoardEdge!]!
 }
 
 type Project implements Node {
@@ -69,19 +48,9 @@ type Project implements Node {
   description: String
   color: Color!
   backlog: Backlog!
-  boards(first: Int! = 10, after: ID): BoardConnection!
-  members(first: Int! = 10, after: ID): UserConnection!
+  boards: [Board!]!
+  members: [User!]!
   admin: User!
-}
-
-type ProjectEdge implements Edge {
-  cursor: String
-  node: Project!
-}
-
-type ProjectConnection implements Connection {
-  pageInfo: PageInfo!
-  edges: [ProjectEdge!]!
 }
 
 enum Color {
@@ -92,21 +61,6 @@ enum Color {
   BROWN
   PINK
   GRAY
-}
-
-type PageInfo {
-  endCursor: String
-  hasNextPage: Boolean!
-}
-
-interface Connection {
-  pageInfo: PageInfo!
-  edges: [Edge!]!
-}
-
-interface Edge {
-  cursor: String
-  node: Node!
 }
 
 interface Node {
