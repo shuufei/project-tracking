@@ -1,8 +1,8 @@
 import {
   GET_BACKLOG_BY_PROJECT_ID_SERVICE,
   LIST_BOARDS_BY_PROJECT_ID_SERVICE,
+  LIST_MEMBERS_SERVICE,
   LIST_PROJECTS_SERVICE,
-  LIST_USERS_BY_PROJECT_ID_SERVICE,
 } from '@bison/backend/application';
 import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
@@ -11,8 +11,8 @@ import { AppModule } from '../../app.module';
 import {
   MockGetBacklogByProjectIdService,
   MockListBoardsByProjectIdService,
+  MockListMembersService,
   MockListProjectsService,
-  MockListUsersByProjectIdService,
 } from './mock';
 
 describe('ProjectResolver', () => {
@@ -37,8 +37,8 @@ describe('ProjectResolver', () => {
           useValue: new MockListBoardsByProjectIdService(),
         },
         {
-          provide: LIST_USERS_BY_PROJECT_ID_SERVICE,
-          useValue: new MockListUsersByProjectIdService(),
+          provide: LIST_MEMBERS_SERVICE,
+          useValue: new MockListMembersService(),
         },
       ],
     }).compile();
@@ -56,17 +56,9 @@ describe('ProjectResolver', () => {
         .post(path)
         .send({
           query: `{
-              projects(first: 3) {
-                pageInfo {
-                  endCursor
-                  hasNextPage
-                }
-                edges {
-                  cursor
-                  node {
-                    id
-                  }
-                }
+              projects {
+                id
+                name
               }
             }`,
         })
