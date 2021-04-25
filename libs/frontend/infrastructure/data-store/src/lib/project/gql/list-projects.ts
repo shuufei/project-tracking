@@ -11,7 +11,6 @@ export const LIST_PROJECTS = gql`
         id
         name
         description
-        isArchived
         project {
           id
         }

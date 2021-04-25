@@ -12,7 +12,6 @@ export const mockProjectsQueryRresponse = {
           id: 'board0001',
           name: 'board name 0001',
           description: 'board description 0001',
-          isArchived: false,
           project: {
             id: 'project515',
           },
@@ -21,7 +20,6 @@ export const mockProjectsQueryRresponse = {
           id: 'board0002',
           name: 'board name 0002',
           description: 'board description 0002',
-          isArchived: false,
           project: {
             id: 'project611',
           },
@@ -30,7 +28,6 @@ export const mockProjectsQueryRresponse = {
           id: 'board0003',
           name: 'board name 0003',
           description: 'board description 0003',
-          isArchived: false,
           project: {
             id: 'project289',
           },
@@ -75,7 +72,6 @@ export const mockProjectsQueryRresponse = {
           id: 'board0001',
           name: 'board name 0001',
           description: 'board description 0001',
-          isArchived: false,
           project: {
             id: 'project515',
           },
@@ -84,7 +80,6 @@ export const mockProjectsQueryRresponse = {
           id: 'board0002',
           name: 'board name 0002',
           description: 'board description 0002',
-          isArchived: false,
           project: {
             id: 'project611',
           },
@@ -93,7 +88,6 @@ export const mockProjectsQueryRresponse = {
           id: 'board0003',
           name: 'board name 0003',
           description: 'board description 0003',
-          isArchived: false,
           project: {
             id: 'project289',
           },
@@ -138,7 +132,6 @@ export const mockProjectsQueryRresponse = {
           id: 'board0001',
           name: 'board name 0001',
           description: 'board description 0001',
-          isArchived: false,
           project: {
             id: 'project515',
           },
@@ -147,7 +140,6 @@ export const mockProjectsQueryRresponse = {
           id: 'board0002',
           name: 'board name 0002',
           description: 'board description 0002',
-          isArchived: false,
           project: {
             id: 'project611',
           },
@@ -156,7 +148,6 @@ export const mockProjectsQueryRresponse = {
           id: 'board0003',
           name: 'board name 0003',
           description: 'board description 0003',
-          isArchived: false,
           project: {
             id: 'project289',
           },

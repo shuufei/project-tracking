@@ -8,10 +8,7 @@ export const LIST_BOARDS_BY_PROJECT_ID_SERVICE = Symbol(
   'ListBoardsByProjectIdService'
 );
 
-export type Board = Pick<
-  DomainBoard,
-  'id' | 'description' | 'name' | 'isArchived'
->;
+export type Board = Pick<DomainBoard, 'id' | 'description' | 'name'>;
 
 export type ListBoardsByProjectIdResponse = {
   boards: Board[];
