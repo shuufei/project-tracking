@@ -61,7 +61,6 @@ export interface Board extends Node {
     id: string;
     name: string;
     description?: string;
-    isArchived: boolean;
     project: Project;
 }
 

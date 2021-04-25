@@ -39,7 +39,6 @@ type Board implements Node {
   id: ID!
   name: String!
   description: String
-  isArchived: Boolean!
   project: Project!
 }
 
