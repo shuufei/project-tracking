@@ -9,7 +9,7 @@ type Mutation {
   createProject(input: CreateProjectInput!): Project!
   updateProject(input: UpdateProjectInput!): Project!
   deleteProject(input: DeleteProjectInput!): Project!
-  updateProjectMembersInput(input: UpdateProjectMembersInput!): Project!
+  updateProjectMembers(input: UpdateProjectMembersInput!): Project!
   createBoard(input: CreateBoardInput!): Project!
   updateBoard(input: UpdateBoardInput!): Project!
   deleteBoard(input: DeleteBoardInput!): Project!
