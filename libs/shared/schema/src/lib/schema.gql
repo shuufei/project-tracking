@@ -201,6 +201,7 @@ input UpdateTaskInput {
   assign: User
   workTime: Int
   scheduledTime: Int
+  boardId: ID!
 }
 
 input DeleteTaskInput {
@@ -222,6 +223,7 @@ input UpdateTaskGroupInput {
   status: Status!
   assign: User
   scheduledTime: Int
+  boardId: ID!
 }
 
 input DeleteTaskGroupInput {
