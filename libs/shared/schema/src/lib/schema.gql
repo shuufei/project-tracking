@@ -9,6 +9,7 @@ type Mutation {
   createProject(input: CreateProjectInput!): Project!
   updateProject(input: UpdateProjectInput!): Project!
   deleteProject(input: DeleteProjectInput!): Project!
+  updateProjectMembersInput(input: UpdateProjectMembersInput!): Project!
   createBoard(input: CreateBoardInput!): Project!
   updateBoard(input: UpdateBoardInput!): Project!
   deleteBoard(input: DeleteBoardInput!): Project!
@@ -27,6 +28,7 @@ type Mutation {
     input: ChangeTasksOrderOfTaskGroupInput!
   ): TaskGroup!
   changeSubtasksOrderOfTask(input: ChangeSubtasksOrderOfTaskInput!): Task!
+  updateMe(input: UpdateMeInput!): User!
 }
 
 type User implements Node {
@@ -139,7 +141,6 @@ input CreateProjectInput {
   description: String
   color: Color!
   adminUserId: ID!
-  memberUserIds: [ID!]!
 }
 
 input UpdateProjectInput {
@@ -148,7 +149,11 @@ input UpdateProjectInput {
   description: String
   color: Color!
   adminUserId: ID!
-  memberUserIds: [ID!]!
+}
+
+input UpdateProjectMembersInput {
+  addUserIds: [ID!]!
+  removeUserIds: [ID!]!
 }
 
 input DeleteProjectInput {
@@ -257,5 +262,11 @@ input ChangeTasksOrderOfTaskGroupInput {
 
 input ChangeSubtasksOrderOfTaskInput {
   taskId: ID!
-  tasksOrder: [ID!]!
+  subtasksOrder: [ID!]!
+}
+
+input UpdateMeInput {
+  id: ID!
+  name: String!
+  icon: String
 }
