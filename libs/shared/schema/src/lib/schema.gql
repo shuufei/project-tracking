@@ -1,9 +1,137 @@
 type Query {
   viewer: User!
+  project(id: ID!): Project
+  board(id: ID!): Board
+  users: [User!]!
 }
 
 type Mutation {
   createProject(input: CreateProjectInput!): Project!
+  updateProject(input: UpdateProjectInput!): Project!
+  deleteProject(input: DeleteProjectInput!): Project!
+  createBoard(input: CreateBoardInput!): Project!
+  updateBoard(input: UpdateBoardInput!): Project!
+  deleteBoard(input: DeleteBoardInput!): Project!
+  createTaskOnBoard(input: CreateTaskOnBoardInput!): Task!
+  createTaskOnTaskGroup(input: CreateTaskOnTaskGroupInput!): Task!
+  updateTask(input: UpdateTaskInput!): Task!
+  deleteTask(input: DeleteTaskInput!): Task!
+  createTaskGroup(input: CreateTaskGroupInput!): TaskGroup!
+  updateTaskGroup(input: UpdateTaskGroupInput!): TaskGroup!
+  deleteTaskGroup(input: DeleteTaskGroupInput!): TaskGroup!
+  createSubtask(input: CreateSubtaskInput!): Subtask!
+  updateSubtask(input: UpdateSubtaskInput!): Subtask!
+  deleteSubtask(input: DeleteSubtaskInput!): Subtask!
+  changeBoardTasksOrder(input: ChangeBoardTasksOrderInput!): Board!
+  changeTasksOrderOfTaskGroup(
+    input: ChangeTasksOrderOfTaskGroupInput!
+  ): TaskGroup!
+  changeSubtasksOrderOfTask(input: ChangeSubtasksOrderOfTaskInput!): Task!
+}
+
+type User implements Node {
+  id: ID!
+  name: String!
+  icon: String
+  projects: [Project!]!
+  authorities: [Authority!]!
+}
+
+type Board implements Node {
+  id: ID!
+  name: String!
+  description: String
+  project: Project!
+  singleTasks: [Task!]!
+  taskGroups: [TaskGroup!]!
+  tasksOrder: [BoardTasksOrderItem!]!
+}
+
+type BoardTasksOrderItem {
+  taskId: ID!
+  type: BoardTaskType!
+}
+
+enum BoardTaskType {
+  TASKGROUP
+  TASK
+}
+
+type Project implements Node {
+  id: ID!
+  name: String!
+  description: String
+  color: Color!
+  boards: [Board!]!
+  members: [User!]!
+  admin: User!
+}
+
+interface TaskBase {
+  title: String!
+  description: String
+  assign: User
+  scheduledTime: Int
+}
+
+type Subtask implements Node {
+  id: ID!
+  title: String!
+  description: String
+  isCompleted: Boolean!
+  assign: User
+  task: Task!
+  workTime: Int
+  scheduledTime: Int
+}
+
+type Task implements Node {
+  id: ID!
+  title: String!
+  description: String
+  status: Status!
+  subtasks: [Subtask!]!
+  assign: User
+  project: Project!
+  board: Board!
+  taskGroup: TaskGroup
+  workTime: Int
+  scheduledTime: Int
+  subtasksOrder: [ID!]
+}
+
+type TaskGroup implements Node {
+  id: ID!
+  title: String!
+  description: String
+  status: Status!
+  tasks: [Task!]!
+  assign: User
+  project: Project!
+  board: Board!
+  scheduledTime: Int
+  tasksOrder: [ID!]!
+}
+
+enum Color {
+  RED
+  BLUE
+  GREEN
+  YELLOW
+  BROWN
+  PINK
+  GRAY
+}
+
+interface Node {
+  id: ID!
+}
+
+enum Status {
+  TODO
+  INPROGRESS
+  CONFIRM
+  DONE
 }
 
 input CreateProjectInput {
@@ -23,46 +151,111 @@ input UpdateProjectInput {
   memberUserIds: [ID!]!
 }
 
-type User implements Node {
+input DeleteProjectInput {
   id: ID!
+}
+
+input CreateBoardInput {
   name: String!
-  icon: String
-  projects: [Project!]!
+  description: String
+  projectId: ID!
 }
 
-type Backlog implements Node {
-  id: ID!
-  project: Project!
-}
-
-type Board implements Node {
+input UpdateBoardInput {
   id: ID!
   name: String!
   description: String
-  project: Project!
+  projectId: ID!
 }
 
-type Project implements Node {
+input DeleteBoardInput {
   id: ID!
-  name: String!
+}
+
+input CreateTaskOnBoardInput {
+  title: String!
   description: String
-  color: Color!
-  backlog: Backlog!
-  boards: [Board!]!
-  members: [User!]!
-  admin: User!
+  assign: User
+  boardId: ID!
+  scheduledTime: Int
 }
 
-enum Color {
-  RED
-  BLUE
-  GREEN
-  YELLOW
-  BROWN
-  PINK
-  GRAY
+input CreateTaskOnTaskGroupInput {
+  title: String!
+  description: String
+  assign: User
+  taskGroupId: ID!
+  scheduledTime: Int
 }
 
-interface Node {
+input UpdateTaskInput {
   id: ID!
+  title: String!
+  description: String
+  status: Status!
+  assign: User
+  workTime: Int
+  scheduledTime: Int
+}
+
+input DeleteTaskInput {
+  id: ID!
+}
+
+input CreateTaskGroupInput {
+  title: String!
+  description: String
+  assign: User
+  boardId: ID!
+  scheduledTime: Int
+}
+
+input UpdateTaskGroupInput {
+  id: ID!
+  title: String!
+  description: String
+  status: Status!
+  assign: User
+  scheduledTime: Int
+}
+
+input DeleteTaskGroupInput {
+  id: ID!
+}
+
+input CreateSubtaskInput {
+  title: String!
+  description: String
+  assign: User
+  taskId: ID!
+  scheduledTime: Int
+}
+
+input UpdateSubtaskInput {
+  id: ID!
+  title: String!
+  description: String
+  isCompleted: Boolean!
+  assign: User
+  workTime: Int
+  scheduledTime: Int
+}
+
+input DeleteSubtaskInput {
+  id: ID!
+}
+
+input ChangeBoardTasksOrderInput {
+  boardId: ID!
+  tasksOrder: [BoardTasksOrderItem!]!
+}
+
+input ChangeTasksOrderOfTaskGroupInput {
+  taskGroupId: ID!
+  tasksOrder: [ID!]!
+}
+
+input ChangeSubtasksOrderOfTaskInput {
+  taskId: ID!
+  tasksOrder: [ID!]!
 }
