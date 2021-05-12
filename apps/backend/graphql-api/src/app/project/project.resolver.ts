@@ -1,28 +1,20 @@
 import type {
   IGetAdminService,
-  IGetBacklogByProjectIdService,
   IListBoardsByProjectIdService,
   IListMembersService,
-  IListProjectsService,
 } from '@bison/backend/application';
 import {
   GET_ADMIN_SERVICE,
-  GET_BACKLOG_BY_PROJECT_ID_SERVICE,
   LIST_BOARDS_BY_PROJECT_ID_SERVICE,
   LIST_MEMBERS_SERVICE,
-  LIST_PROJECTS_SERVICE,
 } from '@bison/backend/application';
-import type { Backlog, Board, Project, User } from '@bison/shared/schema';
+import type { Board, Project, User } from '@bison/shared/schema';
 import { Inject } from '@nestjs/common';
 import { Parent, ResolveField, Resolver } from '@nestjs/graphql';
 
 @Resolver('Project')
 export class ProjectResolver {
   constructor(
-    @Inject(LIST_PROJECTS_SERVICE)
-    private listProjectsService: IListProjectsService,
-    @Inject(GET_BACKLOG_BY_PROJECT_ID_SERVICE)
-    private getBacklogByProjectIdService: IGetBacklogByProjectIdService,
     @Inject(LIST_BOARDS_BY_PROJECT_ID_SERVICE)
     private listBoardsByProjectIdService: IListBoardsByProjectIdService,
     @Inject(LIST_MEMBERS_SERVICE)
@@ -32,12 +24,11 @@ export class ProjectResolver {
   ) {}
 
   @ResolveField()
-  async backlog(@Parent() project: Project): Promise<Omit<Backlog, 'project'>> {
-    return this.getBacklogByProjectIdService.handle(project.id);
-  }
-
-  @ResolveField()
-  async boards(@Parent() project: Project): Promise<Omit<Board, 'project'>[]> {
+  async boards(
+    @Parent() project: Project
+  ): Promise<
+    Omit<Board, 'project' | 'singleTasks' | 'taskGroups' | 'tasksOrder'>[]
+  > {
     const response = await this.listBoardsByProjectIdService.handle(project.id);
     return response.boards;
   }
