@@ -16,12 +16,6 @@ export const LIST_ME_PROJECTS = gql`
             id
           }
         }
-        backlog {
-          id
-          project {
-            id
-          }
-        }
         admin {
           id
           name

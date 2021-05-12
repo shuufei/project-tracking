@@ -15,3 +15,11 @@
 - theme/${theme 名}/variables.scss を利用したいプロジェクトで import することで、theme 変数が利用できるようになる。
 - theme/${theme 名}/variables.scss を利用したいプロジェクトで import すると、Taiga UI の theme も更新される。
 - theme/${theme 名}/tailwind.config.js を利用したいプロジェクトの webpack.config で設定することで、theme に沿った style で Tailwind CSS が利用できるようになる。
+
+### Schema から型定義生成
+
+下記コマンドで `libs/shared/schema/src/lib/schema-types.ts` に型定義を生成する。
+
+```
+> npx nx run shared-schema:generate-typings
+```
