@@ -1,4 +1,4 @@
-import { Color } from '@bison/shared/domain';
+import { COLOR } from '@bison/shared/domain';
 import { ProjectCardModule } from './project-card.module';
 
 export default {
@@ -10,7 +10,7 @@ const description = `プロジェクト管理アプリケーションの開発�
 
 const props = {
   title: 'Bison',
-  color: 'green' as Color,
+  color: COLOR.Red,
   description,
   adminImg: undefined,
   memberImgs: [undefined, undefined, undefined],

@@ -2,7 +2,7 @@ import {
   IListProjectsByUserIdService,
   ListProjectsByUserIdResponse,
 } from '@bison/backend/application';
-import { Color } from '@bison/shared/domain';
+import { COLOR } from '@bison/shared/domain';
 import { getRandom } from '../app/util/get-random-number';
 
 export const mockListProjectsByUserIdResponse: ListProjectsByUserIdResponse = {
@@ -11,19 +11,19 @@ export const mockListProjectsByUserIdResponse: ListProjectsByUserIdResponse = {
       id: `project${getRandom()}`,
       name: `project name ${getRandom()}`,
       description: `project description ${getRandom()}`,
-      color: 'red' as Color,
+      color: COLOR.Red,
     },
     {
       id: `project${getRandom()}`,
       name: `project name ${getRandom()}`,
       description: `project description ${getRandom()}`,
-      color: 'blue' as Color,
+      color: COLOR.Blue,
     },
     {
       id: `project${getRandom()}`,
       name: `project name ${getRandom()}`,
       description: `project description ${getRandom()}`,
-      color: 'green' as Color,
+      color: COLOR.Green,
     },
   ],
 };

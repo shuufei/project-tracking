@@ -1,21 +1,21 @@
-import type { Color as DomainColor } from '@bison/shared/domain';
+import { COLOR, Color as DomainColor } from '@bison/shared/domain';
 import { Color } from '@bison/shared/schema';
 
 export const convertToApiColorFromDomainColor = (color: DomainColor): Color => {
   switch (color) {
-    case 'blue':
+    case COLOR.Blue:
       return Color.BLUE;
-    case 'green':
+    case COLOR.Green:
       return Color.GREEN;
-    case 'red':
+    case COLOR.Red:
       return Color.RED;
-    case 'yellow':
+    case COLOR.Yellow:
       return Color.YELLOW;
-    case 'brown':
+    case COLOR.Brown:
       return Color.BROWN;
-    case 'pink':
+    case COLOR.Pink:
       return Color.PINK;
-    case 'gray':
+    case COLOR.Gray:
       return Color.GRAY;
   }
 };
