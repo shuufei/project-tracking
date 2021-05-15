@@ -5,11 +5,11 @@ import {
 import { Module } from '@nestjs/common';
 import { MockGetMeService } from '../../../mock';
 import { MockListProjectsByUserIdService } from '../../../mock/list-projects-by-user-id-service';
-import { ParseUserModule } from '../../pipes/parse-user/parse-user.module';
+import { ParseUserPipeModule } from '../../pipes/parse-user/parse-user.module';
 import { UserResolver } from './user.resolver';
 
 @Module({
-  imports: [ParseUserModule],
+  imports: [ParseUserPipeModule],
   providers: [
     UserResolver,
     {

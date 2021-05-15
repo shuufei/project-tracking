@@ -1,9 +1,7 @@
-import {
-  GetMeResponse,
-  IGetUserByIdpUserIdService,
-} from '@bison/backend/application';
+import { IGetUserByIdpUserIdService } from '@bison/backend/application';
+import { User } from '@bison/shared/domain';
 
-export const mockGetUserByIdpUserIdResponse: GetMeResponse = {
+export const mockGetUserByIdpUserIdResponse: User = {
   id: 'user0001',
   name: 'user name 0001',
   icon: 'user icon 0001',
