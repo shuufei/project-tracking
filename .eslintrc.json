@@ -18,7 +18,8 @@
                   "scope:backend-application",
                   "scope:backend-domain",
                   "scope:shared-domain",
-                  "scope:shared-schema"
+                  "scope:shared-schema",
+                  "scope:shared-constants"
                 ]
               },
               {
