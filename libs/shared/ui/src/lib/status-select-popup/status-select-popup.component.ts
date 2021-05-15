@@ -5,13 +5,8 @@ import {
   Input,
   Output,
 } from '@angular/core';
-import type {
-  Confirm,
-  Done,
-  Inprogress,
-  Status,
-  Todo,
-} from '@bison/shared/domain';
+import type { Status } from '@bison/shared/domain';
+import { STATUS } from '@bison/shared/domain';
 import { RxState } from '@rx-angular/state';
 import { Subject } from 'rxjs';
 
@@ -38,12 +33,7 @@ export class StatusSelectPopupComponent {
 
   readonly onClickedStatus$ = new Subject<Status>();
 
-  readonly statusList: [Todo, Inprogress, Confirm, Done] = [
-    'TODO',
-    'INPROGRESS',
-    'CONFIRM',
-    'DONE',
-  ];
+  readonly statusList = Object.values(STATUS);
 
   constructor(private state: RxState<State>) {
     this.state.connect('currentStatus', this.onClickedStatus$);

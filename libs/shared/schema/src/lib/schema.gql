@@ -82,8 +82,8 @@ type Subtask implements Node {
   isCompleted: Boolean!
   assign: User
   task: Task!
-  workTime: Int
-  scheduledTime: Int
+  workTimeSec: Int
+  scheduledTimeSec: Int
 }
 
 type Task implements Node {
@@ -96,8 +96,8 @@ type Task implements Node {
   project: Project!
   board: Board!
   taskGroup: TaskGroup
-  workTime: Int
-  scheduledTime: Int
+  workTimeSec: Int
+  scheduledTimeSec: Int
   subtasksOrder: [ID!]
 }
 
@@ -110,7 +110,7 @@ type TaskGroup implements Node {
   assign: User
   project: Project!
   board: Board!
-  scheduledTime: Int
+  scheduledTimeSec: Int
   tasksOrder: [ID!]!
 }
 

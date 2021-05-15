@@ -1,20 +1,13 @@
-import { Project } from './project';
-import { createId } from './utils/create-id';
+import { createId, Id } from './id';
 
 export type User = {
-  id: string;
+  id: Id;
   name: string;
   icon?: string;
-  projectIds: Project['id'][];
 };
 
-export const createUser = (
-  name: User['name'],
-  projectIds: User['projectIds'] = [],
-  icon?: User['icon']
-): User => ({
+export const createUser = (name: User['name'], icon?: User['icon']): User => ({
   id: createId(),
   name,
   icon,
-  projectIds,
 });

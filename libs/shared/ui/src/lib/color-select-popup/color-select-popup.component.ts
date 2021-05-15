@@ -6,6 +6,7 @@ import {
   Output,
 } from '@angular/core';
 import type { Color } from '@bison/shared/domain';
+import { COLOR } from '@bison/shared/domain';
 import { RxState } from '@rx-angular/state';
 import { Subject } from 'rxjs';
 
@@ -32,24 +33,16 @@ export class ColorSelectPopupComponent {
 
   readonly onClickedColor$ = new Subject<Color>();
 
-  readonly colors: Color[] = [
-    'red',
-    'blue',
-    'green',
-    'yellow',
-    'brown',
-    'pink',
-    'gray',
-  ];
+  readonly colors = Object.values(COLOR);
 
   readonly colorNames: { [k in Color]: string } = {
-    red: 'レッド',
-    blue: 'ブルー',
-    green: 'グリーン',
-    yellow: 'イエロー',
-    brown: 'ブラウン',
-    pink: 'ピンク',
-    gray: 'グレー',
+    Red: 'レッド',
+    Blue: 'ブルー',
+    Green: 'グリーン',
+    Yellow: 'イエロー',
+    Brown: 'ブラウン',
+    Pink: 'ピンク',
+    Gray: 'グレー',
   };
 
   constructor(private state: RxState<State>) {

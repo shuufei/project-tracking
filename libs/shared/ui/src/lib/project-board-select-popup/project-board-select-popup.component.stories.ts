@@ -1,3 +1,4 @@
+import { COLOR } from '@bison/shared/domain';
 import type { Board, Project } from './project-board-select-popup.component';
 import { ProjectBoardSelectPopupModule } from './project-board-select-popup.module';
 
@@ -9,17 +10,17 @@ const projects: Project[] = [
   {
     id: '1',
     name: 'Bison',
-    color: 'green',
+    color: COLOR.Green,
   },
   {
     id: '2',
     name: 'Arowana',
-    color: 'red',
+    color: COLOR.Red,
   },
   {
     id: '3',
     name: 'CapibaraCapibaraCapibaraCapibara',
-    color: 'yellow',
+    color: COLOR.Yellow,
   },
 ];
 const boards: Board[] = [

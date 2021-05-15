@@ -21,7 +21,7 @@ export const Set_Value = () => ({
   },
   template: `
     <button #trigger class="text-s1">open</button>
-    <ui-color-select-popup [triggerEl]="trigger" currentColor="red"></ui-color-select-popup>
+    <ui-color-select-popup [triggerEl]="trigger" currentColor="Red"></ui-color-select-popup>
   `,
   props: {},
 });

@@ -1,40 +1,36 @@
 import { Board } from './board';
-import { Comment } from './comment';
-import { Project } from './project';
+import { createId, Id } from './id';
 import { Status } from './status';
-import { Subtask } from './subtask';
+import { TaskGroup } from './task-group';
 import { User } from './user';
-import { createId } from './utils/create-id';
 
 export type Task = {
-  id: string;
+  id: Id;
   title: string;
   description?: string;
   status: Status;
-  createdBy: User['id'];
-  subtasks: Subtask[];
-  assign: User[];
-  comments: Comment[];
-  projectId?: Project['id'];
-  boardId?: Board['id'];
+  assignUserId?: User['id'];
+  boardId: Board['id'];
+  taskGroupId?: TaskGroup['id'];
+  workTimeSec: number;
+  scheduledTimeSec?: number;
 };
 
 export const createTask = (
   title: Task['title'],
-  createdBy: Task['createdBy'],
-  assign: Task['assign'] = [],
+  assignUserId: Task['assignUserId'],
+  boardId: Task['boardId'],
   description?: Task['description'],
-  projectId?: Task['projectId'],
-  boardId?: Task['boardId']
+  taskGroupId?: Task['taskGroupId'],
+  scheduledTimeSec?: Task['scheduledTimeSec']
 ): Task => ({
   id: createId(),
   title,
   description,
   status: 'TODO',
-  createdBy,
-  subtasks: [],
-  assign,
-  comments: [],
-  projectId,
+  assignUserId,
   boardId,
+  taskGroupId,
+  workTimeSec: 0,
+  scheduledTimeSec,
 });

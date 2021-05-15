@@ -1,29 +1,27 @@
-import { Comment } from './comment';
+import { createId, Id } from './id';
 import { User } from './user';
-import { createId } from './utils/create-id';
 
 export type Subtask = {
-  id: string;
+  id: Id;
   title: string;
   description?: string;
   isDone: boolean;
-  createdBy: User['id'];
-  assign: User[];
-  comments: Comment[];
-  completedAt?: Date;
+  assignUserId?: User['id'];
+  workTimeSec: number;
+  scheduledTimeSec?: number;
 };
 
 export const createSubtask = (
   title: Subtask['title'],
-  createdBy: Subtask['createdBy'],
-  assign: Subtask['assign'] = [],
-  description?: Subtask['description']
+  assignUserId?: Subtask['assignUserId'],
+  description?: Subtask['description'],
+  scheduledTimeSec?: Subtask['scheduledTimeSec']
 ): Subtask => ({
   id: createId(),
   title,
   description,
   isDone: false,
-  createdBy,
-  assign,
-  comments: [],
+  assignUserId,
+  workTimeSec: 0,
+  scheduledTimeSec,
 });

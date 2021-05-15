@@ -1,25 +1,19 @@
-import { Backlog, createBacklog } from './backlog';
-import { Board } from './board';
-import { Color } from './color';
+import { Color, COLOR } from './color';
+import { createId, Id } from './id';
 import { User } from './user';
-import { createId } from './utils/create-id';
 
 export type Project = {
-  id: string;
+  id: Id;
   name: string;
   description?: string;
   color: Color;
-  boards: Board[];
-  backlog: Backlog;
-  members: User[];
-  admin: User;
+  adminUserId: User['id'];
 };
 
 export const createProject = (
   name: Project['name'],
-  admin: Project['admin'],
-  members: Project['members'] = [],
-  color: Project['color'] = 'gray',
+  adminUserId: Project['adminUserId'],
+  color: Project['color'] = COLOR.Gray,
   description?: Project['description']
 ): Project => {
   const id = createId();
@@ -28,9 +22,6 @@ export const createProject = (
     name,
     description,
     color,
-    boards: [],
-    backlog: createBacklog(id),
-    members,
-    admin,
+    adminUserId,
   };
 };

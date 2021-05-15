@@ -30,7 +30,7 @@
   },
   "projects": {
     "shared-ui": {
-      "tags": []
+      "tags": ["scope:shared-ui"]
     },
     "frontend-desktop-app": {
       "tags": ["scope:frontend-presentation"]

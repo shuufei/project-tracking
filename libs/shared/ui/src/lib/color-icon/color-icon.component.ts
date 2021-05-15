@@ -5,6 +5,7 @@ import {
   Input,
 } from '@angular/core';
 import type { Color } from '@bison/shared/domain';
+import { COLOR as DOMAIN_COLOR } from '@bison/shared/domain';
 import { COLOR } from '../../constants/color';
 
 @Component({
@@ -14,7 +15,7 @@ import { COLOR } from '../../constants/color';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ColorIconComponent {
-  @Input() color: Color = 'gray';
+  @Input() color: Color = DOMAIN_COLOR.Gray;
   @HostBinding('style.backgroundColor') get backgroundColor() {
     return COLOR[this.color];
   }

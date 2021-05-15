@@ -244,8 +244,8 @@ export interface Subtask extends Node {
     isCompleted: boolean;
     assign?: User;
     task: Task;
-    workTime?: number;
-    scheduledTime?: number;
+    workTimeSec?: number;
+    scheduledTimeSec?: number;
 }
 
 export interface Task extends Node {
@@ -258,8 +258,8 @@ export interface Task extends Node {
     project: Project;
     board: Board;
     taskGroup?: TaskGroup;
-    workTime?: number;
-    scheduledTime?: number;
+    workTimeSec?: number;
+    scheduledTimeSec?: number;
     subtasksOrder?: string[];
 }
 
@@ -272,6 +272,6 @@ export interface TaskGroup extends Node {
     assign?: User;
     project: Project;
     board: Board;
-    scheduledTime?: number;
+    scheduledTimeSec?: number;
     tasksOrder: string[];
 }

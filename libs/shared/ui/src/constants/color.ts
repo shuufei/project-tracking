@@ -1,11 +1,11 @@
 import type { Color } from '@bison/shared/domain';
 
 export const COLOR: { [k in Color]: string } = {
-  red: '#C64040',
-  blue: '#408EC6',
-  green: '#9BC640',
-  yellow: '#C3C640',
-  brown: '#C68840',
-  pink: '#C64070',
-  gray: '#A0A0A0',
+  Red: '#C64040',
+  Blue: '#408EC6',
+  Green: '#9BC640',
+  Yellow: '#C3C640',
+  Brown: '#C68840',
+  Pink: '#C64070',
+  Gray: '#A0A0A0',
 };
