@@ -9,7 +9,7 @@ import {
 import type { Project, User } from '@bison/shared/schema';
 import { Inject } from '@nestjs/common';
 import { Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
-import { convertToApiColorFromDomainColor } from '../util/convert-to-color-from-domain-color';
+import { convertToApiColorFromDomainColor } from '../../util/convert-to-color-from-domain-color';
 
 @Resolver('User')
 export class UserResolver {

@@ -3,8 +3,8 @@ import {
   LIST_PROJECTS_BY_USER_ID_SERVICE,
 } from '@bison/backend/application';
 import { Module } from '@nestjs/common';
-import { MockGetMeService } from '../../mock';
-import { MockListProjectsByUserIdService } from '../../mock/list-projects-by-user-id-service';
+import { MockGetMeService } from '../../../mock';
+import { MockListProjectsByUserIdService } from '../../../mock/list-projects-by-user-id-service';
 import { UserResolver } from './user.resolver';
 
 @Module({

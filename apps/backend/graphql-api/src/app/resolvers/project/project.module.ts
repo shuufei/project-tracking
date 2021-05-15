@@ -12,7 +12,7 @@ import {
   MockListBoardsByProjectIdService,
   MockListMembersService,
   MockProjectRepository,
-} from '../../mock';
+} from '../../../mock';
 import { ProjectResolver } from './project.resolver';
 
 @Module({
