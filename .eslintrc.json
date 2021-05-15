@@ -66,6 +66,10 @@
                   "scope:shared-domain",
                   "scope:shared-schema"
                 ]
+              },
+              {
+                "sourceTag": "scope:shared-ui",
+                "onlyDependOnLibsWithTags": ["scope:shared-domain"]
               }
             ]
           }
