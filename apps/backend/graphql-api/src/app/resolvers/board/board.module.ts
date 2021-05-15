@@ -8,7 +8,7 @@ import { BoardResolver } from './board.resolver';
     BoardResolver,
     {
       provide: GET_PROJECT_BY_BOARD_ID_SERVICE,
-      useValue: new MockGetProjectByBoardIdService(),
+      useClass: MockGetProjectByBoardIdService,
     },
   ],
 })

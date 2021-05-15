@@ -14,11 +14,11 @@ import { UserResolver } from './user.resolver';
     UserResolver,
     {
       provide: LIST_PROJECTS_BY_USER_ID_SERVICE,
-      useValue: new MockListProjectsByUserIdService(),
+      useClass: MockListProjectsByUserIdService,
     },
     {
       provide: GET_ME_SERVICE,
-      useValue: new MockGetMeService(),
+      useClass: MockGetMeService,
     },
   ],
 })

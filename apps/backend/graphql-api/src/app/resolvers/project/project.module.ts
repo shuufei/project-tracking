@@ -24,19 +24,19 @@ import { ProjectResolver } from './project.resolver';
     },
     {
       provide: PROJECT_REPOSITORY,
-      useValue: new MockProjectRepository(),
+      useClass: MockProjectRepository,
     },
     {
       provide: LIST_BOARDS_BY_PROJECT_ID_SERVICE,
-      useValue: new MockListBoardsByProjectIdService(),
+      useClass: MockListBoardsByProjectIdService,
     },
     {
       provide: LIST_MEMBERS_SERVICE,
-      useValue: new MockListMembersService(),
+      useClass: MockListMembersService,
     },
     {
       provide: GET_ADMIN_SERVICE,
-      useValue: new MockGetAdminService(),
+      useClass: MockGetAdminService,
     },
   ],
 })
