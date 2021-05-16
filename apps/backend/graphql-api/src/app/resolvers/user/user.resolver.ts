@@ -1,13 +1,7 @@
-import type {
-  IGetMeService,
-  IListProjectsByUserIdService,
-} from '@bison/backend/application';
-import {
-  GET_ME_SERVICE,
-  LIST_PROJECTS_BY_USER_ID_SERVICE,
-} from '@bison/backend/application';
+import type { IListProjectsByUserIdService } from '@bison/backend/application';
+import { LIST_PROJECTS_BY_USER_ID_SERVICE } from '@bison/backend/application';
 import type { Project, User } from '@bison/shared/schema';
-import { Inject, Logger } from '@nestjs/common';
+import { Inject } from '@nestjs/common';
 import { Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
 import { IdpUserId } from '../../decorators/idp-user-id.decorator';
 import { ParseUserPipe } from '../../pipes/parse-user/parse-user.pipe';
@@ -17,17 +11,14 @@ import { convertToApiColorFromDomainColor } from '../../util/convert-to-color-fr
 export class UserResolver {
   constructor(
     @Inject(LIST_PROJECTS_BY_USER_ID_SERVICE)
-    private listProjectsByUserIdService: IListProjectsByUserIdService,
-    @Inject(GET_ME_SERVICE)
-    private getMeService: IGetMeService
+    private listProjectsByUserIdService: IListProjectsByUserIdService
   ) {}
 
   @Query()
   async viewer(
     @IdpUserId(ParseUserPipe) user: User
   ): Promise<Omit<User, 'projects'>> {
-    Logger.debug(`user: ${user.id}, ${user.name}`);
-    return this.getMeService.handle();
+    return user;
   }
 
   @ResolveField()
