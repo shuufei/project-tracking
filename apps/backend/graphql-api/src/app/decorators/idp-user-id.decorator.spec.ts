@@ -6,7 +6,7 @@ import { ROUTE_ARGS_METADATA } from '@nestjs/common/constants';
 import { InvalidCognitoAuthenticationProviderError } from '../errors/invalid-cognito-authentication-provider-error';
 import { IdpUserId } from './idp-user-id.decorator';
 
-const getContextSpy = jest.fn();
+const mockGetContext = jest.fn();
 
 const sub = 'idpUserId0001';
 jest.mock('@nestjs/graphql', () => {
@@ -14,7 +14,7 @@ jest.mock('@nestjs/graphql', () => {
     GqlExecutionContext: {
       create: () => {
         return {
-          getContext: getContextSpy,
+          getContext: mockGetContext,
         };
       },
     },
@@ -28,13 +28,15 @@ function getParamDecoratorFactory(decorator: Function) {
     }
   }
 
+  // createParamDecoratorのReflect.defineMetadataで定義されたmetadataを取得(key名: ROUTE_ARGS_METADATA)
   const args = Reflect.getMetadata(ROUTE_ARGS_METADATA, Test, 'test');
+  // decoratorの実行関数を返す
   return args[Object.keys(args)[0]].factory;
 }
 
 describe('IdpUserIdDecorator', () => {
   afterEach(() => {
-    getContextSpy.mockReset();
+    mockGetContext.mockReset();
   });
 
   describe('正常系', () => {
@@ -42,7 +44,7 @@ describe('IdpUserIdDecorator', () => {
     const mockExecutionContext = createMock<ExecutionContext>();
 
     beforeEach(() => {
-      getContextSpy.mockReturnValue({
+      mockGetContext.mockReturnValue({
         req: {
           headers: {
             [COGNITO_AUTHENTICATION_PROVIDER]: `cognito-idp.region.amazonaws.com/user_pool_id,cognito-idp.region.amazonaws.com/user_pool_id:CognitoSignIn:${sub}`,
@@ -63,7 +65,7 @@ describe('IdpUserIdDecorator', () => {
       const mockExecutionContext = createMock<ExecutionContext>();
 
       beforeEach(() => {
-        getContextSpy.mockReturnValue({
+        mockGetContext.mockReturnValue({
           req: {
             headers: {},
           },
