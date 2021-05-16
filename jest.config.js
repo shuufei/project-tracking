@@ -14,5 +14,6 @@ module.exports = {
     '<rootDir>/libs/frontend/domain',
     '<rootDir>/libs/frontend/infrastructure/data-store',
     '<rootDir>/libs/shared/schema',
+    '<rootDir>/libs/shared/constants',
   ],
 };

@@ -7,9 +7,11 @@ import {
   LIST_PROJECTS_BY_USER_ID_SERVICE,
 } from '@bison/backend/application';
 import type { Project, User } from '@bison/shared/schema';
-import { Inject } from '@nestjs/common';
+import { Inject, Logger } from '@nestjs/common';
 import { Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
-import { convertToApiColorFromDomainColor } from '../util/convert-to-color-from-domain-color';
+import { IdpUserId } from '../../decorators/idp-user-id.decorator';
+import { ParseUserPipe } from '../../pipes/parse-user/parse-user.pipe';
+import { convertToApiColorFromDomainColor } from '../../util/convert-to-color-from-domain-color';
 
 @Resolver('User')
 export class UserResolver {
@@ -21,7 +23,10 @@ export class UserResolver {
   ) {}
 
   @Query()
-  async viewer(): Promise<Omit<User, 'projects'>> {
+  async viewer(
+    @IdpUserId(ParseUserPipe) user: User
+  ): Promise<Omit<User, 'projects'>> {
+    Logger.debug(`user: ${user.id}, ${user.name}`);
     return this.getMeService.handle();
   }
 

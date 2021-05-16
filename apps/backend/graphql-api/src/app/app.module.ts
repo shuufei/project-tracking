@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
-import { BoardModule } from './board/board.module';
-import { ProjectModule } from './project/project.module';
-import { UserModule } from './user/user.module';
+import { BoardModule } from './resolvers/board/board.module';
+import { ProjectModule } from './resolvers/project/project.module';
+import { UserModule } from './resolvers/user/user.module';
 
 @Module({
   imports: [
