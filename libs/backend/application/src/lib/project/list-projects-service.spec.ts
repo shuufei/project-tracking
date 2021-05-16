@@ -3,6 +3,7 @@ import {
   ListResponse,
   PROJECT_REPOSITORY,
 } from '@bison/backend/domain';
+import { COLOR } from '@bison/shared/domain';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ListProjectsService } from './list-projects-service';
 
@@ -11,7 +12,7 @@ const mockProjects: ListResponse = {
     {
       id: 'project 0001',
       name: 'project 0001',
-      color: 'red',
+      color: COLOR.Red,
     },
   ],
 };
