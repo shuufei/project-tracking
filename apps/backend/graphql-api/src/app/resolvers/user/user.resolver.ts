@@ -24,7 +24,7 @@ export class UserResolver {
   @ResolveField()
   async projects(
     @Parent() user: User
-  ): Promise<Omit<Project, 'backlog' | 'boards' | 'members' | 'admin'>[]> {
+  ): Promise<Omit<Project, 'boards' | 'members' | 'admin'>[]> {
     const response = await this.listProjectsByUserIdService.handle(user.id);
     return response.projects.map((project) => {
       return {
