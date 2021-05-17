@@ -29,4 +29,8 @@ export class MockProjectRepository implements IProjectRepository {
   async list() {
     return mockListResponse;
   }
+
+  async listByUserId() {
+    return mockListResponse;
+  }
 }

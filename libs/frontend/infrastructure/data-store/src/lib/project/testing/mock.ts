@@ -34,12 +34,6 @@ export const mockProjectsQueryRresponse = {
             },
           },
         ],
-        backlog: {
-          id: 'mock backlog id 0001',
-          project: {
-            id: 'project25',
-          },
-        },
         members: [
           {
             id: 'user0001',
@@ -94,12 +88,6 @@ export const mockProjectsQueryRresponse = {
             },
           },
         ],
-        backlog: {
-          id: 'mock backlog id 0001',
-          project: {
-            id: 'project25',
-          },
-        },
         members: [
           {
             id: 'user0001',
@@ -154,12 +142,6 @@ export const mockProjectsQueryRresponse = {
             },
           },
         ],
-        backlog: {
-          id: 'mock backlog id 0001',
-          project: {
-            id: 'project25',
-          },
-        },
         members: [
           {
             id: 'user0001',

@@ -1,10 +1,10 @@
 import {
-  GET_ME_SERVICE,
+  ListProjectsByUserIdService,
   LIST_PROJECTS_BY_USER_ID_SERVICE,
 } from '@bison/backend/application';
+import { PROJECT_REPOSITORY } from '@bison/backend/domain';
 import { Module } from '@nestjs/common';
-import { MockGetMeService } from '../../../mock';
-import { MockListProjectsByUserIdService } from '../../../mock/list-projects-by-user-id-service';
+import { MockProjectRepository } from '../../../mock';
 import { ParseUserPipeModule } from '../../pipes/parse-user/parse-user.module';
 import { UserResolver } from './user.resolver';
 
@@ -14,11 +14,11 @@ import { UserResolver } from './user.resolver';
     UserResolver,
     {
       provide: LIST_PROJECTS_BY_USER_ID_SERVICE,
-      useClass: MockListProjectsByUserIdService,
+      useClass: ListProjectsByUserIdService,
     },
     {
-      provide: GET_ME_SERVICE,
-      useClass: MockGetMeService,
+      provide: PROJECT_REPOSITORY,
+      useClass: MockProjectRepository,
     },
   ],
 })
