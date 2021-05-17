@@ -1,27 +1,10 @@
-import {
-  IProjectRepository,
-  ListResponse,
-  PROJECT_REPOSITORY,
-} from '@bison/backend/domain';
-import { COLOR } from '@bison/shared/domain';
+import { PROJECT_REPOSITORY } from '@bison/backend/domain';
 import { Test, TestingModule } from '@nestjs/testing';
+import {
+  mockListProjectsResponse,
+  MockProjectRepository,
+} from '../../mock/project-repository';
 import { ListProjectsService } from './list-projects-service';
-
-const mockProjects: ListResponse = {
-  projects: [
-    {
-      id: 'project 0001',
-      name: 'project 0001',
-      color: COLOR.Red,
-    },
-  ],
-};
-
-class MockProjectRepository implements IProjectRepository {
-  async list() {
-    return mockProjects;
-  }
-}
 
 describe('ListProjectsService', () => {
   let moduleRef: TestingModule;
@@ -45,13 +28,18 @@ describe('ListProjectsService', () => {
   });
 
   describe('正常系', () => {
-    beforeEach(async () => {
-      jest.spyOn(repository, 'list').mockResolvedValue(mockProjects);
+    beforeEach(() => {
+      jest.spyOn(repository, 'list');
     });
 
     test('project一覧を取得できる', async () => {
       const response = await service.handle();
-      expect(response.projects).toEqual(mockProjects.projects);
+      expect(response).toEqual(mockListProjectsResponse);
+    });
+
+    test('ProjectRepositoryからproject一覧が取得される', async () => {
+      await service.handle();
+      expect(repository.list).toHaveBeenCalled();
     });
   });
 });

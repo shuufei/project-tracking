@@ -1,7 +1,8 @@
-import { Project as DomainProject } from '@bison/shared/domain';
+import { Project as DomainProject, User } from '@bison/shared/domain';
 
 export interface IProjectRepository {
   list: () => Promise<ListResponse>;
+  listByUserId: (userId: User['id']) => Promise<ListResponse>;
 }
 
 export type Project = Pick<
