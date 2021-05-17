@@ -25,7 +25,7 @@ export class ProjectResolver {
 
   @ResolveField()
   async boards(
-    @Parent() project: Project
+    @Parent() project: Omit<Project, 'boards'>
   ): Promise<
     Omit<Board, 'project' | 'singleTasks' | 'taskGroups' | 'tasksOrder'>[]
   > {
@@ -34,13 +34,17 @@ export class ProjectResolver {
   }
 
   @ResolveField()
-  async members(@Parent() project: Project): Promise<Omit<User, 'projects'>[]> {
+  async members(
+    @Parent() project: Omit<Project, 'members'>
+  ): Promise<Omit<User, 'projects'>[]> {
     const response = await this.listMembersService.handle(project.id);
     return response.users;
   }
 
   @ResolveField()
-  async admin(@Parent() project: Project): Promise<Omit<User, 'projects'>> {
+  async admin(
+    @Parent() project: Omit<Project, 'admin'>
+  ): Promise<Omit<User, 'projects'>> {
     return this.getAdminService.handle(project.id);
   }
 }

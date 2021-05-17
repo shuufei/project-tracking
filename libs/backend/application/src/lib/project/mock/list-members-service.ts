@@ -1,7 +1,7 @@
 import {
   IListMembersService,
   ListMembersResponse,
-} from '@bison/backend/application';
+} from '../interface/list-members-service';
 
 export const mockListMembersResponse: ListMembersResponse = {
   users: [

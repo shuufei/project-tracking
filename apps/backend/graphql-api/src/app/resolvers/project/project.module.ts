@@ -4,15 +4,15 @@ import {
   LIST_BOARDS_BY_PROJECT_ID_SERVICE,
   LIST_MEMBERS_SERVICE,
   LIST_PROJECTS_SERVICE,
-} from '@bison/backend/application';
-import { PROJECT_REPOSITORY } from '@bison/backend/domain';
-import { Module } from '@nestjs/common';
-import {
   MockGetAdminService,
   MockListBoardsByProjectIdService,
   MockListMembersService,
+} from '@bison/backend/application';
+import {
   MockProjectRepository,
-} from '../../../mock';
+  PROJECT_REPOSITORY,
+} from '@bison/backend/domain';
+import { Module } from '@nestjs/common';
 import { ProjectResolver } from './project.resolver';
 
 @Module({

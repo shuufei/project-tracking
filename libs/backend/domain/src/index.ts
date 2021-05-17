@@ -1,2 +1,2 @@
-export * from './lib/project/interface/project-repository';
-export * from './lib/user/interface/user-repository';
+export * from './lib/project';
+export * from './lib/user';

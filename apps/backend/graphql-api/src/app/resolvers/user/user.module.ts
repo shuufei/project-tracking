@@ -2,9 +2,11 @@ import {
   ListProjectsByUserIdService,
   LIST_PROJECTS_BY_USER_ID_SERVICE,
 } from '@bison/backend/application';
-import { PROJECT_REPOSITORY } from '@bison/backend/domain';
+import {
+  MockProjectRepository,
+  PROJECT_REPOSITORY,
+} from '@bison/backend/domain';
 import { Module } from '@nestjs/common';
-import { MockProjectRepository } from '../../../mock';
 import { ParseUserPipeModule } from '../../pipes/parse-user/parse-user.module';
 import { UserResolver } from './user.resolver';
 

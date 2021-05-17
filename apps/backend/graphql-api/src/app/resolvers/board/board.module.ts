@@ -1,6 +1,8 @@
-import { GET_PROJECT_BY_BOARD_ID_SERVICE } from '@bison/backend/application';
+import {
+  GET_PROJECT_BY_BOARD_ID_SERVICE,
+  MockGetProjectByBoardIdService,
+} from '@bison/backend/application';
 import { Module } from '@nestjs/common';
-import { MockGetProjectByBoardIdService } from '../../../mock';
 import { BoardResolver } from './board.resolver';
 
 @Module({

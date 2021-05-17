@@ -1,7 +1,7 @@
 import {
   IListBoardsByProjectIdService,
   ListBoardsByProjectIdResponse,
-} from '@bison/backend/application';
+} from '../interface/list-boards-by-project-id-service';
 
 export const mockListBoardsByProjectIdResponse: ListBoardsByProjectIdResponse = {
   boards: [

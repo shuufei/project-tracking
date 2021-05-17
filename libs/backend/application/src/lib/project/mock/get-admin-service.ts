@@ -1,4 +1,7 @@
-import { GetAdminResponse, IGetAdminService } from '@bison/backend/application';
+import {
+  GetAdminResponse,
+  IGetAdminService,
+} from '../interface/get-admin-service';
 
 export const mockGetAdminResponse: GetAdminResponse = {
   id: 'admin0001',

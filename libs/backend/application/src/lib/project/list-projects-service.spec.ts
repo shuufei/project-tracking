@@ -1,9 +1,9 @@
-import { PROJECT_REPOSITORY } from '@bison/backend/domain';
-import { Test, TestingModule } from '@nestjs/testing';
 import {
   mockListProjectsResponse,
   MockProjectRepository,
-} from '../../mock/project-repository';
+  PROJECT_REPOSITORY,
+} from '@bison/backend/domain';
+import { Test, TestingModule } from '@nestjs/testing';
 import { ListProjectsService } from './list-projects-service';
 
 describe('ListProjectsService', () => {

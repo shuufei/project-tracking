@@ -1,14 +1,13 @@
+import { COLOR } from '@bison/shared/domain';
 import {
   GetProjectByBoardIdResponse,
   IGetProjectByBoardIdService,
-} from '@bison/backend/application';
-import { COLOR } from '@bison/shared/domain';
-import { getRandom } from '../app/util/get-random-number';
+} from '../interface/get-project-by-board-id-service';
 
 export const mockGetProjectByBoardIdResponse: GetProjectByBoardIdResponse = {
-  id: `project${getRandom()}`,
-  name: `project name ${getRandom()}`,
-  description: `project description ${getRandom()}`,
+  id: `project001`,
+  name: `project name 001`,
+  description: `project description 001`,
   color: COLOR.Red,
 };
 
