@@ -1,5 +1,4 @@
-import { Project } from '@bison/backend/domain';
-import { User } from '@bison/shared/domain';
+import { Project, User } from '@bison/shared/domain';
 
 export interface IListProjectsByUserIdService {
   handle: (userId: User['id']) => Promise<ListProjectsByUserIdResponse>;

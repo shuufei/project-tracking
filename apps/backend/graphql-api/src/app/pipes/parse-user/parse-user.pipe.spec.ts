@@ -1,7 +1,7 @@
 import {
   mockGetUserByIdpUserIdResponse,
   MockGetUserByIdpUserIdService,
-} from '../../../mock/get-user-by-idp-user-id-service';
+} from '@bison/backend/application';
 import { ParseUserPipe } from './parse-user.pipe';
 describe('ParseUserPipe', () => {
   let service: ParseUserPipe;

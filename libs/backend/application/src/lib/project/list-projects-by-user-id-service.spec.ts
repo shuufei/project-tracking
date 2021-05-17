@@ -1,8 +1,8 @@
-import { createId } from '@bison/shared/domain';
 import {
   mockListProjectsResponse,
   MockProjectRepository,
-} from '../../mock/project-repository';
+} from '@bison/backend/domain';
+import { createId } from '@bison/shared/domain';
 import { ListProjectsByUserIdService } from './list-projects-by-user-id-service';
 
 describe('ListProjectsByUserIdService', () => {

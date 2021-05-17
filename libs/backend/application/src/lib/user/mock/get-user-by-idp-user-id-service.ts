@@ -1,5 +1,5 @@
-import { IGetUserByIdpUserIdService } from '@bison/backend/application';
 import { User } from '@bison/shared/domain';
+import { IGetUserByIdpUserIdService } from '../interface/get-user-by-idp-user-id-service';
 
 export const mockGetUserByIdpUserIdResponse: User = {
   id: 'user0001',
