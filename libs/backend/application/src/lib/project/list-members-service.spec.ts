@@ -1,6 +1,6 @@
 import {
-  mockListUsersResponse,
   MockUserRepository,
+  mockUserRepositoryReturnValues,
 } from '@bison/backend/domain';
 import { createId } from '@bison/shared/domain';
 import { ListMembersService } from './list-members-service';
@@ -22,7 +22,7 @@ describe('ListMembersService', () => {
 
     test('member一覧を取得できる', async () => {
       const response = await service.handle(projectId);
-      expect(response).toEqual(mockListUsersResponse);
+      expect(response).toEqual(mockUserRepositoryReturnValues.listByProjectId);
     });
 
     test('指定したprojectIdで、UserRepositoryからuser一覧取得が行われる', async () => {

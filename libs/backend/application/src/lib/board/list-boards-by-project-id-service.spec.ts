@@ -1,6 +1,6 @@
 import {
   MockBoardRepository,
-  mockListBoardsResponse,
+  mockBoardRepositoryReturnValues,
 } from '@bison/backend/domain';
 import { createId } from '@bison/shared/domain';
 import { ListBoardsByProjectIdService } from './list-boards-by-project-id-service';
@@ -22,7 +22,7 @@ describe('ListBoadsByProjectIdService', () => {
 
     test('board一覧を取得できる', async () => {
       const response = await service.handle(projectId);
-      expect(response).toEqual(mockListBoardsResponse);
+      expect(response).toEqual(mockBoardRepositoryReturnValues.listByProjectId);
     });
 
     test('指定したprojectIdで、BoardRepositoryから一覧取得が行われる', async () => {

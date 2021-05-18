@@ -1,18 +1,11 @@
-import { COLOR, Project } from '@bison/shared/domain';
+import { COLOR } from '@bison/shared/domain';
+import { MockReturnValues } from '@bison/types/testing';
 import {
   IProjectRepository,
   ListProjectsResponse,
 } from '../interface/project-repository';
 
-export const mockGetProjectResponse: Project = {
-  id: `project0001`,
-  name: `project name 0001`,
-  description: `project description 0001`,
-  color: COLOR.Red,
-  adminUserId: 'admin user 0001',
-};
-
-export const mockListProjectsResponse: ListProjectsResponse = {
+const mockListProjectsResponse: ListProjectsResponse = {
   projects: [
     {
       id: `project0001`,
@@ -38,16 +31,28 @@ export const mockListProjectsResponse: ListProjectsResponse = {
   ],
 };
 
+export const mockProjectRepositoryReturnValues: MockReturnValues<IProjectRepository> = {
+  getById: {
+    id: `project0001`,
+    name: `project name 0001`,
+    description: `project description 0001`,
+    color: COLOR.Red,
+    adminUserId: 'admin user 0001',
+  },
+  list: mockListProjectsResponse,
+  listByUserId: mockListProjectsResponse,
+};
+
 export class MockProjectRepository implements IProjectRepository {
   async getById() {
-    return mockGetProjectResponse;
+    return mockProjectRepositoryReturnValues.getById;
   }
 
   async list() {
-    return mockListProjectsResponse;
+    return mockProjectRepositoryReturnValues.list;
   }
 
   async listByUserId() {
-    return mockListProjectsResponse;
+    return mockProjectRepositoryReturnValues.listByUserId;
   }
 }

@@ -1,4 +1,7 @@
-import { mockGetUserResponse, MockUserRepository } from '@bison/backend/domain';
+import {
+  MockUserRepository,
+  mockUserRepositoryReturnValues,
+} from '@bison/backend/domain';
 import { GetUserByIdpUserIdService } from './get-user-by-idp-user-id-service';
 describe('GetUserByIdpUserIdService', () => {
   let service: GetUserByIdpUserIdService;
@@ -17,7 +20,7 @@ describe('GetUserByIdpUserIdService', () => {
 
     test('user情報を取得できる', async () => {
       const response = await service.handle(idpUserId);
-      expect(response).toEqual(mockGetUserResponse);
+      expect(response).toEqual(mockUserRepositoryReturnValues.getByIdpUserId);
     });
 
     test('指定したidpUserIdで、UserRepositoryからuser情報取得が行われる', async () => {

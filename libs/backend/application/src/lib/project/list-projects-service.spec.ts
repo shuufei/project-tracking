@@ -1,6 +1,6 @@
 import {
-  mockListProjectsResponse,
   MockProjectRepository,
+  mockProjectRepositoryReturnValues,
   PROJECT_REPOSITORY,
 } from '@bison/backend/domain';
 import { Test, TestingModule } from '@nestjs/testing';
@@ -34,7 +34,7 @@ describe('ListProjectsService', () => {
 
     test('project一覧を取得できる', async () => {
       const response = await service.handle();
-      expect(response).toEqual(mockListProjectsResponse);
+      expect(response).toEqual(mockProjectRepositoryReturnValues.list);
     });
 
     test('ProjectRepositoryからproject一覧が取得される', async () => {
