@@ -12,6 +12,6 @@ export class ListMembersService implements IListMembersService {
     ...args: Parameters<IListMembersService['handle']>
   ): ReturnType<IListMembersService['handle']> {
     const [projectId] = args;
-    return this.userRepository.listUsersByProjectId(projectId);
+    return this.userRepository.listByProjectId(projectId);
   }
 }

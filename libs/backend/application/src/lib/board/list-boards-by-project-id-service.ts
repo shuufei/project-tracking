@@ -13,6 +13,6 @@ export class ListBoardsByProjectIdService
     ...args: Parameters<IListBoardsByProjectIdService['handle']>
   ): ReturnType<IListBoardsByProjectIdService['handle']> {
     const [projectId] = args;
-    return this.boardRepository.listBoardsByProjectId(projectId);
+    return this.boardRepository.listByProjectId(projectId);
   }
 }

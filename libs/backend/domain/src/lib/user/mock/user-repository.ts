@@ -32,7 +32,7 @@ export class MockUserRepository implements IUserRepositoy {
   async getByIdpUserId() {
     return mockGetUserResponse;
   }
-  async listUsersByProjectId() {
+  async listByProjectId() {
     return mockListUsersResponse;
   }
 }

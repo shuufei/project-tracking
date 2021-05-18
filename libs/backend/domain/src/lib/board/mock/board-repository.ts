@@ -26,7 +26,7 @@ export const mockListBoardsResponse: ListBoardsResponse = {
 };
 
 export class MockBoardRepository implements IBoardRepository {
-  async listBoardsByProjectId() {
+  async listByProjectId() {
     return mockListBoardsResponse;
   }
 }
