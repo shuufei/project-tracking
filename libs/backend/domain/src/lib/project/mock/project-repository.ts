@@ -1,7 +1,7 @@
 import { COLOR, Project } from '@bison/shared/domain';
 import {
   IProjectRepository,
-  ListResponse,
+  ListProjectsResponse,
 } from '../interface/project-repository';
 
 export const mockGetProjectResponse: Project = {
@@ -12,7 +12,7 @@ export const mockGetProjectResponse: Project = {
   adminUserId: 'admin user 0001',
 };
 
-export const mockListProjectsResponse: ListResponse = {
+export const mockListProjectsResponse: ListProjectsResponse = {
   projects: [
     {
       id: `project0001`,
