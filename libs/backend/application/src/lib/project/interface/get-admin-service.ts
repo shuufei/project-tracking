@@ -6,4 +6,4 @@ export interface IGetAdminService {
 
 export const GET_ADMIN_SERVICE = Symbol('GetAdminService');
 
-export type GetAdminResponse = Pick<User, 'id' | 'name' | 'icon'>;
+export type GetAdminResponse = User;

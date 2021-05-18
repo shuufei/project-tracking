@@ -1,4 +1,4 @@
-import { ListResponse } from '@bison/backend/domain';
+import { ListProjectsResponse as ListResponse } from '@bison/backend/domain';
 
 export interface IListProjectsService {
   handle: () => Promise<ListProjectsResponse>;
