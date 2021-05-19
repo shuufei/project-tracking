@@ -1,2 +1,2 @@
-export * from './interface/project-repository';
-export * from './mock/project-repository';
+export * from './project-repository/project-repository.interface';
+export * from './project-repository/project-repository.mock';
