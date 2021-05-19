@@ -1,5 +1,5 @@
 import { MockReturnValues } from '@bison/types/testing';
-import { IBoardRepository } from '../interface/board-repository';
+import { IBoardRepository } from './board-repository.interface';
 
 export const mockBoardRepositoryReturnValues: MockReturnValues<IBoardRepository> = {
   listByProjectId: {

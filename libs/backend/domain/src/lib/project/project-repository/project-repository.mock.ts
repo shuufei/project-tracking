@@ -3,7 +3,7 @@ import { MockReturnValues } from '@bison/types/testing';
 import {
   IProjectRepository,
   ListProjectsResponse,
-} from '../interface/project-repository';
+} from './project-repository.interface';
 
 const mockListProjectsResponse: ListProjectsResponse = {
   projects: [
