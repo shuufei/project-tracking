@@ -6,6 +6,7 @@ import {
   Output,
 } from '@angular/core';
 import type { Color } from '@bison/shared/domain';
+import { COLOR } from '@bison/shared/domain';
 import { RxState } from '@rx-angular/state';
 
 type State = {
@@ -57,7 +58,7 @@ export class ProjectCardComponent {
   constructor(private state: RxState<State>) {
     this.state.set({
       title: '',
-      color: 'gray',
+      color: COLOR.Gray,
       description: '',
       memberImgs: [],
       underDivide: false,

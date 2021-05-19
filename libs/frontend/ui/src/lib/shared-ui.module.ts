@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { AssignChangeButtonModule } from './assign-change-button/assign-change-button.module';
+import { BoardItemModule } from './board-item/board-item.module';
 import { ButtonModule } from './button/button.module';
 import { CheckboxModule } from './checkbox/checkbox.module';
 import { ColorIconModule } from './color-icon/color-icon.module';
@@ -11,6 +12,8 @@ import { MenuItemModule } from './menu-item/menu-item.module';
 import { NavigationModule } from './navigation/navigation.module';
 import { PopupModule } from './popup/popup.module';
 import { ProjectBoardSelectPopupModule } from './project-board-select-popup/project-board-select-popup.module';
+import { ProjectCardModule } from './project-card/project-card.module';
+import { ProjectNavigationModule } from './project-navigation/project-navigation.module';
 import { SelectItemModule } from './select-item/select-item.module';
 import { StatusChangeButtonModule } from './status-change-button/status-change-button.module';
 import { StatusSelectPopupModule } from './status-select-popup/status-select-popup.module';
@@ -52,6 +55,9 @@ import { UserSelectPopupModule } from './user-select-popup/user-select-popup.mod
     StatusChangeButtonModule,
     AssignChangeButtonModule,
     MenuItemModule,
+    BoardItemModule,
+    ProjectCardModule,
+    ProjectNavigationModule,
   ],
 })
 export class SharedUiModule {}

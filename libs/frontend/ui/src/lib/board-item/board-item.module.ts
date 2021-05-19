@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { IconModule, MenuItemModule, PopupModule } from '@bison/frontend/ui';
+import { IconModule } from '../icon/icon.module';
+import { MenuItemModule } from '../menu-item/menu-item.module';
+import { PopupModule } from '../popup/popup.module';
 import { BoardItemComponent } from './board-item.component';
 
 @NgModule({
