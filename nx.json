@@ -24,7 +24,6 @@
     }
   },
   "projects": {
-    "shared-ui": { "tags": ["scope:shared-ui"] },
     "frontend-desktop-app": { "tags": ["scope:frontend-presentation"] },
     "frontend-desktop-app-e2e": {
       "tags": [],
@@ -32,32 +31,23 @@
     },
     "frontend-shared-ui-e2e": {
       "tags": [],
-      "implicitDependencies": ["shared-ui"]
+      "implicitDependencies": ["frontend-ui"]
     },
-    "docs": { "tags": [] },
-    "shared-domain": { "tags": ["scope:shared-domain"] },
-    "project-ui": { "tags": [] },
-    "frontend-project-ui-e2e": {
-      "tags": [],
-      "implicitDependencies": ["project-ui"]
+    "frontend-application": { "tags": ["scope:frontend-application"] },
+    "frontend-domain": { "tags": ["scope:frontend-domain"] },
+    "frontend-infrastructure-data-store": {
+      "tags": ["scope:frontend-infrastructure"]
     },
-    "schedule-ui": { "tags": [] },
-    "frontend-schedule-ui-e2e": {
-      "tags": [],
-      "implicitDependencies": ["schedule-ui"]
-    },
+    "frontend-ui": { "tags": ["scope:frontend-ui"] },
     "backend-graphql-api": { "tags": ["scope:backend-presentation"] },
     "backend-infrastructure-repository": {
       "tags": ["scope:backend-infrastructure"]
     },
     "backend-domain": { "tags": ["scope:backend-domain"] },
     "backend-application": { "tags": ["scope:backend-application"] },
-    "frontend-application": { "tags": ["scope:frontend-application"] },
-    "frontend-domain": { "tags": ["scope:frontend-domain"] },
+    "shared-domain": { "tags": ["scope:shared-domain"] },
     "shared-schema": { "tags": ["scope:shared-schema"] },
-    "frontend-infrastructure-data-store": {
-      "tags": ["scope:frontend-infrastructure"]
-    },
-    "shared-constants": { "tags": ["scope:shared-constants"] }
+    "shared-constants": { "tags": ["scope:shared-constants"] },
+    "docs": { "tags": [] }
   }
 }
