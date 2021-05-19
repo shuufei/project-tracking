@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { IconModule, MenuItemModule, PopupModule } from '@bison/shared/ui';
+import { IconModule, MenuItemModule, PopupModule } from '@bison/frontend/ui';
 import { BoardItemComponent } from './board-item.component';
 
 @NgModule({

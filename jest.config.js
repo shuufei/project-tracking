@@ -1,7 +1,6 @@
 module.exports = {
   projects: [
     '<rootDir>/apps/frontend/desktop-app',
-    '<rootDir>/libs/shared/ui',
     '<rootDir>/apps/backend/graphql-api',
     '<rootDir>/apps/docs',
     '<rootDir>/libs/shared/domain',
@@ -13,6 +12,7 @@ module.exports = {
     '<rootDir>/libs/frontend/application',
     '<rootDir>/libs/frontend/domain',
     '<rootDir>/libs/frontend/infrastructure/data-store',
+    '<rootDir>/libs/frontend/ui',
     '<rootDir>/libs/shared/schema',
     '<rootDir>/libs/shared/constants',
   ],

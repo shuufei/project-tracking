@@ -7,7 +7,7 @@ import {
   PopupModule,
   UserIconListModule,
   UserIconModule,
-} from '@bison/shared/ui';
+} from '@bison/frontend/ui';
 import { ProjectCardComponent } from './project-card.component';
 
 @NgModule({

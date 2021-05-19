@@ -6,7 +6,7 @@ import {
   MenuItemModule,
   PopupModule,
   TooltipModule,
-} from '@bison/shared/ui';
+} from '@bison/frontend/ui';
 import { NavBoardItemComponent } from './nav-board-item/nav-board-item.component';
 import { NavProjectItemComponent } from './nav-project-item/nav-project-item.component';
 import { ProjectNavigationComponent } from './project-navigation.component';

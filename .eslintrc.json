@@ -69,7 +69,7 @@
                 ]
               },
               {
-                "sourceTag": "scope:shared-ui",
+                "sourceTag": "scope:frontend-ui",
                 "onlyDependOnLibsWithTags": ["scope:shared-domain"]
               }
             ]

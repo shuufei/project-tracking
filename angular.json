@@ -35,61 +35,6 @@
   },
   "defaultProject": "frontend-desktop-app",
   "projects": {
-    "shared-ui": {
-      "projectType": "library",
-      "root": "libs/shared/ui",
-      "sourceRoot": "libs/shared/ui/src",
-      "prefix": "ui",
-      "architect": {
-        "lint": {
-          "builder": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": [
-              "libs/shared/ui/src/**/*.ts",
-              "libs/shared/ui/src/**/*.html"
-            ]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/shared/ui"],
-          "options": {
-            "jestConfig": "libs/shared/ui/jest.config.js",
-            "passWithNoTests": true
-          }
-        },
-        "storybook": {
-          "builder": "@nrwl/storybook:storybook",
-          "options": {
-            "uiFramework": "@storybook/angular",
-            "port": 4400,
-            "config": {
-              "configFolder": "libs/shared/ui/.storybook"
-            }
-          },
-          "configurations": {
-            "ci": {
-              "quiet": true
-            }
-          }
-        },
-        "build-storybook": {
-          "builder": "@nrwl/storybook:build",
-          "options": {
-            "uiFramework": "@storybook/angular",
-            "outputPath": "dist/storybook/shared-ui",
-            "config": {
-              "configFolder": "libs/shared/ui/.storybook"
-            }
-          },
-          "configurations": {
-            "ci": {
-              "quiet": true
-            }
-          }
-        }
-      }
-    },
     "backend-graphql-api": {
       "root": "apps/backend/graphql-api",
       "sourceRoot": "apps/backend/graphql-api/src",
@@ -286,11 +231,11 @@
           "options": {
             "cypressConfig": "apps/frontend/shared-ui-e2e/cypress.json",
             "tsConfig": "apps/frontend/shared-ui-e2e/tsconfig.e2e.json",
-            "devServerTarget": "shared-ui:storybook"
+            "devServerTarget": "frontend-ui:storybook"
           },
           "configurations": {
             "ci": {
-              "devServerTarget": "shared-ui:storybook:ci"
+              "devServerTarget": "frontend-ui:storybook:ci"
             }
           }
         },
@@ -795,6 +740,61 @@
           "options": {
             "jestConfig": "libs/shared/constants/jest.config.js",
             "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "frontend-ui": {
+      "projectType": "library",
+      "root": "libs/frontend/ui",
+      "sourceRoot": "libs/frontend/ui/src",
+      "prefix": "ui",
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/frontend/ui/src/**/*.ts",
+              "libs/frontend/ui/src/**/*.html"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/frontend/ui"],
+          "options": {
+            "jestConfig": "libs/frontend/ui/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "storybook": {
+          "builder": "@nrwl/storybook:storybook",
+          "options": {
+            "uiFramework": "@storybook/angular",
+            "port": 4400,
+            "config": {
+              "configFolder": "libs/frontend/ui/.storybook"
+            }
+          },
+          "configurations": {
+            "ci": {
+              "quiet": true
+            }
+          }
+        },
+        "build-storybook": {
+          "builder": "@nrwl/storybook:build",
+          "options": {
+            "uiFramework": "@storybook/angular",
+            "outputPath": "dist/storybook/shared-ui",
+            "config": {
+              "configFolder": "libs/frontend/ui/.storybook"
+            }
+          },
+          "configurations": {
+            "ci": {
+              "quiet": true
+            }
           }
         }
       }
