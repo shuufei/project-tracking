@@ -1,5 +1,5 @@
 import { MockReturnValues } from '@bison/types/testing';
-import { IListBoardsByProjectIdService } from '../interface/list-boards-by-project-id-service';
+import { IListBoardsByProjectIdService } from './list-boards-by-project-id.service.interface';
 
 export const mockListBoardsByProjectIdServiceReturnValues: MockReturnValues<IListBoardsByProjectIdService> = {
   handle: {

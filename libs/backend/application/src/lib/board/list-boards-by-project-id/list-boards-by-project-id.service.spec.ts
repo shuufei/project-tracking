@@ -3,7 +3,7 @@ import {
   mockBoardRepositoryReturnValues,
 } from '@bison/backend/domain';
 import { createId } from '@bison/shared/domain';
-import { ListBoardsByProjectIdService } from './list-boards-by-project-id-service';
+import { ListBoardsByProjectIdService } from './list-boards-by-project-id.service';
 
 describe('ListBoadsByProjectIdService', () => {
   let service: ListBoardsByProjectIdService;

@@ -1,7 +1,7 @@
 import type { IBoardRepository } from '@bison/backend/domain';
 import { BOARD_REPOSITORY } from '@bison/backend/domain';
 import { Inject } from '@nestjs/common';
-import type { IListBoardsByProjectIdService } from './interface/list-boards-by-project-id-service';
+import type { IListBoardsByProjectIdService } from './list-boards-by-project-id.service.interface';
 
 export class ListBoardsByProjectIdService
   implements IListBoardsByProjectIdService {

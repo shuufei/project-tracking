@@ -2,7 +2,7 @@ import {
   MockUserRepository,
   mockUserRepositoryReturnValues,
 } from '@bison/backend/domain';
-import { GetUserByIdpUserIdService } from './get-user-by-idp-user-id-service';
+import { GetUserByIdpUserIdService } from './get-user-by-idp-user-id.service';
 describe('GetUserByIdpUserIdService', () => {
   let service: GetUserByIdpUserIdService;
   const userRepository = new MockUserRepository();

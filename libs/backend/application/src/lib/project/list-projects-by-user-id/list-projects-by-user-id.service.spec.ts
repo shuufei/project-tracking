@@ -3,7 +3,7 @@ import {
   mockProjectRepositoryReturnValues,
 } from '@bison/backend/domain';
 import { createId } from '@bison/shared/domain';
-import { ListProjectsByUserIdService } from './list-projects-by-user-id-service';
+import { ListProjectsByUserIdService } from './list-projects-by-user-id.service';
 
 describe('ListProjectsByUserIdService', () => {
   let service: ListProjectsByUserIdService;

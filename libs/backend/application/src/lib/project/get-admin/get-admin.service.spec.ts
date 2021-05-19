@@ -5,7 +5,7 @@ import {
   mockUserRepositoryReturnValues,
 } from '@bison/backend/domain';
 import { createId } from '@bison/shared/domain';
-import { GetAdminService } from './get-admin-service';
+import { GetAdminService } from './get-admin.service';
 
 describe('GetAdminService', () => {
   let service: GetAdminService;

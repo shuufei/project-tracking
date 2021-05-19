@@ -2,7 +2,7 @@ import type { IProjectRepository } from '@bison/backend/domain';
 import { PROJECT_REPOSITORY } from '@bison/backend/domain';
 import { User } from '@bison/shared/domain';
 import { Inject } from '@nestjs/common';
-import { IListProjectsByUserIdService } from './interface/list-projects-by-user-id-service';
+import { IListProjectsByUserIdService } from './list-projects-by-user-id.service.interface';
 
 export class ListProjectsByUserIdService
   implements IListProjectsByUserIdService {

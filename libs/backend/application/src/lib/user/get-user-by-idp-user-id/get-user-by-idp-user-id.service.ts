@@ -1,7 +1,7 @@
 import type { IUserRepositoy } from '@bison/backend/domain';
 import { USER_REPOSITORY } from '@bison/backend/domain';
 import { Inject } from '@nestjs/common';
-import type { IGetUserByIdpUserIdService } from './interface/get-user-by-idp-user-id-service';
+import type { IGetUserByIdpUserIdService } from './get-user-by-idp-user-id.service.interface';
 
 export class GetUserByIdpUserIdService implements IGetUserByIdpUserIdService {
   constructor(

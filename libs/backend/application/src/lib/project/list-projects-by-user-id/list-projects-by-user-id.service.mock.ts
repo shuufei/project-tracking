@@ -1,6 +1,6 @@
 import { COLOR } from '@bison/shared/domain';
 import { MockReturnValues } from '@bison/types/testing';
-import { IListProjectsByUserIdService } from '../interface/list-projects-by-user-id-service';
+import { IListProjectsByUserIdService } from './list-projects-by-user-id.service.interface';
 
 export const mockListProjectsByUserIdServiceReturnValues: MockReturnValues<IListProjectsByUserIdService> = {
   handle: {

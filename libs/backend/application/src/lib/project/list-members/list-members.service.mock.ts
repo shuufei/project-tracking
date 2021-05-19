@@ -1,5 +1,5 @@
 import { MockReturnValues } from '@bison/types/testing';
-import { IListMembersService } from '../interface/list-members-service';
+import { IListMembersService } from './list-members.service.interface';
 
 export const mockListMembersServiceReturnValues: MockReturnValues<IListMembersService> = {
   handle: {

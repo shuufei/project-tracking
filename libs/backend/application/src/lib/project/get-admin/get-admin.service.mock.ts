@@ -1,5 +1,5 @@
 import { MockReturnValues } from '@bison/types/testing';
-import { IGetAdminService } from '../interface/get-admin-service';
+import { IGetAdminService } from './get-admin.service.interface';
 
 export const mockGetAdminServiceReturnValues: MockReturnValues<IGetAdminService> = {
   handle: {

@@ -1,5 +1,5 @@
 import { MockReturnValues } from '@bison/types/testing';
-import { IGetUserByIdpUserIdService } from '../interface/get-user-by-idp-user-id-service';
+import { IGetUserByIdpUserIdService } from './get-user-by-idp-user-id.service.interface';
 
 export const mockGetUserByIdpUserIdServiceReturnValues: MockReturnValues<IGetUserByIdpUserIdService> = {
   handle: {

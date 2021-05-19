@@ -4,7 +4,7 @@ import {
   PROJECT_REPOSITORY,
 } from '@bison/backend/domain';
 import { Test, TestingModule } from '@nestjs/testing';
-import { ListProjectsService } from './list-projects-service';
+import { ListProjectsService } from './list-projects.service';
 
 describe('ListProjectsService', () => {
   let moduleRef: TestingModule;

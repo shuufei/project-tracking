@@ -1,7 +1,7 @@
 import type { IUserRepositoy } from '@bison/backend/domain';
 import { USER_REPOSITORY } from '@bison/backend/domain';
 import { Inject } from '@nestjs/common';
-import type { IListMembersService } from './interface/list-members-service';
+import type { IListMembersService } from './list-members.service.interface';
 
 export class ListMembersService implements IListMembersService {
   constructor(
