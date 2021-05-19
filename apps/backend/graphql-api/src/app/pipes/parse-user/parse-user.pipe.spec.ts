@@ -1,6 +1,6 @@
 import {
-  mockGetUserByIdpUserIdResponse,
   MockGetUserByIdpUserIdService,
+  mockGetUserByIdpUserIdServiceReturnValues,
 } from '@bison/backend/application';
 import { ParseUserPipe } from './parse-user.pipe';
 describe('ParseUserPipe', () => {
@@ -22,6 +22,6 @@ describe('ParseUserPipe', () => {
 
   test('user情報を取得できる', async () => {
     const actual = await service.transform(idpUserId);
-    expect(actual).toEqual(mockGetUserByIdpUserIdResponse);
+    expect(actual).toEqual(mockGetUserByIdpUserIdServiceReturnValues.handle);
   });
 });
