@@ -1,6 +1,6 @@
 import {
-  GetBoardByIdService,
-  GET_BOARD_BY_ID_SERVICE,
+  GetBoardByIdAndUserService,
+  GET_BOARD_BY_ID_AND_USER_SERVICE,
   GET_PROJECT_BY_BOARD_ID_SERVICE,
   ListTaskGroupsByBoardIdService,
   LIST_TASK_GROUPS_BY_BOARD_ID_SERVICE,
@@ -36,8 +36,8 @@ import { BoardResolver } from './board.resolver';
       useClass: MockTaskGroupRepository,
     },
     {
-      provide: GET_BOARD_BY_ID_SERVICE,
-      useClass: GetBoardByIdService,
+      provide: GET_BOARD_BY_ID_AND_USER_SERVICE,
+      useClass: GetBoardByIdAndUserService,
     },
     {
       provide: CAN_ACCESS_PROJECT_SERVICE,

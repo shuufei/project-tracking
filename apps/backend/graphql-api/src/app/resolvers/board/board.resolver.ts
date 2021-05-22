@@ -1,10 +1,10 @@
 import type {
-  IGetBoardByIdServiceBoardByIdService,
+  IGetBoardByIdAndUserService,
   IGetProjectByBoardIdService,
   IListTaskGroupsByBoardIdService,
 } from '@bison/backend/application';
 import {
-  GET_BOARD_BY_ID_SERVICE,
+  GET_BOARD_BY_ID_AND_USER_SERVICE,
   GET_PROJECT_BY_BOARD_ID_SERVICE,
   LIST_TASK_GROUPS_BY_BOARD_ID_SERVICE,
 } from '@bison/backend/application';
@@ -29,8 +29,8 @@ export class BoardResolver {
   constructor(
     @Inject(GET_PROJECT_BY_BOARD_ID_SERVICE)
     private getProjectByBoardIdService: IGetProjectByBoardIdService,
-    @Inject(GET_BOARD_BY_ID_SERVICE)
-    private getBoardByIdService: IGetBoardByIdServiceBoardByIdService,
+    @Inject(GET_BOARD_BY_ID_AND_USER_SERVICE)
+    private getBoardByIdService: IGetBoardByIdAndUserService,
     @Inject(LIST_TASK_GROUPS_BY_BOARD_ID_SERVICE)
     private listTaskGroupsByBoardIdService: IListTaskGroupsByBoardIdService
   ) {}
