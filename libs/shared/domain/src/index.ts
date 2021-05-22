@@ -5,4 +5,5 @@ export * from './lib/project';
 export * from './lib/status';
 export * from './lib/subtask';
 export * from './lib/task';
+export * from './lib/task-group';
 export * from './lib/user';

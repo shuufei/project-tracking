@@ -1,13 +1,15 @@
 import type {
   IGetBoardByIdServiceBoardByIdService,
   IGetProjectByBoardIdService,
+  IListTaskGroupsByBoardIdService,
 } from '@bison/backend/application';
 import {
   GET_BOARD_BY_ID_SERVICE,
   GET_PROJECT_BY_BOARD_ID_SERVICE,
+  LIST_TASK_GROUPS_BY_BOARD_ID_SERVICE,
 } from '@bison/backend/application';
 import type { Id, User } from '@bison/shared/domain';
-import type { Board, Project } from '@bison/shared/schema';
+import type { Board, Project, TaskGroup } from '@bison/shared/schema';
 import { Inject } from '@nestjs/common';
 import {
   Args,
@@ -20,6 +22,7 @@ import {
 import { IdpUserId } from '../../decorators/idp-user-id.decorator';
 import { ParseUserPipe } from '../../pipes/parse-user/parse-user.pipe';
 import { convertToApiColorFromDomainColor } from '../../util/convert-to-color-from-domain-color';
+import { convertToApiStatusFromDomainStatus } from '../../util/convert-to-status-from-domain-status';
 
 @Resolver('Board')
 export class BoardResolver {
@@ -27,7 +30,9 @@ export class BoardResolver {
     @Inject(GET_PROJECT_BY_BOARD_ID_SERVICE)
     private getProjectByBoardIdService: IGetProjectByBoardIdService,
     @Inject(GET_BOARD_BY_ID_SERVICE)
-    private getBoardByIdService: IGetBoardByIdServiceBoardByIdService
+    private getBoardByIdService: IGetBoardByIdServiceBoardByIdService,
+    @Inject(LIST_TASK_GROUPS_BY_BOARD_ID_SERVICE)
+    private listTaskGroupsByBoardIdService: IListTaskGroupsByBoardIdService
   ) {}
 
   @Query()
@@ -54,5 +59,22 @@ export class BoardResolver {
       ...project,
       color: convertToApiColorFromDomainColor(project.color),
     };
+  }
+
+  @ResolveField()
+  async taskGroups(
+    @Parent() board: Omit<Board, 'project'>
+  ): Promise<Omit<TaskGroup, 'tasks' | 'assign' | 'project' | 'board'>[]> {
+    const { taskGroups } = await this.listTaskGroupsByBoardIdService.handle(
+      board.id
+    );
+    return taskGroups.map((taskGroup) => ({
+      id: taskGroup.id,
+      title: taskGroup.title,
+      description: taskGroup.description,
+      status: convertToApiStatusFromDomainStatus(taskGroup.status),
+      scheduledTimeSec: taskGroup.scheduledTimeSec,
+      tasksOrder: [],
+    }));
   }
 }
