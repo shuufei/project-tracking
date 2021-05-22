@@ -1,4 +1,3 @@
-export * from './get-board-by-id/get-board-by-id.module';
 export * from './get-board-by-id/get-board-by-id.service';
 export * from './get-board-by-id/get-board-by-id.service.interface';
 export * from './get-board-by-id/get-board-by-id.service.mock';
