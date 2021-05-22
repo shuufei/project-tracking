@@ -23,10 +23,20 @@ export const mockBoardRepositoryReturnValues: MockReturnValues<IBoardRepository>
       },
     ],
   },
+  getById: {
+    id: 'board0001',
+    name: 'board name 0001',
+    description: 'board description 0001',
+    projectId: 'project0001',
+  },
 };
 
 export class MockBoardRepository implements IBoardRepository {
   async listByProjectId() {
     return mockBoardRepositoryReturnValues.listByProjectId;
+  }
+
+  async getById() {
+    return mockBoardRepositoryReturnValues.getById;
   }
 }
