@@ -9,7 +9,7 @@ import {
   LIST_TASK_GROUPS_BY_BOARD_ID_SERVICE,
 } from '@bison/backend/application';
 import type { Id, User } from '@bison/shared/domain';
-import type { Board, Project, TaskGroup } from '@bison/shared/schema';
+import type { Board, Project } from '@bison/shared/schema';
 import { Inject } from '@nestjs/common';
 import {
   Args,
@@ -21,8 +21,10 @@ import {
 } from '@nestjs/graphql';
 import { IdpUserId } from '../../decorators/idp-user-id.decorator';
 import { ParseUserPipe } from '../../pipes/parse-user/parse-user.pipe';
+import { convertToApiBoardTaskTypeFromDomainBoardTaskType } from '../../util/convert-to-board-task-type-from-domain-board-task-type';
 import { convertToApiColorFromDomainColor } from '../../util/convert-to-color-from-domain-color';
 import { convertToApiStatusFromDomainStatus } from '../../util/convert-to-status-from-domain-status';
+import type { ResolvedBoard, ResolvedTaskGroup } from '../resolved-value';
 
 @Resolver('Board')
 export class BoardResolver {
@@ -39,14 +41,19 @@ export class BoardResolver {
   async board(
     @IdpUserId(ParseUserPipe) user: User,
     @Args('id', { type: () => ID }) id: Id
-  ): Promise<
-    Omit<Board, 'project' | 'singleTasks' | 'taskGroups' | 'tasksOrder'>
-  > {
+  ): Promise<ResolvedBoard> {
     const board = await this.getBoardByIdService.handle(id, user);
     return {
       id: board.id,
       name: board.name,
       description: board.description,
+      tasksOrder: board.tasksOrder.map((v) => ({
+        taskId: v.taskId,
+        type: convertToApiBoardTaskTypeFromDomainBoardTaskType(v.type),
+      })),
+      project: {
+        id: board.projectId,
+      },
     };
   }
 
@@ -63,8 +70,8 @@ export class BoardResolver {
 
   @ResolveField()
   async taskGroups(
-    @Parent() board: Omit<Board, 'project'>
-  ): Promise<Omit<TaskGroup, 'tasks' | 'assign' | 'project' | 'board'>[]> {
+    @Parent() board: ResolvedBoard
+  ): Promise<ResolvedTaskGroup[]> {
     const { taskGroups } = await this.listTaskGroupsByBoardIdService.handle(
       board.id
     );
@@ -74,7 +81,13 @@ export class BoardResolver {
       description: taskGroup.description,
       status: convertToApiStatusFromDomainStatus(taskGroup.status),
       scheduledTimeSec: taskGroup.scheduledTimeSec,
-      tasksOrder: [],
+      tasksOrder: taskGroup.tasksOrder,
+      assign: taskGroup.assignUserId
+        ? { id: taskGroup.assignUserId }
+        : undefined,
+      board: {
+        id: taskGroup.boardId,
+      },
     }));
   }
 }

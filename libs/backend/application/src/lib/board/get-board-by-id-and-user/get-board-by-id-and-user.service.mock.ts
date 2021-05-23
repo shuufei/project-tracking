@@ -7,6 +7,7 @@ export const mockGetBoardByIdAndUserServiceReturnValues: MockReturnValues<IGetBo
     name: `board name 0001`,
     description: `board description 0001`,
     projectId: 'project0001',
+    tasksOrder: [],
   },
 };
 
