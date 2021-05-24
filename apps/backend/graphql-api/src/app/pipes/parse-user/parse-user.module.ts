@@ -1,13 +1,13 @@
 import {
   GetUserByIdpUserIdService,
-  GET_USER_BY_IDP_USER_ID,
+  GET_USER_BY_IDP_USER_ID_SERVICE,
 } from '@bison/backend/application';
 import { MockUserRepository, USER_REPOSITORY } from '@bison/backend/domain';
 import { Module } from '@nestjs/common';
 import { ParseUserPipe } from './parse-user.pipe';
 
 const GetUserByIdpUserIdServiceProvider = {
-  provide: GET_USER_BY_IDP_USER_ID,
+  provide: GET_USER_BY_IDP_USER_ID_SERVICE,
   useClass: GetUserByIdpUserIdService,
 };
 
