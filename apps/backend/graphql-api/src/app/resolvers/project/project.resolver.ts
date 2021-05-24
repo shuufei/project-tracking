@@ -10,7 +10,7 @@ import {
 } from '@bison/backend/application';
 import { Inject } from '@nestjs/common';
 import { Parent, ResolveField, Resolver } from '@nestjs/graphql';
-import { convertToApiBoardTaskTypeFromDomainBoardTaskType } from '../../util/convert-to-board-task-type-from-domain-board-task-type';
+import { convertToResolvedBoardFromDomainBoard } from '../../util/convert-to-resolved-board-from-domain-board';
 import type {
   ResolvedBoard,
   ResolvedProject,
@@ -31,16 +31,7 @@ export class ProjectResolver {
   @ResolveField()
   async boards(@Parent() project: ResolvedProject): Promise<ResolvedBoard[]> {
     const response = await this.listBoardsByProjectIdService.handle(project.id);
-    return response.boards.map((board) => ({
-      ...board,
-      tasksOrder: board.tasksOrder.map((v) => ({
-        taskId: v.taskId,
-        type: convertToApiBoardTaskTypeFromDomainBoardTaskType(v.type),
-      })),
-      project: {
-        id: board.projectId,
-      },
-    }));
+    return response.boards.map(convertToResolvedBoardFromDomainBoard);
   }
 
   @ResolveField()

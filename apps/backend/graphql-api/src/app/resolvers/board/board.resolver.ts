@@ -20,9 +20,9 @@ import {
 } from '@nestjs/graphql';
 import { IdpUserId } from '../../decorators/idp-user-id.decorator';
 import { ParseUserPipe } from '../../pipes/parse-user/parse-user.pipe';
-import { convertToApiBoardTaskTypeFromDomainBoardTaskType } from '../../util/convert-to-board-task-type-from-domain-board-task-type';
-import { convertToApiColorFromDomainColor } from '../../util/convert-to-color-from-domain-color';
-import { convertToApiStatusFromDomainStatus } from '../../util/convert-to-status-from-domain-status';
+import { convertToResolvedBoardFromDomainBoard } from '../../util/convert-to-resolved-board-from-domain-board';
+import { convertToResolvedProjectFromDomainProject } from '../../util/convert-to-resolved-project-from-domain-project';
+import { convertToResolvedTaskGroupFromDomainTaskGroup } from '../../util/convert-to-resolved-task-group-from-domain-task-group';
 import type {
   ResolvedBoard,
   ResolvedProject,
@@ -46,30 +46,13 @@ export class BoardResolver {
     @Args('id', { type: () => ID }) id: Id
   ): Promise<ResolvedBoard> {
     const board = await this.getBoardByIdService.handle(id, user);
-    return {
-      id: board.id,
-      name: board.name,
-      description: board.description,
-      tasksOrder: board.tasksOrder.map((v) => ({
-        taskId: v.taskId,
-        type: convertToApiBoardTaskTypeFromDomainBoardTaskType(v.type),
-      })),
-      project: {
-        id: board.projectId,
-      },
-    };
+    return convertToResolvedBoardFromDomainBoard(board);
   }
 
   @ResolveField()
   async project(@Parent() board: ResolvedBoard): Promise<ResolvedProject> {
     const project = await this.getProjectByBoardIdService.handle(board.id);
-    return {
-      ...project,
-      color: convertToApiColorFromDomainColor(project.color),
-      admin: {
-        id: project.adminUserId,
-      },
-    };
+    return convertToResolvedProjectFromDomainProject(project);
   }
 
   @ResolveField()
@@ -79,19 +62,6 @@ export class BoardResolver {
     const { taskGroups } = await this.listTaskGroupsByBoardIdService.handle(
       board.id
     );
-    return taskGroups.map((taskGroup) => ({
-      id: taskGroup.id,
-      title: taskGroup.title,
-      description: taskGroup.description,
-      status: convertToApiStatusFromDomainStatus(taskGroup.status),
-      scheduledTimeSec: taskGroup.scheduledTimeSec,
-      tasksOrder: taskGroup.tasksOrder,
-      assign: taskGroup.assignUserId
-        ? { id: taskGroup.assignUserId }
-        : undefined,
-      board: {
-        id: taskGroup.boardId,
-      },
-    }));
+    return taskGroups.map(convertToResolvedTaskGroupFromDomainTaskGroup);
   }
 }
