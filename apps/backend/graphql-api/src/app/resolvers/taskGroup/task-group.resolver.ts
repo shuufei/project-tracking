@@ -1,10 +1,12 @@
 import type {
   IGetBoardByIdService,
   IGetProjectByBoardIdService,
+  IGetUserByIdService,
 } from '@bison/backend/application';
 import {
   GET_BOARD_BY_ID_SERVICE,
   GET_PROJECT_BY_BOARD_ID_SERVICE,
+  GET_USER_BY_ID_SERVICE,
 } from '@bison/backend/application';
 import { Inject } from '@nestjs/common';
 import { Parent, ResolveField, Resolver } from '@nestjs/graphql';
@@ -14,6 +16,7 @@ import type {
   ResolvedBoard,
   ResolvedProject,
   ResolvedTaskGroup,
+  ResolvedUser,
 } from '../resolved-value-type';
 
 @Resolver('TaskGroup')
@@ -22,7 +25,9 @@ export class TaskGroupResolver {
     @Inject(GET_BOARD_BY_ID_SERVICE)
     private getBoardByIdService: IGetBoardByIdService,
     @Inject(GET_PROJECT_BY_BOARD_ID_SERVICE)
-    private getProjectByBoardIdService: IGetProjectByBoardIdService
+    private getProjectByBoardIdService: IGetProjectByBoardIdService,
+    @Inject(GET_USER_BY_ID_SERVICE)
+    private getUserByIdService: IGetUserByIdService
   ) {}
 
   @ResolveField()
@@ -48,5 +53,16 @@ export class TaskGroupResolver {
       taskGroup.board.id
     );
     return convertToResolvedProjectFromDomainProject(project);
+  }
+
+  @ResolveField()
+  async assign(
+    @Parent() taskGroup: ResolvedTaskGroup
+  ): Promise<ResolvedUser | undefined> {
+    if (taskGroup.assign === undefined) {
+      return undefined;
+    }
+    const user = await this.getUserByIdService.handle(taskGroup.assign.id);
+    return user;
   }
 }
