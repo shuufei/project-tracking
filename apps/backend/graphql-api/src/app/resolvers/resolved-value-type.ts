@@ -1,4 +1,4 @@
-import { Board, TaskGroup, User } from '@bison/shared/schema';
+import { Board, Project, TaskGroup, User } from '@bison/shared/schema';
 
 export type ResolvedBoard = Pick<
   Board,
@@ -13,4 +13,13 @@ export type ResolvedTaskGroup = Pick<
 > & {
   assign?: Pick<User, 'id'>;
   board: Pick<TaskGroup['board'], 'id'>;
+};
+
+export type ResolvedUser = Pick<User, 'id' | 'name' | 'icon'>;
+
+export type ResolvedProject = Pick<
+  Project,
+  'id' | 'name' | 'description' | 'color'
+> & {
+  admin: Pick<Project['admin'], 'id'>;
 };

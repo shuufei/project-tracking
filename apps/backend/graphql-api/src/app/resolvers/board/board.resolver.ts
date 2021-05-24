@@ -9,7 +9,6 @@ import {
   LIST_TASK_GROUPS_BY_BOARD_ID_SERVICE,
 } from '@bison/backend/application';
 import type { Id, User } from '@bison/shared/domain';
-import type { Board, Project } from '@bison/shared/schema';
 import { Inject } from '@nestjs/common';
 import {
   Args,
@@ -24,7 +23,11 @@ import { ParseUserPipe } from '../../pipes/parse-user/parse-user.pipe';
 import { convertToApiBoardTaskTypeFromDomainBoardTaskType } from '../../util/convert-to-board-task-type-from-domain-board-task-type';
 import { convertToApiColorFromDomainColor } from '../../util/convert-to-color-from-domain-color';
 import { convertToApiStatusFromDomainStatus } from '../../util/convert-to-status-from-domain-status';
-import type { ResolvedBoard, ResolvedTaskGroup } from '../resolved-value';
+import type {
+  ResolvedBoard,
+  ResolvedProject,
+  ResolvedTaskGroup,
+} from '../resolved-value-type';
 
 @Resolver('Board')
 export class BoardResolver {
@@ -58,13 +61,14 @@ export class BoardResolver {
   }
 
   @ResolveField()
-  async project(
-    @Parent() board: Omit<Board, 'project'>
-  ): Promise<Omit<Project, 'boards' | 'members' | 'admin'>> {
+  async project(@Parent() board: ResolvedBoard): Promise<ResolvedProject> {
     const project = await this.getProjectByBoardIdService.handle(board.id);
     return {
       ...project,
       color: convertToApiColorFromDomainColor(project.color),
+      admin: {
+        id: project.adminUserId,
+      },
     };
   }
 

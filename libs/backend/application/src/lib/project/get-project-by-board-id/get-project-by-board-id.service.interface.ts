@@ -8,7 +8,4 @@ export const GET_PROJECT_BY_BOARD_ID_SERVICE = Symbol(
   'GetProjectByBoardIdService'
 );
 
-export type GetProjectByBoardIdResponse = Pick<
-  Project,
-  'id' | 'name' | 'description' | 'color'
->;
+export type GetProjectByBoardIdResponse = Project;

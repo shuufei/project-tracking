@@ -1,11 +1,11 @@
 import {
   MockBoardRepository,
+  mockBoardRepositoryReturnValues,
   MockCanAccessProjectService,
 } from '@bison/backend/domain';
 import { createId, User } from '@bison/shared/domain';
 import { PermissionDeniedError } from '../../errors/permission-denied-error';
 import { GetBoardByIdAndUserService } from './get-board-by-id-and-user.service';
-import { mockGetBoardByIdAndUserServiceReturnValues } from './get-board-by-id-and-user.service.mock';
 
 describe('GetBoardByIdAndUserService', () => {
   let service: GetBoardByIdAndUserService;
@@ -32,9 +32,7 @@ describe('GetBoardByIdAndUserService', () => {
 
       test('boardを取得できる', async () => {
         const actual = await service.handle(boardId, user);
-        expect(actual).toEqual(
-          mockGetBoardByIdAndUserServiceReturnValues.handle
-        );
+        expect(actual).toEqual(mockBoardRepositoryReturnValues.getById);
       });
       test('指定したidで、BoardRepositoryからboardの取得が行われる', () => {
         expect(boardRepository.getById).toHaveBeenCalledWith(boardId);

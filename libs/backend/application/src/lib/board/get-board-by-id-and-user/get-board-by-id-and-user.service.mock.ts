@@ -11,7 +11,8 @@ export const mockGetBoardByIdAndUserServiceReturnValues: MockReturnValues<IGetBo
   },
 };
 
-export class MockGetBoardByIdService implements IGetBoardByIdAndUserService {
+export class MockGetBoardByIdAndUserService
+  implements IGetBoardByIdAndUserService {
   async handle() {
     return mockGetBoardByIdAndUserServiceReturnValues.handle;
   }
