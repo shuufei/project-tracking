@@ -2,7 +2,7 @@ import { createId, STATUS } from '@bison/shared/domain';
 import { MockReturnValues } from '@bison/types/testing';
 import { ITaskGroupRepository } from './task-group-repository.interface';
 
-const mockTaskGroupRepositoryReturnValues: MockReturnValues<ITaskGroupRepository> = {
+export const mockTaskGroupRepositoryReturnValues: MockReturnValues<ITaskGroupRepository> = {
   listByBoardId: {
     taskGroups: [
       {
