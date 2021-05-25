@@ -1,6 +1,7 @@
 import { Board } from './board';
 import { createId, Id } from './id';
 import { Status } from './status';
+import { Subtask } from './subtask';
 import { TaskGroup } from './task-group';
 import { User } from './user';
 
@@ -14,6 +15,7 @@ export type Task = {
   taskGroupId?: TaskGroup['id'];
   workTimeSec: number;
   scheduledTimeSec?: number;
+  subtasksOrder: Subtask['id'][];
 };
 
 export const createTask = (
@@ -33,4 +35,5 @@ export const createTask = (
   taskGroupId,
   workTimeSec: 0,
   scheduledTimeSec,
+  subtasksOrder: [],
 });
