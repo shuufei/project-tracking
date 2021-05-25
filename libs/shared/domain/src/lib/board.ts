@@ -6,7 +6,15 @@ export type Board = {
   name: string;
   description?: string;
   projectId: Project['id'];
+  tasksOrder: BoardTasksOrderItem[];
 };
+
+export type BoardTasksOrderItem = {
+  taskId: Id;
+  type: BoardTaskType;
+};
+
+export type BoardTaskType = 'TaskGroup' | 'Task';
 
 export const createBoard = (
   name: Board['name'],
@@ -17,4 +25,5 @@ export const createBoard = (
   name,
   description,
   projectId,
+  tasksOrder: [],
 });

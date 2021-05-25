@@ -1,6 +1,7 @@
 export * from './get-admin/get-admin.service';
 export * from './get-admin/get-admin.service.interface';
 export * from './get-admin/get-admin.service.mock';
+export * from './get-project-by-board-id/get-project-by-board-id.service';
 export * from './get-project-by-board-id/get-project-by-board-id.service.interface';
 export * from './get-project-by-board-id/get-project-by-board-id.service.mock';
 export * from './list-members/list-members.service';

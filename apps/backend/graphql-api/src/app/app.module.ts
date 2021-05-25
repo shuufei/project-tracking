@@ -3,6 +3,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
 import { BoardModule } from './resolvers/board/board.module';
 import { ProjectModule } from './resolvers/project/project.module';
+import { TaskGroupModule } from './resolvers/taskGroup/task-group.module';
 import { UserModule } from './resolvers/user/user.module';
 
 @Module({
@@ -10,6 +11,7 @@ import { UserModule } from './resolvers/user/user.module';
     ProjectModule,
     BoardModule,
     UserModule,
+    TaskGroupModule,
     GraphQLModule.forRoot({
       typePaths: [join(process.cwd(), 'libs/shared/schema/src/**/*.gql')],
     }),
