@@ -1,17 +1,17 @@
-import { CalenderModule } from './calender.module';
+import { CalendarModule } from './calendar.module';
 
 export default {
-  title: 'Calender'
+  title: 'Calendar'
 }
 
 const moduleMetadata = {
-  imports: [CalenderModule],
+  imports: [CalendarModule],
 };
 
 export const Default = () => ({
   moduleMetadata,
   template: `
-    <ui-calender></ui-calender>
+    <ui-calendar></ui-calendar>
   `,
   props: {
   }
