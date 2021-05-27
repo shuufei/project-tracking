@@ -7,14 +7,18 @@ import {
   GET_PROJECT_BY_BOARD_ID_SERVICE,
   GET_TASK_GROUP_BY_ID_SERVICE,
   GET_USER_BY_ID_SERVICE,
+  ListSubtasksByTaskIdService,
+  LIST_SUBTASKS_BY_TASK_ID_SERVICE,
 } from '@bison/backend/application';
 import {
   BOARD_REPOSITORY,
   MockBoardRepository,
   MockProjectRepository,
+  MockSubtaskRepository,
   MockTaskGroupRepository,
   MockUserRepository,
   PROJECT_REPOSITORY,
+  SUBTASK_REPOSITORY,
   TASK_GROUP_REPOSITORY,
   USER_REPOSITORY,
 } from '@bison/backend/domain';
@@ -41,6 +45,10 @@ import { TaskResolver } from './task.resolver';
       useClass: GetTaskGroupByIdService,
     },
     {
+      provide: LIST_SUBTASKS_BY_TASK_ID_SERVICE,
+      useClass: ListSubtasksByTaskIdService,
+    },
+    {
       provide: BOARD_REPOSITORY,
       useClass: MockBoardRepository,
     },
@@ -55,6 +63,10 @@ import { TaskResolver } from './task.resolver';
     {
       provide: TASK_GROUP_REPOSITORY,
       useClass: MockTaskGroupRepository,
+    },
+    {
+      provide: SUBTASK_REPOSITORY,
+      useClass: MockSubtaskRepository,
     },
   ],
 })

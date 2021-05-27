@@ -1,4 +1,11 @@
-import { Board, Project, Task, TaskGroup, User } from '@bison/shared/schema';
+import {
+  Board,
+  Project,
+  Subtask,
+  Task,
+  TaskGroup,
+  User,
+} from '@bison/shared/schema';
 
 export type ResolvedBoard = Pick<
   Board,
@@ -37,4 +44,17 @@ export type ResolvedTask = Pick<
   assign?: Pick<User, 'id'>;
   board: Pick<Task['board'], 'id'>;
   taskGroup?: Pick<TaskGroup, 'id'>;
+};
+
+export type ResolvedSubtask = Pick<
+  Subtask,
+  | 'id'
+  | 'title'
+  | 'description'
+  | 'isCompleted'
+  | 'workTimeSec'
+  | 'scheduledTimeSec'
+> & {
+  assign?: Pick<User, 'id'>;
+  task: Pick<Subtask['task'], 'id'>;
 };

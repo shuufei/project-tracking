@@ -1,4 +1,5 @@
 import { createId, Id } from './id';
+import { Task } from './task';
 import { User } from './user';
 
 export type Subtask = {
@@ -9,10 +10,12 @@ export type Subtask = {
   assignUserId?: User['id'];
   workTimeSec: number;
   scheduledTimeSec?: number;
+  taskId: Id;
 };
 
 export const createSubtask = (
   title: Subtask['title'],
+  taskId: Task['id'],
   assignUserId?: Subtask['assignUserId'],
   description?: Subtask['description'],
   scheduledTimeSec?: Subtask['scheduledTimeSec']
@@ -24,4 +27,5 @@ export const createSubtask = (
   assignUserId,
   workTimeSec: 0,
   scheduledTimeSec,
+  taskId,
 });
