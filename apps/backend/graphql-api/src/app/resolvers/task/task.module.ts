@@ -1,17 +1,21 @@
 import {
   GetBoardByIdService,
   GetProjectByBoardIdService,
+  GetTaskGroupByIdService,
   GetUserByIdService,
   GET_BOARD_BY_ID_SERVICE,
   GET_PROJECT_BY_BOARD_ID_SERVICE,
+  GET_TASK_GROUP_BY_ID_SERVICE,
   GET_USER_BY_ID_SERVICE,
 } from '@bison/backend/application';
 import {
   BOARD_REPOSITORY,
   MockBoardRepository,
   MockProjectRepository,
+  MockTaskGroupRepository,
   MockUserRepository,
   PROJECT_REPOSITORY,
+  TASK_GROUP_REPOSITORY,
   USER_REPOSITORY,
 } from '@bison/backend/domain';
 import { Module } from '@nestjs/common';
@@ -33,6 +37,10 @@ import { TaskResolver } from './task.resolver';
       useClass: GetUserByIdService,
     },
     {
+      provide: GET_TASK_GROUP_BY_ID_SERVICE,
+      useClass: GetTaskGroupByIdService,
+    },
+    {
       provide: BOARD_REPOSITORY,
       useClass: MockBoardRepository,
     },
@@ -43,6 +51,10 @@ import { TaskResolver } from './task.resolver';
     {
       provide: USER_REPOSITORY,
       useClass: MockUserRepository,
+    },
+    {
+      provide: TASK_GROUP_REPOSITORY,
+      useClass: MockTaskGroupRepository,
     },
   ],
 })
