@@ -39,10 +39,24 @@ export const mockTaskRepositoryReturnValues: MockReturnValues<ITaskRepository> =
       },
     ],
   },
+  getById: {
+    id: createId(),
+    title: 'task title 0001',
+    description: 'task description 0001',
+    status: STATUS.Todo,
+    assignUserId: createId(),
+    boardId: createId(),
+    workTimeSec: 0,
+    subtasksOrder: [],
+  },
 };
 
 export class MockTaskRepository implements ITaskRepository {
   async listByTaskGroupId() {
     return mockTaskRepositoryReturnValues.listByTaskGroupId;
+  }
+
+  async getById() {
+    return mockTaskRepositoryReturnValues.getById;
   }
 }
