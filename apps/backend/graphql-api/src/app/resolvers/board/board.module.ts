@@ -2,7 +2,9 @@ import {
   GetBoardByIdAndUserService,
   GET_BOARD_BY_ID_AND_USER_SERVICE,
   GET_PROJECT_BY_BOARD_ID_SERVICE,
+  ListSoloTasksByBoardIdService,
   ListTaskGroupsByBoardIdService,
+  LIST_SOLO_TASKS_BY_BOARD_ID_SERVICE,
   LIST_TASK_GROUPS_BY_BOARD_ID_SERVICE,
   MockGetProjectByBoardIdService,
 } from '@bison/backend/application';
@@ -13,8 +15,10 @@ import {
   MockBoardRepository,
   MockProjectRepository,
   MockTaskGroupRepository,
+  MockTaskRepository,
   PROJECT_REPOSITORY,
   TASK_GROUP_REPOSITORY,
+  TASK_REPOSITORY,
 } from '@bison/backend/domain';
 import { Module } from '@nestjs/common';
 import { ParseUserPipeModule } from '../../pipes/parse-user/parse-user.module';
@@ -32,10 +36,6 @@ import { BoardResolver } from './board.resolver';
       useClass: ListTaskGroupsByBoardIdService,
     },
     {
-      provide: TASK_GROUP_REPOSITORY,
-      useClass: MockTaskGroupRepository,
-    },
-    {
       provide: GET_BOARD_BY_ID_AND_USER_SERVICE,
       useClass: GetBoardByIdAndUserService,
     },
@@ -44,12 +44,24 @@ import { BoardResolver } from './board.resolver';
       useClass: CanAccessProjectService,
     },
     {
+      provide: LIST_SOLO_TASKS_BY_BOARD_ID_SERVICE,
+      useClass: ListSoloTasksByBoardIdService,
+    },
+    {
+      provide: TASK_GROUP_REPOSITORY,
+      useClass: MockTaskGroupRepository,
+    },
+    {
       provide: PROJECT_REPOSITORY,
       useClass: MockProjectRepository,
     },
     {
       provide: BOARD_REPOSITORY,
       useClass: MockBoardRepository,
+    },
+    {
+      provide: TASK_REPOSITORY,
+      useClass: MockTaskRepository,
     },
   ],
   imports: [ParseUserPipeModule],

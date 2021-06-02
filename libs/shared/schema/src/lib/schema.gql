@@ -43,7 +43,7 @@ type Board implements Node {
   name: String!
   description: String
   project: Project!
-  singleTasks: [Task!]!
+  soloTasks: [Task!]!
   taskGroups: [TaskGroup!]!
   tasksOrder: [BoardTasksOrderItem!]!
 }

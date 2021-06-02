@@ -217,7 +217,7 @@ export interface Board extends Node {
     name: string;
     description?: string;
     project: Project;
-    singleTasks: Task[];
+    soloTasks: Task[];
     taskGroups: TaskGroup[];
     tasksOrder: BoardTasksOrderItem[];
 }
