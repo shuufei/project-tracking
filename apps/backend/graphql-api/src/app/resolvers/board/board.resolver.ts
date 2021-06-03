@@ -39,7 +39,7 @@ export class BoardResolver {
     @Inject(GET_PROJECT_BY_BOARD_ID_SERVICE)
     private getProjectByBoardIdService: IGetProjectByBoardIdService,
     @Inject(GET_BOARD_BY_ID_AND_USER_SERVICE)
-    private getBoardByIdService: IGetBoardByIdAndUserService,
+    private getBoardByIdAndUserService: IGetBoardByIdAndUserService,
     @Inject(LIST_TASK_GROUPS_BY_BOARD_ID_SERVICE)
     private listTaskGroupsByBoardIdService: IListTaskGroupsByBoardIdService,
     @Inject(LIST_SOLO_TASKS_BY_BOARD_ID_SERVICE)
@@ -51,7 +51,7 @@ export class BoardResolver {
     @IdpUserId(ParseUserPipe) user: User,
     @Args('id', { type: () => ID }) id: Id
   ): Promise<ResolvedBoard> {
-    const board = await this.getBoardByIdService.handle(id, user);
+    const board = await this.getBoardByIdAndUserService.handle(id, user);
     return convertToResolvedBoardFromDomainBoard(board);
   }
 

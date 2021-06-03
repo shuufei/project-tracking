@@ -4,6 +4,8 @@ export * from './get-admin/get-admin.service.mock';
 export * from './get-project-by-board-id/get-project-by-board-id.service';
 export * from './get-project-by-board-id/get-project-by-board-id.service.interface';
 export * from './get-project-by-board-id/get-project-by-board-id.service.mock';
+export * from './get-project-by-id-and-user/get-project-by-id-and-user.service';
+export * from './get-project-by-id-and-user/get-project-by-id-and-user.service.interface';
 export * from './list-members/list-members.service';
 export * from './list-members/list-members.service.interface';
 export * from './list-members/list-members.service.mock';

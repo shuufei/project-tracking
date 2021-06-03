@@ -29,12 +29,17 @@ describe('GetBoardByIdAndUserService', () => {
       beforeEach(() => {
         jest.spyOn(boardRepository, 'getById');
       });
+      afterEach(() => {
+        jest.clearAllMocks();
+      });
 
       test('boardを取得できる', async () => {
         const actual = await service.handle(boardId, user);
         expect(actual).toEqual(mockBoardRepositoryReturnValues.getById);
       });
-      test('指定したidで、BoardRepositoryからboardの取得が行われる', () => {
+      test('指定したidで、BoardRepositoryからboardの取得が行われる', async () => {
+        await service.handle(boardId, user);
+        expect(boardRepository.getById).toHaveBeenCalledTimes(1);
         expect(boardRepository.getById).toHaveBeenCalledWith(boardId);
       });
     });
@@ -44,6 +49,9 @@ describe('GetBoardByIdAndUserService', () => {
     describe('ユーザが、指定したボードのプロジェクトにアクセスできない時', () => {
       beforeEach(() => {
         jest.spyOn(canAccessProjectService, 'handle').mockResolvedValue(false);
+      });
+      afterEach(() => {
+        jest.resetAllMocks();
       });
 
       test('PermissionDeniedErrorがthrowされる', async () => {
