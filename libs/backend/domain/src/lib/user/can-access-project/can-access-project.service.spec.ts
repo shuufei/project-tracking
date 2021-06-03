@@ -20,6 +20,10 @@ describe('CanAccessProjectService', () => {
           .mockResolvedValue({ projects: [] });
       });
 
+      afterEach(() => {
+        jest.resetAllMocks();
+      });
+
       test('falseが返る', async () => {
         const actual = await service.handle(userId, projectId);
         expect(actual).toBe(false);
@@ -42,6 +46,10 @@ describe('CanAccessProjectService', () => {
           },
         ],
       });
+    });
+
+    afterEach(() => {
+      jest.resetAllMocks();
     });
 
     test('trueが返る', async () => {

@@ -18,12 +18,16 @@ describe('GetBoardByIdService', () => {
     beforeEach(() => {
       jest.spyOn(boardRepository, 'getById');
     });
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
 
     test('boardを取得できる', async () => {
       const actual = await service.handle(boardId);
       expect(actual).toEqual(mockBoardRepositoryReturnValues.getById);
     });
-    test('指定したidで、BoardRepositoryからboardの取得が行われる', () => {
+    test('指定したidで、BoardRepositoryからboardの取得が行われる', async () => {
+      await service.handle(boardId);
       expect(boardRepository.getById).toHaveBeenCalledWith(boardId);
     });
   });

@@ -20,6 +20,10 @@ describe('ListTasksByTaskGroupIdService', () => {
       jest.spyOn(taskRepository, 'listByTaskGroupId');
     });
 
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+
     test('task一覧を取得できる', async () => {
       const actual = await service.handle(taskGroupId);
       expect(actual).toEqual(mockTaskRepositoryReturnValues.listByTaskGroupId);

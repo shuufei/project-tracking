@@ -27,16 +27,21 @@ export const mockUserRepositoryReturnValues: MockReturnValues<IUserRepositoy> = 
   getById: mockGetUserResponse,
   getByIdpUserId: mockGetUserResponse,
   listByProjectId: mockListUsersResponse,
+  list: mockListUsersResponse,
 };
 
 export class MockUserRepository implements IUserRepositoy {
   async getById() {
-    return mockGetUserResponse;
+    return mockUserRepositoryReturnValues.getById;
   }
   async getByIdpUserId() {
-    return mockGetUserResponse;
+    return mockUserRepositoryReturnValues.getByIdpUserId;
   }
   async listByProjectId() {
-    return mockListUsersResponse;
+    return mockUserRepositoryReturnValues.listByProjectId;
+  }
+
+  async list() {
+    return mockUserRepositoryReturnValues.list;
   }
 }

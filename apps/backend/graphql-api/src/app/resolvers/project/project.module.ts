@@ -1,6 +1,8 @@
 import {
   GetAdminService,
+  GetProjectByIdAndUserService,
   GET_ADMIN_SERVICE,
+  GET_PROJECT_BY_ID_AND_USER_SERVICE,
   ListBoardsByProjectIdService,
   ListMembersService,
   ListProjectsService,
@@ -10,6 +12,8 @@ import {
 } from '@bison/backend/application';
 import {
   BOARD_REPOSITORY,
+  CanAccessProjectService,
+  CAN_ACCESS_PROJECT_SERVICE,
   MockBoardRepository,
   MockProjectRepository,
   MockUserRepository,
@@ -17,9 +21,11 @@ import {
   USER_REPOSITORY,
 } from '@bison/backend/domain';
 import { Module } from '@nestjs/common';
+import { ParseUserPipeModule } from '../../pipes/parse-user/parse-user.module';
 import { ProjectResolver } from './project.resolver';
 
 @Module({
+  imports: [ParseUserPipeModule],
   providers: [
     ProjectResolver,
     {
@@ -49,6 +55,14 @@ import { ProjectResolver } from './project.resolver';
     {
       provide: GET_ADMIN_SERVICE,
       useClass: GetAdminService,
+    },
+    {
+      provide: GET_PROJECT_BY_ID_AND_USER_SERVICE,
+      useClass: GetProjectByIdAndUserService,
+    },
+    {
+      provide: CAN_ACCESS_PROJECT_SERVICE,
+      useClass: CanAccessProjectService,
     },
   ],
 })

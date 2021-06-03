@@ -20,6 +20,10 @@ describe('ListBoadsByProjectIdService', () => {
       jest.spyOn(boardRepository, 'listByProjectId');
     });
 
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+
     test('board一覧を取得できる', async () => {
       const response = await service.handle(projectId);
       expect(response).toEqual(mockBoardRepositoryReturnValues.listByProjectId);

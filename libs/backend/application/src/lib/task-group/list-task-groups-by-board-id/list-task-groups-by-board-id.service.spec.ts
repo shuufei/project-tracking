@@ -19,6 +19,10 @@ describe('ListTaskGroupsByBoardIdService', () => {
       jest.spyOn(taskGroupRepository, 'listByBoardId');
     });
 
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+
     test('taskGroup一覧を取得できる', async () => {
       const actual = await service.handle(boardId);
       expect(actual).toEqual(mockTaskGroupRepositoryReturnValues.listByBoardId);

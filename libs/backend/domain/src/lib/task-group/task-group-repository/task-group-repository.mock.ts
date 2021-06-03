@@ -34,10 +34,23 @@ export const mockTaskGroupRepositoryReturnValues: MockReturnValues<ITaskGroupRep
       },
     ],
   },
+  getById: {
+    id: createId(),
+    title: 'task group title 0002',
+    description: 'task group description 0002',
+    status: STATUS.Confirm,
+    assignUserId: createId(),
+    boardId: createId(),
+    tasksOrder: [],
+  },
 };
 
 export class MockTaskGroupRepository implements ITaskGroupRepository {
   async listByBoardId() {
     return mockTaskGroupRepositoryReturnValues.listByBoardId;
+  }
+
+  async getById() {
+    return mockTaskGroupRepositoryReturnValues.getById;
   }
 }

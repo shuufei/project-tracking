@@ -32,6 +32,10 @@ describe('ListProjectsService', () => {
       jest.spyOn(repository, 'list');
     });
 
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+
     test('project一覧を取得できる', async () => {
       const response = await service.handle();
       expect(response).toEqual(mockProjectRepositoryReturnValues.list);

@@ -1,6 +1,7 @@
 export * from './lib/board';
 export * from './lib/errors';
 export * from './lib/project';
+export * from './lib/subtask';
 export * from './lib/task';
 export * from './lib/task-group';
 export * from './lib/user';
