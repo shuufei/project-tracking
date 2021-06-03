@@ -4,6 +4,7 @@ export interface IUserRepositoy {
   getByIdpUserId: (idpUserId: string) => Promise<User>;
   getById: (id: User['id']) => Promise<User>;
   listByProjectId: (projectId: Project['id']) => Promise<ListUsersResponse>;
+  list: () => Promise<ListUsersResponse>;
 }
 
 export const USER_REPOSITORY = Symbol('UserRepository');
