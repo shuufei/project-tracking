@@ -20,6 +20,10 @@ describe('ListProjectsByUserIdService', () => {
       jest.spyOn(repository, 'listByUserId');
     });
 
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+
     test('project一覧を取得できる', async () => {
       const response = await service.handle(userId);
       expect(response).toEqual(mockProjectRepositoryReturnValues.listByUserId);

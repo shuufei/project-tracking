@@ -24,6 +24,10 @@ describe('GetProjectByIdAndUserService', () => {
     );
   });
 
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   describe('正常系', () => {
     describe('ユーザが、指定したプロジェクトにアクセスできる時', () => {
       beforeEach(() => {

@@ -24,6 +24,10 @@ describe('GetAdminService', () => {
       jest.spyOn(userRepository, 'getById');
     });
 
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+
     test('admin情報を取得できる', async () => {
       const response = await service.handle(projectId);
       expect(response).toEqual(mockUserRepositoryReturnValues.getById);

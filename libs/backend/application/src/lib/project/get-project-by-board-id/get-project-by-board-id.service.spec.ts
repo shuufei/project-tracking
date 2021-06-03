@@ -27,6 +27,10 @@ describe('GetProjectByBoardIdService', () => {
       jest.spyOn(boardRepository, 'getById');
     });
 
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+
     test('projectを取得できる', async () => {
       const actual = await service.handle(boardId);
       expect(actual).toEqual(mockProjectRepositoryReturnValues.getById);

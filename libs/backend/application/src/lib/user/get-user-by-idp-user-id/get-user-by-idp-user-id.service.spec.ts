@@ -18,6 +18,10 @@ describe('GetUserByIdpUserIdService', () => {
       jest.spyOn(userRepository, 'getByIdpUserId');
     });
 
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+
     test('user情報を取得できる', async () => {
       const response = await service.handle(idpUserId);
       expect(response).toEqual(mockUserRepositoryReturnValues.getByIdpUserId);

@@ -20,6 +20,10 @@ describe('GetTaskGroupByIdService', () => {
       jest.spyOn(taskGroupRepository, 'getById');
     });
 
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+
     test('taskGroupを取得できる', async () => {
       const taskGroup = await service.handle(taskGroupId);
       expect(taskGroup).toEqual(mockTaskGroupRepositoryReturnValues.getById);

@@ -20,6 +20,10 @@ describe('GetTaskByIdService', () => {
       jest.spyOn(taskRepository, 'getById');
     });
 
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+
     test('taskを取得できる', async () => {
       const actual = await service.handle(taskId);
       expect(actual).toEqual(mockTaskRepositoryReturnValues.getById);

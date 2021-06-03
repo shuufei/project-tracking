@@ -20,6 +20,10 @@ describe('ListMembersService', () => {
       jest.spyOn(userRepository, 'listByProjectId');
     });
 
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+
     test('member一覧を取得できる', async () => {
       const response = await service.handle(projectId);
       expect(response).toEqual(mockUserRepositoryReturnValues.listByProjectId);

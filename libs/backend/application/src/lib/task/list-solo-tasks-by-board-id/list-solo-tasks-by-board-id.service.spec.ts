@@ -20,6 +20,10 @@ describe('ListSoloTasksByBoardIdService', () => {
       jest.spyOn(taskRepository, 'listSoloTasksByBoardId');
     });
 
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+
     test('task一覧を取得できる', async () => {
       const actual = await service.handle(boardId);
       expect(actual).toEqual(

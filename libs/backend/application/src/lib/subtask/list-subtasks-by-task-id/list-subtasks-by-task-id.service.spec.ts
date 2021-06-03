@@ -20,6 +20,10 @@ describe('ListSubtasksByTaskIdService', () => {
       jest.spyOn(subtaskRepository, 'listByTaskId');
     });
 
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+
     test('subtask一覧を取得できる', async () => {
       const actual = await service.handle(taskId);
       expect(actual).toEqual(mockSubtaskRepositoryReturnValues.listByTaskId);
