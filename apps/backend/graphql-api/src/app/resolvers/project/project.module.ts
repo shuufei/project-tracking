@@ -1,4 +1,6 @@
 import {
+  CreateProjectService,
+  CREATE_PROJECT_SERVICE,
   GetAdminService,
   GetProjectByIdAndUserService,
   GET_ADMIN_SERVICE,
@@ -63,6 +65,10 @@ import { ProjectResolver } from './project.resolver';
     {
       provide: CAN_ACCESS_PROJECT_SERVICE,
       useClass: CanAccessProjectService,
+    },
+    {
+      provide: CREATE_PROJECT_SERVICE,
+      useClass: CreateProjectService,
     },
   ],
 })

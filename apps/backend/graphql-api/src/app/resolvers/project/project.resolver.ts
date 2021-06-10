@@ -1,20 +1,24 @@
 import type {
+  ICreateProjectService,
   IGetAdminService,
   IGetProjectByIdAndUserService,
   IListBoardsByProjectIdService,
   IListMembersService,
 } from '@bison/backend/application';
 import {
+  CREATE_PROJECT_SERVICE,
   GET_ADMIN_SERVICE,
   GET_PROJECT_BY_ID_AND_USER_SERVICE,
   LIST_BOARDS_BY_PROJECT_ID_SERVICE,
   LIST_MEMBERS_SERVICE,
 } from '@bison/backend/application';
 import type { Id, User } from '@bison/shared/domain';
+import type { CreateProjectInput } from '@bison/shared/schema';
 import { Inject } from '@nestjs/common';
 import {
   Args,
   ID,
+  Mutation,
   Parent,
   Query,
   ResolveField,
@@ -22,6 +26,7 @@ import {
 } from '@nestjs/graphql';
 import { IdpUserId } from '../../decorators/idp-user-id.decorator';
 import { ParseUserPipe } from '../../pipes/parse-user/parse-user.pipe';
+import { convertToDomainColorFromColor } from '../../util/convert-to-domain-color-from-color';
 import { convertToResolvedBoardFromDomainBoard } from '../../util/convert-to-resolved-board-from-domain-board';
 import { convertToResolvedProjectFromDomainProject } from '../../util/convert-to-resolved-project-from-domain-project';
 import type {
@@ -40,7 +45,9 @@ export class ProjectResolver {
     @Inject(GET_ADMIN_SERVICE)
     private getAdminService: IGetAdminService,
     @Inject(GET_PROJECT_BY_ID_AND_USER_SERVICE)
-    private getProjectByIdAndUserService: IGetProjectByIdAndUserService
+    private getProjectByIdAndUserService: IGetProjectByIdAndUserService,
+    @Inject(CREATE_PROJECT_SERVICE)
+    private createProjectService: ICreateProjectService
   ) {}
 
   @Query()
@@ -67,5 +74,18 @@ export class ProjectResolver {
   @ResolveField()
   async admin(@Parent() project: ResolvedProject): Promise<ResolvedUser> {
     return this.getAdminService.handle(project.id);
+  }
+
+  @Mutation()
+  async createProject(
+    @Args('input') input: CreateProjectInput
+  ): Promise<ResolvedProject> {
+    const project = await this.createProjectService.handle({
+      name: input.name,
+      description: input.description,
+      color: convertToDomainColorFromColor(input.color),
+      adminUserId: input.adminUserId,
+    });
+    return convertToResolvedProjectFromDomainProject(project);
   }
 }
