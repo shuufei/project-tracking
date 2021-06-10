@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import {
   ApolloDataQuery,
-  APOLLO_DATA_QUERY,
+  APOLLO_DATA_QUERY
 } from '@bison/frontend/application';
 import {
   ButtonModule,
@@ -16,7 +16,7 @@ import {
   SheetFooterModule,
   SheetModule,
   TaskCardModule,
-  UserIconModule,
+  UserIconModule
 } from '@bison/frontend/ui';
 import { TuiNotificationsModule } from '@taiga-ui/core';
 import { BoardCreateSheetModule } from '../../shared/components/board-create-sheet/board-create-sheet.module';
@@ -29,6 +29,7 @@ import { BoardDetailHeaderComponent } from './components/board-detail-header/boa
 import { BoardDetailComponent } from './components/board-detail/board-detail.component';
 import { ExampleHeaderComponent } from './components/example-header/example-header.component';
 import { ExampleComponent } from './components/example/example.component';
+import { ProjectPageIdealComponent } from './project-page-ideal/project-page-ideal.component';
 import { ProjectPageRoutingModule } from './project-page-routing.module';
 import { ProjectPageComponent } from './project-page.component';
 
@@ -39,6 +40,7 @@ import { ProjectPageComponent } from './project-page.component';
     BoardDetailHeaderComponent,
     ExampleHeaderComponent,
     ExampleComponent,
+    ProjectPageComponent, ProjectPageIdealComponent
   ],
   imports: [
     CommonModule,
@@ -72,4 +74,4 @@ import { ProjectPageComponent } from './project-page.component';
     },
   ],
 })
-export class ProjectPageModule {}
+export class ProjectPageModule { }
