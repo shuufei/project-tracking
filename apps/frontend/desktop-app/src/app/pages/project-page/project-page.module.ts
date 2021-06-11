@@ -29,7 +29,6 @@ import { BoardDetailHeaderComponent } from './components/board-detail-header/boa
 import { BoardDetailComponent } from './components/board-detail/board-detail.component';
 import { ExampleHeaderComponent } from './components/example-header/example-header.component';
 import { ExampleComponent } from './components/example/example.component';
-import { ProjectPageIdealComponent } from './project-page-ideal/project-page-ideal.component';
 import { ProjectPageRoutingModule } from './project-page-routing.module';
 import { ProjectPageComponent } from './project-page.component';
 
@@ -40,7 +39,7 @@ import { ProjectPageComponent } from './project-page.component';
     BoardDetailHeaderComponent,
     ExampleHeaderComponent,
     ExampleComponent,
-    ProjectPageComponent, ProjectPageIdealComponent
+    ProjectPageComponent
   ],
   imports: [
     CommonModule,
