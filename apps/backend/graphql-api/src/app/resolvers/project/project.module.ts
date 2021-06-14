@@ -11,11 +11,15 @@ import {
   LIST_BOARDS_BY_PROJECT_ID_SERVICE,
   LIST_MEMBERS_SERVICE,
   LIST_PROJECTS_SERVICE,
+  UpdateProjectService,
+  UPDATE_PROJECT_SERVICE,
 } from '@bison/backend/application';
 import {
   BOARD_REPOSITORY,
   CanAccessProjectService,
+  CanEditProjectService,
   CAN_ACCESS_PROJECT_SERVICE,
+  CAN_EDIT_PROJECT_SERVICE,
   MockBoardRepository,
   MockProjectRepository,
   MockUserRepository,
@@ -69,6 +73,14 @@ import { ProjectResolver } from './project.resolver';
     {
       provide: CREATE_PROJECT_SERVICE,
       useClass: CreateProjectService,
+    },
+    {
+      provide: CAN_EDIT_PROJECT_SERVICE,
+      useClass: CanEditProjectService,
+    },
+    {
+      provide: UPDATE_PROJECT_SERVICE,
+      useClass: UpdateProjectService,
     },
   ],
 })

@@ -11,9 +11,14 @@ import {
   GET_PROJECT_BY_ID_AND_USER_SERVICE,
   LIST_BOARDS_BY_PROJECT_ID_SERVICE,
   LIST_MEMBERS_SERVICE,
+  UpdateProjectService,
+  UPDATE_PROJECT_SERVICE,
 } from '@bison/backend/application';
 import type { Id, User } from '@bison/shared/domain';
-import type { CreateProjectInput } from '@bison/shared/schema';
+import type {
+  CreateProjectInput,
+  UpdateProjectInput,
+} from '@bison/shared/schema';
 import { Inject } from '@nestjs/common';
 import {
   Args,
@@ -47,7 +52,9 @@ export class ProjectResolver {
     @Inject(GET_PROJECT_BY_ID_AND_USER_SERVICE)
     private getProjectByIdAndUserService: IGetProjectByIdAndUserService,
     @Inject(CREATE_PROJECT_SERVICE)
-    private createProjectService: ICreateProjectService
+    private createProjectService: ICreateProjectService,
+    @Inject(UPDATE_PROJECT_SERVICE)
+    private updateProjectService: UpdateProjectService
   ) {}
 
   @Query()
@@ -86,6 +93,24 @@ export class ProjectResolver {
       color: convertToDomainColorFromColor(input.color),
       adminUserId: input.adminUserId,
     });
+    return convertToResolvedProjectFromDomainProject(project);
+  }
+
+  @Mutation()
+  async updateProject(
+    @Args('input') input: UpdateProjectInput,
+    @IdpUserId(ParseUserPipe) user: User
+  ): Promise<ResolvedProject> {
+    const project = await this.updateProjectService.handle(
+      {
+        id: input.id,
+        name: input.name,
+        description: input.description,
+        color: convertToDomainColorFromColor(input.color),
+        adminUserId: input.adminUserId,
+      },
+      user
+    );
     return convertToResolvedProjectFromDomainProject(project);
   }
 }

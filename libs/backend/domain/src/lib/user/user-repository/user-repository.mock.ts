@@ -3,9 +3,9 @@ import { MockReturnValues } from '@bison/types/testing';
 import { IUserRepositoy, ListUsersResponse } from './user-repository.interface';
 
 const mockGetUserResponse: User = {
-  id: 'user0002',
-  name: 'user name 0002',
-  icon: 'user icon 0002',
+  id: 'user0001',
+  name: 'user name 0001',
+  icon: 'user icon 0001',
 };
 
 const mockListUsersResponse: ListUsersResponse = {

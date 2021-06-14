@@ -37,11 +37,18 @@ export const mockProjectRepositoryReturnValues: MockReturnValues<IProjectReposit
     name: `project name 0001`,
     description: `project description 0001`,
     color: COLOR.Red,
-    adminUserId: 'admin user 0001',
+    adminUserId: 'user0001',
   },
   list: mockListProjectsResponse,
   listByUserId: mockListProjectsResponse,
   create: {
+    id: `project0001`,
+    name: `project name 0001`,
+    description: `project description 0001`,
+    color: COLOR.Red,
+    adminUserId: 'admin user 0001',
+  },
+  update: {
     id: `project0001`,
     name: `project name 0001`,
     description: `project description 0001`,
@@ -65,5 +72,9 @@ export class MockProjectRepository implements IProjectRepository {
 
   async create() {
     return mockProjectRepositoryReturnValues.create;
+  }
+
+  async update() {
+    return mockProjectRepositoryReturnValues.update;
   }
 }
