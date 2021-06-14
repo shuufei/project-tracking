@@ -4,6 +4,7 @@ import {
   mockProjectRepositoryReturnValues,
 } from '@bison/backend/domain';
 import { COLOR, createId, Project, User } from '@bison/shared/domain';
+import { PermissionDeniedError } from '../../errors';
 import { UpdateProjectService } from './update-project.service';
 
 describe('UpdateProjectService', () => {
@@ -19,7 +20,7 @@ describe('UpdateProjectService', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    jest.restoreAllMocks();
   });
 
   describe('正常系', () => {
@@ -70,6 +71,11 @@ describe('UpdateProjectService', () => {
         } catch (error) {
           expect(projectRepository.update).not.toHaveBeenCalled();
         }
+      });
+      test('PermissionDeniedErrorをthrowする', async () => {
+        await expect(service.handle(project, user)).rejects.toThrowError(
+          PermissionDeniedError
+        );
       });
     });
   });

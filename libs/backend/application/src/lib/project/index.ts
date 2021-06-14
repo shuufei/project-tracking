@@ -1,5 +1,7 @@
 export * from './create-project/create-project.service';
 export * from './create-project/create-project.service.interface';
+export * from './delete-project/delete-project.service';
+export * from './delete-project/delete-project.service.interface';
 export * from './get-admin/get-admin.service';
 export * from './get-admin/get-admin.service.interface';
 export * from './get-admin/get-admin.service.mock';

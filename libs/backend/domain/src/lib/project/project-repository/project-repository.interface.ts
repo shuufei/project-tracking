@@ -6,6 +6,7 @@ export interface IProjectRepository {
   listByUserId: (userId: User['id']) => Promise<ListProjectsResponse>;
   create: (project: Project) => Promise<Project>;
   update: (project: Project) => Promise<Project>;
+  delete: (id: Project['id']) => Promise<Project>;
 }
 
 export const PROJECT_REPOSITORY = Symbol('ProjectRepository');

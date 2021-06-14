@@ -1,6 +1,8 @@
 import {
   CreateProjectService,
   CREATE_PROJECT_SERVICE,
+  DeleteProjectService,
+  DELETE_PROJECT_SERVICE,
   GetAdminService,
   GetProjectByIdAndUserService,
   GET_ADMIN_SERVICE,
@@ -81,6 +83,10 @@ import { ProjectResolver } from './project.resolver';
     {
       provide: UPDATE_PROJECT_SERVICE,
       useClass: UpdateProjectService,
+    },
+    {
+      provide: DELETE_PROJECT_SERVICE,
+      useClass: DeleteProjectService,
     },
   ],
 })

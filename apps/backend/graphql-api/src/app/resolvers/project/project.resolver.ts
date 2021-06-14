@@ -1,22 +1,25 @@
 import type {
   ICreateProjectService,
+  IDeleteProjectService,
   IGetAdminService,
   IGetProjectByIdAndUserService,
   IListBoardsByProjectIdService,
   IListMembersService,
+  IUpdatePrjojectService,
 } from '@bison/backend/application';
 import {
   CREATE_PROJECT_SERVICE,
+  DELETE_PROJECT_SERVICE,
   GET_ADMIN_SERVICE,
   GET_PROJECT_BY_ID_AND_USER_SERVICE,
   LIST_BOARDS_BY_PROJECT_ID_SERVICE,
   LIST_MEMBERS_SERVICE,
-  UpdateProjectService,
   UPDATE_PROJECT_SERVICE,
 } from '@bison/backend/application';
 import type { Id, User } from '@bison/shared/domain';
 import type {
   CreateProjectInput,
+  DeleteProjectInput,
   UpdateProjectInput,
 } from '@bison/shared/schema';
 import { Inject } from '@nestjs/common';
@@ -54,7 +57,9 @@ export class ProjectResolver {
     @Inject(CREATE_PROJECT_SERVICE)
     private createProjectService: ICreateProjectService,
     @Inject(UPDATE_PROJECT_SERVICE)
-    private updateProjectService: UpdateProjectService
+    private updateProjectService: IUpdatePrjojectService,
+    @Inject(DELETE_PROJECT_SERVICE)
+    private deleteProjectService: IDeleteProjectService
   ) {}
 
   @Query()
@@ -111,6 +116,15 @@ export class ProjectResolver {
       },
       user
     );
+    return convertToResolvedProjectFromDomainProject(project);
+  }
+
+  @Mutation()
+  async deleteProject(
+    @Args('input') input: DeleteProjectInput,
+    @IdpUserId(ParseUserPipe) user: User
+  ): Promise<ResolvedProject> {
+    const project = await this.deleteProjectService.handle(input.id, user);
     return convertToResolvedProjectFromDomainProject(project);
   }
 }

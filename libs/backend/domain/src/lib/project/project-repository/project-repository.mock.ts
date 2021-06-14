@@ -55,6 +55,13 @@ export const mockProjectRepositoryReturnValues: MockReturnValues<IProjectReposit
     color: COLOR.Red,
     adminUserId: 'admin user 0001',
   },
+  delete: {
+    id: `project0003`,
+    name: `project name 0003`,
+    description: `project description 0003`,
+    color: COLOR.Green,
+    adminUserId: 'admin user 0002',
+  },
 };
 
 export class MockProjectRepository implements IProjectRepository {
@@ -76,5 +83,9 @@ export class MockProjectRepository implements IProjectRepository {
 
   async update() {
     return mockProjectRepositoryReturnValues.update;
+  }
+
+  async delete() {
+    return mockProjectRepositoryReturnValues.delete;
   }
 }
