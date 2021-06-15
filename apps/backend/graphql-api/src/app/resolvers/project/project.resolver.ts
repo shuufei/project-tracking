@@ -5,6 +5,7 @@ import type {
   IGetProjectByIdAndUserService,
   IListBoardsByProjectIdService,
   IListMembersService,
+  IUpdateMembersService,
   IUpdatePrjojectService,
 } from '@bison/backend/application';
 import {
@@ -14,6 +15,7 @@ import {
   GET_PROJECT_BY_ID_AND_USER_SERVICE,
   LIST_BOARDS_BY_PROJECT_ID_SERVICE,
   LIST_MEMBERS_SERVICE,
+  UPDATE_MEMBERS_SERVICE,
   UPDATE_PROJECT_SERVICE,
 } from '@bison/backend/application';
 import type { Id, User } from '@bison/shared/domain';
@@ -21,6 +23,7 @@ import type {
   CreateProjectInput,
   DeleteProjectInput,
   UpdateProjectInput,
+  UpdateProjectMembersInput,
 } from '@bison/shared/schema';
 import { Inject } from '@nestjs/common';
 import {
@@ -59,7 +62,9 @@ export class ProjectResolver {
     @Inject(UPDATE_PROJECT_SERVICE)
     private updateProjectService: IUpdatePrjojectService,
     @Inject(DELETE_PROJECT_SERVICE)
-    private deleteProjectService: IDeleteProjectService
+    private deleteProjectService: IDeleteProjectService,
+    @Inject(UPDATE_MEMBERS_SERVICE)
+    private updateMembersService: IUpdateMembersService
   ) {}
 
   @Query()
@@ -125,6 +130,15 @@ export class ProjectResolver {
     @IdpUserId(ParseUserPipe) user: User
   ): Promise<ResolvedProject> {
     const project = await this.deleteProjectService.handle(input.id, user);
+    return convertToResolvedProjectFromDomainProject(project);
+  }
+
+  @Mutation()
+  async updateProjectMembers(
+    @Args('input') input: UpdateProjectMembersInput,
+    @IdpUserId(ParseUserPipe) user: User
+  ): Promise<ResolvedProject> {
+    const project = await this.updateMembersService.handle(input, user);
     return convertToResolvedProjectFromDomainProject(project);
   }
 }

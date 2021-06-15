@@ -7,6 +7,8 @@ export interface IProjectRepository {
   create: (project: Project) => Promise<Project>;
   update: (project: Project) => Promise<Project>;
   delete: (id: Project['id']) => Promise<Project>;
+  addMembers: (id: Project['id'], userIds: User['id'][]) => Promise<void>;
+  removeMembers: (id: Project['id'], userIds: User['id'][]) => Promise<void>;
 }
 
 export const PROJECT_REPOSITORY = Symbol('ProjectRepository');

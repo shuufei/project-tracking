@@ -19,5 +19,7 @@ export * from './list-projects-by-user-id/list-projects-by-user-id.service.mock'
 export * from './list-projects/list-projects.service';
 export * from './list-projects/list-projects.service.interface';
 export * from './list-projects/list-projects.service.mock';
+export * from './update-members/update-members.service';
+export * from './update-members/update-members.service.interface';
 export * from './update-project/update-project.service';
 export * from './update-project/update-project.service.interface';

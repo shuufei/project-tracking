@@ -13,7 +13,9 @@ import {
   LIST_BOARDS_BY_PROJECT_ID_SERVICE,
   LIST_MEMBERS_SERVICE,
   LIST_PROJECTS_SERVICE,
+  UpdateMembersService,
   UpdateProjectService,
+  UPDATE_MEMBERS_SERVICE,
   UPDATE_PROJECT_SERVICE,
 } from '@bison/backend/application';
 import {
@@ -87,6 +89,10 @@ import { ProjectResolver } from './project.resolver';
     {
       provide: DELETE_PROJECT_SERVICE,
       useClass: DeleteProjectService,
+    },
+    {
+      provide: UPDATE_MEMBERS_SERVICE,
+      useClass: UpdateMembersService,
     },
   ],
 })

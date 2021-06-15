@@ -62,6 +62,8 @@ export const mockProjectRepositoryReturnValues: MockReturnValues<IProjectReposit
     color: COLOR.Green,
     adminUserId: 'admin user 0002',
   },
+  addMembers: undefined,
+  removeMembers: undefined,
 };
 
 export class MockProjectRepository implements IProjectRepository {
@@ -87,5 +89,13 @@ export class MockProjectRepository implements IProjectRepository {
 
   async delete() {
     return mockProjectRepositoryReturnValues.delete;
+  }
+
+  async addMembers() {
+    return;
+  }
+
+  async removeMembers() {
+    return;
   }
 }
