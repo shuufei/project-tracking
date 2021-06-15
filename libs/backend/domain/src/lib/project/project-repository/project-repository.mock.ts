@@ -37,10 +37,33 @@ export const mockProjectRepositoryReturnValues: MockReturnValues<IProjectReposit
     name: `project name 0001`,
     description: `project description 0001`,
     color: COLOR.Red,
-    adminUserId: 'admin user 0001',
+    adminUserId: 'user0001',
   },
   list: mockListProjectsResponse,
   listByUserId: mockListProjectsResponse,
+  create: {
+    id: `project0001`,
+    name: `project name 0001`,
+    description: `project description 0001`,
+    color: COLOR.Red,
+    adminUserId: 'admin user 0001',
+  },
+  update: {
+    id: `project0001`,
+    name: `project name 0001`,
+    description: `project description 0001`,
+    color: COLOR.Red,
+    adminUserId: 'admin user 0001',
+  },
+  delete: {
+    id: `project0003`,
+    name: `project name 0003`,
+    description: `project description 0003`,
+    color: COLOR.Green,
+    adminUserId: 'admin user 0002',
+  },
+  addMembers: undefined,
+  removeMembers: undefined,
 };
 
 export class MockProjectRepository implements IProjectRepository {
@@ -54,5 +77,25 @@ export class MockProjectRepository implements IProjectRepository {
 
   async listByUserId() {
     return mockProjectRepositoryReturnValues.listByUserId;
+  }
+
+  async create() {
+    return mockProjectRepositoryReturnValues.create;
+  }
+
+  async update() {
+    return mockProjectRepositoryReturnValues.update;
+  }
+
+  async delete() {
+    return mockProjectRepositoryReturnValues.delete;
+  }
+
+  async addMembers() {
+    return;
+  }
+
+  async removeMembers() {
+    return;
   }
 }

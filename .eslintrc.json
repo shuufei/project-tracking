@@ -33,7 +33,8 @@
                 "sourceTag": "scope:backend-application",
                 "onlyDependOnLibsWithTags": [
                   "scope:backend-domain",
-                  "scope:shared-domain"
+                  "scope:shared-domain",
+                  "scope:shared-constants"
                 ]
               },
               {

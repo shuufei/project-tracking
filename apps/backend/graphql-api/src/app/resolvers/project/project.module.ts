@@ -1,4 +1,8 @@
 import {
+  CreateProjectService,
+  CREATE_PROJECT_SERVICE,
+  DeleteProjectService,
+  DELETE_PROJECT_SERVICE,
   GetAdminService,
   GetProjectByIdAndUserService,
   GET_ADMIN_SERVICE,
@@ -9,11 +13,17 @@ import {
   LIST_BOARDS_BY_PROJECT_ID_SERVICE,
   LIST_MEMBERS_SERVICE,
   LIST_PROJECTS_SERVICE,
+  UpdateMembersService,
+  UpdateProjectService,
+  UPDATE_MEMBERS_SERVICE,
+  UPDATE_PROJECT_SERVICE,
 } from '@bison/backend/application';
 import {
   BOARD_REPOSITORY,
   CanAccessProjectService,
+  CanEditProjectService,
   CAN_ACCESS_PROJECT_SERVICE,
+  CAN_EDIT_PROJECT_SERVICE,
   MockBoardRepository,
   MockProjectRepository,
   MockUserRepository,
@@ -63,6 +73,26 @@ import { ProjectResolver } from './project.resolver';
     {
       provide: CAN_ACCESS_PROJECT_SERVICE,
       useClass: CanAccessProjectService,
+    },
+    {
+      provide: CREATE_PROJECT_SERVICE,
+      useClass: CreateProjectService,
+    },
+    {
+      provide: CAN_EDIT_PROJECT_SERVICE,
+      useClass: CanEditProjectService,
+    },
+    {
+      provide: UPDATE_PROJECT_SERVICE,
+      useClass: UpdateProjectService,
+    },
+    {
+      provide: DELETE_PROJECT_SERVICE,
+      useClass: DeleteProjectService,
+    },
+    {
+      provide: UPDATE_MEMBERS_SERVICE,
+      useClass: UpdateMembersService,
     },
   ],
 })

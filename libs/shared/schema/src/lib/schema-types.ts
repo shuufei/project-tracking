@@ -44,6 +44,7 @@ export interface UpdateProjectInput {
 }
 
 export interface UpdateProjectMembersInput {
+    projectId: string;
     addUserIds: string[];
     removeUserIds: string[];
 }
