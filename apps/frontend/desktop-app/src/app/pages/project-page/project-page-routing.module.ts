@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { BoardDetailHeaderComponent } from './components/board-detail-header/board-detail-header.component';
 import { BoardDetailComponent } from './components/board-detail/board-detail.component';
 import { ExampleHeaderComponent } from './components/example-header/example-header.component';
-import { ExampleComponent } from './components/example/example.component';
+import { ProjectDetailComponent } from './project-detail/project-detail.component';
 
 const routes: Routes = [
   {
@@ -17,11 +17,11 @@ const routes: Routes = [
   },
   // TODO: 下のExampleComponentとExampleHeaderComponentを削除して代わりにプロジェクト詳細(とそのヘッダー)コンポーネントを配置してください。
   {
-    path: '',
-    component: ExampleComponent,
+    path: 'detail',
+    component: ProjectDetailComponent,
   },
   {
-    path: '',
+    path: 'detail',
     component: ExampleHeaderComponent,
     outlet: 'header',
   },
@@ -31,4 +31,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class ProjectPageRoutingModule {}
+export class ProjectPageRoutingModule { }
