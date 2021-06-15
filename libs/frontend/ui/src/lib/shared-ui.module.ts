@@ -6,6 +6,7 @@ import { ButtonModule } from './button/button.module';
 import { CheckboxModule } from './checkbox/checkbox.module';
 import { ColorIconModule } from './color-icon/color-icon.module';
 import { ColorSelectPopupModule } from './color-select-popup/color-select-popup.module';
+import { HeaderModule } from './header/header.module';
 import { IconModule } from './icon/icon.module';
 import { InputTimeModule } from './input-time/input-time.module';
 import { MenuItemModule } from './menu-item/menu-item.module';
@@ -58,6 +59,7 @@ import { UserSelectPopupModule } from './user-select-popup/user-select-popup.mod
     BoardItemModule,
     ProjectCardModule,
     ProjectNavigationModule,
+    HeaderModule,
   ],
 })
 export class SharedUiModule {}
