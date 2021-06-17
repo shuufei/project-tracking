@@ -1,5 +1,6 @@
 import type {
   ICreateTaskGroupService,
+  IDeleteTaskGroupService,
   IGetBoardByIdService,
   IGetProjectByBoardIdService,
   IGetUserByIdService,
@@ -8,6 +9,7 @@ import type {
 } from '@bison/backend/application';
 import {
   CREATE_TASK_GROUP_SERVICE,
+  DELETE_TASK_GROUP_SERVICE,
   GET_BOARD_BY_ID_SERVICE,
   GET_PROJECT_BY_BOARD_ID_SERVICE,
   GET_USER_BY_ID_SERVICE,
@@ -16,6 +18,7 @@ import {
 } from '@bison/backend/application';
 import type {
   CreateTaskGroupInput,
+  DeleteTaskGroupInput,
   UpdateTaskGroupInput,
 } from '@bison/shared/schema';
 import { Inject } from '@nestjs/common';
@@ -52,7 +55,9 @@ export class TaskGroupResolver {
     @Inject(CREATE_TASK_GROUP_SERVICE)
     private createTaskGroupService: ICreateTaskGroupService,
     @Inject(UPDATE_TASK_GROUP_SERVICE)
-    private updateTaskGroupService: IUpdateTaskGroupService
+    private updateTaskGroupService: IUpdateTaskGroupService,
+    @Inject(DELETE_TASK_GROUP_SERVICE)
+    private deleteTaskGroupService: IDeleteTaskGroupService
   ) {}
 
   @ResolveField()
@@ -109,6 +114,14 @@ export class TaskGroupResolver {
     @Args('input') input: UpdateTaskGroupInput
   ): Promise<ResolvedTaskGroup> {
     const taskGroup = await this.updateTaskGroupService.handle(input);
+    return convertToResolvedTaskGroupFromDomainTaskGroup(taskGroup);
+  }
+
+  @Mutation()
+  async deleteTaskGroup(
+    @Args('input') input: DeleteTaskGroupInput
+  ): Promise<ResolvedTaskGroup> {
+    const taskGroup = await this.deleteTaskGroupService.handle(input.id);
     return convertToResolvedTaskGroupFromDomainTaskGroup(taskGroup);
   }
 }

@@ -1,6 +1,8 @@
 import {
   CreateTaskGroupService,
   CREATE_TASK_GROUP_SERVICE,
+  DeleteTaskGroupService,
+  DELETE_TASK_GROUP_SERVICE,
   GetBoardByIdService,
   GetProjectByBoardIdService,
   GetUserByIdService,
@@ -73,6 +75,10 @@ import { TaskGroupResolver } from './task-group.resolver';
     {
       provide: UPDATE_TASK_GROUP_SERVICE,
       useClass: UpdateTaskGroupService,
+    },
+    {
+      provide: DELETE_TASK_GROUP_SERVICE,
+      useClass: DeleteTaskGroupService,
     },
   ],
 })

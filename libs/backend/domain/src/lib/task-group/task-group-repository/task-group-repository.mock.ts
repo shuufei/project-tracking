@@ -61,6 +61,7 @@ export const mockTaskGroupRepositoryReturnValues: MockReturnValues<ITaskGroupRep
     boardId: createId(),
     tasksOrder: [],
   },
+  delete: undefined,
 };
 
 export class MockTaskGroupRepository implements ITaskGroupRepository {
@@ -78,5 +79,9 @@ export class MockTaskGroupRepository implements ITaskGroupRepository {
 
   async update() {
     return mockTaskGroupRepositoryReturnValues.update;
+  }
+
+  async delete() {
+    return mockTaskGroupRepositoryReturnValues.delete;
   }
 }

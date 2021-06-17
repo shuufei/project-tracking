@@ -4,6 +4,7 @@ export interface ITaskGroupRepository {
   getById: (id: TaskGroup['id']) => Promise<TaskGroup>;
   create: (taskGroup: TaskGroup) => Promise<TaskGroup>;
   update: (taskGroup: TaskGroup) => Promise<TaskGroup>;
+  delete: (id: TaskGroup['id']) => Promise<void>;
 }
 
 export const TASK_GROUP_REPOSITORY = Symbol('TaskGroupRepository');

@@ -33,7 +33,7 @@ describe('UpdateTaskGroupService', () => {
     });
     test('taskGroupを取得できる', async () => {
       const actual = await service.handle(taskGroup);
-      expect(actual).toEqual(actual);
+      expect(actual).toEqual(taskGroup);
     });
   });
 });
