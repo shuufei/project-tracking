@@ -211,7 +211,7 @@ input DeleteTaskInput {
 input CreateTaskGroupInput {
   title: String!
   description: String
-  assignUserId: ID!
+  assignUserId: ID
   boardId: ID!
   scheduledTime: Int
 }

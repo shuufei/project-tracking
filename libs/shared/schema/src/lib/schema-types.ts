@@ -104,7 +104,7 @@ export interface DeleteTaskInput {
 export interface CreateTaskGroupInput {
     title: string;
     description?: string;
-    assignUserId: string;
+    assignUserId?: string;
     boardId: string;
     scheduledTime?: number;
 }
