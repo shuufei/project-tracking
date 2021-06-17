@@ -16,6 +16,7 @@ import {
   LIST_TASKS_BY_TASK_GROUP_ID_SERVICE,
   UPDATE_TASK_GROUP_SERVICE,
 } from '@bison/backend/application';
+import type { User } from '@bison/shared/domain';
 import type {
   CreateTaskGroupInput,
   DeleteTaskGroupInput,
@@ -29,6 +30,8 @@ import {
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
+import { IdpUserId } from '../../decorators/idp-user-id.decorator';
+import { ParseUserPipe } from '../../pipes/parse-user/parse-user.pipe';
 import { convertToResolvedBoardFromDomainBoard } from '../../util/convert-to-resolved-board-from-domain-board';
 import { convertToResolvedProjectFromDomainProject } from '../../util/convert-to-resolved-project-from-domain-project';
 import { convertToResolvedTaskFromDomainTask } from '../../util/convert-to-resolved-task-from-domain-task';
@@ -97,31 +100,37 @@ export class TaskGroupResolver {
 
   @Mutation()
   async createTaskGroup(
-    @Args('input') input: CreateTaskGroupInput
+    @Args('input') input: CreateTaskGroupInput,
+    @IdpUserId(ParseUserPipe) user: User
   ): Promise<ResolvedTaskGroup> {
-    const taskGroup = await this.createTaskGroupService.handle({
-      title: input.title,
-      description: input.description,
-      assignUserId: input.assignUserId,
-      boardId: input.boardId,
-      scheduledTimeSec: input.scheduledTime,
-    });
+    const taskGroup = await this.createTaskGroupService.handle(
+      {
+        title: input.title,
+        description: input.description,
+        assignUserId: input.assignUserId,
+        boardId: input.boardId,
+        scheduledTimeSec: input.scheduledTime,
+      },
+      user
+    );
     return convertToResolvedTaskGroupFromDomainTaskGroup(taskGroup);
   }
 
   @Mutation()
   async updateTaskGroup(
-    @Args('input') input: UpdateTaskGroupInput
+    @Args('input') input: UpdateTaskGroupInput,
+    @IdpUserId(ParseUserPipe) user: User
   ): Promise<ResolvedTaskGroup> {
-    const taskGroup = await this.updateTaskGroupService.handle(input);
+    const taskGroup = await this.updateTaskGroupService.handle(input, user);
     return convertToResolvedTaskGroupFromDomainTaskGroup(taskGroup);
   }
 
   @Mutation()
   async deleteTaskGroup(
-    @Args('input') input: DeleteTaskGroupInput
+    @Args('input') input: DeleteTaskGroupInput,
+    @IdpUserId(ParseUserPipe) user: User
   ): Promise<ResolvedTaskGroup> {
-    const taskGroup = await this.deleteTaskGroupService.handle(input.id);
+    const taskGroup = await this.deleteTaskGroupService.handle(input.id, user);
     return convertToResolvedTaskGroupFromDomainTaskGroup(taskGroup);
   }
 }

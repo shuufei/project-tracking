@@ -1,6 +1,7 @@
-import { TaskGroup } from '@bison/shared/domain';
+import { TaskGroup, User } from '@bison/shared/domain';
+
 export interface IDeleteTaskGroupService {
-  handle: (id: TaskGroup['id']) => Promise<TaskGroup>;
+  handle: (id: TaskGroup['id'], requestUser: User) => Promise<TaskGroup>;
 }
 
 export const DELETE_TASK_GROUP_SERVICE = Symbol('DeleteTaskGroupService');

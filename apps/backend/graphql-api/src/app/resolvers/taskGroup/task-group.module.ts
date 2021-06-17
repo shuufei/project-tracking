@@ -16,6 +16,8 @@ import {
 } from '@bison/backend/application';
 import {
   BOARD_REPOSITORY,
+  CanAccessProjectService,
+  CAN_ACCESS_PROJECT_SERVICE,
   MockBoardRepository,
   MockProjectRepository,
   MockTaskGroupRepository,
@@ -27,6 +29,7 @@ import {
   USER_REPOSITORY,
 } from '@bison/backend/domain';
 import { Module } from '@nestjs/common';
+import { ParseUserPipeModule } from '../../pipes/parse-user/parse-user.module';
 import { TaskGroupResolver } from './task-group.resolver';
 
 @Module({
@@ -80,6 +83,11 @@ import { TaskGroupResolver } from './task-group.resolver';
       provide: DELETE_TASK_GROUP_SERVICE,
       useClass: DeleteTaskGroupService,
     },
+    {
+      provide: CAN_ACCESS_PROJECT_SERVICE,
+      useClass: CanAccessProjectService,
+    },
   ],
+  imports: [ParseUserPipeModule],
 })
 export class TaskGroupModule {}

@@ -1,7 +1,10 @@
-import { TaskGroup } from '@bison/shared/domain';
+import { TaskGroup, User } from '@bison/shared/domain';
 
 export interface ICreateTaskGroupService {
-  handle: (input: CreateTaskGroupServiceInput) => Promise<TaskGroup>;
+  handle: (
+    input: CreateTaskGroupServiceInput,
+    requestUser: User
+  ) => Promise<TaskGroup>;
 }
 
 export type CreateTaskGroupServiceInput = Pick<
