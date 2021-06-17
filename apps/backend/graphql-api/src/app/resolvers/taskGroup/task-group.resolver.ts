@@ -4,6 +4,7 @@ import type {
   IGetProjectByBoardIdService,
   IGetUserByIdService,
   IListTasksByTaskGroupIdService,
+  IUpdateTaskGroupService,
 } from '@bison/backend/application';
 import {
   CREATE_TASK_GROUP_SERVICE,
@@ -11,8 +12,12 @@ import {
   GET_PROJECT_BY_BOARD_ID_SERVICE,
   GET_USER_BY_ID_SERVICE,
   LIST_TASKS_BY_TASK_GROUP_ID_SERVICE,
+  UPDATE_TASK_GROUP_SERVICE,
 } from '@bison/backend/application';
-import type { CreateTaskGroupInput } from '@bison/shared/schema';
+import type {
+  CreateTaskGroupInput,
+  UpdateTaskGroupInput,
+} from '@bison/shared/schema';
 import { Inject } from '@nestjs/common';
 import {
   Args,
@@ -45,7 +50,9 @@ export class TaskGroupResolver {
     @Inject(LIST_TASKS_BY_TASK_GROUP_ID_SERVICE)
     private listTasksByTaskGroupIdService: IListTasksByTaskGroupIdService,
     @Inject(CREATE_TASK_GROUP_SERVICE)
-    private createTaskGroupService: ICreateTaskGroupService
+    private createTaskGroupService: ICreateTaskGroupService,
+    @Inject(UPDATE_TASK_GROUP_SERVICE)
+    private updateTaskGroupService: IUpdateTaskGroupService
   ) {}
 
   @ResolveField()
@@ -94,6 +101,14 @@ export class TaskGroupResolver {
       boardId: input.boardId,
       scheduledTimeSec: input.scheduledTime,
     });
+    return convertToResolvedTaskGroupFromDomainTaskGroup(taskGroup);
+  }
+
+  @Mutation()
+  async updateTaskGroup(
+    @Args('input') input: UpdateTaskGroupInput
+  ): Promise<ResolvedTaskGroup> {
+    const taskGroup = await this.updateTaskGroupService.handle(input);
     return convertToResolvedTaskGroupFromDomainTaskGroup(taskGroup);
   }
 }

@@ -11,6 +11,10 @@ describe('CreateTaskGroupService', () => {
     service = new CreateTaskGroupService(taskGroupRepository);
   });
 
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
   describe('正常系', () => {
     const input: CreateTaskGroupServiceInput = {
       title: 'taskGroup title 0001',

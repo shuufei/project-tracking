@@ -64,6 +64,7 @@ export interface UpdateBoardInput {
     name: string;
     description?: string;
     projectId: string;
+    tasksOrder: BoardTasksOrderItemInput[];
 }
 
 export interface DeleteBoardInput {
@@ -95,6 +96,7 @@ export interface UpdateTaskInput {
     workTime?: number;
     scheduledTime?: number;
     boardId: string;
+    subtasksOrder: string[];
 }
 
 export interface DeleteTaskInput {
@@ -117,6 +119,7 @@ export interface UpdateTaskGroupInput {
     assignUserId: string;
     scheduledTime?: number;
     boardId: string;
+    tasksOrder: string[];
 }
 
 export interface DeleteTaskGroupInput {
@@ -148,21 +151,6 @@ export interface DeleteSubtaskInput {
 export interface BoardTasksOrderItemInput {
     taskId: string;
     type: BoardTaskType;
-}
-
-export interface ChangeBoardTasksOrderInput {
-    boardId: string;
-    tasksOrder: BoardTasksOrderItemInput[];
-}
-
-export interface ChangeTasksOrderOfTaskGroupInput {
-    taskGroupId: string;
-    tasksOrder: string[];
-}
-
-export interface ChangeSubtasksOrderOfTaskInput {
-    taskId: string;
-    subtasksOrder: string[];
 }
 
 export interface UpdateMeInput {
@@ -200,9 +188,6 @@ export interface IMutation {
     createSubtask(input: CreateSubtaskInput): Subtask | Promise<Subtask>;
     updateSubtask(input: UpdateSubtaskInput): Subtask | Promise<Subtask>;
     deleteSubtask(input: DeleteSubtaskInput): Subtask | Promise<Subtask>;
-    changeBoardTasksOrder(input: ChangeBoardTasksOrderInput): Board | Promise<Board>;
-    changeTasksOrderOfTaskGroup(input: ChangeTasksOrderOfTaskGroupInput): TaskGroup | Promise<TaskGroup>;
-    changeSubtasksOrderOfTask(input: ChangeSubtasksOrderOfTaskInput): Task | Promise<Task>;
     updateMe(input: UpdateMeInput): User | Promise<User>;
 }
 

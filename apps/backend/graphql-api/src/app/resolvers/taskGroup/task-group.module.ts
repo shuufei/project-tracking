@@ -9,6 +9,8 @@ import {
   GET_USER_BY_ID_SERVICE,
   ListTasksByTaskGroupIdService,
   LIST_TASKS_BY_TASK_GROUP_ID_SERVICE,
+  UpdateTaskGroupService,
+  UPDATE_TASK_GROUP_SERVICE,
 } from '@bison/backend/application';
 import {
   BOARD_REPOSITORY,
@@ -67,6 +69,10 @@ import { TaskGroupResolver } from './task-group.resolver';
     {
       provide: CREATE_TASK_GROUP_SERVICE,
       useClass: CreateTaskGroupService,
+    },
+    {
+      provide: UPDATE_TASK_GROUP_SERVICE,
+      useClass: UpdateTaskGroupService,
     },
   ],
 })
