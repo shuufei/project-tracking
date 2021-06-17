@@ -1,4 +1,8 @@
 import {
+  CreateTaskGroupService,
+  CREATE_TASK_GROUP_SERVICE,
+  DeleteTaskGroupService,
+  DELETE_TASK_GROUP_SERVICE,
   GetBoardByIdService,
   GetProjectByBoardIdService,
   GetUserByIdService,
@@ -7,18 +11,25 @@ import {
   GET_USER_BY_ID_SERVICE,
   ListTasksByTaskGroupIdService,
   LIST_TASKS_BY_TASK_GROUP_ID_SERVICE,
+  UpdateTaskGroupService,
+  UPDATE_TASK_GROUP_SERVICE,
 } from '@bison/backend/application';
 import {
   BOARD_REPOSITORY,
+  CanAccessProjectService,
+  CAN_ACCESS_PROJECT_SERVICE,
   MockBoardRepository,
   MockProjectRepository,
+  MockTaskGroupRepository,
   MockTaskRepository,
   MockUserRepository,
   PROJECT_REPOSITORY,
+  TASK_GROUP_REPOSITORY,
   TASK_REPOSITORY,
   USER_REPOSITORY,
 } from '@bison/backend/domain';
 import { Module } from '@nestjs/common';
+import { ParseUserPipeModule } from '../../pipes/parse-user/parse-user.module';
 import { TaskGroupResolver } from './task-group.resolver';
 
 @Module({
@@ -56,6 +67,27 @@ import { TaskGroupResolver } from './task-group.resolver';
       provide: TASK_REPOSITORY,
       useClass: MockTaskRepository,
     },
+    {
+      provide: TASK_GROUP_REPOSITORY,
+      useClass: MockTaskGroupRepository,
+    },
+    {
+      provide: CREATE_TASK_GROUP_SERVICE,
+      useClass: CreateTaskGroupService,
+    },
+    {
+      provide: UPDATE_TASK_GROUP_SERVICE,
+      useClass: UpdateTaskGroupService,
+    },
+    {
+      provide: DELETE_TASK_GROUP_SERVICE,
+      useClass: DeleteTaskGroupService,
+    },
+    {
+      provide: CAN_ACCESS_PROJECT_SERVICE,
+      useClass: CanAccessProjectService,
+    },
   ],
+  imports: [ParseUserPipeModule],
 })
 export class TaskGroupModule {}

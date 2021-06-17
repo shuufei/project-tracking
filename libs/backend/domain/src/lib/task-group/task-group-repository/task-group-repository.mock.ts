@@ -43,6 +43,25 @@ export const mockTaskGroupRepositoryReturnValues: MockReturnValues<ITaskGroupRep
     boardId: createId(),
     tasksOrder: [],
   },
+  create: {
+    id: createId(),
+    title: 'task group title 0001',
+    description: 'task group description 0001',
+    status: STATUS.Todo,
+    assignUserId: createId(),
+    boardId: createId(),
+    tasksOrder: [],
+  },
+  update: {
+    id: createId(),
+    title: 'task group title 0001',
+    description: 'task group description 0001',
+    status: STATUS.Todo,
+    assignUserId: createId(),
+    boardId: createId(),
+    tasksOrder: [],
+  },
+  delete: undefined,
 };
 
 export class MockTaskGroupRepository implements ITaskGroupRepository {
@@ -52,5 +71,17 @@ export class MockTaskGroupRepository implements ITaskGroupRepository {
 
   async getById() {
     return mockTaskGroupRepositoryReturnValues.getById;
+  }
+
+  async create() {
+    return mockTaskGroupRepositoryReturnValues.create;
+  }
+
+  async update() {
+    return mockTaskGroupRepositoryReturnValues.update;
+  }
+
+  async delete() {
+    return mockTaskGroupRepositoryReturnValues.delete;
   }
 }

@@ -23,11 +23,6 @@ type Mutation {
   createSubtask(input: CreateSubtaskInput!): Subtask!
   updateSubtask(input: UpdateSubtaskInput!): Subtask!
   deleteSubtask(input: DeleteSubtaskInput!): Subtask!
-  changeBoardTasksOrder(input: ChangeBoardTasksOrderInput!): Board!
-  changeTasksOrderOfTaskGroup(
-    input: ChangeTasksOrderOfTaskGroupInput!
-  ): TaskGroup!
-  changeSubtasksOrderOfTask(input: ChangeSubtasksOrderOfTaskInput!): Task!
   updateMe(input: UpdateMeInput!): User!
 }
 
@@ -171,6 +166,7 @@ input UpdateBoardInput {
   name: String!
   description: String
   projectId: ID!
+  tasksOrder: [BoardTasksOrderItemInput!]!
 }
 
 input DeleteBoardInput {
@@ -202,6 +198,7 @@ input UpdateTaskInput {
   workTime: Int
   scheduledTime: Int
   boardId: ID!
+  subtasksOrder: [ID!]!
 }
 
 input DeleteTaskInput {
@@ -211,7 +208,7 @@ input DeleteTaskInput {
 input CreateTaskGroupInput {
   title: String!
   description: String
-  assignUserId: ID!
+  assignUserId: ID
   boardId: ID!
   scheduledTime: Int
 }
@@ -224,6 +221,7 @@ input UpdateTaskGroupInput {
   assignUserId: ID!
   scheduledTime: Int
   boardId: ID!
+  tasksOrder: [ID!]!
 }
 
 input DeleteTaskGroupInput {
@@ -255,21 +253,6 @@ input DeleteSubtaskInput {
 input BoardTasksOrderItemInput {
   taskId: ID!
   type: BoardTaskType!
-}
-
-input ChangeBoardTasksOrderInput {
-  boardId: ID!
-  tasksOrder: [BoardTasksOrderItemInput!]!
-}
-
-input ChangeTasksOrderOfTaskGroupInput {
-  taskGroupId: ID!
-  tasksOrder: [ID!]!
-}
-
-input ChangeSubtasksOrderOfTaskInput {
-  taskId: ID!
-  subtasksOrder: [ID!]!
 }
 
 input UpdateMeInput {
