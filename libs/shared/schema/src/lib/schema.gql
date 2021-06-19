@@ -176,7 +176,7 @@ input DeleteBoardInput {
 input CreateTaskOnBoardInput {
   title: String!
   description: String
-  assignUserId: ID!
+  assignUserId: ID
   boardId: ID!
   scheduledTime: Int
 }
@@ -184,7 +184,7 @@ input CreateTaskOnBoardInput {
 input CreateTaskOnTaskGroupInput {
   title: String!
   description: String
-  assignUserId: ID!
+  assignUserId: ID
   taskGroupId: ID!
   scheduledTime: Int
 }
@@ -194,11 +194,12 @@ input UpdateTaskInput {
   title: String!
   description: String
   status: Status!
-  assignUserId: ID!
+  assignUserId: ID
   workTime: Int
   scheduledTime: Int
   boardId: ID!
   subtasksOrder: [ID!]!
+  taskGroupId: ID
 }
 
 input DeleteTaskInput {

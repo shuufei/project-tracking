@@ -74,7 +74,7 @@ export interface DeleteBoardInput {
 export interface CreateTaskOnBoardInput {
     title: string;
     description?: string;
-    assignUserId: string;
+    assignUserId?: string;
     boardId: string;
     scheduledTime?: number;
 }
@@ -82,7 +82,7 @@ export interface CreateTaskOnBoardInput {
 export interface CreateTaskOnTaskGroupInput {
     title: string;
     description?: string;
-    assignUserId: string;
+    assignUserId?: string;
     taskGroupId: string;
     scheduledTime?: number;
 }
@@ -92,11 +92,12 @@ export interface UpdateTaskInput {
     title: string;
     description?: string;
     status: Status;
-    assignUserId: string;
+    assignUserId?: string;
     workTime?: number;
     scheduledTime?: number;
     boardId: string;
     subtasksOrder: string[];
+    taskGroupId?: string;
 }
 
 export interface DeleteTaskInput {
