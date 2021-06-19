@@ -175,9 +175,9 @@ export interface IMutation {
     updateProject(input: UpdateProjectInput): Project | Promise<Project>;
     deleteProject(input: DeleteProjectInput): Project | Promise<Project>;
     updateProjectMembers(input: UpdateProjectMembersInput): Project | Promise<Project>;
-    createBoard(input: CreateBoardInput): Project | Promise<Project>;
-    updateBoard(input: UpdateBoardInput): Project | Promise<Project>;
-    deleteBoard(input: DeleteBoardInput): Project | Promise<Project>;
+    createBoard(input: CreateBoardInput): Board | Promise<Board>;
+    updateBoard(input: UpdateBoardInput): Board | Promise<Board>;
+    deleteBoard(input: DeleteBoardInput): Board | Promise<Board>;
     createTaskOnBoard(input: CreateTaskOnBoardInput): Task | Promise<Task>;
     createTaskOnTaskGroup(input: CreateTaskOnTaskGroupInput): Task | Promise<Task>;
     updateTask(input: UpdateTaskInput): Task | Promise<Task>;

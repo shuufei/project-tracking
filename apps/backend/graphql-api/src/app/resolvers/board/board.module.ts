@@ -1,4 +1,8 @@
 import {
+  CreateBoardService,
+  CREATE_BOARD_SERVICE,
+  DeleteBoardService,
+  DELETE_BOARD_SERVICE,
   GetBoardByIdAndUserService,
   GET_BOARD_BY_ID_AND_USER_SERVICE,
   GET_PROJECT_BY_BOARD_ID_SERVICE,
@@ -7,6 +11,8 @@ import {
   LIST_SOLO_TASKS_BY_BOARD_ID_SERVICE,
   LIST_TASK_GROUPS_BY_BOARD_ID_SERVICE,
   MockGetProjectByBoardIdService,
+  UpdateBoardService,
+  UPDATE_BOARD_SERVICE,
 } from '@bison/backend/application';
 import {
   BOARD_REPOSITORY,
@@ -62,6 +68,18 @@ import { BoardResolver } from './board.resolver';
     {
       provide: TASK_REPOSITORY,
       useClass: MockTaskRepository,
+    },
+    {
+      provide: CREATE_BOARD_SERVICE,
+      useClass: CreateBoardService,
+    },
+    {
+      provide: UPDATE_BOARD_SERVICE,
+      useClass: UpdateBoardService,
+    },
+    {
+      provide: DELETE_BOARD_SERVICE,
+      useClass: DeleteBoardService,
     },
   ],
   imports: [ParseUserPipeModule],
