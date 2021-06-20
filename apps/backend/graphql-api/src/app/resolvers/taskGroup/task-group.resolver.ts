@@ -109,7 +109,7 @@ export class TaskGroupResolver {
         description: input.description,
         assignUserId: input.assignUserId,
         boardId: input.boardId,
-        scheduledTimeSec: input.scheduledTime,
+        scheduledTimeSec: input.scheduledTimeSec,
       },
       user
     );

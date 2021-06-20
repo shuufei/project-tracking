@@ -76,7 +76,7 @@ export interface CreateTaskOnBoardInput {
     description?: string;
     assignUserId?: string;
     boardId: string;
-    scheduledTime?: number;
+    scheduledTimeSec?: number;
 }
 
 export interface CreateTaskOnTaskGroupInput {
@@ -84,7 +84,7 @@ export interface CreateTaskOnTaskGroupInput {
     description?: string;
     assignUserId?: string;
     taskGroupId: string;
-    scheduledTime?: number;
+    scheduledTimeSec?: number;
 }
 
 export interface UpdateTaskInput {
@@ -93,8 +93,8 @@ export interface UpdateTaskInput {
     description?: string;
     status: Status;
     assignUserId?: string;
-    workTime?: number;
-    scheduledTime?: number;
+    workTimeSec: number;
+    scheduledTimeSec?: number;
     boardId: string;
     subtasksOrder: string[];
     taskGroupId?: string;
@@ -109,7 +109,7 @@ export interface CreateTaskGroupInput {
     description?: string;
     assignUserId?: string;
     boardId: string;
-    scheduledTime?: number;
+    scheduledTimeSec?: number;
 }
 
 export interface UpdateTaskGroupInput {
@@ -118,7 +118,7 @@ export interface UpdateTaskGroupInput {
     description?: string;
     status: Status;
     assignUserId: string;
-    scheduledTime?: number;
+    scheduledTimeSec?: number;
     boardId: string;
     tasksOrder: string[];
 }
@@ -132,17 +132,17 @@ export interface CreateSubtaskInput {
     description?: string;
     assignUserId?: string;
     taskId: string;
-    scheduledTime?: number;
+    scheduledTimeSec?: number;
 }
 
 export interface UpdateSubtaskInput {
     id: string;
     title: string;
     description?: string;
-    isCompleted: boolean;
+    isDone: boolean;
     assignUserId?: string;
-    workTime: number;
-    scheduledTime?: number;
+    workTimeSec: number;
+    scheduledTimeSec?: number;
     taskId: string;
 }
 
@@ -229,7 +229,7 @@ export interface Subtask extends Node {
     id: string;
     title: string;
     description?: string;
-    isCompleted: boolean;
+    isDone: boolean;
     assign?: User;
     task: Task;
     workTimeSec: number;
@@ -246,7 +246,7 @@ export interface Task extends Node {
     project: Project;
     board: Board;
     taskGroup?: TaskGroup;
-    workTimeSec?: number;
+    workTimeSec: number;
     scheduledTimeSec?: number;
     subtasksOrder?: string[];
 }

@@ -8,7 +8,7 @@ export const convertToResolvedSubtaskFromDomainSubtask = (
     id: subtask.id,
     title: subtask.title,
     description: subtask.description,
-    isCompleted: subtask.isDone,
+    isDone: subtask.isDone,
     workTimeSec: subtask.workTimeSec,
     scheduledTimeSec: subtask.scheduledTimeSec,
     assign:

@@ -77,14 +77,7 @@ export class SubtaskResolver {
     @Args('input') input: UpdateSubtaskInput,
     @IdpUserId(ParseUserPipe) user: User
   ): Promise<ResolvedSubtask> {
-    const subtask = await this.updateSubtaskService.handle(
-      {
-        ...input,
-        isDone: input.isCompleted,
-        workTimeSec: input.workTime,
-      },
-      user
-    );
+    const subtask = await this.updateSubtaskService.handle(input, user);
     return convertToResolvedSubtaskFromDomainSubtask(subtask);
   }
 

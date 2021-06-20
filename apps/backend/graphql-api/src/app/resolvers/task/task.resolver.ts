@@ -139,7 +139,6 @@ export class TaskResolver {
     const task = await this.udpateTaskService.handle(
       {
         ...input,
-        workTimeSec: input.workTime ?? 0,
       },
       user
     );
