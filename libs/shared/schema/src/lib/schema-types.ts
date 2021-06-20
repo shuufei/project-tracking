@@ -74,17 +74,17 @@ export interface DeleteBoardInput {
 export interface CreateTaskOnBoardInput {
     title: string;
     description?: string;
-    assignUserId: string;
+    assignUserId?: string;
     boardId: string;
-    scheduledTime?: number;
+    scheduledTimeSec?: number;
 }
 
 export interface CreateTaskOnTaskGroupInput {
     title: string;
     description?: string;
-    assignUserId: string;
+    assignUserId?: string;
     taskGroupId: string;
-    scheduledTime?: number;
+    scheduledTimeSec?: number;
 }
 
 export interface UpdateTaskInput {
@@ -92,11 +92,12 @@ export interface UpdateTaskInput {
     title: string;
     description?: string;
     status: Status;
-    assignUserId: string;
-    workTime?: number;
-    scheduledTime?: number;
+    assignUserId?: string;
+    workTimeSec: number;
+    scheduledTimeSec?: number;
     boardId: string;
     subtasksOrder: string[];
+    taskGroupId?: string;
 }
 
 export interface DeleteTaskInput {
@@ -108,7 +109,7 @@ export interface CreateTaskGroupInput {
     description?: string;
     assignUserId?: string;
     boardId: string;
-    scheduledTime?: number;
+    scheduledTimeSec?: number;
 }
 
 export interface UpdateTaskGroupInput {
@@ -117,7 +118,7 @@ export interface UpdateTaskGroupInput {
     description?: string;
     status: Status;
     assignUserId: string;
-    scheduledTime?: number;
+    scheduledTimeSec?: number;
     boardId: string;
     tasksOrder: string[];
 }
@@ -129,19 +130,20 @@ export interface DeleteTaskGroupInput {
 export interface CreateSubtaskInput {
     title: string;
     description?: string;
-    assignUserId: string;
+    assignUserId?: string;
     taskId: string;
-    scheduledTime?: number;
+    scheduledTimeSec?: number;
 }
 
 export interface UpdateSubtaskInput {
     id: string;
     title: string;
     description?: string;
-    isCompleted: boolean;
-    assignUserId: string;
-    workTime?: number;
-    scheduledTime?: number;
+    isDone: boolean;
+    assignUserId?: string;
+    workTimeSec: number;
+    scheduledTimeSec?: number;
+    taskId: string;
 }
 
 export interface DeleteSubtaskInput {
@@ -175,9 +177,9 @@ export interface IMutation {
     updateProject(input: UpdateProjectInput): Project | Promise<Project>;
     deleteProject(input: DeleteProjectInput): Project | Promise<Project>;
     updateProjectMembers(input: UpdateProjectMembersInput): Project | Promise<Project>;
-    createBoard(input: CreateBoardInput): Project | Promise<Project>;
-    updateBoard(input: UpdateBoardInput): Project | Promise<Project>;
-    deleteBoard(input: DeleteBoardInput): Project | Promise<Project>;
+    createBoard(input: CreateBoardInput): Board | Promise<Board>;
+    updateBoard(input: UpdateBoardInput): Board | Promise<Board>;
+    deleteBoard(input: DeleteBoardInput): Board | Promise<Board>;
     createTaskOnBoard(input: CreateTaskOnBoardInput): Task | Promise<Task>;
     createTaskOnTaskGroup(input: CreateTaskOnTaskGroupInput): Task | Promise<Task>;
     updateTask(input: UpdateTaskInput): Task | Promise<Task>;
@@ -227,10 +229,10 @@ export interface Subtask extends Node {
     id: string;
     title: string;
     description?: string;
-    isCompleted: boolean;
+    isDone: boolean;
     assign?: User;
     task: Task;
-    workTimeSec?: number;
+    workTimeSec: number;
     scheduledTimeSec?: number;
 }
 
@@ -244,7 +246,7 @@ export interface Task extends Node {
     project: Project;
     board: Board;
     taskGroup?: TaskGroup;
-    workTimeSec?: number;
+    workTimeSec: number;
     scheduledTimeSec?: number;
     subtasksOrder?: string[];
 }

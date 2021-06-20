@@ -8,6 +8,12 @@ export interface ITaskRepository {
   listSoloTasksByBoardId: (boardId: Board['id']) => Promise<ListTasksResponse>;
 
   getById: (id: Task['id']) => Promise<Task>;
+
+  create: (task: Task) => Promise<Task>;
+
+  delete: (id: Task['id']) => Promise<void>;
+
+  update: (task: Task) => Promise<Task>;
 }
 
 export const TASK_REPOSITORY = Symbol('TaskRepository');

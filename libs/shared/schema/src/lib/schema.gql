@@ -10,9 +10,9 @@ type Mutation {
   updateProject(input: UpdateProjectInput!): Project!
   deleteProject(input: DeleteProjectInput!): Project!
   updateProjectMembers(input: UpdateProjectMembersInput!): Project!
-  createBoard(input: CreateBoardInput!): Project!
-  updateBoard(input: UpdateBoardInput!): Project!
-  deleteBoard(input: DeleteBoardInput!): Project!
+  createBoard(input: CreateBoardInput!): Board!
+  updateBoard(input: UpdateBoardInput!): Board!
+  deleteBoard(input: DeleteBoardInput!): Board!
   createTaskOnBoard(input: CreateTaskOnBoardInput!): Task!
   createTaskOnTaskGroup(input: CreateTaskOnTaskGroupInput!): Task!
   updateTask(input: UpdateTaskInput!): Task!
@@ -67,17 +67,17 @@ interface TaskBase {
   title: String!
   description: String
   assign: User
-  scheduledTime: Int
+  scheduledTimeSec: Int
 }
 
 type Subtask implements Node {
   id: ID!
   title: String!
   description: String
-  isCompleted: Boolean!
+  isDone: Boolean!
   assign: User
   task: Task!
-  workTimeSec: Int
+  workTimeSec: Int!
   scheduledTimeSec: Int
 }
 
@@ -91,7 +91,7 @@ type Task implements Node {
   project: Project!
   board: Board!
   taskGroup: TaskGroup
-  workTimeSec: Int
+  workTimeSec: Int!
   scheduledTimeSec: Int
   subtasksOrder: [ID!]
 }
@@ -176,17 +176,17 @@ input DeleteBoardInput {
 input CreateTaskOnBoardInput {
   title: String!
   description: String
-  assignUserId: ID!
+  assignUserId: ID
   boardId: ID!
-  scheduledTime: Int
+  scheduledTimeSec: Int
 }
 
 input CreateTaskOnTaskGroupInput {
   title: String!
   description: String
-  assignUserId: ID!
+  assignUserId: ID
   taskGroupId: ID!
-  scheduledTime: Int
+  scheduledTimeSec: Int
 }
 
 input UpdateTaskInput {
@@ -194,11 +194,12 @@ input UpdateTaskInput {
   title: String!
   description: String
   status: Status!
-  assignUserId: ID!
-  workTime: Int
-  scheduledTime: Int
+  assignUserId: ID
+  workTimeSec: Int!
+  scheduledTimeSec: Int
   boardId: ID!
   subtasksOrder: [ID!]!
+  taskGroupId: ID
 }
 
 input DeleteTaskInput {
@@ -210,7 +211,7 @@ input CreateTaskGroupInput {
   description: String
   assignUserId: ID
   boardId: ID!
-  scheduledTime: Int
+  scheduledTimeSec: Int
 }
 
 input UpdateTaskGroupInput {
@@ -219,7 +220,7 @@ input UpdateTaskGroupInput {
   description: String
   status: Status!
   assignUserId: ID!
-  scheduledTime: Int
+  scheduledTimeSec: Int
   boardId: ID!
   tasksOrder: [ID!]!
 }
@@ -231,19 +232,20 @@ input DeleteTaskGroupInput {
 input CreateSubtaskInput {
   title: String!
   description: String
-  assignUserId: ID!
+  assignUserId: ID
   taskId: ID!
-  scheduledTime: Int
+  scheduledTimeSec: Int
 }
 
 input UpdateSubtaskInput {
   id: ID!
   title: String!
   description: String
-  isCompleted: Boolean!
-  assignUserId: ID!
-  workTime: Int
-  scheduledTime: Int
+  isDone: Boolean!
+  assignUserId: ID
+  workTimeSec: Int!
+  scheduledTimeSec: Int
+  taskId: ID!
 }
 
 input DeleteSubtaskInput {

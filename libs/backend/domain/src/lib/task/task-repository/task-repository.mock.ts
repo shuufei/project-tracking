@@ -85,6 +85,27 @@ export const mockTaskRepositoryReturnValues: MockReturnValues<ITaskRepository> =
     workTimeSec: 0,
     subtasksOrder: [],
   },
+  create: {
+    id: createId(),
+    title: 'task title 0001',
+    description: 'task description 0001',
+    status: STATUS.Todo,
+    assignUserId: createId(),
+    boardId: createId(),
+    workTimeSec: 0,
+    subtasksOrder: [],
+  },
+  update: {
+    id: createId(),
+    title: 'task title 0001',
+    description: 'task description 0001',
+    status: STATUS.Todo,
+    assignUserId: createId(),
+    boardId: createId(),
+    workTimeSec: 0,
+    subtasksOrder: [],
+  },
+  delete: undefined,
 };
 
 export class MockTaskRepository implements ITaskRepository {
@@ -98,5 +119,17 @@ export class MockTaskRepository implements ITaskRepository {
 
   async getById() {
     return mockTaskRepositoryReturnValues.getById;
+  }
+
+  async create() {
+    return mockTaskRepositoryReturnValues.create;
+  }
+
+  async update() {
+    return mockTaskRepositoryReturnValues.update;
+  }
+
+  async delete() {
+    return mockTaskRepositoryReturnValues.delete;
   }
 }

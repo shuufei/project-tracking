@@ -86,6 +86,47 @@ export const mockBoardRepositoryReturnValues: MockReturnValues<IBoardRepository>
       },
     ],
   },
+  create: {
+    id: 'board0001',
+    name: 'board name 0001',
+    description: 'board description 0001',
+    projectId: 'project0001',
+    tasksOrder: [
+      {
+        taskId: createId(),
+        type: 'Task',
+      },
+      {
+        taskId: createId(),
+        type: 'TaskGroup',
+      },
+      {
+        taskId: createId(),
+        type: 'Task',
+      },
+    ],
+  },
+  delete: undefined,
+  update: {
+    id: 'board0001',
+    name: 'board name 0001',
+    description: 'board description 0001',
+    projectId: 'project0001',
+    tasksOrder: [
+      {
+        taskId: createId(),
+        type: 'Task',
+      },
+      {
+        taskId: createId(),
+        type: 'TaskGroup',
+      },
+      {
+        taskId: createId(),
+        type: 'Task',
+      },
+    ],
+  },
 };
 
 export class MockBoardRepository implements IBoardRepository {
@@ -95,5 +136,17 @@ export class MockBoardRepository implements IBoardRepository {
 
   async getById() {
     return mockBoardRepositoryReturnValues.getById;
+  }
+
+  async create() {
+    return mockBoardRepositoryReturnValues.create;
+  }
+
+  async delete() {
+    return mockBoardRepositoryReturnValues.delete;
+  }
+
+  async update() {
+    return mockBoardRepositoryReturnValues.update;
   }
 }

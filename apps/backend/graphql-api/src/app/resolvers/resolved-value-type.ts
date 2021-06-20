@@ -48,12 +48,7 @@ export type ResolvedTask = Pick<
 
 export type ResolvedSubtask = Pick<
   Subtask,
-  | 'id'
-  | 'title'
-  | 'description'
-  | 'isCompleted'
-  | 'workTimeSec'
-  | 'scheduledTimeSec'
+  'id' | 'title' | 'description' | 'isDone' | 'workTimeSec' | 'scheduledTimeSec'
 > & {
   assign?: Pick<User, 'id'>;
   task: Pick<Subtask['task'], 'id'>;
