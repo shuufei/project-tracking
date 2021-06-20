@@ -130,7 +130,7 @@ export interface DeleteTaskGroupInput {
 export interface CreateSubtaskInput {
     title: string;
     description?: string;
-    assignUserId: string;
+    assignUserId?: string;
     taskId: string;
     scheduledTime?: number;
 }
@@ -140,9 +140,10 @@ export interface UpdateSubtaskInput {
     title: string;
     description?: string;
     isCompleted: boolean;
-    assignUserId: string;
-    workTime?: number;
+    assignUserId?: string;
+    workTime: number;
     scheduledTime?: number;
+    taskId: string;
 }
 
 export interface DeleteSubtaskInput {
@@ -231,7 +232,7 @@ export interface Subtask extends Node {
     isCompleted: boolean;
     assign?: User;
     task: Task;
-    workTimeSec?: number;
+    workTimeSec: number;
     scheduledTimeSec?: number;
 }
 

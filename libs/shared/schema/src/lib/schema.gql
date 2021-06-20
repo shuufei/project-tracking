@@ -77,7 +77,7 @@ type Subtask implements Node {
   isCompleted: Boolean!
   assign: User
   task: Task!
-  workTimeSec: Int
+  workTimeSec: Int!
   scheduledTimeSec: Int
 }
 
@@ -232,7 +232,7 @@ input DeleteTaskGroupInput {
 input CreateSubtaskInput {
   title: String!
   description: String
-  assignUserId: ID!
+  assignUserId: ID
   taskId: ID!
   scheduledTime: Int
 }
@@ -242,9 +242,10 @@ input UpdateSubtaskInput {
   title: String!
   description: String
   isCompleted: Boolean!
-  assignUserId: ID!
-  workTime: Int
+  assignUserId: ID
+  workTime: Int!
   scheduledTime: Int
+  taskId: ID!
 }
 
 input DeleteSubtaskInput {
