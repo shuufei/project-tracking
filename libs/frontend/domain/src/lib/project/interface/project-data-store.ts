@@ -6,7 +6,7 @@ export interface IProjectDataStore {
   projects$: () => Observable<Project[]>;
 }
 
-export const PROJECT_DATA_STOR = new InjectionToken<IProjectDataStore>(
+export const PROJECT_DATA_STORE = new InjectionToken<IProjectDataStore>(
   'ProjectDataStore'
 );
 
