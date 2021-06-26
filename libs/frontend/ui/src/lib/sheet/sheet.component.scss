@@ -10,7 +10,7 @@
   width: 100%;
   background-color: #20202090;
   &.open {
-    animation: ease-out 0.05s showOverlay forwards;
+    animation: ease-in 0.05s showOverlay forwards;
   }
 }
 
@@ -36,6 +36,7 @@
   width: 100%;
   background-color: #ffffff;
   border-radius: 10px 10px 0 0;
+  overflow-y: auto;
   &.open {
     animation: ease-out 0.2s openSheet forwards;
   }
@@ -54,10 +55,4 @@
     transform: translateY(0);
     opacity: 1;
   }
-}
-
-.close-icon {
-  position: absolute;
-  right: 16px;
-  top: 12px;
 }

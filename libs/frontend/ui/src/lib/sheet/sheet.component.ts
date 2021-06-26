@@ -21,6 +21,7 @@ export type State = {
 })
 export class SheetComponent implements OnInit {
   @Input() triggerEl?: HTMLElement;
+  @Input() title = '';
 
   readonly state$ = this.state.select();
 
