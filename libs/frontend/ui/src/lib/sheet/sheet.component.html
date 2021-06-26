@@ -1,0 +1,17 @@
+<ng-container *ngIf="state$ | async as state">
+  <ng-container *ngIf="state.isOpen">
+    <div
+      class="overlay"
+      [ngClass]="[state.isOpen ? 'open' : '']"
+      (click)="onClickOverlay$.next()"
+    ></div>
+    <div class="sheet" [ngClass]="[state.isOpen ? 'open' : '']">
+      <ng-content></ng-content>
+      <ui-icon
+        class="close-icon p-2 cursor-pointer"
+        [icon]="'x'"
+        (click)="onClickCloseButton$.next()"
+      ></ui-icon>
+    </div>
+  </ng-container>
+</ng-container>

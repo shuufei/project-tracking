@@ -16,6 +16,7 @@ import { ProjectBoardSelectPopupModule } from './project-board-select-popup/proj
 import { ProjectCardModule } from './project-card/project-card.module';
 import { ProjectNavigationModule } from './project-navigation/project-navigation.module';
 import { SelectItemModule } from './select-item/select-item.module';
+import { SheetModule } from './sheet/sheet.module';
 import { StatusChangeButtonModule } from './status-change-button/status-change-button.module';
 import { StatusSelectPopupModule } from './status-select-popup/status-select-popup.module';
 import { SubtaskModule } from './subtask/subtask.module';
@@ -60,6 +61,7 @@ import { UserSelectPopupModule } from './user-select-popup/user-select-popup.mod
     ProjectCardModule,
     ProjectNavigationModule,
     HeaderModule,
+    SheetModule,
   ],
 })
 export class SharedUiModule {}
