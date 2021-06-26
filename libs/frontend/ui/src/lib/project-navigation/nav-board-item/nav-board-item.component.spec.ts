@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { ProjectNavigationModule } from '../project-navigation.module';
 import { NavBoardItemComponent } from './nav-board-item.component';
 
 describe('NavBoardItemComponent', () => {
@@ -8,9 +8,8 @@ describe('NavBoardItemComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ NavBoardItemComponent ]
-    })
-    .compileComponents();
+      imports: [ProjectNavigationModule],
+    }).compileComponents();
   });
 
   beforeEach(() => {

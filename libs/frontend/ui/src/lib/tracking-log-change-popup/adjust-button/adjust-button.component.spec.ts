@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { TrackingLogChangePopupModule } from '../tracking-log-change-popup.module';
 import { AdjustButtonComponent } from './adjust-button.component';
 
 describe('AdjustButtonComponent', () => {
@@ -8,7 +8,7 @@ describe('AdjustButtonComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [AdjustButtonComponent],
+      imports: [TrackingLogChangePopupModule],
     }).compileComponents();
   });
 

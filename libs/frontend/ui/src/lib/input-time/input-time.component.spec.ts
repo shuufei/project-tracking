@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { InputTimeComponent } from './input-time.component';
+import { InputTimeModule } from './input-time.module';
 
 describe('InputTimeComponent', () => {
   let component: InputTimeComponent;
@@ -8,7 +8,7 @@ describe('InputTimeComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [InputTimeComponent],
+      imports: [InputTimeModule],
     }).compileComponents();
   });
 

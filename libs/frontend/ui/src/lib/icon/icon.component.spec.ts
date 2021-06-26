@@ -15,6 +15,7 @@ describe('IconComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(IconComponent);
     component = fixture.componentInstance;
+    component.icon = 'calendar';
     fixture.detectChanges();
   });
 

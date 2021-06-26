@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { SubtaskComponent } from './subtask.component';
+import { SubtaskModule } from './subtask.module';
 
 describe('SubtaskComponent', () => {
   let component: SubtaskComponent;
@@ -8,7 +8,7 @@ describe('SubtaskComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [SubtaskComponent],
+      imports: [SubtaskModule],
     }).compileComponents();
   });
 

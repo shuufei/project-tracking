@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { TrackingLogChangePopupModule } from '../tracking-log-change-popup.module';
 import { TrackingTimeControllerComponent } from './tracking-time-controller.component';
 
 describe('TrackingTimeControllerComponent', () => {
@@ -8,7 +8,7 @@ describe('TrackingTimeControllerComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [TrackingTimeControllerComponent],
+      imports: [TrackingLogChangePopupModule],
     }).compileComponents();
   });
 
