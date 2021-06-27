@@ -10,6 +10,13 @@ const routes: Routes = [
       ),
   },
   {
+    path: 'projects',
+    loadChildren: () =>
+      import('./pages/project-list-page/project-list-page.module').then(
+        (m) => m.ProjectListPageModule
+      ),
+  },
+  {
     path: '**',
     redirectTo: '/project',
   },

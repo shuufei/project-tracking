@@ -39,12 +39,12 @@ export class ProjectCardComponent {
     this.state.set('description', () => value);
   }
   @Input()
-  set adminImg(value: string | undefined) {
-    this.state.set('adminImg', () => value);
+  set admin(value: { icon?: string }) {
+    this.state.set('adminImg', () => value.icon);
   }
   @Input()
-  set memberImgs(value: (string | undefined)[]) {
-    this.state.set('memberImgs', () => value);
+  set members(value: { icon?: string }[]) {
+    this.state.set('memberImgs', () => value.map((v) => v.icon));
   }
   @Input()
   set underDivide(value: boolean) {

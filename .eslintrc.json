@@ -58,6 +58,7 @@
                   "scope:frontend-application",
                   "scope:frontend-domain",
                   "scope:frontend-infrastructure",
+                  "scope:frontend-ui",
                   "scope:shared-domain"
                 ]
               },
