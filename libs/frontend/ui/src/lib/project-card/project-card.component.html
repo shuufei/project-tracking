@@ -2,7 +2,7 @@
   <div class="item px-6 pt-4 pb-8 font-sans cursor-pointer duration-100">
     <div class="flex justify-between items-center">
       <div class="flex items-center">
-        <div class="text-l2 text-black-default font-medium leading-8 mr-2">
+        <div class="text-l2 text-black-default font-medium leading-6 mr-2">
           {{ state.title }}
         </div>
         <ui-color-icon [color]="state.color" class="h-3 w-3"></ui-color-icon>
@@ -13,7 +13,7 @@
             class="menu-icon cursor-pointer"
             [icon]="'more-horizontal'"
             [size]="'s'"
-            [color]="'primary-light2'"
+            [color]="'primary-light1'"
             [hoverColor]="'primary'"
           ></ui-icon>
         </div>
@@ -30,7 +30,7 @@
       </div>
     </div>
     <p
-      class="description text-s2 font-medium leading-normal whitespace-pre-line mt-1"
+      class="description text-s2 font-medium leading-normal whitespace-pre-line mt-2"
     >
       {{ state.description }}
     </p>

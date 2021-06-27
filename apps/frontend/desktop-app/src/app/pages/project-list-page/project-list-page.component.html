@@ -1,0 +1,64 @@
+<ng-container *ngIf="state$ | async as state">
+  <ui-header>
+    <div left class="font-medium">Logo</div>
+    <h1 center class="text-center text-s2 font-medium m-0 leading-normal">
+      <span
+        style="border-bottom-width: 1.5px"
+        class="pb-1 border-solid border-primary-default"
+      >
+        プロジェクト一覧
+      </span>
+    </h1>
+    <div right class="flex items-center justify-end">
+      <button
+        ui-stroked-button
+        style="min-width: 110px"
+        class="mr-4"
+        color="primary"
+        (click)="onClickedCreateNewProject$.next()"
+      >
+        <ui-icon class="mr-1" icon="plus" size="s"></ui-icon>
+        <span class="text-s2 font-medium leading-normal">
+          新しいプロジェクトを作成
+        </span>
+      </button>
+      <ui-user-icon
+        style="width: 30px; height: 30px"
+        class="flex-shrink-0"
+      ></ui-user-icon>
+    </div>
+  </ui-header>
+
+  <ng-container *ngIf="state.projects.length > 0; else projectsEmpty">
+    <div class="flex flex-col items-center justify-center mt-3">
+      <ui-project-card
+        *ngFor="let project of state.projects; last as last"
+        style="max-width: 700px; width: 50%"
+        class="mb-3"
+        routerLink="/projects/{{ project.id }}"
+        [title]="project.name"
+        [color]="project.color"
+        [description]="project.description"
+        [admin]="project.admin"
+        [members]="project.members"
+        [underDivide]="!last"
+        (clickedDelete)="onClickedDeleteProject$.next(project)"
+      ></ui-project-card>
+    </div>
+  </ng-container>
+  <ng-template #projectsEmpty>
+    <div style="margin-top: 34vh" class="text-center">
+      <button
+        ui-button
+        class=""
+        color="primary"
+        (click)="onClickedCreateNewProject$.next()"
+      >
+        <ui-icon class="mr-1" icon="plus" size="s"></ui-icon>
+        <span class="text-s2 font-medium leading-normal">
+          新しいプロジェクトを作成
+        </span>
+      </button>
+    </div>
+  </ng-template>
+</ng-container>

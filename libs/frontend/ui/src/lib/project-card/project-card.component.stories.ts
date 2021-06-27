@@ -12,8 +12,8 @@ const props = {
   title: 'Bison',
   color: COLOR.Red,
   description,
-  adminImg: undefined,
-  memberImgs: [undefined, undefined, undefined],
+  admin: {},
+  members: [{}, {}, {}],
 };
 
 export const Default = () => ({
@@ -25,8 +25,8 @@ export const Default = () => ({
       [title]="title"
       [color]="color"
       [description]="description"
-      [adminImg]="adminImg"
-      [memberImgs]="memberImgs"
+      [admin]="admin"
+      [members]="members"
     ></ui-project-card>
   `,
   props,
@@ -41,8 +41,8 @@ export const Under_Divide = () => ({
       [title]="title"
       [color]="color"
       [description]="description"
-      [adminImg]="adminImg"
-      [memberImgs]="memberImgs"
+      [admin]="admin"
+      [members]="members"
       [underDivide]="true"
     ></ui-project-card>
   `,

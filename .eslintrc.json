@@ -59,7 +59,8 @@
                   "scope:frontend-domain",
                   "scope:frontend-infrastructure",
                   "scope:shared-domain",
-                  "scope:shared-constants"
+                  "scope:shared-constants",
+                  "scope:frontend-ui"
                 ]
               },
               {
