@@ -5,6 +5,7 @@ import { UserSelectPopupModule } from './user-select-popup.module';
 describe('UserSelectPopupComponent', () => {
   let component: UserSelectPopupComponent;
   let fixture: ComponentFixture<UserSelectPopupComponent>;
+  const triggerEl = document.createElement('button');
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -15,6 +16,7 @@ describe('UserSelectPopupComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(UserSelectPopupComponent);
     component = fixture.componentInstance;
+    component.triggerEl = triggerEl;
     fixture.detectChanges();
   });
 

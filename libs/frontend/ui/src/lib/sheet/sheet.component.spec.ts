@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { BoardItemComponent } from './board-item.component';
-import { BoardItemModule } from './board-item.module';
+import { SheetComponent } from './sheet.component';
+import { SheetModule } from './sheet.module';
 
-describe('BoardItemComponent', () => {
-  let component: BoardItemComponent;
-  let fixture: ComponentFixture<BoardItemComponent>;
+describe('SheetComponent', () => {
+  let component: SheetComponent;
+  let fixture: ComponentFixture<SheetComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [BoardItemModule],
+      imports: [SheetModule],
     }).compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(BoardItemComponent);
+    fixture = TestBed.createComponent(SheetComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

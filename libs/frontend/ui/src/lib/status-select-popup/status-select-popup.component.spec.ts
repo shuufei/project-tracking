@@ -5,6 +5,7 @@ import { StatusSelectPopupModule } from './status-select-popup.module';
 describe('StatusSelectPopupComponent', () => {
   let component: StatusSelectPopupComponent;
   let fixture: ComponentFixture<StatusSelectPopupComponent>;
+  const triggerEl = document.createElement('button');
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -15,6 +16,7 @@ describe('StatusSelectPopupComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(StatusSelectPopupComponent);
     component = fixture.componentInstance;
+    component.triggerEl = triggerEl;
     fixture.detectChanges();
   });
 

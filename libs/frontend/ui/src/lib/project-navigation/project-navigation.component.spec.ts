@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { ProjectNavigationComponent } from './project-navigation.component';
+import { ProjectNavigationModule } from './project-navigation.module';
 
 describe('ProjectNavigationComponent', () => {
   let component: ProjectNavigationComponent;
@@ -8,9 +8,8 @@ describe('ProjectNavigationComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ProjectNavigationComponent ]
-    })
-    .compileComponents();
+      imports: [ProjectNavigationModule],
+    }).compileComponents();
   });
 
   beforeEach(() => {

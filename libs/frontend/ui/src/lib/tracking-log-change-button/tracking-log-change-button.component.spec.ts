@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { TrackingLogChangeButtonComponent } from './tracking-log-change-button.component';
+import { TrackingLogChangeButtonModule } from './tracking-log-change-button.module';
 
 describe('TrackingLogChangeButtonComponent', () => {
   let component: TrackingLogChangeButtonComponent;
@@ -8,7 +8,7 @@ describe('TrackingLogChangeButtonComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [TrackingLogChangeButtonComponent],
+      imports: [TrackingLogChangeButtonModule],
     }).compileComponents();
   });
 

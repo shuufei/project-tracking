@@ -5,6 +5,7 @@ import { PopupModule } from './popup.module';
 describe('PopupComponent', () => {
   let component: PopupComponent;
   let fixture: ComponentFixture<PopupComponent>;
+  const triggerEl = document.createElement('button');
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -15,6 +16,7 @@ describe('PopupComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(PopupComponent);
     component = fixture.componentInstance;
+    component.triggerEl = triggerEl;
     fixture.detectChanges();
   });
 

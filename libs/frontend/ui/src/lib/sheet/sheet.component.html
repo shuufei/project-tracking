@@ -1,0 +1,19 @@
+<ng-container *ngIf="state$ | async as state">
+  <ng-container *ngIf="state.isOpen">
+    <div class="overlay" (click)="onClickOverlay$.next()"></div>
+    <div class="sheet px-3 pb-8" @fadeInOutSheet>
+      <div class="flex items-center justify-between sticky top-0 bg-white py-2">
+        <ui-icon class="p-2 opacity-0" [icon]="'x'"></ui-icon>
+        <h2 class="text-base font-medium">{{ title }}</h2>
+        <ui-icon
+          class="close-icon p-2 cursor-pointer"
+          [icon]="'x'"
+          (click)="onClickCloseButton$.next()"
+        ></ui-icon>
+      </div>
+      <div class="px-4">
+        <ng-content></ng-content>
+      </div>
+    </div>
+  </ng-container>
+</ng-container>

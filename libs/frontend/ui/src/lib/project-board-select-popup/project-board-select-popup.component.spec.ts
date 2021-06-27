@@ -5,6 +5,7 @@ import { ProjectBoardSelectPopupModule } from './project-board-select-popup.modu
 describe('ProjectBoardSelectPopupComponent', () => {
   let component: ProjectBoardSelectPopupComponent;
   let fixture: ComponentFixture<ProjectBoardSelectPopupComponent>;
+  const triggerEl = document.createElement('button');
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -15,6 +16,7 @@ describe('ProjectBoardSelectPopupComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ProjectBoardSelectPopupComponent);
     component = fixture.componentInstance;
+    component.triggerEl = triggerEl;
     fixture.detectChanges();
   });
 
