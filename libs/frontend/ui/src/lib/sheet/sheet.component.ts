@@ -38,7 +38,7 @@ export type State = {
       transition(':leave', [
         style({ transform: 'translateY(0)', opacity: 1 }),
         animate(
-          '0.2s 0s ease-out',
+          '0.15s 0s ease-out',
           style({ transform: 'translateY(25%)', opacity: 0 })
         ),
       ]),
