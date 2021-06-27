@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { SheetComponent } from './sheet.component';
+import { SheetModule } from './sheet.module';
 
 describe('SheetComponent', () => {
   let component: SheetComponent;
@@ -8,9 +8,8 @@ describe('SheetComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SheetComponent ]
-    })
-    .compileComponents();
+      imports: [SheetModule],
+    }).compileComponents();
   });
 
   beforeEach(() => {
