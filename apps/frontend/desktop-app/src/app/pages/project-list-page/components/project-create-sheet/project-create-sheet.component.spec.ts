@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { ProjectListPageModule } from '../../project-list-page.module';
 import { ProjectCreateSheetComponent } from './project-create-sheet.component';
 
 describe('ProjectCreateSheetComponent', () => {
@@ -8,9 +8,9 @@ describe('ProjectCreateSheetComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ProjectCreateSheetComponent ]
-    })
-    .compileComponents();
+      declarations: [ProjectCreateSheetComponent],
+      imports: [ProjectListPageModule],
+    }).compileComponents();
   });
 
   beforeEach(() => {
