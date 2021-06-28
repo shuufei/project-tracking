@@ -11,13 +11,15 @@ import {
   HeaderModule,
   IconModule,
   ProjectCardModule,
+  SheetModule,
   UserIconModule,
 } from '@bison/frontend/ui';
 import { ProjectListPageRoutingModule } from './project-list-page-routing.module';
 import { ProjectListPageComponent } from './project-list-page.component';
+import { ProjectCreateSheetComponent } from './components/project-create-sheet/project-create-sheet.component';
 
 @NgModule({
-  declarations: [ProjectListPageComponent],
+  declarations: [ProjectListPageComponent, ProjectCreateSheetComponent],
   imports: [
     CommonModule,
     ProjectListPageRoutingModule,
@@ -26,6 +28,7 @@ import { ProjectListPageComponent } from './project-list-page.component';
     UserIconModule,
     ProjectCardModule,
     HeaderModule,
+    SheetModule,
   ],
   exports: [ProjectListPageComponent],
   providers: [
