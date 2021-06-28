@@ -1,3 +1,5 @@
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SheetModule } from './sheet.module';
 
 export default {
@@ -6,7 +8,7 @@ export default {
 
 export const Default = () => ({
   moduleMetadata: {
-    imports: [SheetModule],
+    imports: [SheetModule, BrowserModule, BrowserAnimationsModule],
   },
   template: `
     <button #trigger class="text-s1">open</button>
