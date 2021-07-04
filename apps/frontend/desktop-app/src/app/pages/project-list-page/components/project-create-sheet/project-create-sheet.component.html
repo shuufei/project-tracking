@@ -1,5 +1,56 @@
-<ui-sheet
-  [triggerEl]="triggerEl"
-  [zindex]="100"
-  [title]="'プロジェクトを作成'"
-></ui-sheet>
+<ui-sheet [triggerEl]="triggerEl" [zindex]="100" [title]="'プロジェクトを作成'">
+  <div class="sheet-content">
+    <div class="mt-6">
+      <div>
+        <div class="flex items-center">
+          <input
+            type="text"
+            placeholder="プロジェクト名"
+            class="focus:outline-none focus:shadow-outline_primary px-3 py-2 text-l1 leading-7 w-full font-medium rounded-m"
+          />
+          <div class="relative">
+            <button
+              #colorSelectTriggerEl
+              class="ml-4 p-0 flex items-center focus:outline-none"
+            >
+              <ui-color-icon class="h-4 w-4" color="Gray"></ui-color-icon>
+              <ui-icon
+                icon="chevron-down"
+                size="s"
+                color="primary-light1 ml-1"
+              ></ui-icon>
+            </button>
+            <ui-color-select-popup
+              [triggerEl]="colorSelectTriggerEl"
+            ></ui-color-select-popup>
+          </div>
+        </div>
+        <textarea
+          placeholder="説明"
+          class="focus:outline-none focus:shadow-outline_primary px-3 py-2 text-s1 leading-3 w-full font-medium mt-2 rounded-m"
+          rows="5"
+        ></textarea>
+      </div>
+    </div>
+    <div
+      class="sheet-footer bottom-6 w-full bg-primary-light3 fixed flex rounded-m py-2 px-3"
+    >
+      <div class="sheet-footer-side"></div>
+      <div class="sheet-footer-stepper flex justify-center items-center">
+        <div
+          class="step-count text-s4 font-medium bg-primary-default text-white flex justify-center items-center mr-2"
+        >
+          1
+        </div>
+        <div
+          class="step-count text-s4 font-medium text-primary-default flex justify-center items-center"
+        >
+          2
+        </div>
+      </div>
+      <div class="sheet-footer-side flex justify-end">
+        <button ui-button>次へ</button>
+      </div>
+    </div>
+  </div>
+</ui-sheet>

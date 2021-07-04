@@ -8,15 +8,17 @@ import { PROJECT_DATA_STORE } from '@bison/frontend/domain';
 import { ProjectDataStore } from '@bison/frontend/infrastructure/data-store';
 import {
   ButtonModule,
+  ColorIconModule,
+  ColorSelectPopupModule,
   HeaderModule,
   IconModule,
   ProjectCardModule,
   SheetModule,
   UserIconModule,
 } from '@bison/frontend/ui';
+import { ProjectCreateSheetComponent } from './components/project-create-sheet/project-create-sheet.component';
 import { ProjectListPageRoutingModule } from './project-list-page-routing.module';
 import { ProjectListPageComponent } from './project-list-page.component';
-import { ProjectCreateSheetComponent } from './components/project-create-sheet/project-create-sheet.component';
 
 @NgModule({
   declarations: [ProjectListPageComponent, ProjectCreateSheetComponent],
@@ -29,6 +31,8 @@ import { ProjectCreateSheetComponent } from './components/project-create-sheet/p
     ProjectCardModule,
     HeaderModule,
     SheetModule,
+    ColorSelectPopupModule,
+    ColorIconModule,
   ],
   exports: [ProjectListPageComponent],
   providers: [

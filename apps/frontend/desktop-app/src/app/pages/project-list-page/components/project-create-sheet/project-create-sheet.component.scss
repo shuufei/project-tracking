@@ -1,3 +1,28 @@
 :host {
   display: block;
 }
+
+$max-width: 680px;
+
+.sheet-content {
+  max-width: $max-width;
+  margin: 0 auto;
+}
+
+.sheet-footer {
+  max-width: $max-width;
+}
+
+.sheet-footer-side {
+  flex: 1;
+}
+
+.sheet-footer-stepper {
+  flex: 2;
+}
+
+.step-count {
+  height: 24px;
+  width: 24px;
+  border-radius: 50%;
+}
