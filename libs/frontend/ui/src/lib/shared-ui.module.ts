@@ -22,6 +22,7 @@ import { StatusSelectPopupModule } from './status-select-popup/status-select-pop
 import { SubtaskModule } from './subtask/subtask.module';
 import { TaskCardModule } from './task-card/task-card.module';
 import { TextFieldModule } from './text-field/text-field.module';
+import { TextareaModule } from './textarea/textarea.module';
 import { TimeLabelModule } from './time-label/time-label.module';
 import { TooltipModule } from './tooltip/tooltip.module';
 import { TrackingLogChangeButtonModule } from './tracking-log-change-button/tracking-log-change-button.module';
@@ -62,6 +63,7 @@ import { UserSelectPopupModule } from './user-select-popup/user-select-popup.mod
     ProjectNavigationModule,
     HeaderModule,
     SheetModule,
+    TextareaModule,
   ],
 })
 export class SharedUiModule {}

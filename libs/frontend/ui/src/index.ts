@@ -43,6 +43,8 @@ export * from './lib/task-card/task-card.component';
 export * from './lib/task-card/task-card.module';
 export * from './lib/text-field/text-field.component';
 export * from './lib/text-field/text-field.module';
+export * from './lib/textarea/textarea.component';
+export * from './lib/textarea/textarea.module';
 export * from './lib/time-label/time-label.component';
 export * from './lib/time-label/time-label.module';
 export * from './lib/tooltip/tooltip.component';

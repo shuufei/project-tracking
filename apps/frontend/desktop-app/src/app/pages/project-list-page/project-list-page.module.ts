@@ -14,6 +14,7 @@ import {
   IconModule,
   ProjectCardModule,
   SheetModule,
+  TextareaModule,
   TextFieldModule,
   UserIconModule,
 } from '@bison/frontend/ui';
@@ -35,6 +36,7 @@ import { ProjectListPageComponent } from './project-list-page.component';
     ColorSelectPopupModule,
     ColorIconModule,
     TextFieldModule,
+    TextareaModule,
   ],
   exports: [ProjectListPageComponent],
   providers: [

@@ -25,11 +25,12 @@
             ></ui-color-select-popup>
           </div>
         </div>
-        <textarea
+        <ui-textarea
           placeholder="説明"
-          class="focus:outline-none focus:shadow-outline_primary px-3 py-2 text-s1 leading-3 w-full font-medium mt-2 rounded-m"
-          rows="5"
-        ></textarea>
+          [rows]="5"
+          [borderless]="true"
+          class="w-full mt-3 project-description"
+        ></ui-textarea>
       </div>
     </div>
     <div
