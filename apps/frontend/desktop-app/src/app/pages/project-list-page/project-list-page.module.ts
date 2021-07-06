@@ -13,6 +13,7 @@ import {
   HeaderModule,
   IconModule,
   ProjectCardModule,
+  SheetFooterModule,
   SheetModule,
   TextareaModule,
   TextFieldModule,
@@ -37,6 +38,7 @@ import { ProjectListPageComponent } from './project-list-page.component';
     ColorIconModule,
     TextFieldModule,
     TextareaModule,
+    SheetFooterModule,
   ],
   exports: [ProjectListPageComponent],
   providers: [

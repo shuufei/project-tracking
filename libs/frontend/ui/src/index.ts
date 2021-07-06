@@ -31,6 +31,8 @@ export * from './lib/project-navigation/project-navigation.module';
 export * from './lib/select-item/select-item.component';
 export * from './lib/select-item/select-item.module';
 export * from './lib/shared-ui.module';
+export * from './lib/sheet-footer/sheet-footer.component';
+export * from './lib/sheet-footer/sheet-footer.module';
 export * from './lib/sheet/sheet.component';
 export * from './lib/sheet/sheet.module';
 export * from './lib/status-change-button/status-change-button.component';

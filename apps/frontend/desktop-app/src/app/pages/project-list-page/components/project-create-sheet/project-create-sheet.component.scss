@@ -2,23 +2,15 @@
   display: block;
 }
 
-$max-width: 680px;
+$width: 680px;
 
 .sheet-content {
-  max-width: $max-width;
+  width: $width;
   margin: 0 auto;
 }
 
 .sheet-footer {
-  max-width: $max-width;
-}
-
-.sheet-footer-side {
-  flex: 1;
-}
-
-.sheet-footer-stepper {
-  flex: 2;
+  width: $width;
 }
 
 .step-count {
@@ -29,9 +21,11 @@ $max-width: 680px;
 
 .project-name {
   font-size: var(--bison-font-size-l1);
+  font-weight: var(--bison-font-weight-medium);
   padding: 8px 12px;
 }
 
 .project-description {
   padding: 8px 12px;
+  font-weight: var(--bison-font-weight-medium);
 }
