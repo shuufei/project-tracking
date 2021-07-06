@@ -3,11 +3,11 @@
     <div class="mt-6">
       <div>
         <div class="flex items-center">
-          <input
-            type="text"
+          <ui-text-field
             placeholder="プロジェクト名"
-            class="focus:outline-none focus:shadow-outline_primary px-3 py-2 text-l1 leading-7 w-full font-medium rounded-m"
-          />
+            class="project-name w-full"
+            [borderless]="true"
+          ></ui-text-field>
           <div class="relative">
             <button
               #colorSelectTriggerEl

@@ -14,6 +14,9 @@
     cursor: text;
     background-color: unset;
   }
+  &.borderless {
+    border: none;
+  }
 }
 
 :host:focus-within {
