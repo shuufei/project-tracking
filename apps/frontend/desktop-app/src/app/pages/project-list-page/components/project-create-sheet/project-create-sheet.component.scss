@@ -17,6 +17,16 @@ $width: 680px;
   height: 24px;
   width: 24px;
   border-radius: 50%;
+  font-size: var(--bison-font-size-s4);
+  font-weight: var(--bison-font-weight-medium);
+  color: var(--bison-primary-default);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  &.active {
+    color: var(--bison-white);
+    background-color: var(--bison-primary-default);
+  }
 }
 
 .project-name {

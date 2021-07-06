@@ -1,63 +1,86 @@
 <ui-sheet [triggerEl]="triggerEl" [zindex]="100" [title]="'プロジェクトを作成'">
   <ng-container *ngIf="state$ | async as state">
     <div class="sheet-content">
-      <div class="mt-6">
-        <div>
-          <div class="flex items-center">
-            <ui-text-field
-              placeholder="プロジェクト名"
-              class="project-name w-full"
-              [borderless]="true"
-              (changedValue)="onChangedProjectName$.next($event)"
-            ></ui-text-field>
-            <div class="relative">
-              <button
-                #colorSelectTriggerEl
-                class="ml-4 p-0 flex items-center focus:outline-none"
-              >
-                <ui-color-icon
-                  class="h-4 w-4"
-                  [color]="state.color"
-                ></ui-color-icon>
-                <ui-icon
-                  icon="chevron-down"
-                  size="s"
-                  color="primary-light1 ml-1"
-                ></ui-icon>
-              </button>
-              <ui-color-select-popup
-                [triggerEl]="colorSelectTriggerEl"
-                [currentColor]="state.color"
-                (changedColor)="onChangedColor$.next($event)"
-              ></ui-color-select-popup>
+      <ng-container [ngSwitch]="state.step">
+        <ng-container *ngSwitchCase="step.inputProperty">
+          <ng-container *ngTemplateOutlet="inputPropertyBlock"></ng-container>
+          <ui-sheet-footer class="sheet-footer bottom-6 fixed">
+            <div center class="flex justify-center items-center">
+              <div class="step-count active mr-2">1</div>
+              <div class="step-count">2</div>
             </div>
-          </div>
-          <ui-textarea
-            placeholder="説明"
-            [rows]="5"
-            [borderless]="true"
-            class="w-full mt-3 project-description"
-            (changedValue)="onChangedProjectDescription$.next($event)"
-          ></ui-textarea>
-        </div>
-      </div>
-      <ui-sheet-footer class="sheet-footer bottom-6 fixed">
-        <div center class="flex justify-center items-center">
-          <div
-            class="step-count text-s4 font-medium bg-primary-default text-white flex justify-center items-center mr-2"
-          >
-            1
-          </div>
-          <div
-            class="step-count text-s4 font-medium text-primary-default flex justify-center items-center"
-          >
-            2
-          </div>
-        </div>
-        <div right-side>
-          <button ui-button>次へ</button>
-        </div>
-      </ui-sheet-footer>
+            <div right-side>
+              <button ui-button (click)="onClickedNextStep$.next()">
+                次へ
+              </button>
+            </div>
+          </ui-sheet-footer>
+        </ng-container>
+        <ng-container *ngSwitchCase="step.selectMember">
+          <ng-container *ngTemplateOutlet="selectMemberBlock"></ng-container>
+          <ui-sheet-footer class="sheet-footer bottom-6 fixed">
+            <div left-side>
+              <button ui-button (click)="onClickedBackStep$.next()">
+                戻る
+              </button>
+            </div>
+            <div center class="flex justify-center items-center">
+              <div class="step-count mr-2">1</div>
+              <div class="step-count active">2</div>
+            </div>
+            <div right-side>
+              <button ui-button>作成</button>
+            </div>
+          </ui-sheet-footer>
+        </ng-container>
+      </ng-container>
     </div>
   </ng-container>
 </ui-sheet>
+
+<ng-template #inputPropertyBlock>
+  <ng-container *ngIf="state$ | async as state">
+    <div class="mt-6">
+      <div>
+        <div class="flex items-center">
+          <ui-text-field
+            placeholder="プロジェクト名"
+            class="project-name w-full"
+            [borderless]="true"
+            (changedValue)="onChangedProjectName$.next($event)"
+          ></ui-text-field>
+          <div class="relative">
+            <button
+              #colorSelectTriggerEl
+              class="ml-4 p-0 flex items-center focus:outline-none"
+            >
+              <ui-color-icon
+                class="h-4 w-4"
+                [color]="state.color"
+              ></ui-color-icon>
+              <ui-icon
+                icon="chevron-down"
+                size="s"
+                color="primary-light1 ml-1"
+              ></ui-icon>
+            </button>
+            <ui-color-select-popup
+              [triggerEl]="colorSelectTriggerEl"
+              [currentColor]="state$.color"
+              (changedColor)="onChangedColor$.next($event)"
+            ></ui-color-select-popup>
+          </div>
+        </div>
+        <ui-textarea
+          placeholder="説明"
+          [rows]="5"
+          [borderless]="true"
+          class="w-full mt-3 project-description"
+          (changedValue)="onChangedProjectDescription$.next($event)"
+        ></ui-textarea>
+      </div>
+    </div>
+  </ng-container>
+</ng-template>
+
+<ng-template #selectMemberBlock></ng-template>

@@ -8,10 +8,16 @@ import { Color } from '@bison/shared/domain';
 import { RxState } from '@rx-angular/state';
 import { Subject } from 'rxjs';
 
+const STEP = {
+  inputProperty: 'inputProperty',
+  selectMember: 'selectMember',
+} as const;
+
 type State = {
   color: Color;
   projectName: string;
   projectDescription: string;
+  step: keyof typeof STEP;
 };
 
 @Component({
@@ -24,22 +30,31 @@ type State = {
 export class ProjectCreateSheetComponent implements OnInit {
   @Input() triggerEl?: HTMLElement;
 
+  readonly step = STEP;
   readonly state$ = this.state.select();
   readonly onChangedColor$ = new Subject<Color>();
   readonly onChangedProjectName$ = new Subject<State['projectName']>();
   readonly onChangedProjectDescription$ = new Subject<
     State['projectDescription']
   >();
+  readonly onClickedNextStep$ = new Subject<void>();
+  readonly onClickedBackStep$ = new Subject<void>();
 
   constructor(private state: RxState<State>) {}
 
   ngOnInit(): void {
     this.state.set({
       color: 'Gray',
+      step: 'inputProperty',
     });
     this.state.connect('color', this.onChangedColor$);
     this.state.connect('projectName', this.onChangedProjectName$);
     this.state.connect('projectDescription', this.onChangedProjectDescription$);
-    this.state$.subscribe((v) => console.log(v));
+    this.state.connect('step', this.onClickedNextStep$, () => {
+      return this.step.selectMember;
+    });
+    this.state.connect('step', this.onClickedBackStep$, () => {
+      return this.step.inputProperty;
+    });
   }
 }
