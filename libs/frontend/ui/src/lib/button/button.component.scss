@@ -24,6 +24,25 @@
       pointer-events: none;
     }
   }
+  &.primary-light3 {
+    @apply text-primary-default;
+    &:hover {
+      cursor: pointer;
+      @apply border-primary-light3;
+    }
+    &:focus {
+      outline: none;
+      @apply border-primary-light3;
+      @apply shadow-outline_primary;
+    }
+    &:active {
+      @apply bg-primary-light4;
+    }
+    &:disabled {
+      @apply text-primary-light3;
+      pointer-events: none;
+    }
+  }
   &.success {
     @apply text-success-default;
     &:hover {
@@ -135,6 +154,20 @@
     &:disabled {
       @apply bg-primary-light2;
       @apply border-primary-light2;
+    }
+  }
+  &.primary-light3 {
+    @apply bg-primary-light3;
+    @apply text-black-default;
+    @apply border-primary-light3;
+    &:active {
+      @apply bg-primary-light2;
+      @apply border-primary-light2;
+    }
+    &:disabled {
+      @apply bg-primary-light3;
+      @apply border-primary-light3;
+      @apply text-black-light3;
     }
   }
   &.success {

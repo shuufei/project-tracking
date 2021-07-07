@@ -10,7 +10,11 @@
               <div class="step-count">2</div>
             </div>
             <div right-side>
-              <button ui-button (click)="onClickedNextStep$.next()">
+              <button
+                ui-fill-button
+                color="primary-light3"
+                (click)="onClickedNextStep$.next()"
+              >
                 次へ
               </button>
             </div>
@@ -20,7 +24,11 @@
           <ng-container *ngTemplateOutlet="selectMemberBlock"></ng-container>
           <ui-sheet-footer class="sheet-footer bottom-6 fixed">
             <div left-side>
-              <button ui-button (click)="onClickedBackStep$.next()">
+              <button
+                ui-fill-button
+                color="primary-light3"
+                (click)="onClickedBackStep$.next()"
+              >
                 戻る
               </button>
             </div>
