@@ -4,17 +4,13 @@ import {
   Inject,
   OnInit,
 } from '@angular/core';
-import {
-  IProjectStateQueryService,
-  Projects,
-  PROJECT_STATE_QUERY_SERVICE,
-} from '@bison/frontend/application';
+import { IStateQuery, STATE_QUERY } from '@bison/frontend/application';
 import { Project } from '@bison/frontend/domain';
 import { RxState } from '@rx-angular/state';
 import { Subject } from 'rxjs';
 
 type State = {
-  projects: Projects;
+  projects: Project[];
 };
 
 @Component({
@@ -35,8 +31,8 @@ export class ProjectListPageComponent implements OnInit {
 
   constructor(
     private state: RxState<State>,
-    @Inject(PROJECT_STATE_QUERY_SERVICE)
-    private stateQueryService: IProjectStateQueryService
+    @Inject(STATE_QUERY)
+    private stateQueryService: IStateQuery
   ) {
     this.state.set({
       projects: [],

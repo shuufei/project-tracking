@@ -1,11 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule, Provider } from '@angular/core';
-import {
-  MeStateQuery,
-  ME_STATE_QUERY,
-  ProjectStateQueryService,
-  PROJECT_STATE_QUERY_SERVICE,
-} from '@bison/frontend/application';
+import { StateQuery, STATE_QUERY } from '@bison/frontend/application';
 import { ME_DATA_STORE, PROJECT_DATA_STORE } from '@bison/frontend/domain';
 import {
   MeDataStore,
@@ -28,21 +23,14 @@ import { ProjectCreateSheetComponent } from './components/project-create-sheet/p
 import { ProjectListPageRoutingModule } from './project-list-page-routing.module';
 import { ProjectListPageComponent } from './project-list-page.component';
 
-const projectStateQueryProviders: Provider[] = [
+const stateQueryProviders: Provider[] = [
   {
-    provide: PROJECT_STATE_QUERY_SERVICE,
-    useClass: ProjectStateQueryService,
+    provide: STATE_QUERY,
+    useClass: StateQuery,
   },
   {
     provide: PROJECT_DATA_STORE,
     useClass: ProjectDataStore,
-  },
-];
-
-const meStateQueryProviders: Provider[] = [
-  {
-    provide: ME_STATE_QUERY,
-    useClass: MeStateQuery,
   },
   {
     provide: ME_DATA_STORE,
@@ -68,6 +56,6 @@ const meStateQueryProviders: Provider[] = [
     SheetFooterModule,
   ],
   exports: [ProjectListPageComponent],
-  providers: [...projectStateQueryProviders, ...meStateQueryProviders],
+  providers: [...stateQueryProviders],
 })
 export class ProjectListPageModule {}

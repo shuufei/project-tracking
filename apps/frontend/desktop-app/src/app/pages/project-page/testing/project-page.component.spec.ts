@@ -1,24 +1,27 @@
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { PROJECT_STATE_QUERY_SERVICE } from '@bison/frontend/application';
+import {
+  mockProjects,
+  MockStateQuery,
+  STATE_QUERY,
+} from '@bison/frontend/application';
 import { ProjectPageComponent } from '../project-page.component';
 import { ProjectPageModule } from '../project-page.module';
-import { mockProjects, MockProjectStateQueryService } from './mock';
 import { ProjectPageComponentHarness } from './project-page.component.harness';
 
 describe('ProjectPageComponent', () => {
   let component: ProjectPageComponent;
   let fixture: ComponentFixture<ProjectPageComponent>;
   let harness: ProjectPageComponentHarness;
-  const mockProjectStateQueryService = new MockProjectStateQueryService();
+  const mockStateQuery = new MockStateQuery();
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ProjectPageModule],
       providers: [
         {
-          provide: PROJECT_STATE_QUERY_SERVICE,
-          useValue: mockProjectStateQueryService,
+          provide: STATE_QUERY,
+          useValue: mockStateQuery,
         },
       ],
     }).compileComponents();

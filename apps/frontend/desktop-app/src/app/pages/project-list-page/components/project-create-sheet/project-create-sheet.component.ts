@@ -5,7 +5,7 @@ import {
   Input,
   OnInit,
 } from '@angular/core';
-import { IMeStateQuery, ME_STATE_QUERY } from '@bison/frontend/application';
+import { IStateQuery, STATE_QUERY } from '@bison/frontend/application';
 import { Color, User } from '@bison/shared/domain';
 import { RxState } from '@rx-angular/state';
 import { Subject } from 'rxjs';
@@ -45,7 +45,7 @@ export class ProjectCreateSheetComponent implements OnInit {
 
   constructor(
     private state: RxState<State>,
-    @Inject(ME_STATE_QUERY) private meStateQuery: IMeStateQuery
+    @Inject(STATE_QUERY) private stateQuery: IStateQuery
   ) {}
 
   ngOnInit(): void {
@@ -62,6 +62,6 @@ export class ProjectCreateSheetComponent implements OnInit {
     this.state.connect('step', this.onClickedBackStep$, () => {
       return this.step.inputProperty;
     });
-    this.state.connect('me', this.meStateQuery.me$());
+    this.state.connect('me', this.stateQuery.me$());
   }
 }
