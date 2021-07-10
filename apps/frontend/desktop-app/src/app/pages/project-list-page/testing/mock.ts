@@ -1,6 +1,9 @@
-import { IProjectStateQueryService } from '@bison/frontend/application';
+import {
+  IMeStateQuery,
+  IProjectStateQueryService,
+} from '@bison/frontend/application';
 import { IProjectDataStore, Project } from '@bison/frontend/domain';
-import { COLOR } from '@bison/shared/domain';
+import { COLOR, User } from '@bison/shared/domain';
 import { of } from 'rxjs';
 
 export const mockProjects: Project[] = [
@@ -30,6 +33,11 @@ export const mockProjects: Project[] = [
   },
 ];
 
+export const mockMe: User = {
+  id: 'user0001',
+  name: 'user name 0001',
+};
+
 export class MockProjectStateQueryService implements IProjectStateQueryService {
   projects$() {
     return of(mockProjects);
@@ -39,5 +47,11 @@ export class MockProjectStateQueryService implements IProjectStateQueryService {
 export class MockProjectDataStoreService implements IProjectDataStore {
   projects$() {
     return of(mockProjects);
+  }
+}
+
+export class MockMeStateQueryService implements IMeStateQuery {
+  me$() {
+    return of(mockMe);
   }
 }

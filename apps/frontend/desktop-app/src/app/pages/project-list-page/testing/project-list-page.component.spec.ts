@@ -1,10 +1,17 @@
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { PROJECT_STATE_QUERY_SERVICE } from '@bison/frontend/application';
+import {
+  ME_STATE_QUERY,
+  PROJECT_STATE_QUERY_SERVICE,
+} from '@bison/frontend/application';
 import { ProjectListPageComponent } from '../project-list-page.component';
 import { ProjectListPageModule } from '../project-list-page.module';
-import { mockProjects, MockProjectStateQueryService } from './mock';
+import {
+  MockMeStateQueryService,
+  mockProjects,
+  MockProjectStateQueryService,
+} from './mock';
 import { ProjectListPageComponentHarness } from './project-list-page.component.harness';
 
 describe('ProjectListPageComponent', () => {
@@ -12,6 +19,7 @@ describe('ProjectListPageComponent', () => {
   let fixture: ComponentFixture<ProjectListPageComponent>;
   let harness: ProjectListPageComponentHarness;
   const mockProjectStateQueryService = new MockProjectStateQueryService();
+  const mockMeStateQuery = new MockMeStateQueryService();
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -20,6 +28,10 @@ describe('ProjectListPageComponent', () => {
         {
           provide: PROJECT_STATE_QUERY_SERVICE,
           useValue: mockProjectStateQueryService,
+        },
+        {
+          provide: ME_STATE_QUERY,
+          useValue: mockMeStateQuery,
         },
       ],
     }).compileComponents();
