@@ -14,7 +14,6 @@ export class MeDataStore implements IMeDataStore {
       .watchQuery<{ viewer: User }>({ query: GET_ME })
       .valueChanges.pipe(
         map((response) => {
-          console.log(response);
           return response.data.viewer;
         })
       );
