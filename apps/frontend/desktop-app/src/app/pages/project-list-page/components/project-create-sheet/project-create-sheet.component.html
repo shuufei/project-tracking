@@ -97,9 +97,9 @@
     <div>
       <label for="" class="text-black-light2 text-s2 font-medium">管理者</label>
       <div class="flex items-center mt-2">
-        <ui-user-icon class="w-8" [src]="state.me.icon"></ui-user-icon>
+        <ui-user-icon class="w-8" [src]="state.me?.icon"></ui-user-icon>
         <span class="text-s1 text-black-default font-medium ml-2">{{
-          state.me.name
+          state.me?.name
         }}</span>
       </div>
     </div>

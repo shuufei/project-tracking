@@ -1,14 +1,33 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  Inject,
   Input,
   OnInit,
 } from '@angular/core';
-import { IStateQuery, STATE_QUERY } from '@bison/frontend/application';
+import { ApolloQueryResult } from '@apollo/client/core';
 import { Color, User } from '@bison/shared/domain';
+import { User as ApiUser } from '@bison/shared/schema';
 import { RxState } from '@rx-angular/state';
+import { Apollo, gql } from 'apollo-angular';
 import { Subject } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
+
+export const ME_FIELDS = gql`
+  fragment MeParts on User {
+    id
+    name
+    icon
+  }
+`;
+
+const MeQuery = gql`
+  ${ME_FIELDS}
+  query MeQuery {
+    viewer {
+      ...MeParts
+    }
+  }
+`;
 
 const STEP = {
   inputProperty: 'inputProperty',
@@ -20,7 +39,7 @@ type State = {
   projectName: string;
   projectDescription: string;
   step: keyof typeof STEP;
-  me: User;
+  me?: User;
 };
 
 @Component({
@@ -43,10 +62,7 @@ export class ProjectCreateSheetComponent implements OnInit {
   readonly onClickedNextStep$ = new Subject<void>();
   readonly onClickedBackStep$ = new Subject<void>();
 
-  constructor(
-    private state: RxState<State>,
-    @Inject(STATE_QUERY) private stateQuery: IStateQuery
-  ) {}
+  constructor(private state: RxState<State>, private apollo: Apollo) {}
 
   ngOnInit(): void {
     this.state.set({
@@ -62,6 +78,28 @@ export class ProjectCreateSheetComponent implements OnInit {
     this.state.connect('step', this.onClickedBackStep$, () => {
       return this.step.inputProperty;
     });
-    this.state.connect('me', this.stateQuery.me$());
+    this.state.connect('me', this.queryMe$());
+  }
+
+  private queryMe$() {
+    return this.apollo
+      .watchQuery<{ viewer?: ApiUser }>({
+        query: MeQuery,
+        fetchPolicy: 'cache-only',
+      })
+      .valueChanges.pipe(
+        filter(
+          (response): response is ApolloQueryResult<{ viewer: ApiUser }> =>
+            response.data.viewer != null
+        ),
+        map((response) => {
+          const { viewer } = response.data;
+          return {
+            id: viewer.id,
+            name: viewer.name,
+            icon: viewer.icon,
+          };
+        })
+      );
   }
 }

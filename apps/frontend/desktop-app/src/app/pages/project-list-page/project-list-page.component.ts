@@ -1,13 +1,45 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  Inject,
-  OnInit,
-} from '@angular/core';
-import { IStateQuery, STATE_QUERY } from '@bison/frontend/application';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Project } from '@bison/frontend/domain';
+import { User as ApiUser } from '@bison/shared/schema';
 import { RxState } from '@rx-angular/state';
+import { Apollo, gql } from 'apollo-angular';
 import { Subject } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { convertToFrontendDomainProjectFromApiProject } from '../../util/convert-to-frontend-domain-project-from-api-project';
+import { ME_FIELDS } from './components/project-create-sheet/project-create-sheet.component';
+
+const PROJECT_LIST_PAGE_QUERY = gql`
+  ${ME_FIELDS}
+  query ProjectListPageQuery {
+    viewer {
+      ...MeParts
+      projects {
+        id
+        name
+        description
+        color
+        boards {
+          id
+          name
+          description
+          project {
+            id
+          }
+        }
+        admin {
+          id
+          name
+          icon
+        }
+        members {
+          id
+          name
+          icon
+        }
+      }
+    }
+  }
+`;
 
 type State = {
   projects: Project[];
@@ -29,18 +61,18 @@ export class ProjectListPageComponent implements OnInit {
 
   private readonly onInit$ = new Subject();
 
-  constructor(
-    private state: RxState<State>,
-    @Inject(STATE_QUERY)
-    private stateQueryService: IStateQuery
-  ) {
+  constructor(private state: RxState<State>, private apollo: Apollo) {
     this.state.set({
       projects: [],
     });
     // TODO: プロジェクト作成ダイアログを表示
-    this.state.hold(this.onClickedCreateNewProject$, () => {});
+    this.state.hold(this.onClickedCreateNewProject$, () => {
+      return;
+    });
     // TODO: プロジェクト削除ダイアログを表示
-    this.state.hold(this.onClickedDeleteProject$, () => {});
+    this.state.hold(this.onClickedDeleteProject$, () => {
+      return;
+    });
   }
 
   ngOnInit() {
@@ -49,6 +81,20 @@ export class ProjectListPageComponent implements OnInit {
   }
 
   private setupEventHandler() {
-    this.state.connect('projects', this.stateQueryService.projects$());
+    this.state.connect(
+      'projects',
+      this.apollo
+        .watchQuery<{ viewer: ApiUser }>({
+          query: PROJECT_LIST_PAGE_QUERY,
+        })
+        .valueChanges.pipe(
+          map((response) => {
+            const { viewer } = response.data;
+            return viewer.projects.map(
+              convertToFrontendDomainProjectFromApiProject
+            );
+          })
+        )
+    );
   }
 }
