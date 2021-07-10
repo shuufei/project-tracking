@@ -536,31 +536,6 @@
         }
       }
     },
-    "frontend-infrastructure-data-store": {
-      "projectType": "library",
-      "root": "libs/frontend/infrastructure/data-store",
-      "sourceRoot": "libs/frontend/infrastructure/data-store/src",
-      "prefix": "bison",
-      "architect": {
-        "lint": {
-          "builder": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": [
-              "libs/frontend/infrastructure/data-store/src/**/*.ts",
-              "libs/frontend/infrastructure/data-store/src/**/*.html"
-            ]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/frontend/infrastructure/data-store"],
-          "options": {
-            "jestConfig": "libs/frontend/infrastructure/data-store/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
     "shared-constants": {
       "root": "libs/shared/constants",
       "sourceRoot": "libs/shared/constants/src",

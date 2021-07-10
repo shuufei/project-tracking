@@ -1,8 +1,5 @@
-import { IStateQuery } from '@bison/frontend/application';
 import { Project } from '@bison/frontend/domain';
 import { COLOR, User } from '@bison/shared/domain';
-import { of } from 'rxjs';
-
 export const mockProjects: Project[] = [
   {
     id: 'project0001',
@@ -35,12 +32,3 @@ export const mockMe: User = {
   name: 'user name 0001',
   icon: 'user icon 0001',
 };
-
-export class MockStateQuery implements IStateQuery {
-  me$() {
-    return of(mockMe);
-  }
-  projects$() {
-    return of(mockProjects);
-  }
-}

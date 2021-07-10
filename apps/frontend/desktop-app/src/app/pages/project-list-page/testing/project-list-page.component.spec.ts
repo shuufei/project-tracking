@@ -1,11 +1,11 @@
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { mockProjects } from '@bison/frontend/application';
 import {
   ApolloTestingController,
   ApolloTestingModule,
 } from 'apollo-angular/testing';
+import { mockProjects } from '../../../../testing/mock';
 import {
   ProjectListPageComponent,
   PROJECT_LIST_PAGE_QUERY,

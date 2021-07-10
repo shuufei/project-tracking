@@ -35,9 +35,6 @@
     },
     "frontend-application": { "tags": ["scope:frontend-application"] },
     "frontend-domain": { "tags": ["scope:frontend-domain"] },
-    "frontend-infrastructure-data-store": {
-      "tags": ["scope:frontend-infrastructure"]
-    },
     "frontend-ui": { "tags": ["scope:frontend-ui"] },
     "backend-graphql-api": { "tags": ["scope:backend-presentation"] },
     "backend-infrastructure-repository": {

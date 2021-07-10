@@ -1,11 +1,14 @@
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {
-  mockProjects,
-  MockStateQuery,
-  STATE_QUERY,
-} from '@bison/frontend/application';
-import { ProjectPageComponent } from '../project-page.component';
+  ApolloTestingController,
+  ApolloTestingModule,
+} from 'apollo-angular/testing';
+import { mockProjects } from '../../../../testing/mock';
+import {
+  ProjectPageComponent,
+  PROJECT_PAGE_QUERY,
+} from '../project-page.component';
 import { ProjectPageModule } from '../project-page.module';
 import { ProjectPageComponentHarness } from './project-page.component.harness';
 
@@ -13,17 +16,11 @@ describe('ProjectPageComponent', () => {
   let component: ProjectPageComponent;
   let fixture: ComponentFixture<ProjectPageComponent>;
   let harness: ProjectPageComponentHarness;
-  const mockStateQuery = new MockStateQuery();
+  let testingController: ApolloTestingController;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ProjectPageModule],
-      providers: [
-        {
-          provide: STATE_QUERY,
-          useValue: mockStateQuery,
-        },
-      ],
+      imports: [ProjectPageModule, ApolloTestingModule],
     }).compileComponents();
   });
 
@@ -34,7 +31,23 @@ describe('ProjectPageComponent', () => {
       fixture,
       ProjectPageComponentHarness
     );
+    testingController = TestBed.inject(ApolloTestingController);
+  });
+
+  beforeEach(async () => {
+    const op = testingController.expectOne(PROJECT_PAGE_QUERY);
+    op.flush({
+      data: {
+        viewer: {
+          projects: mockProjects,
+        },
+      },
+    });
     fixture.detectChanges();
+  });
+
+  afterEach(() => {
+    testingController.verify();
   });
 
   it('should create', () => {

@@ -1,10 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { InMemoryCache } from '@apollo/client/core';
-import { mockMe } from '@bison/frontend/application';
 import {
   ApolloTestingModule,
   APOLLO_TESTING_CACHE,
 } from 'apollo-angular/testing';
+import { mockMe } from '../../../../../testing/mock';
 import { ProjectListPageModule } from '../../project-list-page.module';
 import {
   ME_QUERY,

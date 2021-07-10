@@ -25,9 +25,6 @@
       "@bison/frontend/application": ["libs/frontend/application/src/index.ts"],
       "@bison/frontend/domain": ["libs/frontend/domain/src/index.ts"],
       "@bison/shared/schema": ["libs/shared/schema/src/index.ts"],
-      "@bison/frontend/infrastructure/data-store": [
-        "libs/frontend/infrastructure/data-store/src/index.ts"
-      ],
       "@bison/shared/constants": ["libs/shared/constants/src/index.ts"],
       "@bison/types/testing": ["types/testing/index.ts"],
       "@bison/frontend/ui": ["libs/frontend/ui/src/index.ts"]
