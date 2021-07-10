@@ -1,20 +1,28 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MockStateQuery, STATE_QUERY } from '@bison/frontend/application';
+import { InMemoryCache } from '@apollo/client/core';
+import { mockMe } from '@bison/frontend/application';
+import {
+  ApolloTestingModule,
+  APOLLO_TESTING_CACHE,
+} from 'apollo-angular/testing';
 import { ProjectListPageModule } from '../../project-list-page.module';
-import { ProjectCreateSheetComponent } from './project-create-sheet.component';
+import {
+  ME_QUERY,
+  ProjectCreateSheetComponent,
+} from './project-create-sheet.component';
 
 describe('ProjectCreateSheetComponent', () => {
   let component: ProjectCreateSheetComponent;
   let fixture: ComponentFixture<ProjectCreateSheetComponent>;
-  const mockStateQuery = new MockStateQuery();
+  const cache = new InMemoryCache({});
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ProjectListPageModule],
+      imports: [ProjectListPageModule, ApolloTestingModule],
       providers: [
         {
-          provide: STATE_QUERY,
-          useValue: mockStateQuery,
+          provide: APOLLO_TESTING_CACHE,
+          useValue: cache,
         },
       ],
     }).compileComponents();
@@ -23,6 +31,18 @@ describe('ProjectCreateSheetComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ProjectCreateSheetComponent);
     component = fixture.componentInstance;
+  });
+
+  beforeEach(async () => {
+    cache.writeQuery({
+      query: ME_QUERY,
+      data: {
+        viewer: {
+          ...mockMe,
+          __typename: 'User',
+        },
+      },
+    });
     fixture.detectChanges();
   });
 

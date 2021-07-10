@@ -20,7 +20,7 @@ export const ME_FIELDS = gql`
   }
 `;
 
-const MeQuery = gql`
+export const ME_QUERY = gql`
   ${ME_FIELDS}
   query MeQuery {
     viewer {
@@ -84,14 +84,15 @@ export class ProjectCreateSheetComponent implements OnInit {
   private queryMe$() {
     return this.apollo
       .watchQuery<{ viewer?: ApiUser }>({
-        query: MeQuery,
+        query: ME_QUERY,
         fetchPolicy: 'cache-only',
       })
       .valueChanges.pipe(
-        filter(
-          (response): response is ApolloQueryResult<{ viewer: ApiUser }> =>
-            response.data.viewer != null
-        ),
+        filter((response): response is ApolloQueryResult<{
+          viewer: ApiUser;
+        }> => {
+          return response.data.viewer != null;
+        }),
         map((response) => {
           const { viewer } = response.data;
           return {

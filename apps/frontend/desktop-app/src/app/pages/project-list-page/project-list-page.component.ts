@@ -8,7 +8,7 @@ import { map } from 'rxjs/operators';
 import { convertToFrontendDomainProjectFromApiProject } from '../../util/convert-to-frontend-domain-project-from-api-project';
 import { ME_FIELDS } from './components/project-create-sheet/project-create-sheet.component';
 
-const PROJECT_LIST_PAGE_QUERY = gql`
+export const PROJECT_LIST_PAGE_QUERY = gql`
   ${ME_FIELDS}
   query ProjectListPageQuery {
     viewer {

@@ -1,12 +1,15 @@
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
+import { mockProjects } from '@bison/frontend/application';
 import {
-  mockProjects,
-  MockStateQuery,
-  STATE_QUERY,
-} from '@bison/frontend/application';
-import { ProjectListPageComponent } from '../project-list-page.component';
+  ApolloTestingController,
+  ApolloTestingModule,
+} from 'apollo-angular/testing';
+import {
+  ProjectListPageComponent,
+  PROJECT_LIST_PAGE_QUERY,
+} from '../project-list-page.component';
 import { ProjectListPageModule } from '../project-list-page.module';
 import { ProjectListPageComponentHarness } from './project-list-page.component.harness';
 
@@ -14,16 +17,14 @@ describe('ProjectListPageComponent', () => {
   let component: ProjectListPageComponent;
   let fixture: ComponentFixture<ProjectListPageComponent>;
   let harness: ProjectListPageComponentHarness;
-  const mockStateQuery = new MockStateQuery();
+  let testingController: ApolloTestingController;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ProjectListPageModule, RouterTestingModule],
-      providers: [
-        {
-          provide: STATE_QUERY,
-          useValue: mockStateQuery,
-        },
+      imports: [
+        ProjectListPageModule,
+        RouterTestingModule,
+        ApolloTestingModule,
       ],
     }).compileComponents();
   });
@@ -35,7 +36,23 @@ describe('ProjectListPageComponent', () => {
       fixture,
       ProjectListPageComponentHarness
     );
+    testingController = TestBed.inject(ApolloTestingController);
+  });
+
+  beforeEach(async () => {
+    const op = testingController.expectOne(PROJECT_LIST_PAGE_QUERY);
+    op.flush({
+      data: {
+        viewer: {
+          projects: mockProjects,
+        },
+      },
+    });
     fixture.detectChanges();
+  });
+
+  afterEach(() => {
+    testingController.verify();
   });
 
   it('should create', () => {
