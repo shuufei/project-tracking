@@ -75,7 +75,7 @@
             </button>
             <ui-color-select-popup
               [triggerEl]="colorSelectTriggerEl"
-              [currentColor]="state$.color"
+              [currentColor]="state.color"
               (changedColor)="onChangedColor$.next($event)"
             ></ui-color-select-popup>
           </div>
@@ -92,4 +92,16 @@
   </ng-container>
 </ng-template>
 
-<ng-template #selectMemberBlock></ng-template>
+<ng-template #selectMemberBlock>
+  <ng-container *ngIf="state$ | async as state">
+    <div>
+      <label for="" class="text-black-light2 text-s2 font-medium">管理者</label>
+      <div class="flex items-center mt-2">
+        <ui-user-icon class="w-8" [src]="state.me.icon"></ui-user-icon>
+        <span class="text-s1 text-black-default font-medium ml-2">{{
+          state.me.name
+        }}</span>
+      </div>
+    </div>
+  </ng-container>
+</ng-template>

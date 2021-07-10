@@ -1,10 +1,12 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  Inject,
   Input,
   OnInit,
 } from '@angular/core';
-import { Color } from '@bison/shared/domain';
+import { IMeStateQuery, ME_STATE_QUERY } from '@bison/frontend/application';
+import { Color, User } from '@bison/shared/domain';
 import { RxState } from '@rx-angular/state';
 import { Subject } from 'rxjs';
 
@@ -18,6 +20,7 @@ type State = {
   projectName: string;
   projectDescription: string;
   step: keyof typeof STEP;
+  me: User;
 };
 
 @Component({
@@ -40,7 +43,10 @@ export class ProjectCreateSheetComponent implements OnInit {
   readonly onClickedNextStep$ = new Subject<void>();
   readonly onClickedBackStep$ = new Subject<void>();
 
-  constructor(private state: RxState<State>) {}
+  constructor(
+    private state: RxState<State>,
+    @Inject(ME_STATE_QUERY) private meStateQuery: IMeStateQuery
+  ) {}
 
   ngOnInit(): void {
     this.state.set({
@@ -56,5 +62,6 @@ export class ProjectCreateSheetComponent implements OnInit {
     this.state.connect('step', this.onClickedBackStep$, () => {
       return this.step.inputProperty;
     });
+    this.state.connect('me', this.meStateQuery.me$());
   }
 }

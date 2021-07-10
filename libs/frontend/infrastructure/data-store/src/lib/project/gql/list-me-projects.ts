@@ -3,6 +3,7 @@ import { gql } from 'apollo-angular';
 export const LIST_ME_PROJECTS = gql`
   query MeProjectsQuery {
     viewer {
+      id
       projects {
         id
         name
