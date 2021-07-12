@@ -38,7 +38,7 @@
               <div class="step-count active">2</div>
             </div>
             <div right-side>
-              <button ui-button>作成</button>
+              <button ui-button (click)="onClickedCreate$.next()">作成</button>
             </div>
           </ui-sheet-footer>
         </ng-container>
@@ -94,13 +94,48 @@
 
 <ng-template #selectMemberBlock>
   <ng-container *ngIf="state$ | async as state">
-    <div>
-      <label for="" class="text-black-light2 text-s2 font-medium">管理者</label>
-      <div class="flex items-center mt-2">
-        <ui-user-icon class="w-8" [src]="state.me?.icon"></ui-user-icon>
-        <span class="text-s1 text-black-default font-medium ml-2">{{
-          state.me?.name
-        }}</span>
+    <div class="mt-6">
+      <div>
+        <label for="" class="text-black-light2 text-s2 font-medium"
+          >管理者</label
+        >
+        <div class="flex items-center mt-2">
+          <ui-user-icon class="w-8" [src]="state.me?.icon"></ui-user-icon>
+          <span class="text-s1 text-black-default font-medium ml-2">{{
+            state.me?.name
+          }}</span>
+        </div>
+      </div>
+
+      <div class="mt-8">
+        <label for="" class="text-black-light2 text-s2 font-medium"
+          >メンバー</label
+        >
+        <div>
+          <button ui-stroked-button #memberSelectTrigger class="mt-3">
+            メンバーを選択
+          </button>
+          <ui-user-select-popup
+            [triggerEl]="memberSelectTrigger.elementRef.nativeElement"
+            [users]="state.users"
+            (selectUsers)="onSelectedMembers$.next($event)"
+          ></ui-user-select-popup>
+          <div class="mt-3">
+            <ng-container *ngFor="let member of state.members">
+              <div class="flex items-center mt-2">
+                <ui-user-icon class="w-8" [src]="member.icon"></ui-user-icon>
+                <span class="text-s1 text-black-default font-medium ml-2">{{
+                  member.name
+                }}</span>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="(state.members?.length || 0) === 0">
+              <p class="text-s3 text-black-light3">
+                メンバーが選択されていません
+              </p>
+            </ng-container>
+          </div>
+        </div>
       </div>
     </div>
   </ng-container>

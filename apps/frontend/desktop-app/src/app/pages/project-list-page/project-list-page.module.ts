@@ -12,6 +12,7 @@ import {
   TextareaModule,
   TextFieldModule,
   UserIconModule,
+  UserSelectPopupModule,
 } from '@bison/frontend/ui';
 import { ProjectCreateSheetComponent } from './components/project-create-sheet/project-create-sheet.component';
 import { ProjectListPageRoutingModule } from './project-list-page-routing.module';
@@ -33,6 +34,7 @@ import { ProjectListPageComponent } from './project-list-page.component';
     TextFieldModule,
     TextareaModule,
     SheetFooterModule,
+    UserSelectPopupModule,
   ],
   exports: [ProjectListPageComponent],
 })
