@@ -6,11 +6,16 @@ import {
 } from '@angular/core';
 import { ApolloQueryResult } from '@apollo/client/core';
 import { Color, User } from '@bison/shared/domain';
-import { User as ApiUser } from '@bison/shared/schema';
+import {
+  CreateProjectInput,
+  Project,
+  User as ApiUser,
+} from '@bison/shared/schema';
 import { RxState } from '@rx-angular/state';
 import { Apollo, gql } from 'apollo-angular';
 import { Observable, Subject } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
+import { exhaustMap, filter, map } from 'rxjs/operators';
+import { convertToApiColorFromDomainColor } from '../../../../util/convert-to-api-color-from-domain-color';
 
 export const ME_FIELDS = gql`
   fragment MeParts on User {
@@ -35,6 +40,30 @@ const USERS_QUERY = gql`
       id
       name
       icon
+    }
+  }
+`;
+
+const CREATE_PROJECT_MUTATION = gql`
+  mutation CreateProject($input: CreateProjectInput!) {
+    createProject(input: $input) {
+      id
+      name
+      description
+      color
+      admin {
+        id
+        name
+        icon
+      }
+      members {
+        id
+        name
+        icon
+      }
+      boards {
+        id
+      }
     }
   }
 `;
@@ -99,9 +128,18 @@ export class ProjectCreateSheetComponent implements OnInit {
         .map((id) => state.users.find((v) => v.id === id))
         .filter((v): v is User => v != null);
     });
+    this.state.hold(
+      this.onClickedCreate$.pipe(
+        exhaustMap(() => this.mutateCreateProject$(this.state.get()))
+      )
+    );
   }
 
   private queryMe$() {
+    // TODO: Queryとして共通化
+    // Cacheからの自由なqueryとAPIからの自由なqueryを行うserviceを定義する。
+    // PageからはAPIからの取得。各Componentからは、cacheからの取得を行わせる
+    // そのPageで何をQueryするべきかをもう少しわかりやすくしたほうがいい？
     return this.apollo
       .watchQuery<{ viewer?: ApiUser }>({
         query: ME_QUERY,
@@ -125,6 +163,7 @@ export class ProjectCreateSheetComponent implements OnInit {
   }
 
   private queryUsers$(): Observable<User[]> {
+    // TODO: Queryとして共通化
     return this.apollo
       .watchQuery<{ users: ApiUser[] }>({
         query: USERS_QUERY,
@@ -141,5 +180,54 @@ export class ProjectCreateSheetComponent implements OnInit {
           });
         })
       );
+  }
+
+  private mutateCreateProject$(state: State) {
+    if (state.me?.id == null) {
+      throw new Error('me is undefined');
+    }
+    const input: CreateProjectInput = {
+      name: state.projectName,
+      description: state.projectDescription,
+      color: convertToApiColorFromDomainColor(state.color),
+      adminUserId: state.me?.id,
+    };
+
+    // TODO: Usecaseとして共通化
+    return this.apollo.mutate<{ createProject: Project }>({
+      mutation: CREATE_PROJECT_MUTATION,
+      variables: {
+        input,
+      },
+      update(cache, response) {
+        const query = gql`
+          query Viewer {
+            viewer {
+              id
+              projects {
+                id
+              }
+            }
+          }
+        `;
+        const data = cache.readQuery<{ viewer: ApiUser }>({
+          query: query,
+        });
+        const projects = [
+          ...(data?.viewer.projects ?? []),
+          response.data?.createProject,
+        ];
+        cache.writeQuery({
+          query: query,
+          data: {
+            ...data,
+            viewer: {
+              ...data?.viewer,
+              projects,
+            },
+          },
+        });
+      },
+    });
   }
 }

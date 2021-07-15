@@ -86,6 +86,7 @@ export class ProjectListPageComponent implements OnInit {
       this.apollo
         .watchQuery<{ viewer: ApiUser }>({
           query: PROJECT_LIST_PAGE_QUERY,
+          nextFetchPolicy: 'cache-only',
         })
         .valueChanges.pipe(
           map((response) => {
