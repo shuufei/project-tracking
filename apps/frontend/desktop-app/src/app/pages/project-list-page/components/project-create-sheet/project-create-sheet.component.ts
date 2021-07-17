@@ -70,16 +70,10 @@ const CREATE_PROJECT_MUTATION = gql`
   }
 `;
 
-const STEP = {
-  inputProperty: 'inputProperty',
-  selectMember: 'selectMember',
-} as const;
-
 type State = {
   color: Color;
   projectName: string;
   projectDescription: string;
-  step: keyof typeof STEP;
   me?: User;
   users: User[];
   members: User[];
@@ -96,7 +90,6 @@ type State = {
 export class ProjectCreateSheetComponent implements OnInit {
   @Input() triggerEl?: HTMLElement;
 
-  readonly step = STEP;
   readonly state$ = this.state.select();
   readonly isSheetOpen$ = this.state.select('isSheetOpen');
   readonly onChangedColor$ = new Subject<Color>();
@@ -119,18 +112,11 @@ export class ProjectCreateSheetComponent implements OnInit {
   ngOnInit(): void {
     this.state.set({
       color: 'Gray',
-      step: 'inputProperty',
       isSheetOpen: true,
     });
     this.state.connect('color', this.onChangedColor$);
     this.state.connect('projectName', this.onChangedProjectName$);
     this.state.connect('projectDescription', this.onChangedProjectDescription$);
-    this.state.connect('step', this.onClickedNextStep$, () => {
-      return this.step.selectMember;
-    });
-    this.state.connect('step', this.onClickedBackStep$, () => {
-      return this.step.inputProperty;
-    });
     this.state.connect('me', this.queryMe$());
     this.state.connect('users', this.queryUsers$());
     this.state.connect('members', this.onSelectedMembers$, (state, userIds) => {
