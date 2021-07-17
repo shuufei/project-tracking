@@ -7,14 +7,16 @@ import {
 } from '@angular/core';
 import { ApolloQueryResult } from '@apollo/client/core';
 import {
+  APOLLO_DATA_QUERY,
   CREATE_PROJECT_USECASE,
+  IApolloDataQuery,
   ICreateProjectUsecase,
 } from '@bison/frontend/application';
 import { Color, User } from '@bison/shared/domain';
 import { CreateProjectInput, User as ApiUser } from '@bison/shared/schema';
 import { RxState } from '@rx-angular/state';
 import { TuiNotification, TuiNotificationsService } from '@taiga-ui/core';
-import { Apollo, gql } from 'apollo-angular';
+import { gql } from 'apollo-angular';
 import { Observable, Subject } from 'rxjs';
 import { exhaustMap, filter, map, tap } from 'rxjs/operators';
 import { convertToApiColorFromDomainColor } from '../../../../util/convert-to-api-color-from-domain-color';
@@ -27,22 +29,11 @@ export const ME_FIELDS = gql`
   }
 `;
 
-export const ME_QUERY = gql`
-  ${ME_FIELDS}
-  query MeQuery {
-    viewer {
-      ...MeParts
-    }
-  }
-`;
-
-const USERS_QUERY = gql`
-  query UsersQuery {
-    users {
-      id
-      name
-      icon
-    }
+const USER_FIELDS = gql`
+  fragment UserParts on User {
+    id
+    name
+    icon
   }
 `;
 
@@ -95,20 +86,19 @@ export class ProjectCreateSheetComponent implements OnInit {
   readonly onChangedProjectDescription$ = new Subject<
     State['projectDescription']
   >();
-  readonly onClickedNextStep$ = new Subject<void>();
-  readonly onClickedBackStep$ = new Subject<void>();
   readonly onClickedCreate$ = new Subject<void>();
   readonly onSelectedMembers$ = new Subject<User['id'][]>();
   readonly onClosedeSheet$ = new Subject<void>();
   readonly onOpenedSheet$ = new Subject<void>();
 
   constructor(
-    private state: RxState<State>,
-    private apollo: Apollo,
+    private readonly state: RxState<State>,
     @Inject(TuiNotificationsService)
     private readonly notificationsService: TuiNotificationsService,
     @Inject(CREATE_PROJECT_USECASE)
-    private readonly createProjectUsecase: ICreateProjectUsecase
+    private readonly createProjectUsecase: ICreateProjectUsecase,
+    @Inject(APOLLO_DATA_QUERY)
+    private readonly apolloDataQuery: IApolloDataQuery
   ) {}
 
   ngOnInit(): void {
@@ -144,16 +134,12 @@ export class ProjectCreateSheetComponent implements OnInit {
   }
 
   private queryMe$() {
-    // TODO: Queryとして共通化
-    // Cacheからの自由なqueryとAPIからの自由なqueryを行うserviceを定義する。
-    // PageからはAPIからの取得。各Componentからは、cacheからの取得を行わせる
-    // そのPageで何をQueryするべきかをもう少しわかりやすくしたほうがいい？
-    return this.apollo
-      .watchQuery<{ viewer?: ApiUser }>({
-        query: ME_QUERY,
-        fetchPolicy: 'cache-only',
-      })
-      .valueChanges.pipe(
+    return this.apolloDataQuery
+      .queryViewer(
+        { name: 'MeParts', fields: ME_FIELDS },
+        { fetchPolicy: 'cache-only' }
+      )
+      .pipe(
         filter((response): response is ApolloQueryResult<{
           viewer: ApiUser;
         }> => {
@@ -171,12 +157,12 @@ export class ProjectCreateSheetComponent implements OnInit {
   }
 
   private queryUsers$(): Observable<User[]> {
-    // TODO: Queryとして共通化
-    return this.apollo
-      .watchQuery<{ users: ApiUser[] }>({
-        query: USERS_QUERY,
+    return this.apolloDataQuery
+      .queryUsers({
+        name: 'UserParts',
+        fields: USER_FIELDS,
       })
-      .valueChanges.pipe(
+      .pipe(
         map((response) => {
           const { users } = response.data;
           return users.map((user) => {

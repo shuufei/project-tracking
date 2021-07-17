@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import {
+  ApolloDataQuery,
+  APOLLO_DATA_QUERY,
   CreateProjectUsecase,
   CREATE_PROJECT_USECASE,
 } from '@bison/frontend/application';
@@ -45,6 +47,10 @@ import { ProjectListPageComponent } from './project-list-page.component';
     {
       provide: CREATE_PROJECT_USECASE,
       useClass: CreateProjectUsecase,
+    },
+    {
+      provide: APOLLO_DATA_QUERY,
+      useClass: ApolloDataQuery,
     },
   ],
 })
