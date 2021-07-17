@@ -101,6 +101,8 @@ export class ProjectCreateSheetComponent implements OnInit {
   readonly onClickedBackStep$ = new Subject<void>();
   readonly onClickedCreate$ = new Subject<void>();
   readonly onSelectedMembers$ = new Subject<User['id'][]>();
+  readonly onClosedeSheet$ = new Subject<void>();
+  readonly onOpenedSheet$ = new Subject<void>();
 
   constructor(
     private state: RxState<State>,
@@ -129,6 +131,16 @@ export class ProjectCreateSheetComponent implements OnInit {
         exhaustMap(() => this.mutateCreateProject$(this.state.get()))
       )
     );
+    this.state.connect('isSheetOpen', this.onOpenedSheet$, () => true);
+    this.state.connect(this.onClosedeSheet$, () => {
+      return {
+        color: 'Gray',
+        projectName: undefined,
+        projectDescription: undefined,
+        members: [],
+        isSheetOpen: false,
+      };
+    });
   }
 
   private queryMe$() {

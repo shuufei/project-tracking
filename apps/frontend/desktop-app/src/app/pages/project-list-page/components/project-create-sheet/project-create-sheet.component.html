@@ -3,6 +3,8 @@
   [zindex]="100"
   [title]="'プロジェクトを作成'"
   [isOpen$]="isSheetOpen$"
+  (opened)="onOpenedSheet$.next()"
+  (closed)="onClosedeSheet$.next()"
 >
   <ng-container *ngIf="state$ | async as state">
     <div class="sheet-content">

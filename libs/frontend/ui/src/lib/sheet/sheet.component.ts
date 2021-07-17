@@ -2,8 +2,10 @@ import { animate, style, transition, trigger } from '@angular/animations';
 import {
   ChangeDetectionStrategy,
   Component,
+  EventEmitter,
   Input,
   OnInit,
+  Output,
 } from '@angular/core';
 import { RxState } from '@rx-angular/state';
 import { fromEvent, Observable, Subject } from 'rxjs';
@@ -51,6 +53,8 @@ export class SheetComponent implements OnInit {
   @Input() zindex = '1';
   @Input()
   isOpen$: Observable<boolean> = new Subject<boolean>().asObservable();
+  @Output() closed = new EventEmitter<void>();
+  @Output() opened = new EventEmitter<void>();
 
   readonly state$ = this.state.select();
 
@@ -75,6 +79,9 @@ export class SheetComponent implements OnInit {
     this.state.connect('isOpen', this.isOpen$);
     this.state.set({
       isOpen: false,
+    });
+    this.state.hold(this.state.select('isOpen'), (isOpen) => {
+      isOpen ? this.opened.emit() : this.closed.emit();
     });
   }
 }
