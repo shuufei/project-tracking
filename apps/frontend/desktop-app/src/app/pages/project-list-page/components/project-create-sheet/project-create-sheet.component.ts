@@ -19,6 +19,7 @@ import { TuiNotification, TuiNotificationsService } from '@taiga-ui/core';
 import { gql } from 'apollo-angular';
 import { Observable, Subject } from 'rxjs';
 import { exhaustMap, filter, map, tap } from 'rxjs/operators';
+import { ChangedPropertyEvent } from '../../../../shared/components/project-property-edit-form/project-property-edit-form.component';
 import { convertToApiColorFromDomainColor } from '../../../../util/convert-to-api-color-from-domain-color';
 
 export const ME_FIELDS = gql`
@@ -79,13 +80,16 @@ type State = {
 export class ProjectCreateSheetComponent implements OnInit {
   @Input() triggerEl?: HTMLElement;
 
+  /**
+   * State
+   */
   readonly state$ = this.state.select();
   readonly isSheetOpen$ = this.state.select('isSheetOpen');
-  readonly onChangedColor$ = new Subject<Color>();
-  readonly onChangedProjectName$ = new Subject<State['projectName']>();
-  readonly onChangedProjectDescription$ = new Subject<
-    State['projectDescription']
-  >();
+
+  /**
+   * Event
+   */
+  readonly onChangedProjectProperty$ = new Subject<ChangedPropertyEvent>();
   readonly onClickedCreate$ = new Subject<void>();
   readonly onSelectedMembers$ = new Subject<User['id'][]>();
   readonly onClosedeSheet$ = new Subject<void>();
@@ -106,9 +110,14 @@ export class ProjectCreateSheetComponent implements OnInit {
       color: 'Gray',
       isSheetOpen: true,
     });
-    this.state.connect('color', this.onChangedColor$);
-    this.state.connect('projectName', this.onChangedProjectName$);
-    this.state.connect('projectDescription', this.onChangedProjectDescription$);
+    this.state.connect(this.onChangedProjectProperty$, (state, event) => {
+      return {
+        ...state,
+        projectName: event.name,
+        projectDescription: event.description,
+        color: event.color,
+      };
+    });
     this.state.connect('me', this.queryMe$());
     this.state.connect('users', this.queryUsers$());
     this.state.connect('members', this.onSelectedMembers$, (state, userIds) => {

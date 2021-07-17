@@ -8,18 +8,15 @@ import {
 } from '@bison/frontend/application';
 import {
   ButtonModule,
-  ColorIconModule,
-  ColorSelectPopupModule,
   HeaderModule,
   IconModule,
   ProjectCardModule,
   SheetFooterModule,
   SheetModule,
-  TextareaModule,
-  TextFieldModule,
   UserIconModule,
   UserSelectPopupModule,
 } from '@bison/frontend/ui';
+import { ProjectPropertyEditFormModule } from '../../shared/components/project-property-edit-form/project-property-edit-form.module';
 import { ProjectCreateSheetComponent } from './components/project-create-sheet/project-create-sheet.component';
 import { ProjectListPageRoutingModule } from './project-list-page-routing.module';
 import { ProjectListPageComponent } from './project-list-page.component';
@@ -35,12 +32,9 @@ import { ProjectListPageComponent } from './project-list-page.component';
     ProjectCardModule,
     HeaderModule,
     SheetModule,
-    ColorSelectPopupModule,
-    ColorIconModule,
-    TextFieldModule,
-    TextareaModule,
     SheetFooterModule,
     UserSelectPopupModule,
+    ProjectPropertyEditFormModule,
   ],
   exports: [ProjectListPageComponent],
   providers: [

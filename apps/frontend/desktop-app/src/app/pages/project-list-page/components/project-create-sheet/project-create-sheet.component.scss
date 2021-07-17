@@ -7,35 +7,9 @@ $width: 680px;
 .sheet-content {
   width: $width;
   margin: 0 auto;
+  padding-bottom: 120px;
 }
 
 .sheet-footer {
   width: $width;
-}
-
-.step-count {
-  height: 24px;
-  width: 24px;
-  border-radius: 50%;
-  font-size: var(--bison-font-size-s4);
-  font-weight: var(--bison-font-weight-medium);
-  color: var(--bison-primary-default);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  &.active {
-    color: var(--bison-white);
-    background-color: var(--bison-primary-default);
-  }
-}
-
-.project-name {
-  font-size: var(--bison-font-size-l1);
-  font-weight: var(--bison-font-weight-medium);
-  padding: 8px 12px;
-}
-
-.project-description {
-  padding: 8px 12px;
-  font-weight: var(--bison-font-weight-medium);
 }

@@ -8,106 +8,56 @@
 >
   <ng-container *ngIf="state$ | async as state">
     <div class="sheet-content">
-      <ng-container *ngIf="state$ | async as state">
-        <div class="mt-6">
-          <div class="flex items-center">
-            <div class="w-full">
-              <label for="" class="text-black-light2 text-s2 font-medium"
-                >プロジェクト名</label
-              >
-              <ui-text-field
-                placeholder="プロジェクト名を入力してください"
-                class="project-name w-full mt-2"
-                [borderless]="true"
-                [text]="state.projectName"
-                (changedValue)="onChangedProjectName$.next($event)"
-              ></ui-text-field>
-            </div>
+      <bis-project-property-edit-form
+        class="mt-6"
+        [name]="state.projectName"
+        [description]="state.projectDescription"
+        [color]="state.color"
+        (changed)="onChangedProjectProperty$.next($event)"
+      ></bis-project-property-edit-form>
+
+      <div class="mt-8">
+        <label for="" class="text-black-light2 text-s2 font-medium"
+          >管理者</label
+        >
+        <div class="flex items-center mt-2">
+          <ui-user-icon class="w-8" [src]="state.me?.icon"></ui-user-icon>
+          <span class="text-s1 text-black-default font-medium ml-2">{{
+            state.me?.name
+          }}</span>
+        </div>
+      </div>
+
+      <div class="mt-8">
+        <label for="" class="text-black-light2 text-s2 font-medium"
+          >メンバー</label
+        >
+        <div>
+          <button ui-stroked-button #memberSelectTrigger class="mt-3">
+            メンバーを選択
+          </button>
+          <ui-user-select-popup
+            [triggerEl]="memberSelectTrigger.elementRef.nativeElement"
+            [users]="state.users || []"
+            (selectUsers)="onSelectedMembers$.next($event)"
+          ></ui-user-select-popup>
+          <div class="mt-3">
+            <ng-container *ngFor="let member of state.members">
+              <div class="flex items-center mt-2">
+                <ui-user-icon class="w-8" [src]="member.icon"></ui-user-icon>
+                <span class="text-s1 text-black-default font-medium ml-2">{{
+                  member.name
+                }}</span>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="(state.members?.length || 0) === 0">
+              <p class="text-s3 text-black-light3">
+                メンバーが選択されていません
+              </p>
+            </ng-container>
           </div>
         </div>
-
-        <div class="mt-8">
-          <label for="" class="text-black-light2 text-s2 font-medium"
-            >プロジェクトの説明</label
-          >
-          <ui-textarea
-            placeholder="任意: プロジェクトの説明を入力してください"
-            [rows]="5"
-            [borderless]="true"
-            [text]="state.projectDescription"
-            class="w-full mt-2 project-description"
-            (changedValue)="onChangedProjectDescription$.next($event)"
-          ></ui-textarea>
-        </div>
-
-        <div class="mt-8">
-          <label for="" class="text-black-light2 text-s2 font-medium">色</label>
-          <div class="relative mt-2">
-            <button
-              #colorSelectTriggerEl
-              class="p-0 flex items-center focus:outline-none"
-            >
-              <ui-color-icon
-                class="h-4 w-4"
-                [color]="state.color"
-              ></ui-color-icon>
-              <ui-icon
-                icon="chevron-down"
-                size="s"
-                color="primary-light1 ml-1"
-              ></ui-icon>
-            </button>
-            <ui-color-select-popup
-              [triggerEl]="colorSelectTriggerEl"
-              [currentColor]="state.color"
-              (changedColor)="onChangedColor$.next($event)"
-            ></ui-color-select-popup>
-          </div>
-        </div>
-
-        <div class="mt-8">
-          <label for="" class="text-black-light2 text-s2 font-medium"
-            >管理者</label
-          >
-          <div class="flex items-center mt-2">
-            <ui-user-icon class="w-8" [src]="state.me?.icon"></ui-user-icon>
-            <span class="text-s1 text-black-default font-medium ml-2">{{
-              state.me?.name
-            }}</span>
-          </div>
-        </div>
-
-        <div class="mt-8">
-          <label for="" class="text-black-light2 text-s2 font-medium"
-            >メンバー</label
-          >
-          <div>
-            <button ui-stroked-button #memberSelectTrigger class="mt-3">
-              メンバーを選択
-            </button>
-            <ui-user-select-popup
-              [triggerEl]="memberSelectTrigger.elementRef.nativeElement"
-              [users]="state.users || []"
-              (selectUsers)="onSelectedMembers$.next($event)"
-            ></ui-user-select-popup>
-            <div class="mt-3">
-              <ng-container *ngFor="let member of state.members">
-                <div class="flex items-center mt-2">
-                  <ui-user-icon class="w-8" [src]="member.icon"></ui-user-icon>
-                  <span class="text-s1 text-black-default font-medium ml-2">{{
-                    member.name
-                  }}</span>
-                </div>
-              </ng-container>
-              <ng-container *ngIf="(state.members?.length || 0) === 0">
-                <p class="text-s3 text-black-light3">
-                  メンバーが選択されていません
-                </p>
-              </ng-container>
-            </div>
-          </div>
-        </div>
-      </ng-container>
+      </div>
 
       <ui-sheet-footer class="sheet-footer bottom-6 fixed">
         <div right-side>
