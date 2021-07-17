@@ -6,12 +6,12 @@ import {
   OnInit,
 } from '@angular/core';
 import { ApolloQueryResult } from '@apollo/client/core';
-import { Color, User } from '@bison/shared/domain';
 import {
-  CreateProjectInput,
-  Project,
-  User as ApiUser,
-} from '@bison/shared/schema';
+  CREATE_PROJECT_USECASE,
+  ICreateProjectUsecase,
+} from '@bison/frontend/application';
+import { Color, User } from '@bison/shared/domain';
+import { CreateProjectInput, User as ApiUser } from '@bison/shared/schema';
 import { RxState } from '@rx-angular/state';
 import { TuiNotification, TuiNotificationsService } from '@taiga-ui/core';
 import { Apollo, gql } from 'apollo-angular';
@@ -46,26 +46,24 @@ const USERS_QUERY = gql`
   }
 `;
 
-const CREATE_PROJECT_MUTATION = gql`
-  mutation CreateProject($input: CreateProjectInput!) {
-    createProject(input: $input) {
+const PROJECT_FIELDS = gql`
+  fragment ProjectParts on Project {
+    id
+    name
+    description
+    color
+    admin {
       id
       name
-      description
-      color
-      admin {
-        id
-        name
-        icon
-      }
-      members {
-        id
-        name
-        icon
-      }
-      boards {
-        id
-      }
+      icon
+    }
+    members {
+      id
+      name
+      icon
+    }
+    boards {
+      id
     }
   }
 `;
@@ -108,7 +106,9 @@ export class ProjectCreateSheetComponent implements OnInit {
     private state: RxState<State>,
     private apollo: Apollo,
     @Inject(TuiNotificationsService)
-    private readonly notificationsService: TuiNotificationsService
+    private readonly notificationsService: TuiNotificationsService,
+    @Inject(CREATE_PROJECT_USECASE)
+    private readonly createProjectUsecase: ICreateProjectUsecase
   ) {}
 
   ngOnInit(): void {
@@ -200,43 +200,10 @@ export class ProjectCreateSheetComponent implements OnInit {
       color: convertToApiColorFromDomainColor(state.color),
       adminUserId: state.me?.id,
     };
-
-    // TODO: Usecaseとして共通化
-    return this.apollo
-      .mutate<{ createProject: Project }>({
-        mutation: CREATE_PROJECT_MUTATION,
-        variables: {
-          input,
-        },
-        update(cache, response) {
-          const query = gql`
-            query Viewer {
-              viewer {
-                id
-                projects {
-                  id
-                }
-              }
-            }
-          `;
-          const data = cache.readQuery<{ viewer: ApiUser }>({
-            query: query,
-          });
-          const projects = [
-            ...(data?.viewer.projects ?? []),
-            response.data?.createProject,
-          ];
-          cache.writeQuery({
-            query: query,
-            data: {
-              ...data,
-              viewer: {
-                ...data?.viewer,
-                projects,
-              },
-            },
-          });
-        },
+    return this.createProjectUsecase
+      .execute(input, {
+        name: 'ProjectParts',
+        fields: PROJECT_FIELDS,
       })
       .pipe(
         tap(() => {

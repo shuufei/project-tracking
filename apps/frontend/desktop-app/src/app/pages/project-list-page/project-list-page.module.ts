@@ -1,6 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import {
+  CreateProjectUsecase,
+  CREATE_PROJECT_USECASE,
+} from '@bison/frontend/application';
+import {
   ButtonModule,
   ColorIconModule,
   ColorSelectPopupModule,
@@ -37,5 +41,11 @@ import { ProjectListPageComponent } from './project-list-page.component';
     UserSelectPopupModule,
   ],
   exports: [ProjectListPageComponent],
+  providers: [
+    {
+      provide: CREATE_PROJECT_USECASE,
+      useClass: CreateProjectUsecase,
+    },
+  ],
 })
 export class ProjectListPageModule {}
