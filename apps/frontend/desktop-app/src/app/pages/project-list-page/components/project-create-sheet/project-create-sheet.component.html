@@ -1,4 +1,9 @@
-<ui-sheet [triggerEl]="triggerEl" [zindex]="100" [title]="'プロジェクトを作成'">
+<ui-sheet
+  [triggerEl]="triggerEl"
+  [zindex]="100"
+  [title]="'プロジェクトを作成'"
+  [isOpen$]="isSheetOpen$"
+>
   <ng-container *ngIf="state$ | async as state">
     <div class="sheet-content">
       <ng-container [ngSwitch]="state.step">

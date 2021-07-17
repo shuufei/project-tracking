@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  Inject,
   Input,
   OnInit,
 } from '@angular/core';
@@ -12,9 +13,10 @@ import {
   User as ApiUser,
 } from '@bison/shared/schema';
 import { RxState } from '@rx-angular/state';
+import { TuiNotification, TuiNotificationsService } from '@taiga-ui/core';
 import { Apollo, gql } from 'apollo-angular';
 import { Observable, Subject } from 'rxjs';
-import { exhaustMap, filter, map } from 'rxjs/operators';
+import { exhaustMap, filter, map, tap } from 'rxjs/operators';
 import { convertToApiColorFromDomainColor } from '../../../../util/convert-to-api-color-from-domain-color';
 
 export const ME_FIELDS = gql`
@@ -81,6 +83,7 @@ type State = {
   me?: User;
   users: User[];
   members: User[];
+  isSheetOpen: boolean;
 };
 
 @Component({
@@ -95,6 +98,7 @@ export class ProjectCreateSheetComponent implements OnInit {
 
   readonly step = STEP;
   readonly state$ = this.state.select();
+  readonly isSheetOpen$ = this.state.select('isSheetOpen');
   readonly onChangedColor$ = new Subject<Color>();
   readonly onChangedProjectName$ = new Subject<State['projectName']>();
   readonly onChangedProjectDescription$ = new Subject<
@@ -105,12 +109,18 @@ export class ProjectCreateSheetComponent implements OnInit {
   readonly onClickedCreate$ = new Subject<void>();
   readonly onSelectedMembers$ = new Subject<User['id'][]>();
 
-  constructor(private state: RxState<State>, private apollo: Apollo) {}
+  constructor(
+    private state: RxState<State>,
+    private apollo: Apollo,
+    @Inject(TuiNotificationsService)
+    private readonly notificationsService: TuiNotificationsService
+  ) {}
 
   ngOnInit(): void {
     this.state.set({
       color: 'Gray',
       step: 'inputProperty',
+      isSheetOpen: true,
     });
     this.state.connect('color', this.onChangedColor$);
     this.state.connect('projectName', this.onChangedProjectName$);
@@ -194,40 +204,54 @@ export class ProjectCreateSheetComponent implements OnInit {
     };
 
     // TODO: Usecaseとして共通化
-    return this.apollo.mutate<{ createProject: Project }>({
-      mutation: CREATE_PROJECT_MUTATION,
-      variables: {
-        input,
-      },
-      update(cache, response) {
-        const query = gql`
-          query Viewer {
-            viewer {
-              id
-              projects {
+    return this.apollo
+      .mutate<{ createProject: Project }>({
+        mutation: CREATE_PROJECT_MUTATION,
+        variables: {
+          input,
+        },
+        update(cache, response) {
+          const query = gql`
+            query Viewer {
+              viewer {
                 id
+                projects {
+                  id
+                }
               }
             }
-          }
-        `;
-        const data = cache.readQuery<{ viewer: ApiUser }>({
-          query: query,
-        });
-        const projects = [
-          ...(data?.viewer.projects ?? []),
-          response.data?.createProject,
-        ];
-        cache.writeQuery({
-          query: query,
-          data: {
-            ...data,
-            viewer: {
-              ...data?.viewer,
-              projects,
+          `;
+          const data = cache.readQuery<{ viewer: ApiUser }>({
+            query: query,
+          });
+          const projects = [
+            ...(data?.viewer.projects ?? []),
+            response.data?.createProject,
+          ];
+          cache.writeQuery({
+            query: query,
+            data: {
+              ...data,
+              viewer: {
+                ...data?.viewer,
+                projects,
+              },
             },
-          },
-        });
-      },
-    });
+          });
+        },
+      })
+      .pipe(
+        tap(() => {
+          this.state.set('isSheetOpen', () => false);
+          this.notificationsService
+            .show('プロジェクトが作成されました', {
+              // SuccessとErrorを指定すると、背景色の要素が一番手前に来て、通知内容が隠れてしまう
+              // taiga-uiのバグ?
+              status: TuiNotification.Info,
+              hasCloseButton: true,
+            })
+            .subscribe();
+        })
+      );
   }
 }
