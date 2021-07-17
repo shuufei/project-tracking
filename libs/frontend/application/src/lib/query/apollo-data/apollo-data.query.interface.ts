@@ -1,20 +1,14 @@
 import { InjectionToken } from '@angular/core';
-import {
-  ApolloQueryResult,
-  DocumentNode,
-  WatchQueryFetchPolicy,
-} from '@apollo/client';
+import { ApolloQueryResult, WatchQueryFetchPolicy } from '@apollo/client';
 import { User } from '@bison/shared/schema';
 import { Observable } from 'rxjs';
+import { Fragment } from '../../types';
 
 export type QueryOptions = {
   fetchPolicy: WatchQueryFetchPolicy;
 };
 
-export type QueryArgs = [
-  framgnet: { name: string; fields: DocumentNode },
-  options?: QueryOptions
-];
+export type QueryArgs = [framgnet: Fragment, options?: QueryOptions];
 
 export interface IApolloDataQuery {
   queryViewer: (

@@ -18,7 +18,7 @@ import { RxState } from '@rx-angular/state';
 import { TuiNotification, TuiNotificationsService } from '@taiga-ui/core';
 import { gql } from 'apollo-angular';
 import { Observable, Subject } from 'rxjs';
-import { exhaustMap, filter, map, tap } from 'rxjs/operators';
+import { exhaustMap, filter, map, switchMap } from 'rxjs/operators';
 import { ChangedPropertyEvent } from '../../../../shared/components/project-property-edit-form/project-property-edit-form.component';
 import { convertToApiColorFromDomainColor } from '../../../../util/convert-to-api-color-from-domain-color';
 
@@ -201,16 +201,17 @@ export class ProjectCreateSheetComponent implements OnInit {
         fields: PROJECT_FIELDS,
       })
       .pipe(
-        tap(() => {
+        switchMap(() => {
           this.state.set('isSheetOpen', () => false);
-          this.notificationsService
-            .show('プロジェクトが作成されました', {
+          return this.notificationsService.show(
+            'プロジェクトが作成されました',
+            {
               // SuccessとErrorを指定すると、背景色の要素が一番手前に来て、通知内容が隠れてしまう
               // taiga-uiのバグ?
               status: TuiNotification.Info,
               hasCloseButton: true,
-            })
-            .subscribe();
+            }
+          );
         })
       );
   }

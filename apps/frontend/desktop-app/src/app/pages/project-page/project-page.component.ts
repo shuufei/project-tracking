@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Project } from '@bison/frontend/domain';
+import { COLOR } from '@bison/shared/domain';
 import { User } from '@bison/shared/schema';
 import { RxState } from '@rx-angular/state';
 import { Apollo, gql } from 'apollo-angular';
@@ -52,6 +53,18 @@ type State = {
 export class ProjectPageComponent implements OnInit {
   readonly state$ = this.state.select();
   private readonly onInit$ = new Subject();
+
+  readonly project: Project = {
+    id: 'id',
+    name: 'name',
+    description: 'description',
+    color: COLOR.Red,
+    admin: {
+      id: 'id',
+      name: 'admin name',
+    },
+    members: [],
+  };
 
   constructor(private state: RxState<State>, private apollo: Apollo) {}
 

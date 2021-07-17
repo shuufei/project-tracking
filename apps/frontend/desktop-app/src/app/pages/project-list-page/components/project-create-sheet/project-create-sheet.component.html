@@ -64,7 +64,7 @@
           <button
             ui-button
             (click)="onClickedCreate$.next()"
-            [disabled]="state.projectName == null"
+            [disabled]="!state.projectName"
           >
             作成
           </button>
