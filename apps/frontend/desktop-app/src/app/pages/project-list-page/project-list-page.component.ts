@@ -16,7 +16,7 @@ import { map } from 'rxjs/operators';
 import { convertToFrontendDomainProjectFromApiProject } from '../../util/convert-to-frontend-domain-project-from-api-project';
 import { ME_FIELDS } from './components/project-create-sheet/project-create-sheet.component';
 
-const VIEWER_FIELD = gql`
+export const VIEWER_FIELD = gql`
   ${ME_FIELDS}
   fragment ViewerParts on User {
     ...MeParts
