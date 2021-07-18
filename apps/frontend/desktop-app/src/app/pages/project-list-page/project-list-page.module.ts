@@ -16,6 +16,7 @@ import {
   UserIconModule,
   UserSelectPopupModule,
 } from '@bison/frontend/ui';
+import { ProjectDeleteDialogModule } from '../../shared/components/project-delete-dialog/project-delete-dialog.module';
 import { ProjectPropertyEditFormModule } from '../../shared/components/project-property-edit-form/project-property-edit-form.module';
 import { ProjectCreateSheetComponent } from './components/project-create-sheet/project-create-sheet.component';
 import { ProjectListPageRoutingModule } from './project-list-page-routing.module';
@@ -35,6 +36,7 @@ import { ProjectListPageComponent } from './project-list-page.component';
     SheetFooterModule,
     UserSelectPopupModule,
     ProjectPropertyEditFormModule,
+    ProjectDeleteDialogModule,
   ],
   exports: [ProjectListPageComponent],
   providers: [

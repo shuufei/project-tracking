@@ -48,6 +48,12 @@
         (clickedDelete)="onClickedDeleteProject$.next(project)"
       ></ui-project-card>
     </div>
+    <bis-project-delete-dialog
+      [isOpen$]="isOpenDeleteDialog$"
+      [project]="state.deleteState?.project"
+      (opened)="onOpenedDeleteProjectDialog$.next()"
+      (closed)="onClosedDeleteProjectDialog$.next()"
+    ></bis-project-delete-dialog>
   </ng-container>
   <ng-template #projectsEmpty>
     <div style="margin-top: 34vh" class="text-center">

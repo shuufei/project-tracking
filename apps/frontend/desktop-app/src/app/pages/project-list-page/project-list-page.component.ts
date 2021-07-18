@@ -49,6 +49,10 @@ export const VIEWER_FIELDS = gql`
 
 type State = {
   projects: Project[];
+  deleteState: {
+    isOpenDialog: boolean;
+    project?: Project;
+  };
 };
 
 @Component({
@@ -60,10 +64,16 @@ type State = {
 })
 export class ProjectListPageComponent implements OnInit {
   readonly state$ = this.state.select();
+  readonly isOpenDeleteDialog$ = this.state.select(
+    'deleteState',
+    'isOpenDialog'
+  );
 
   readonly onClickedDeleteProject$ = new Subject<Project>();
 
   private readonly onInit$ = new Subject();
+  readonly onOpenedDeleteProjectDialog$ = new Subject<void>();
+  readonly onClosedDeleteProjectDialog$ = new Subject<void>();
 
   constructor(
     private state: RxState<State>,
@@ -72,10 +82,31 @@ export class ProjectListPageComponent implements OnInit {
   ) {
     this.state.set({
       projects: [],
+      deleteState: {
+        isOpenDialog: false,
+      },
     });
-    // TODO: プロジェクト削除ダイアログを表示
-    this.state.hold(this.onClickedDeleteProject$, () => {
-      return;
+    this.state.hold(this.onClickedDeleteProject$, (project) => {
+      this.state.set('deleteState', () => ({
+        isOpenDialog: true,
+        project,
+      }));
+    });
+    this.state.connect(
+      'deleteState',
+      this.onOpenedDeleteProjectDialog$,
+      (state) => {
+        return {
+          ...state.deleteState,
+          isOpenDialog: true,
+        };
+      }
+    );
+    this.state.connect('deleteState', this.onClosedDeleteProjectDialog$, () => {
+      return {
+        isOpenDialog: false,
+        project: undefined,
+      };
     });
   }
 

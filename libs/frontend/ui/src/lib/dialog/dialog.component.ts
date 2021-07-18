@@ -35,10 +35,7 @@ type State = {
     trigger('fadeInOutDialog', [
       transition(':enter', [
         style({ transform: 'translate(-50%, -8%)' }),
-        animate(
-          '0.2s 0s ease-out',
-          style({ transform: 'translateY(-50%, 0)' })
-        ),
+        animate('0.2s 0s ease-out', style({ transform: 'translate(-50%, 0)' })),
       ]),
       transition(':leave', [
         style({ transform: 'translate(-50%, 0)', opacity: 1 }),
@@ -64,14 +61,13 @@ export class DialogComponent implements OnInit {
   constructor(private readonly state: RxState<State>) {}
 
   ngOnInit(): void {
-    if (this.triggerEl == null) {
-      return;
+    if (this.triggerEl != null) {
+      this.state.connect(
+        'isOpen',
+        fromEvent(this.triggerEl, 'click').pipe(mapTo(true))
+      );
     }
     this.state.connect('isOpen', this.isOpen$);
-    this.state.connect(
-      'isOpen',
-      fromEvent(this.triggerEl, 'click').pipe(mapTo(true))
-    );
     this.state.connect('isOpen', this.onClickOverlay$.pipe(mapTo(false)));
     this.state.set({
       isOpen: false,

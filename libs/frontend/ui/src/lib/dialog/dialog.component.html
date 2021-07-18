@@ -4,6 +4,7 @@
       class="overlay"
       (click)="onClickOverlay$.next()"
       @fadeInOutOverlay
+      [style.zIndex]="zindex"
     ></div>
     <div class="dialog" @fadeInOutDialog [style.zIndex]="zindex">
       <ng-content></ng-content>
