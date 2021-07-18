@@ -16,7 +16,7 @@ import { map } from 'rxjs/operators';
 import { convertToFrontendDomainProjectFromApiProject } from '../../util/convert-to-frontend-domain-project-from-api-project';
 import { ME_FIELDS } from './components/project-create-sheet/project-create-sheet.component';
 
-export const VIEWER_FIELD = gql`
+export const VIEWER_FIELDS = gql`
   ${ME_FIELDS}
   fragment ViewerParts on User {
     ...MeParts
@@ -90,7 +90,7 @@ export class ProjectListPageComponent implements OnInit {
       'projects',
       this.apolloDataQuery
         .queryViewer(
-          { name: 'ViewerParts', fields: VIEWER_FIELD },
+          { name: 'ViewerParts', fields: VIEWER_FIELDS },
           { nextFetchPolicy: 'cache-only' }
         )
         .pipe(
