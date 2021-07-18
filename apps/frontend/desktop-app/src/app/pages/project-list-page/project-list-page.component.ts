@@ -65,10 +65,6 @@ export class ProjectListPageComponent implements OnInit {
     this.state.set({
       projects: [],
     });
-    // TODO: プロジェクト作成ダイアログを表示
-    this.state.hold(this.onClickedCreateNewProject$, () => {
-      return;
-    });
     // TODO: プロジェクト削除ダイアログを表示
     this.state.hold(this.onClickedDeleteProject$, () => {
       return;

@@ -57,6 +57,7 @@
         class=""
         color="primary"
         (click)="onClickedCreateNewProject$.next()"
+        #createProjectButton
       >
         <ui-icon class="mr-1" icon="plus" size="s"></ui-icon>
         <span class="text-s2 font-medium leading-normal">
@@ -64,5 +65,8 @@
         </span>
       </button>
     </div>
+    <bis-project-create-sheet
+      [triggerEl]="createProjectButton.elementRef.nativeElement"
+    ></bis-project-create-sheet>
   </ng-template>
 </ng-container>
