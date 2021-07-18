@@ -18,8 +18,8 @@ import { ME_FIELDS } from './components/project-create-sheet/project-create-shee
 
 export const VIEWER_FIELDS = gql`
   ${ME_FIELDS}
-  fragment ViewerParts on User {
-    ...MeParts
+  fragment ViewerPartsInProjectListPage on User {
+    ...MePartsInProjectCreateSheet
     projects {
       id
       name
@@ -121,7 +121,7 @@ export class ProjectListPageComponent implements OnInit {
       'projects',
       this.apolloDataQuery
         .queryViewer(
-          { name: 'ViewerParts', fields: VIEWER_FIELDS },
+          { name: 'ViewerPartsInProjectListPage', fields: VIEWER_FIELDS },
           { nextFetchPolicy: 'cache-only' }
         )
         .pipe(

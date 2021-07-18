@@ -17,7 +17,7 @@ import { map } from 'rxjs/operators';
 import { convertToFrontendDomainProjectFromApiProject } from '../../util/convert-to-frontend-domain-project-from-api-project';
 
 export const VIEWER_FIELDS = gql`
-  fragment ViewerParts on User {
+  fragment ViewerPartsInProjectPage on User {
     projects {
       id
       name
@@ -86,7 +86,10 @@ export class ProjectPageComponent implements OnInit {
     this.state.connect(
       'projects',
       this.apolloDataQuery
-        .queryViewer({ name: 'ViewerParts', fields: VIEWER_FIELDS })
+        .queryViewer({
+          name: 'ViewerPartsInProjectPage',
+          fields: VIEWER_FIELDS,
+        })
         .pipe(
           map((response) => {
             const { viewer } = response.data;

@@ -20,7 +20,7 @@ import { of, Subject } from 'rxjs';
 import { exhaustMap, switchMap } from 'rxjs/operators';
 
 const PROJECT_FIELDS = gql`
-  fragment ProjectParts on Project {
+  fragment ProjectPartsInProjectDeleteDialog on Project {
     id
   }
 `;
@@ -93,7 +93,7 @@ export class ProjectDeleteDialogComponent implements OnInit {
     };
     return this.deleteProjectUsecase
       .execute(input, {
-        name: 'ProjectParts',
+        name: 'ProjectPartsInProjectDeleteDialog',
         fields: PROJECT_FIELDS,
       })
       .pipe(
