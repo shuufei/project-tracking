@@ -1,0 +1,12 @@
+<ng-container *ngIf="state$ | async as state">
+  <ng-container *ngIf="state.isOpen">
+    <div
+      class="overlay"
+      (click)="onClickOverlay$.next()"
+      @fadeInOutOverlay
+    ></div>
+    <div class="dialog" @fadeInOutDialog [style.zIndex]="zindex">
+      <ng-content></ng-content>
+    </div>
+  </ng-container>
+</ng-container>
