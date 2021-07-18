@@ -33,3 +33,13 @@ export const Set_Value = () => ({
   `,
   props: {},
 });
+
+export const Borderless = () => ({
+  moduleMetadata: {
+    imports: [TextFieldModule],
+  },
+  template: `
+    <ui-text-field placeholder="search" [borderless]="true"></ui-text-field>
+  `,
+  props: {},
+});

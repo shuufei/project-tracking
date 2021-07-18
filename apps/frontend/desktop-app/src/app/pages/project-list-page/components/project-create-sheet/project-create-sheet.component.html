@@ -1,0 +1,75 @@
+<ui-sheet
+  [triggerEl]="triggerEl"
+  [zindex]="100"
+  [title]="'プロジェクトを作成'"
+  [isOpen$]="isSheetOpen$"
+  (opened)="onOpenedSheet$.next()"
+  (closed)="onClosedeSheet$.next()"
+>
+  <ng-container *ngIf="state$ | async as state">
+    <div class="sheet-content">
+      <bis-project-property-edit-form
+        class="mt-6"
+        [name]="state.projectName"
+        [description]="state.projectDescription"
+        [color]="state.color"
+        (changed)="onChangedProjectProperty$.next($event)"
+      ></bis-project-property-edit-form>
+
+      <div class="mt-8">
+        <label for="" class="text-black-light2 text-s2 font-medium"
+          >管理者</label
+        >
+        <div class="flex items-center mt-2">
+          <ui-user-icon class="w-8" [src]="state.me?.icon"></ui-user-icon>
+          <span class="text-s1 text-black-default font-medium ml-2">{{
+            state.me?.name
+          }}</span>
+        </div>
+      </div>
+
+      <div class="mt-8">
+        <label for="" class="text-black-light2 text-s2 font-medium"
+          >メンバー</label
+        >
+        <div>
+          <button ui-stroked-button #memberSelectTrigger class="mt-3">
+            メンバーを選択
+          </button>
+          <ui-user-select-popup
+            [triggerEl]="memberSelectTrigger.elementRef.nativeElement"
+            [users]="state.users || []"
+            (selectUsers)="onSelectedMembers$.next($event)"
+          ></ui-user-select-popup>
+          <div class="mt-3">
+            <ng-container *ngFor="let member of state.members">
+              <div class="flex items-center mt-2">
+                <ui-user-icon class="w-8" [src]="member.icon"></ui-user-icon>
+                <span class="text-s1 text-black-default font-medium ml-2">{{
+                  member.name
+                }}</span>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="(state.members?.length || 0) === 0">
+              <p class="text-s3 text-black-light3">
+                メンバーが選択されていません
+              </p>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+
+      <ui-sheet-footer class="sheet-footer bottom-6 fixed">
+        <div right-side>
+          <button
+            ui-button
+            (click)="onClickedCreate$.next()"
+            [disabled]="!state.projectName"
+          >
+            作成
+          </button>
+        </div>
+      </ui-sheet-footer>
+    </div>
+  </ng-container>
+</ui-sheet>

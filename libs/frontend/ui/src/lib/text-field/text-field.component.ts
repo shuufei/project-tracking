@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
+  HostBinding,
   Input,
   OnInit,
   Output,
@@ -31,7 +32,11 @@ export class TextFieldComponent implements OnInit {
   }
   @Input() icon?: IconName;
   @Input() placeholder = '';
+  @Input() borderless = false;
   @Output() changedValue = new EventEmitter<string>();
+  @HostBinding('class.borderless') get isBorderless() {
+    return this.borderless;
+  }
 
   readonly textFormCtrl = new FormControl('');
 

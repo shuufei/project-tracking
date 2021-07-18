@@ -16,6 +16,7 @@
         class="mr-4"
         color="primary"
         (click)="onClickedCreateNewProject$.next()"
+        #trigger
       >
         <ui-icon class="mr-1" icon="plus" size="s"></ui-icon>
         <span class="text-s2 font-medium leading-normal">
@@ -28,6 +29,9 @@
       ></ui-user-icon>
     </div>
   </ui-header>
+  <bis-project-create-sheet
+    [triggerEl]="trigger.elementRef.nativeElement"
+  ></bis-project-create-sheet>
 
   <ng-container *ngIf="state.projects.length > 0; else projectsEmpty">
     <div class="flex flex-col items-center justify-center mt-3">
@@ -53,6 +57,7 @@
         class=""
         color="primary"
         (click)="onClickedCreateNewProject$.next()"
+        #createProjectButton
       >
         <ui-icon class="mr-1" icon="plus" size="s"></ui-icon>
         <span class="text-s2 font-medium leading-normal">
@@ -60,5 +65,8 @@
         </span>
       </button>
     </div>
+    <bis-project-create-sheet
+      [triggerEl]="createProjectButton.elementRef.nativeElement"
+    ></bis-project-create-sheet>
   </ng-template>
 </ng-container>

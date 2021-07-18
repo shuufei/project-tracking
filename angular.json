@@ -116,6 +116,11 @@
                 "glob": "feather-sprite.svg",
                 "input": "node_modules/feather-icons/dist",
                 "output": "/assets/"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/@taiga-ui/icons/src",
+                "output": "assets/taiga-ui/icons"
               }
             ],
             "styles": [
@@ -532,31 +537,6 @@
                 "command": "npx ts-node libs/shared/schema/generate-typings.ts"
               }
             ]
-          }
-        }
-      }
-    },
-    "frontend-infrastructure-data-store": {
-      "projectType": "library",
-      "root": "libs/frontend/infrastructure/data-store",
-      "sourceRoot": "libs/frontend/infrastructure/data-store/src",
-      "prefix": "bison",
-      "architect": {
-        "lint": {
-          "builder": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": [
-              "libs/frontend/infrastructure/data-store/src/**/*.ts",
-              "libs/frontend/infrastructure/data-store/src/**/*.html"
-            ]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/frontend/infrastructure/data-store"],
-          "options": {
-            "jestConfig": "libs/frontend/infrastructure/data-store/jest.config.js",
-            "passWithNoTests": true
           }
         }
       }

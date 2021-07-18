@@ -1,0 +1,50 @@
+<ng-container *ngIf="state$ | async as state">
+  <div class="w-full">
+    <label for="" class="text-black-light2 text-s2 font-medium"
+      >プロジェクト名</label
+    >
+    <ui-text-field
+      placeholder="プロジェクト名を入力してください"
+      class="project-name w-full mt-2"
+      [borderless]="true"
+      [text]="state.name"
+      (changedValue)="onChangedName$.next($event)"
+    ></ui-text-field>
+  </div>
+
+  <div class="mt-8">
+    <label for="" class="text-black-light2 text-s2 font-medium"
+      >プロジェクトの説明</label
+    >
+    <ui-textarea
+      placeholder="任意: プロジェクトの説明を入力してください"
+      [rows]="5"
+      [borderless]="true"
+      [text]="state.description"
+      class="w-full mt-2 project-description"
+      (changedValue)="onChangedDescription$.next($event)"
+    ></ui-textarea>
+  </div>
+
+  <div class="mt-8">
+    <label for="" class="text-black-light2 text-s2 font-medium">色</label>
+    <div class="relative mt-2">
+      <button
+        #colorSelectTriggerEl
+        class="p-0 flex items-center focus:outline-none"
+      >
+        <ui-color-icon class="h-4 w-4" [color]="state.color"></ui-color-icon>
+        <ui-icon
+          icon="chevron-down"
+          size="s"
+          color="primary-light1 ml-1"
+        ></ui-icon>
+      </button>
+      <ui-color-select-popup
+        [triggerEl]="colorSelectTriggerEl"
+        [currentColor]="state.color"
+        (changedColor)="onChangedColor$.next($event)"
+      ></ui-color-select-popup>
+    </div>
+  </div>
+</ng-container>

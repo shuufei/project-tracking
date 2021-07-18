@@ -22,7 +22,17 @@ export function createApollo(httpLink: HttpLink): ApolloClientOptions<unknown> {
       uri,
       headers,
     }),
-    cache: new InMemoryCache(),
+    cache: new InMemoryCache({
+      typePolicies: {
+        Query: {
+          fields: {
+            viewer: {
+              merge: true,
+            },
+          },
+        },
+      },
+    }),
   };
 }
 

@@ -10,13 +10,13 @@ export const List = () => ({
   },
   template: `
     <ui-color-icon class="m-2"></ui-color-icon>
-    <ui-color-icon class="m-2" color="red"></ui-color-icon>
-    <ui-color-icon class="m-2" color="blue"></ui-color-icon>
-    <ui-color-icon class="m-2" color="green"></ui-color-icon>
-    <ui-color-icon class="m-2" color="yellow"></ui-color-icon>
-    <ui-color-icon class="m-2" color="brown"></ui-color-icon>
-    <ui-color-icon class="m-2" color="pink"></ui-color-icon>
-    <ui-color-icon class="m-2" color="gray"></ui-color-icon>
+    <ui-color-icon class="m-2" color="Red"></ui-color-icon>
+    <ui-color-icon class="m-2" color="Blue"></ui-color-icon>
+    <ui-color-icon class="m-2" color="Green"></ui-color-icon>
+    <ui-color-icon class="m-2" color="Yellow"></ui-color-icon>
+    <ui-color-icon class="m-2" color="Brown"></ui-color-icon>
+    <ui-color-icon class="m-2" color="Pink"></ui-color-icon>
+    <ui-color-icon class="m-2" color="Gray"></ui-color-icon>
   `,
   props: {},
 });
