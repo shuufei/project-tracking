@@ -5,7 +5,8 @@ import { Observable } from 'rxjs';
 import { Fragment } from '../../types';
 
 export type QueryOptions = {
-  fetchPolicy: WatchQueryFetchPolicy;
+  fetchPolicy?: WatchQueryFetchPolicy;
+  nextFetchPolicy?: WatchQueryFetchPolicy;
 };
 
 export type QueryArgs = [framgnet: Fragment, options?: QueryOptions];

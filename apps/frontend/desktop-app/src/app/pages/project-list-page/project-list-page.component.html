@@ -15,7 +15,6 @@
         style="min-width: 110px"
         class="mr-4"
         color="primary"
-        (click)="onClickedCreateNewProject$.next()"
         #trigger
       >
         <ui-icon class="mr-1" icon="plus" size="s"></ui-icon>
@@ -52,13 +51,7 @@
   </ng-container>
   <ng-template #projectsEmpty>
     <div style="margin-top: 34vh" class="text-center">
-      <button
-        ui-button
-        class=""
-        color="primary"
-        (click)="onClickedCreateNewProject$.next()"
-        #createProjectButton
-      >
+      <button ui-button class="" color="primary" #createProjectButton>
         <ui-icon class="mr-1" icon="plus" size="s"></ui-icon>
         <span class="text-s2 font-medium leading-normal">
           新しいプロジェクトを作成
