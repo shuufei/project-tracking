@@ -6,8 +6,6 @@ import {
   OnInit,
 } from '@angular/core';
 import {
-  APOLLO_DATA_QUERY,
-  IApolloDataQuery,
   IUpdateProjectUsecase,
   UPDATE_PROJECT_USECASE,
 } from '@bison/frontend/application';
@@ -71,8 +69,6 @@ export class ProjectUpdateSheetComponent implements OnInit {
     private state: RxState<State>,
     @Inject(UPDATE_PROJECT_USECASE)
     private readonly updateProjectUsecase: IUpdateProjectUsecase,
-    @Inject(APOLLO_DATA_QUERY)
-    private readonly apolloDataQuery: IApolloDataQuery,
     @Inject(TuiNotificationsService)
     private readonly notificationService: TuiNotificationsService
   ) {

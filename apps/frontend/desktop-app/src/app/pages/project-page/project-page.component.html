@@ -1,11 +1,19 @@
 <ng-container *ngIf="state$ | async as state">
-  <p>project-page works!</p>
+  <div class="m-4">
+    <button ui-stroked-button #projectEditButton>プロジェクトを編集</button>
+    <bis-project-update-sheet
+      [triggerEl]="projectEditButton.elementRef.nativeElement"
+      [project]="project"
+    ></bis-project-update-sheet>
+  </div>
 
-  <button ui-stroked-button #projectEditButton>プロジェクトを編集</button>
-  <bis-project-update-sheet
-    [triggerEl]="projectEditButton.elementRef.nativeElement"
-    [project]="project"
-  ></bis-project-update-sheet>
+  <div class="m-4">
+    <button ui-stroked-button #projectMemberEditButton>メンバーを編集</button>
+    <bis-project-member-update-sheet
+      [triggerEl]="projectMemberEditButton.elementRef.nativeElement"
+      [project]="project"
+    ></bis-project-member-update-sheet>
+  </div>
 
   <ul>
     <ng-container *ngFor="let project of state.projects">

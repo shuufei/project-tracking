@@ -1,0 +1,54 @@
+<ui-sheet
+  [triggerEl]="triggerEl"
+  [zindex]="100"
+  [title]="'プロジェクト メンバー編集'"
+  [isOpen$]="isSheetOpen$"
+  (opened)="onOpenedSheet$.next()"
+  (closed)="onClosedeSheet$.next()"
+>
+  <ng-container *ngIf="state$ | async as state">
+    <div class="sheet-content">
+      <label for="" class="text-black-light2 text-s2 font-medium"
+        >メンバー</label
+      >
+      <div>
+        <button ui-stroked-button #memberSelectTrigger class="mt-3">
+          メンバーを選択
+        </button>
+        <ui-user-select-popup
+          [triggerEl]="memberSelectTrigger.elementRef.nativeElement"
+          [users]="state.users || []"
+          [selectedUserIds]="state.memberIds || []"
+          (selectUsers)="onSelectedMembers$.next($event)"
+        ></ui-user-select-popup>
+        <div class="mt-3">
+          <ng-container *ngFor="let member of (members$ | async) || []">
+            <div class="flex items-center mt-2">
+              <ui-user-icon class="w-8" [src]="member.icon"></ui-user-icon>
+              <span class="text-s1 text-black-default font-medium ml-2">{{
+                member.name
+              }}</span>
+            </div>
+          </ng-container>
+          <ng-container *ngIf="(state.memberIds?.length || 0) === 0">
+            <p class="text-s3 text-black-light3">
+              メンバーが選択されていません
+            </p>
+          </ng-container>
+        </div>
+      </div>
+
+      <ui-sheet-footer class="sheet-footer bottom-6 fixed">
+        <div right-side>
+          <button
+            ui-button
+            [disabled]="(state.memberIds?.length || 0) <= 0"
+            (click)="onClickedUpdate$.next()"
+          >
+            更新
+          </button>
+        </div>
+      </ui-sheet-footer>
+    </div>
+  </ng-container>
+</ui-sheet>

@@ -69,7 +69,12 @@ export class ProjectPageComponent implements OnInit {
       id: 'id',
       name: 'admin name',
     },
-    members: [],
+    members: [
+      {
+        id: 'user0001',
+        name: 'user name 0001',
+      },
+    ],
   };
 
   constructor(
