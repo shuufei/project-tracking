@@ -23,8 +23,6 @@ export class UpdateProjectUsecase implements IUpdateProjectUsecase {
       variables: {
         input,
       },
-      // update(cache, response) {
-      // },
     });
   }
 }

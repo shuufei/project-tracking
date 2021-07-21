@@ -23,7 +23,7 @@ import { ChangedPropertyEvent } from '../../../../shared/components/project-prop
 import { convertToApiColorFromDomainColor } from '../../../../util/convert-to-api-color-from-domain-color';
 
 export const ME_FIELDS = gql`
-  fragment MeParts on User {
+  fragment MePartsInProjectCreateSheet on User {
     id
     name
     icon
@@ -31,7 +31,7 @@ export const ME_FIELDS = gql`
 `;
 
 const USER_FIELDS = gql`
-  fragment UserParts on User {
+  fragment UserPartsInProjectCreateSheet on User {
     id
     name
     icon
@@ -39,7 +39,7 @@ const USER_FIELDS = gql`
 `;
 
 const PROJECT_FIELDS = gql`
-  fragment ProjectParts on Project {
+  fragment ProjectPartsOnProjectCreateSheet on Project {
     id
     name
     description
@@ -145,7 +145,7 @@ export class ProjectCreateSheetComponent implements OnInit {
   private queryMe$() {
     return this.apolloDataQuery
       .queryViewer(
-        { name: 'MeParts', fields: ME_FIELDS },
+        { name: 'MePartsInProjectCreateSheet', fields: ME_FIELDS },
         { fetchPolicy: 'cache-only' }
       )
       .pipe(
@@ -168,7 +168,7 @@ export class ProjectCreateSheetComponent implements OnInit {
   private queryUsers$(): Observable<User[]> {
     return this.apolloDataQuery
       .queryUsers({
-        name: 'UserParts',
+        name: 'UserPartsInProjectCreateSheet',
         fields: USER_FIELDS,
       })
       .pipe(
@@ -197,7 +197,7 @@ export class ProjectCreateSheetComponent implements OnInit {
     };
     return this.createProjectUsecase
       .execute(input, {
-        name: 'ProjectParts',
+        name: 'ProjectPartsOnProjectCreateSheet',
         fields: PROJECT_FIELDS,
       })
       .pipe(

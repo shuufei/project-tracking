@@ -1,41 +1,47 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Inject,
+  OnInit,
+} from '@angular/core';
+import {
+  APOLLO_DATA_QUERY,
+  IApolloDataQuery,
+} from '@bison/frontend/application';
 import { Project } from '@bison/frontend/domain';
-import { User as ApiUser } from '@bison/shared/schema';
 import { RxState } from '@rx-angular/state';
-import { Apollo, gql } from 'apollo-angular';
+import { gql } from 'apollo-angular';
 import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { convertToFrontendDomainProjectFromApiProject } from '../../util/convert-to-frontend-domain-project-from-api-project';
 import { ME_FIELDS } from './components/project-create-sheet/project-create-sheet.component';
 
-export const PROJECT_LIST_PAGE_QUERY = gql`
+export const VIEWER_FIELDS = gql`
   ${ME_FIELDS}
-  query ProjectListPageQuery {
-    viewer {
-      ...MeParts
-      projects {
+  fragment ViewerPartsInProjectListPage on User {
+    ...MePartsInProjectCreateSheet
+    projects {
+      id
+      name
+      description
+      color
+      boards {
         id
         name
         description
-        color
-        boards {
+        project {
           id
-          name
-          description
-          project {
-            id
-          }
         }
-        admin {
-          id
-          name
-          icon
-        }
-        members {
-          id
-          name
-          icon
-        }
+      }
+      admin {
+        id
+        name
+        icon
+      }
+      members {
+        id
+        name
+        icon
       }
     }
   }
@@ -43,6 +49,10 @@ export const PROJECT_LIST_PAGE_QUERY = gql`
 
 type State = {
   projects: Project[];
+  deleteState: {
+    isOpenDialog: boolean;
+    project?: Project;
+  };
 };
 
 @Component({
@@ -54,20 +64,49 @@ type State = {
 })
 export class ProjectListPageComponent implements OnInit {
   readonly state$ = this.state.select();
-
-  readonly onClickedCreateNewProject$ = new Subject();
+  readonly isOpenDeleteDialog$ = this.state.select(
+    'deleteState',
+    'isOpenDialog'
+  );
 
   readonly onClickedDeleteProject$ = new Subject<Project>();
 
   private readonly onInit$ = new Subject();
+  readonly onOpenedDeleteProjectDialog$ = new Subject<void>();
+  readonly onClosedDeleteProjectDialog$ = new Subject<void>();
 
-  constructor(private state: RxState<State>, private apollo: Apollo) {
+  constructor(
+    private state: RxState<State>,
+    @Inject(APOLLO_DATA_QUERY)
+    private readonly apolloDataQuery: IApolloDataQuery
+  ) {
     this.state.set({
       projects: [],
+      deleteState: {
+        isOpenDialog: false,
+      },
     });
-    // TODO: プロジェクト削除ダイアログを表示
-    this.state.hold(this.onClickedDeleteProject$, () => {
-      return;
+    this.state.hold(this.onClickedDeleteProject$, (project) => {
+      this.state.set('deleteState', () => ({
+        isOpenDialog: true,
+        project,
+      }));
+    });
+    this.state.connect(
+      'deleteState',
+      this.onOpenedDeleteProjectDialog$,
+      (state) => {
+        return {
+          ...state.deleteState,
+          isOpenDialog: true,
+        };
+      }
+    );
+    this.state.connect('deleteState', this.onClosedDeleteProjectDialog$, () => {
+      return {
+        isOpenDialog: false,
+        project: undefined,
+      };
     });
   }
 
@@ -77,18 +116,21 @@ export class ProjectListPageComponent implements OnInit {
   }
 
   private setupEventHandler() {
+    // Application ServiceレイヤのQueryを利用する
     this.state.connect(
       'projects',
-      this.apollo
-        .watchQuery<{ viewer: ApiUser }>({
-          query: PROJECT_LIST_PAGE_QUERY,
-          nextFetchPolicy: 'cache-only',
-        })
-        .valueChanges.pipe(
+      this.apolloDataQuery
+        .queryViewer(
+          { name: 'ViewerPartsInProjectListPage', fields: VIEWER_FIELDS },
+          { nextFetchPolicy: 'cache-only' }
+        )
+        .pipe(
           map((response) => {
             const { viewer } = response.data;
-            return viewer.projects.map(
-              convertToFrontendDomainProjectFromApiProject
+            return (
+              viewer?.projects.map(
+                convertToFrontendDomainProjectFromApiProject
+              ) ?? []
             );
           })
         )

@@ -1,0 +1,15 @@
+:host {
+  display: block;
+}
+
+$width: 680px;
+
+.sheet-content {
+  width: $width;
+  margin: 0 auto;
+  padding-bottom: 120px;
+}
+
+.sheet-footer {
+  width: $width;
+}

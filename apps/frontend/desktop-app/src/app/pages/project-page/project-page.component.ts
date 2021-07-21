@@ -1,39 +1,45 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Inject,
+  OnInit,
+} from '@angular/core';
+import {
+  APOLLO_DATA_QUERY,
+  IApolloDataQuery,
+} from '@bison/frontend/application';
 import { Project } from '@bison/frontend/domain';
 import { COLOR } from '@bison/shared/domain';
-import { User } from '@bison/shared/schema';
 import { RxState } from '@rx-angular/state';
-import { Apollo, gql } from 'apollo-angular';
+import { gql } from 'apollo-angular';
 import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { convertToFrontendDomainProjectFromApiProject } from '../../util/convert-to-frontend-domain-project-from-api-project';
 
-export const PROJECT_PAGE_QUERY = gql`
-  query ProjectPageQuery {
-    viewer {
-      projects {
+export const VIEWER_FIELDS = gql`
+  fragment ViewerPartsInProjectPage on User {
+    projects {
+      id
+      name
+      description
+      color
+      boards {
         id
         name
         description
-        color
-        boards {
+        project {
           id
-          name
-          description
-          project {
-            id
-          }
         }
-        admin {
-          id
-          name
-          icon
-        }
-        members {
-          id
-          name
-          icon
-        }
+      }
+      admin {
+        id
+        name
+        icon
+      }
+      members {
+        id
+        name
+        icon
       }
     }
   }
@@ -63,10 +69,18 @@ export class ProjectPageComponent implements OnInit {
       id: 'id',
       name: 'admin name',
     },
-    members: [],
+    members: [
+      {
+        id: 'user0001',
+        name: 'user name 0001',
+      },
+    ],
   };
 
-  constructor(private state: RxState<State>, private apollo: Apollo) {}
+  constructor(
+    private state: RxState<State>,
+    @Inject(APOLLO_DATA_QUERY) private apolloDataQuery: IApolloDataQuery
+  ) {}
 
   ngOnInit() {
     this.setupEventHandler();
@@ -76,15 +90,18 @@ export class ProjectPageComponent implements OnInit {
   private setupEventHandler() {
     this.state.connect(
       'projects',
-      this.apollo
-        .watchQuery<{ viewer: User }>({
-          query: PROJECT_PAGE_QUERY,
+      this.apolloDataQuery
+        .queryViewer({
+          name: 'ViewerPartsInProjectPage',
+          fields: VIEWER_FIELDS,
         })
-        .valueChanges.pipe(
+        .pipe(
           map((response) => {
             const { viewer } = response.data;
-            return viewer.projects.map(
-              convertToFrontendDomainProjectFromApiProject
+            return (
+              viewer?.projects.map(
+                convertToFrontendDomainProjectFromApiProject
+              ) ?? []
             );
           })
         )

@@ -22,16 +22,6 @@ export type State = {
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [RxState],
   animations: [
-    trigger('fadeInOutOverlay', [
-      transition(':enter', [
-        style({ opacity: 0 }),
-        animate('0.1s 0s ease-in', style({ opacity: 1 })),
-      ]),
-      transition(':leave', [
-        style({ opacity: 1 }),
-        animate('0.25s 0s ease-out', style({ opacity: 0 })),
-      ]),
-    ]),
     trigger('fadeInOutSheet', [
       transition(':enter', [
         style({ transform: 'translateY(25%)' }),
