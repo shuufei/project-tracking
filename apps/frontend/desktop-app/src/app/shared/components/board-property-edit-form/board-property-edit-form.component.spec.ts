@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { BoardPropertyEditFormComponent } from './board-property-edit-form.component';
+import { BoardPropertyEditFormModule } from './board-property-edit-form.module';
 
 describe('BoardPropertyEditFormComponent', () => {
   let component: BoardPropertyEditFormComponent;
@@ -8,9 +8,8 @@ describe('BoardPropertyEditFormComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ BoardPropertyEditFormComponent ]
-    })
-    .compileComponents();
+      imports: [BoardPropertyEditFormModule],
+    }).compileComponents();
   });
 
   beforeEach(() => {

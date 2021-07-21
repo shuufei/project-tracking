@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { BoardCreateSheetComponent } from './board-create-sheet.component';
+import { BoardCreateSheetModule } from './board-create-sheet.module';
 
 describe('BoardCreateSheetComponent', () => {
   let component: BoardCreateSheetComponent;
@@ -8,9 +8,8 @@ describe('BoardCreateSheetComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ BoardCreateSheetComponent ]
-    })
-    .compileComponents();
+      imports: [BoardCreateSheetModule],
+    }).compileComponents();
   });
 
   beforeEach(() => {

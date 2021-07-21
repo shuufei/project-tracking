@@ -1,6 +1,5 @@
 import {
   MockBoardRepository,
-  mockBoardRepositoryReturnValues,
   MockCanAccessProjectService,
 } from '@bison/backend/domain';
 import { createId, User } from '@bison/shared/domain';
@@ -45,7 +44,11 @@ describe('CreateBoardService', () => {
       });
       test('boardを取得できる', async () => {
         const board = await service.handle(input, requestUser);
-        expect(board).toEqual(mockBoardRepositoryReturnValues.create);
+        expect(board).toEqual({
+          ...input,
+          id: expect.anything(),
+          tasksOrder: [],
+        });
       });
     });
   });
