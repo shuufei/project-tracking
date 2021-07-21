@@ -1,0 +1,34 @@
+<ng-container *ngIf="state$ | async as state">
+  <div class="flex items-center">
+    <span>{{ state.project?.name }}</span>
+    <ui-color-icon
+      [color]="state.project?.color"
+      class="w-3 ml-2"
+    ></ui-color-icon>
+  </div>
+
+  <div class="w-full mt-5">
+    <label for="" class="text-black-light2 text-s2 font-medium">ボード名</label>
+    <ui-text-field
+      placeholder="ボード名を入力してください"
+      class="board-name w-full mt-2"
+      [borderless]="true"
+      [text]="state.name"
+      (changedValue)="onChangedName$.next($event)"
+    ></ui-text-field>
+  </div>
+
+  <div class="mt-8">
+    <label for="" class="text-black-light2 text-s2 font-medium"
+      >ボードの説明</label
+    >
+    <ui-textarea
+      placeholder="任意: ボードの説明を入力してください"
+      [rows]="5"
+      [borderless]="true"
+      [text]="state.description"
+      class="w-full mt-2 board-description"
+      (changedValue)="onChangedDescription$.next($event)"
+    ></ui-textarea>
+  </div>
+</ng-container>

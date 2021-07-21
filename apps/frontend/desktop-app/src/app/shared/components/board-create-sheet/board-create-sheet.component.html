@@ -1,0 +1,31 @@
+<ui-sheet
+  [triggerEl]="triggerEl"
+  [zindex]="100"
+  [title]="'ボードを作成'"
+  [isOpen$]="isSheetOpen$"
+  (opened)="onOpenedSheet$.next()"
+  (closed)="onClosedeSheet$.next()"
+>
+  <ng-container *ngIf="state$ | async as state">
+    <div class="sheet-content">
+      <bis-board-property-edit-form
+        [project]="state.project"
+        [name]="state.boardName"
+        [description]="state.boardDescription"
+        (changed)="onChangedBoardProperty$.next($event)"
+      ></bis-board-property-edit-form>
+
+      <ui-sheet-footer class="sheet-footer bottom-6 fixed">
+        <div right-side>
+          <button
+            ui-button
+            (click)="onClickedCreate$.next()"
+            [disabled]="!state.boardName"
+          >
+            作成
+          </button>
+        </div>
+      </ui-sheet-footer>
+    </div>
+  </ng-container>
+</ui-sheet>

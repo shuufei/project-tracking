@@ -61,7 +61,7 @@ export class ProjectPageComponent implements OnInit {
   private readonly onInit$ = new Subject();
 
   readonly project: Project = {
-    id: 'id',
+    id: 'project0001',
     name: 'name',
     description: 'description',
     color: COLOR.Red,

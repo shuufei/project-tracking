@@ -15,6 +15,14 @@
     ></bis-project-member-update-sheet>
   </div>
 
+  <div class="m-4">
+    <button ui-stroked-button #boardCreateButton>ボードを作成</button>
+    <bis-board-create-sheet
+      [triggerEl]="boardCreateButton.elementRef.nativeElement"
+      [project]="project"
+    ></bis-board-create-sheet>
+  </div>
+
   <ul>
     <ng-container *ngFor="let project of state.projects">
       <li class="mt-4">

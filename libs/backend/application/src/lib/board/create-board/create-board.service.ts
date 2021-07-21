@@ -31,6 +31,7 @@ export class CreateBoardService implements ICreateBoardService {
       throw new PermissionDeniedError();
     }
     const board = createBoard(input.name, input.projectId, input.description);
-    return this.boardRepository.create(board);
+    await this.boardRepository.create(board);
+    return board;
   }
 }

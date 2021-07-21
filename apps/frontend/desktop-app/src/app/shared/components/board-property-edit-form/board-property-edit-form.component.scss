@@ -1,0 +1,14 @@
+:host {
+  display: block;
+}
+
+.board-name {
+  font-size: var(--bison-font-size-l1);
+  font-weight: var(--bison-font-weight-medium);
+  padding: 8px 12px;
+}
+
+.board-description {
+  padding: 8px 12px;
+  font-weight: var(--bison-font-weight-medium);
+}
