@@ -17,6 +17,7 @@ import {
 } from '@bison/frontend/ui';
 import { TuiNotificationsModule } from '@taiga-ui/core';
 import { BoardCreateSheetModule } from '../../shared/components/board-create-sheet/board-create-sheet.module';
+import { BoardUpdateSheetModule } from '../../shared/components/board-update-sheet/board-update-sheet.module';
 import { ProjectPropertyEditFormModule } from '../../shared/components/project-property-edit-form/project-property-edit-form.module';
 import { ProjectMemberUpdateSheetComponent } from './components/project-member-update-sheet/project-member-update-sheet.component';
 import { ProjectUpdateSheetComponent } from './components/project-update-sheet/project-update-sheet.component';
@@ -40,6 +41,7 @@ import { ProjectPageComponent } from './project-page.component';
     UserIconModule,
     TuiNotificationsModule,
     BoardCreateSheetModule,
+    BoardUpdateSheetModule,
   ],
   exports: [ProjectPageComponent],
   providers: [

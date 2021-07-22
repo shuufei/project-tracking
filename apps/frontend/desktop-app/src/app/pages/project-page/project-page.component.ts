@@ -9,7 +9,7 @@ import {
   IApolloDataQuery,
 } from '@bison/frontend/application';
 import { Project } from '@bison/frontend/domain';
-import { COLOR } from '@bison/shared/domain';
+import { Board, COLOR } from '@bison/shared/domain';
 import { RxState } from '@rx-angular/state';
 import { gql } from 'apollo-angular';
 import { Subject } from 'rxjs';
@@ -75,6 +75,14 @@ export class ProjectPageComponent implements OnInit {
         name: 'user name 0001',
       },
     ],
+  };
+  readonly board: Board = {
+    id: 'board0001',
+    name: 'Bison',
+    description:
+      'プロジェクト管理サービスの開発。\nプロジェクト管理サービスの開発。',
+    projectId: this.project.id,
+    tasksOrder: [],
   };
 
   constructor(
