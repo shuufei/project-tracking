@@ -1,0 +1,25 @@
+<ng-container *ngIf="state$ | async as state">
+  <div
+    [uiTooltip]="'プロジェクト'"
+    [uiTooltipDirection]="'top-left'"
+    class="w-full"
+  >
+    <div class="flex items-center w-full">
+      <ui-icon size="m" icon="folder" color="primary-light1"></ui-icon>
+      <div class="ml-3 text-s2 font-medium">
+        <ng-container *ngIf="state.project; else projectIsUndefined">
+          <p class="flex items-center">
+            <span class="text-primary-default">{{ state.project.name }}</span>
+            <ui-color-icon
+              [color]="state.project.color"
+              class="w-3 h-3 ml-2"
+            ></ui-color-icon>
+          </p>
+        </ng-container>
+        <ng-template #projectIsUndefined>
+          <span class="text-primary-light1">プロジェクト</span>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</ng-container>
