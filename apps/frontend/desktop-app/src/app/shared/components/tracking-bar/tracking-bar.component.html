@@ -1,0 +1,28 @@
+<div class="flex justify-between w-full items-center">
+  <ui-icon icon="clock" size="s" color="primary-light2"></ui-icon>
+  <div class="flex items-center">
+    <ui-tracking-log-change-button
+      [trackingTimeSec]="trackingTimeSec"
+      [plannedTimeSec]="scheduledTimeSec"
+      [isTracking]="isTracking"
+      (changedTrackingTimeSec)="changedTrackingTimeSec.emit($event)"
+      (changedPlannedTimeSec)="changedScheduledTimeSec.emit($event)"
+    ></ui-tracking-log-change-button>
+    <ng-container *ngIf="isTracking; else paused">
+      <ui-icon
+        icon="pause"
+        size="s"
+        color="primary"
+        class="ml-2 cursor-pointer"
+      ></ui-icon>
+    </ng-container>
+    <ng-template #paused>
+      <ui-icon
+        icon="play"
+        size="s"
+        color="primary"
+        class="ml-2 cursor-pointer"
+      ></ui-icon>
+    </ng-template>
+  </div>
+</div>
