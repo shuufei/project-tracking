@@ -1,30 +1,30 @@
 <ng-container *ngIf="state$ | async as state">
-  <div #trigger class="inline-block">
+  <div #trigger class="">
     <div
-      class="inline-block"
       [uiTooltip]="'作業者'"
       [uiTooltipDirection]="'top-left'"
+      class="w-full"
     >
-      <ng-container
-        *ngIf="state.selectedUserId === undefined; else existSelectedUser"
-      >
-        <button class="focus:outline-none h-5 flex items-center justify-center">
-          <ui-icon
-            [size]="'m'"
-            [icon]="'user'"
-            [color]="'primary-light1'"
-          ></ui-icon>
+      <button class="focus:outline-none flex items-center w-full">
+        <ui-icon
+          [size]="'m'"
+          [icon]="'user'"
+          [color]="'primary-light1'"
+        ></ui-icon>
+        <ng-container
+          *ngIf="state.selectedUserId === undefined; else existSelectedUser"
+        >
           <span class="ml-3 text-s2 text-primary-light1 font-medium"
             >作業者</span
           >
-        </button>
-      </ng-container>
-      <ng-template #existSelectedUser>
-        <ui-user-icon-list
-          [srcList]="[selectedUserImageSrc$ | async] || []"
-          [size]="20"
-        ></ui-user-icon-list>
-      </ng-template>
+        </ng-container>
+        <ng-template #existSelectedUser>
+          <ui-user-icon
+            class="w-6 h-6 ml-3"
+            [src]="state.selectedUserImageSrc"
+          ></ui-user-icon>
+        </ng-template>
+      </button>
     </div>
   </div>
   <ui-user-select-popup
