@@ -1,55 +1,57 @@
 <ui-popup [triggerEl]="triggerEl">
-  <div>
-    <p class="text-s4 text-black-light2">作業者</p>
-    <ui-text-field
-      [icon]="'search'"
-      [placeholder]="'メンバーを検索'"
-      (changedValue)="onInputedSearchWord$.next($event)"
-      class="mt-2"
-    ></ui-text-field>
-    <div class="mt-2 pb-1">
-      <p>
-        <button
-          class="p-1 text-s4 text-black-light2 cursor-pointer focus:outline-none"
-          [ngClass]="{
-            'pointer-events-none': !(isShowResetButton$ | async),
-            'text-black-light4': !(isShowResetButton$ | async)
-          }"
-          (click)="onClickedReset$.next()"
-        >
-          リセット
-        </button>
-      </p>
+  <ng-container *ngIf="state$ | async as state">
+    <div>
+      <p class="text-s4 text-black-light2">作業者</p>
+      <ui-text-field
+        [icon]="'search'"
+        [placeholder]="'メンバーを検索'"
+        (changedValue)="onInputedSearchWord$.next($event)"
+        class="mt-2"
+      ></ui-text-field>
+      <div class="mt-2 pb-1">
+        <p>
+          <button
+            class="p-1 text-s4 text-black-light2 cursor-pointer focus:outline-none"
+            [ngClass]="{
+              'pointer-events-none': !(isShowResetButton$ | async),
+              'text-black-light4': !(isShowResetButton$ | async)
+            }"
+            (click)="onClickedReset$.next()"
+          >
+            リセット
+          </button>
+        </p>
 
-      <ul class="mt-2">
-        <ng-container *ngFor="let user of filteredUsers$ | async; index as i">
-          <li>
-            <ui-select-item
-              class="cursor-pointer"
-              [ngClass]="{
-                'mt-1': i !== 0
-              }"
-              [selected]="isSelected(user.id)"
-              (click)="onClickedUser$.next(user.id)"
-            >
-              <p class="flex items-center">
-                <ui-user-icon
-                  [src]="user.imageSrc"
-                  style="width: 35px; height: 35px"
-                ></ui-user-icon>
-                <span class="ml-3 text-s2 text-black-default">{{
-                  user.name
-                }}</span>
-              </p>
-            </ui-select-item>
-          </li>
-        </ng-container>
-        <ng-container *ngIf="(filteredUsers$ | async).length === 0">
-          <p class="text-s3 text-black-light2 text-center py-1">
-            一致するユーザがいません
-          </p>
-        </ng-container>
-      </ul>
+        <ul class="mt-2">
+          <ng-container *ngFor="let user of filteredUsers$ | async; index as i">
+            <li>
+              <ui-select-item
+                class="cursor-pointer"
+                [ngClass]="{
+                  'mt-1': i !== 0
+                }"
+                [selected]="user.id === state.selectedUserId"
+                (click)="onClickedUser$.next(user.id)"
+              >
+                <p class="flex items-center">
+                  <ui-user-icon
+                    [src]="user.imageSrc"
+                    style="width: 35px; height: 35px"
+                  ></ui-user-icon>
+                  <span class="ml-3 text-s2 text-black-default">{{
+                    user.name
+                  }}</span>
+                </p>
+              </ui-select-item>
+            </li>
+          </ng-container>
+          <ng-container *ngIf="(filteredUsers$ | async).length === 0">
+            <p class="text-s3 text-black-light2 text-center py-1">
+              一致するユーザがいません
+            </p>
+          </ng-container>
+        </ul>
+      </div>
     </div>
-  </div>
+  </ng-container>
 </ui-popup>

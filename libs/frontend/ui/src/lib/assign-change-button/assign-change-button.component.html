@@ -6,7 +6,7 @@
       [uiTooltipDirection]="'top-left'"
     >
       <ng-container
-        *ngIf="state.selectedUserIds.length === 0; else existSelectedUser"
+        *ngIf="state.selectedUserId === undefined; else existSelectedUser"
       >
         <button
           class="focus:outline-none w-5 h-5 flex items-center justify-center"
@@ -21,7 +21,7 @@
       </ng-container>
       <ng-template #existSelectedUser>
         <ui-user-icon-list
-          [srcList]="(selectedUserImageSrcList$ | async) || []"
+          [srcList]="[selectedUserImageSrc$ | async] || []"
           [size]="20"
         ></ui-user-icon-list>
       </ng-template>
@@ -30,7 +30,7 @@
   <ui-user-select-popup
     [triggerEl]="trigger"
     [users]="state.users"
-    [selectedUserIds]="state.selectedUserIds"
-    (selectUsers)="onChangedSelectedUserIds$.next($event)"
+    [selectedUserId]="state.selectedUserId"
+    (selectUser)="onChangedSelectedUserId$.next($event)"
   ></ui-user-select-popup>
 </ng-container>

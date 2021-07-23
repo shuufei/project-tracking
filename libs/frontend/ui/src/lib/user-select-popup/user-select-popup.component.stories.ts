@@ -39,10 +39,10 @@ export const Selected_User = () => ({
   },
   template: `
     <button #triggerEl class="text-s1">open</button>
-    <ui-user-select-popup [triggerEl]="triggerEl" [users]="users" [selectedUserIds]="selectedUserIds"></ui-user-select-popup>
+    <ui-user-select-popup [triggerEl]="triggerEl" [users]="users" [selectedUserId]="selectedUserId"></ui-user-select-popup>
   `,
   props: {
     users,
-    selectedUserIds: [users[0].id, users[1].id],
+    selectedUserId: users[0].id,
   },
 });
