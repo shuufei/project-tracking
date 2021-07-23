@@ -1,0 +1,55 @@
+<ng-container *ngIf="state$ | async as state">
+  <div class="task-card-content">
+    <div class="flex justify-between items-center px-3 pt-2">
+      <div class="flex justify-start items-center">
+        <ui-checkbox
+          [checked]="state.subtask?.isDone || false"
+          (changedCheck)="onChangedCheck$.next($event)"
+        ></ui-checkbox>
+        <span class="text-s2 text-black-default font-medium ml-2">{{
+          state.subtask?.title
+        }}</span>
+      </div>
+      <div class="relative ml-2">
+        <div #triggerEl class="menu-trigger flex invisible">
+          <ui-icon
+            class="menu-icon cursor-pointer"
+            [icon]="'more-horizontal'"
+            [size]="'s'"
+            [color]="'primary-light2'"
+            [hoverColor]="'primary'"
+          ></ui-icon>
+        </div>
+        <ui-popup [triggerEl]="triggerEl" [isCloseWhenPopupAction]="true">
+          <div class="menu-items">
+            <ui-menu-item
+              [itemName]="'削除'"
+              [color]="'warn'"
+              [icon]="'trash-2'"
+              (clickedItem)="clickedDelete.emit()"
+            ></ui-menu-item>
+          </div>
+        </ui-popup>
+      </div>
+    </div>
+
+    <div class="py-1 px-3 mt-1">
+      <ui-assign-change-button
+        [users]="state.users"
+        [selectedUserId]="state.subtask?.assignUser?.id"
+      ></ui-assign-change-button>
+    </div>
+  </div>
+
+  <hr class="bg-primary-light3" />
+
+  <div class="py-2 px-3">
+    <bis-tracking-bar
+      class="w-full"
+      [trackingTimeSec]="state.subtask?.workTimeSec || 0"
+      [scheduledTimeSec]="state.subtask?.scheduledTimeSec || 0"
+      (changedTrackingTimeSec)="onChangedWorkTimeSec$.next($event)"
+      (changedScheduledTimeSec)="onChangedScheduledTimeSec$.next($event)"
+    ></bis-tracking-bar>
+  </div>
+</ng-container>
