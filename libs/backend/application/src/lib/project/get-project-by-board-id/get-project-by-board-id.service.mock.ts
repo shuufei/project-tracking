@@ -4,9 +4,9 @@ import { IGetProjectByBoardIdService } from './get-project-by-board-id.service.i
 
 export const mockGetProjectByBoardIdServiceReturnValues: MockReturnValues<IGetProjectByBoardIdService> = {
   handle: {
-    id: `project001`,
-    name: `project name 001`,
-    description: `project description 001`,
+    id: `project0001`,
+    name: `project name 0001`,
+    description: `project description 0001`,
     color: COLOR.Red,
     adminUserId: createId(),
   },

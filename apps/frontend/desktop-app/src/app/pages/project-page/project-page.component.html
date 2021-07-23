@@ -15,6 +15,34 @@
     ></bis-project-member-update-sheet>
   </div>
 
+  <div class="m-4">
+    <button ui-stroked-button #boardCreateButton>ボードを作成</button>
+    <bis-board-create-sheet
+      [triggerEl]="boardCreateButton.elementRef.nativeElement"
+      [project]="project"
+    ></bis-board-create-sheet>
+  </div>
+
+  <div class="m-4">
+    <button ui-stroked-button #boardUpdateButton>ボードを編集</button>
+    <bis-board-update-sheet
+      [triggerEl]="boardUpdateButton.elementRef.nativeElement"
+      [project]="project"
+      [board]="board"
+    ></bis-board-update-sheet>
+  </div>
+
+  <div class="m-4">
+    <button ui-stroked-button color="warn" #boardDeleteButton>
+      ボードを削除
+    </button>
+    <bis-board-delete-dialog
+      [triggerEl]="boardDeleteButton.elementRef.nativeElement"
+      [project]="project"
+      [board]="board"
+    ></bis-board-delete-dialog>
+  </div>
+
   <ul>
     <ng-container *ngFor="let project of state.projects">
       <li class="mt-4">
