@@ -8,7 +8,7 @@ import {
   APOLLO_DATA_QUERY,
   IApolloDataQuery,
 } from '@bison/frontend/application';
-import { Project } from '@bison/frontend/domain';
+import { Project, Task } from '@bison/frontend/domain';
 import { Board, COLOR } from '@bison/shared/domain';
 import { RxState } from '@rx-angular/state';
 import { gql } from 'apollo-angular';
@@ -83,6 +83,57 @@ export class ProjectPageComponent implements OnInit {
       'プロジェクト管理サービスの開発。\nプロジェクト管理サービスの開発。',
     projectId: this.project.id,
     tasksOrder: [],
+  };
+
+  readonly task: Task = {
+    id: 'task0001',
+    title: 'タスクタイトル0001',
+    description: 'タスク詳細0001\nタスク詳細0001',
+    status: 'INPROGRESS',
+    assignUser: { id: 'user0001', name: 'user name 0001' },
+    board: {
+      id: 'board0001',
+      name: 'board name 0001',
+      description: 'board description',
+      project: {
+        id: 'projec0001',
+        name: 'project name',
+      },
+    },
+    taskGroup: {
+      id: 'taskGroup0001',
+      title: 'task group name 0001',
+      description: 'task group description',
+    },
+    workTimeSec: 60 * 60 * 1 + 60 + 30,
+    scheduledTimeSec: 60 * 60 * 2,
+    subtasksOrder: [],
+    subtasks: [
+      {
+        id: 'subtask0001',
+        title: 'subtask title 0001',
+        description: 'subtask description 0001',
+        isDone: false,
+        scheduledTimeSec: 60 * 60 * 1,
+        workTimeSec: 0,
+        assignUser: {
+          id: 'user0002',
+          name: 'user name 0002',
+        },
+      },
+      {
+        id: 'subtask0002',
+        title: 'subtask title 0002',
+        description: 'subtask description 0002',
+        isDone: true,
+        scheduledTimeSec: 60 * 60 * 1,
+        workTimeSec: 0,
+        assignUser: {
+          id: 'user0002',
+          name: 'user name 0002',
+        },
+      },
+    ],
   };
 
   constructor(
