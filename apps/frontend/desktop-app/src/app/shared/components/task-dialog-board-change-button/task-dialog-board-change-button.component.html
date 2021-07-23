@@ -1,0 +1,29 @@
+<ng-container *ngIf="state$ | async as state">
+  <div #trigger>
+    <div
+      [uiTooltip]="'ボード'"
+      [uiTooltipDirection]="'top-left'"
+      class="w-full"
+    >
+      <button class="flex w-full items-center focus:outline-none">
+        <ui-icon icon="columns" size="m" color="primary-light1"></ui-icon>
+        <div class="ml-3 text-s2 font-medium">
+          <ng-container *ngIf="state.selectedBoardId; else notSelected">
+            <span class="text-primary-default">{{
+              (selectedBoard$ | async)?.name
+            }}</span>
+          </ng-container>
+          <ng-template #notSelected>
+            <span class="text-primary-light1">ボード</span>
+          </ng-template>
+        </div>
+      </button>
+    </div>
+  </div>
+  <ui-board-select-popup
+    [triggerEl]="trigger"
+    [boards]="state.boards"
+    [selectedBoardId]="state.selectedBoardId"
+    (selectBoard)="onChangedSelectedBoardId$.next($event)"
+  ></ui-board-select-popup>
+</ng-container>

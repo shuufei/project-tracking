@@ -2,6 +2,8 @@ export * from './lib/assign-change-button/assign-change-button.component';
 export * from './lib/assign-change-button/assign-change-button.module';
 export * from './lib/board-item/board-item.component';
 export * from './lib/board-item/board-item.module';
+export * from './lib/board-select-popup/board-select-popup.component';
+export * from './lib/board-select-popup/board-select-popup.module';
 export * from './lib/button/button.component';
 export * from './lib/button/button.module';
 export * from './lib/checkbox/checkbox.component';
