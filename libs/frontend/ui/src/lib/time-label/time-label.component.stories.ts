@@ -73,3 +73,28 @@ export const Show_Seconds = () => ({
     sec: 60 * 60 * 2 + 60 * 35 + 30,
   },
 });
+
+export const Show_ScheduledTime = () => ({
+  moduleMetadata: {
+    imports: [TimeLabelModule],
+  },
+  template: `
+    <ui-time-label [sec]="sec" [scheduledTimeSec]="scheduledTimeSec" [isShowScheduledTime]="true"></ui-time-label>
+  `,
+  props: {
+    sec: 60 * 60 * 2 + 60 * 35,
+    scheduledTimeSec: 60 * 60 * 2 + 60 * 35,
+  },
+});
+
+export const Show_ScheduledTime_UnSet = () => ({
+  moduleMetadata: {
+    imports: [TimeLabelModule],
+  },
+  template: `
+    <ui-time-label [sec]="sec" [isShowSec]="true" [isShowScheduledTime]="true"></ui-time-label>
+  `,
+  props: {
+    sec: 60 * 60 * 2 + 60 * 35,
+  },
+});
