@@ -38,10 +38,10 @@ export class TaskDialogAssignChangeButtonComponent implements OnInit {
    * State
    */
   readonly state$ = this.state.select();
-  readonly selectedUserImageSrc$ = combineLatest([
+  readonly selectedUser$ = combineLatest([
     this.state.select('users'),
     this.state.select('selectedUserId'),
-  ]).pipe(map(([users, id]) => users.find((v) => v.id === id)?.icon));
+  ]).pipe(map(([users, id]) => users.find((v) => v.id === id)));
 
   /**
    * Event

@@ -9,20 +9,24 @@
       (changedPlannedTimeSec)="changedScheduledTimeSec.emit($event)"
     ></ui-tracking-log-change-button>
     <ng-container *ngIf="isTracking; else paused">
-      <ui-icon
-        icon="pause"
-        size="s"
-        color="primary"
-        class="ml-2 cursor-pointer"
-      ></ui-icon>
+      <span [uiTooltip]="'トラッキング停止'">
+        <ui-icon
+          icon="pause"
+          size="s"
+          color="primary"
+          class="ml-2 cursor-pointer"
+        ></ui-icon>
+      </span>
     </ng-container>
     <ng-template #paused>
-      <ui-icon
-        icon="play"
-        size="s"
-        color="primary"
-        class="ml-2 cursor-pointer"
-      ></ui-icon>
+      <span [uiTooltip]="'トラッキング開始'">
+        <ui-icon
+          icon="play"
+          size="s"
+          color="primary"
+          class="ml-2 cursor-pointer"
+        ></ui-icon>
+      </span>
     </ng-template>
   </div>
 </div>

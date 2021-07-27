@@ -21,8 +21,11 @@
         <ng-template #existSelectedUser>
           <ui-user-icon
             class="w-6 h-6 ml-3"
-            [src]="state.selectedUserImageSrc"
+            [src]="(selectedUser$ | async)?.icon"
           ></ui-user-icon>
+          <span class="text-s2 text-black-default ml-2 user-name">{{
+            (selectedUser$ | async)?.name
+          }}</span>
         </ng-template>
       </button>
     </div>

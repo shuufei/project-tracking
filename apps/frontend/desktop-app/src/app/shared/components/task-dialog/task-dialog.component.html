@@ -18,19 +18,73 @@
       <div main>
         <ng-container *ngIf="state.task">
           <ng-container *ngIf="state.task.taskGroup">
-            <span class="text-s2 text-black-light1 block mb-1">{{
-              state.task.taskGroup.title
-            }}</span>
+            <span
+              class="text-s2 text-black-light2 block mb-2 underline cursor-pointer"
+              [uiTooltip]="'タスクグループ'"
+              [uiTooltipDirection]="'top-left'"
+              >{{ state.task.taskGroup.title }}</span
+            >
           </ng-container>
 
-          <h2 class="text-l1 text-black-default leading-normal">
-            {{ state.task.title }}
-          </h2>
-          <pre class="mt-2 text-black-default leading-normal">{{
-            state.task.description
-          }}</pre>
+          <ng-container *ngIf="!state.isEditableTitleAndDesc; else editMode">
+            <h2 class="text-l1 text-black-default leading-normal">
+              {{ state.task.title }}
+            </h2>
+            <pre class="mt-2 text-black-default leading-normal text-s2">{{
+              state.task.description
+            }}</pre>
 
-          <div class="mt-6">
+            <button
+              ui-fill-button
+              color="primary-light3"
+              class="mt-4"
+              (click)="onClickedEditTitleAndDescButton$.next()"
+            >
+              編集
+            </button>
+          </ng-container>
+          <ng-template #editMode>
+            <div class="mt-2">
+              <label for="" class="text-s2 text-black-light2 font-medium block"
+                >タスク名</label
+              >
+              <ui-text-field
+                placeholder="タスク名を入力してください"
+                [text]="state.editState?.title"
+                class="task-title mt-2"
+                (changedValue)="onChangedTitle$.next($event)"
+              ></ui-text-field>
+            </div>
+            <div class="mt-4">
+              <label for="" class="text-s2 text-black-light2 font-medium block"
+                >詳細</label
+              >
+              <ui-textarea
+                placeholder="タスクの説明を入力してください"
+                [text]="state.editState?.description"
+                class="task-description leading-normal mt-2"
+                (changedValue)="onChangedDescription$.next($event)"
+              ></ui-textarea>
+            </div>
+            <div class="flex items-center justify-end mt-4">
+              <button
+                ui-fill-button
+                (click)="onClickedEditTitleAndDescCancelButton$.next()"
+              >
+                キャンセル
+              </button>
+              <button
+                ui-fill-button
+                color="primary"
+                class="ml-4"
+                (click)="onClickedUpdateTitleAndDescButton$.next()"
+              >
+                更新
+              </button>
+            </div>
+          </ng-template>
+
+          <div class="mt-8">
             <span class="text-s2 text-black-light1 block">サブタスク</span>
             <div class="mt-2">
               <ng-container
@@ -79,10 +133,14 @@
           <bis-task-dialog-status-change-button
             class="w-full"
             [status]="state.task.status"
+            (changedStatus)="onChangedStatus$.next($event)"
           ></bis-task-dialog-status-change-button>
           <div class="mt-4">
             <bis-task-dialog-assign-change-button
               class="w-full"
+              [users]="state.users"
+              [selectedUserId]="state.task.assignUser?.id"
+              (selectedUser)="onChangedAssignUser$.next($event)"
             ></bis-task-dialog-assign-change-button>
             <bis-task-dialog-project-change-button
               class="w-full mt-3"
@@ -92,6 +150,7 @@
               class="w-full mt-3"
               [boards]="boards"
               [selectedBoardId]="state.task.board.id"
+              (selectedBoard)="onChangedBoard$.next($event)"
             ></bis-task-dialog-board-change-button>
           </div>
           <div class="mt-6">

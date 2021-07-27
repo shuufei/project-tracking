@@ -6,8 +6,9 @@
   min-height: 300px;
 }
 
-hr {
-  height: 0.5px;
+.head {
+  border-color: var(--bison-primary-light2);
+  border-bottom-width: 0.5px;
 }
 
 .side-panel {

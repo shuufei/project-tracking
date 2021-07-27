@@ -99,9 +99,15 @@ export class SubtaskCardComponent implements OnInit {
     this.state.connect(
       'users',
       this.apolloDataQuery
-        .queryUsers({ name: 'UserPartsInSubtaskCard', fields: USER_FIELDS })
+        .queryUsers(
+          { name: 'UserPartsInSubtaskCard', fields: USER_FIELDS },
+          { fetchPolicy: 'cache-only' }
+        )
         .pipe(
           map((response) => {
+            if (response.data?.users == null) {
+              return [];
+            }
             const { users } = response.data;
             return users.map((user) => {
               return {

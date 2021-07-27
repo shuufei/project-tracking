@@ -133,6 +133,42 @@ export class ProjectPageComponent implements OnInit {
           name: 'user name 0002',
         },
       },
+      {
+        id: 'subtask0003',
+        title: 'subtask title 0003',
+        description: 'subtask description 0003',
+        isDone: true,
+        scheduledTimeSec: 60 * 60 * 1,
+        workTimeSec: 0,
+        assignUser: {
+          id: 'user0002',
+          name: 'user name 0002',
+        },
+      },
+      {
+        id: 'subtask0004',
+        title: 'subtask title 0004',
+        description: 'subtask description 0004',
+        isDone: true,
+        scheduledTimeSec: 60 * 60 * 1,
+        workTimeSec: 0,
+        assignUser: {
+          id: 'user0002',
+          name: 'user name 0002',
+        },
+      },
+      {
+        id: 'subtask0005',
+        title: 'subtask title 0005',
+        description: 'subtask description 0005',
+        isDone: true,
+        scheduledTimeSec: 60 * 60 * 1,
+        workTimeSec: 0,
+        assignUser: {
+          id: 'user0002',
+          name: 'user name 0002',
+        },
+      },
     ],
   };
 
