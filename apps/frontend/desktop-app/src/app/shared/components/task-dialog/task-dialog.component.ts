@@ -1,3 +1,4 @@
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -17,7 +18,7 @@ import { UpdateTaskInput } from '@bison/shared/schema';
 import { RxState } from '@rx-angular/state';
 import { gql } from 'apollo-angular';
 import { of, Subject } from 'rxjs';
-import { exhaustMap, filter, map } from 'rxjs/operators';
+import { exhaustMap, filter, map, tap } from 'rxjs/operators';
 import { convertToApiStatusFromDomainStatus } from '../../../util/convert-to-api-status-from-domain-status';
 
 const USER_FIELDS = gql`
@@ -100,6 +101,7 @@ export class TaskDialogComponent implements OnInit {
   readonly onChangedAssignUser$ = new Subject<User['id']>();
   readonly onChangedStatus$ = new Subject<Task['status']>();
   readonly onChangedBoard$ = new Subject<Board['id']>();
+  readonly onDrop$ = new Subject<CdkDragDrop<Task['subtasks']>>();
 
   constructor(
     private state: RxState<State>,
@@ -208,6 +210,37 @@ export class TaskDialogComponent implements OnInit {
         )
     );
 
+    this.state.hold(
+      this.onDrop$.pipe(
+        map((dropEvent) => {
+          const task = this.state.get('task');
+          if (task == null) {
+            return [];
+          }
+          const subtasks = [...(task?.subtasks ?? [])];
+          moveItemInArray(
+            subtasks,
+            dropEvent.previousIndex,
+            dropEvent.currentIndex
+          );
+          return subtasks;
+        }),
+        tap((subtasks) => {
+          const task = this.state.get('task');
+          if (task == null) {
+            return task;
+          }
+          const subtasksOrder = subtasks.map((v) => v.id);
+          this.state.set('task', () => {
+            return { ...task, subtasks, subtasksOrder };
+          });
+        }),
+        exhaustMap((subtasks) => {
+          return this.updateSubtasksOrder(subtasks.map((v) => v.id));
+        })
+      )
+    );
+
     /**
      * TODO:
      * - タスクグループ詳細表示
@@ -298,6 +331,26 @@ export class TaskDialogComponent implements OnInit {
       scheduledTimeSec: task.scheduledTimeSec,
       boardId: boardId,
       subtasksOrder: task.subtasksOrder,
+      taskGroupId: task.taskGroup?.id,
+    };
+    return this.updateTaskUsecase.execute(input);
+  }
+
+  private updateSubtasksOrder(subtasksOrder: Task['subtasksOrder']) {
+    const task = this.state.get('task');
+    if (task == null) {
+      return of(undefined);
+    }
+    const input: UpdateTaskInput = {
+      id: task.id,
+      title: task.title,
+      description: task.description,
+      status: convertToApiStatusFromDomainStatus(task.status),
+      assignUserId: task.assignUser?.id,
+      workTimeSec: task.workTimeSec,
+      scheduledTimeSec: task.scheduledTimeSec,
+      boardId: task.board.id,
+      subtasksOrder,
       taskGroupId: task.taskGroup?.id,
     };
     return this.updateTaskUsecase.execute(input);
