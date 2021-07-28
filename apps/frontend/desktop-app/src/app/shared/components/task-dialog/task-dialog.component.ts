@@ -247,7 +247,6 @@ export class TaskDialogComponent implements OnInit {
      * - 削除確認、削除実施
      * - サブタスク詳細表示
      * - サブタスク追加
-     * - サブタスクの並び替え
      * - トラッキング開始
      * - トラッキング時間、作業予定時間更新
      */
@@ -255,104 +254,62 @@ export class TaskDialogComponent implements OnInit {
 
   private updateTitleAndDescription() {
     const state = this.state.get();
-    const task = state.task;
     const editState = state.editState;
-    if (task == null || editState == null) {
+    if (editState == null) {
       return of(undefined);
     }
-    const input: UpdateTaskInput = {
-      id: task.id,
+    const input = this.generateUpdateTaskInput({
       title: editState.title,
       description: editState.description,
-      status: convertToApiStatusFromDomainStatus(task.status),
-      assignUserId: task.assignUser?.id,
-      workTimeSec: task.workTimeSec,
-      scheduledTimeSec: task.scheduledTimeSec,
-      boardId: task.board.id,
-      subtasksOrder: task.subtasksOrder,
-      taskGroupId: task.taskGroup?.id,
-    };
+    });
+    if (input == null) return of(undefined);
     return this.updateTaskUsecase.execute(input);
   }
 
   private updateAssignUser(userId: User['id']) {
-    const state = this.state.get();
-    const task = state.task;
-    if (task == null) {
-      return of(undefined);
-    }
-    const input: UpdateTaskInput = {
-      id: task.id,
-      title: task.title,
-      description: task.description,
-      status: convertToApiStatusFromDomainStatus(task.status),
-      assignUserId: userId,
-      workTimeSec: task.workTimeSec,
-      scheduledTimeSec: task.scheduledTimeSec,
-      boardId: task.board.id,
-      subtasksOrder: task.subtasksOrder,
-      taskGroupId: task.taskGroup?.id,
-    };
+    const input = this.generateUpdateTaskInput({ assignUserId: userId });
+    if (input == null) return of(undefined);
     return this.updateTaskUsecase.execute(input);
   }
 
   private updateStatus(status: Task['status']) {
-    const task = this.state.get('task');
-    if (task == null) {
-      return of(undefined);
-    }
-    const input: UpdateTaskInput = {
-      id: task.id,
-      title: task.title,
-      description: task.description,
+    const input = this.generateUpdateTaskInput({
       status: convertToApiStatusFromDomainStatus(status),
-      assignUserId: task.assignUser?.id,
-      workTimeSec: task.workTimeSec,
-      scheduledTimeSec: task.scheduledTimeSec,
-      boardId: task.board.id,
-      subtasksOrder: task.subtasksOrder,
-      taskGroupId: task.taskGroup?.id,
-    };
+    });
+    if (input == null) return of(undefined);
     return this.updateTaskUsecase.execute(input);
   }
 
   private updateBoard(boardId: Board['id']) {
-    const task = this.state.get('task');
-    if (task == null) {
-      return of(undefined);
-    }
-    const input: UpdateTaskInput = {
-      id: task.id,
-      title: task.title,
-      description: task.description,
-      status: convertToApiStatusFromDomainStatus(task.status),
-      assignUserId: task.assignUser?.id,
-      workTimeSec: task.workTimeSec,
-      scheduledTimeSec: task.scheduledTimeSec,
-      boardId: boardId,
-      subtasksOrder: task.subtasksOrder,
-      taskGroupId: task.taskGroup?.id,
-    };
+    const input = this.generateUpdateTaskInput({ boardId });
+    if (input == null) return of(undefined);
     return this.updateTaskUsecase.execute(input);
   }
 
   private updateSubtasksOrder(subtasksOrder: Task['subtasksOrder']) {
+    const input = this.generateUpdateTaskInput({ subtasksOrder });
+    if (input == null) return of(undefined);
+    return this.updateTaskUsecase.execute(input);
+  }
+
+  private generateUpdateTaskInput(updateValue: Partial<UpdateTaskInput>) {
     const task = this.state.get('task');
     if (task == null) {
-      return of(undefined);
+      return undefined;
     }
     const input: UpdateTaskInput = {
       id: task.id,
-      title: task.title,
-      description: task.description,
-      status: convertToApiStatusFromDomainStatus(task.status),
-      assignUserId: task.assignUser?.id,
-      workTimeSec: task.workTimeSec,
-      scheduledTimeSec: task.scheduledTimeSec,
-      boardId: task.board.id,
-      subtasksOrder,
-      taskGroupId: task.taskGroup?.id,
+      title: updateValue.title ?? task.title,
+      description: updateValue.description ?? task.description,
+      status:
+        updateValue.status ?? convertToApiStatusFromDomainStatus(task.status),
+      assignUserId: updateValue.assignUserId ?? task.assignUser?.id,
+      workTimeSec: updateValue.workTimeSec ?? task.workTimeSec,
+      scheduledTimeSec: updateValue.scheduledTimeSec ?? task.scheduledTimeSec,
+      boardId: updateValue.boardId ?? task.board.id,
+      subtasksOrder: updateValue.subtasksOrder ?? task.subtasksOrder,
+      taskGroupId: updateValue.taskGroupId ?? task.taskGroup?.id,
     };
-    return this.updateTaskUsecase.execute(input);
+    return input;
   }
 }
