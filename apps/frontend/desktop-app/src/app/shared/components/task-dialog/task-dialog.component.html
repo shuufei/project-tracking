@@ -102,11 +102,12 @@
                       first as isFirst
                     "
                   >
-                    <bis-subtask-card
-                      [subtask]="subtask"
-                      [ngClass]="[isFirst ? '' : 'mt-1']"
-                      cdkDrag
-                    ></bis-subtask-card>
+                    <div cdkDrag>
+                      <bis-subtask-card
+                        [subtask]="subtask"
+                        [ngClass]="[isFirst ? '' : 'mt-1']"
+                      ></bis-subtask-card>
+                    </div>
                   </ng-container>
 
                   <button
