@@ -20,6 +20,7 @@ import { gql } from 'apollo-angular';
 import { of, Subject } from 'rxjs';
 import { exhaustMap, filter, map, tap } from 'rxjs/operators';
 import { convertToApiStatusFromDomainStatus } from '../../../util/convert-to-api-status-from-domain-status';
+import { TaskDialogService } from './task-dialog.service';
 
 const USER_FIELDS = gql`
   fragment UserPartsInTaskDialog on User {
@@ -48,8 +49,6 @@ type State = {
   providers: [RxState],
 })
 export class TaskDialogComponent implements OnInit {
-  @Input() triggerEl?: HTMLElement;
-  @Input() isOpen$ = new Subject<boolean>();
   @Input() set task(value: Task) {
     this.state.set('task', () => value);
   }
@@ -85,7 +84,7 @@ export class TaskDialogComponent implements OnInit {
    * State
    */
   readonly state$ = this.state.select();
-  readonly isOpenDialog$ = this.state.select('isOpenDialog');
+  readonly isOpenedDialog$ = this.taskDialogService.isOpened$;
 
   /**
    * Event
@@ -105,6 +104,7 @@ export class TaskDialogComponent implements OnInit {
 
   constructor(
     private state: RxState<State>,
+    private taskDialogService: TaskDialogService,
     @Inject(APOLLO_DATA_QUERY) private apolloDataQuery: IApolloDataQuery,
     @Inject(UPDATE_TASK_USECASE) private updateTaskUsecase: IUpdateTaskUsecase
   ) {
@@ -116,9 +116,6 @@ export class TaskDialogComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.state.connect('isOpenDialog', this.onClickedCloseButton$, () => false);
-    this.state.connect('isOpenDialog', this.onOpenedDialog$, () => true);
-    this.state.connect('isOpenDialog', this.onClosedDialog$, () => false);
     this.state.connect(this.onClickedEditTitleAndDescButton$, (state) => {
       return {
         ...state,
@@ -149,6 +146,35 @@ export class TaskDialogComponent implements OnInit {
         return { description, title: state.editState?.title ?? '' };
       }
     );
+    this.state.connect(
+      'users',
+      this.apolloDataQuery
+        .queryUsers(
+          { name: 'UserPartsInTaskDialog', fields: USER_FIELDS },
+          { fetchPolicy: 'cache-only' }
+        )
+        .pipe(
+          map((response) => {
+            if (response.data?.users == null) {
+              return [];
+            }
+            const { users } = response.data;
+            return users.map((user) => {
+              return {
+                id: user.id,
+                name: user.name,
+                icon: user.icon,
+              };
+            });
+          })
+        )
+    );
+
+    this.state.hold(this.onClickedCloseButton$, () =>
+      this.taskDialogService.close()
+    );
+    this.state.hold(this.onOpenedDialog$, () => this.taskDialogService.open());
+    this.state.hold(this.onClosedDialog$, () => this.taskDialogService.close());
     this.state.hold(
       this.onClickedUpdateTitleAndDescButton$.pipe(
         exhaustMap(() => {
@@ -186,30 +212,6 @@ export class TaskDialogComponent implements OnInit {
         })
       )
     );
-    this.state.connect(
-      'users',
-      this.apolloDataQuery
-        .queryUsers(
-          { name: 'UserPartsInTaskDialog', fields: USER_FIELDS },
-          { fetchPolicy: 'cache-only' }
-        )
-        .pipe(
-          map((response) => {
-            if (response.data?.users == null) {
-              return [];
-            }
-            const { users } = response.data;
-            return users.map((user) => {
-              return {
-                id: user.id,
-                name: user.name,
-                icon: user.icon,
-              };
-            });
-          })
-        )
-    );
-
     this.state.hold(
       this.onDrop$.pipe(
         map((dropEvent) => {
