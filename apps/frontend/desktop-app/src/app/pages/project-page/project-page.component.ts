@@ -14,6 +14,7 @@ import { RxState } from '@rx-angular/state';
 import { gql } from 'apollo-angular';
 import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { TaskDialogService } from '../../shared/components/task-dialog/task-dialog.service';
 import { convertToFrontendDomainProjectFromApiProject } from '../../util/convert-to-frontend-domain-project-from-api-project';
 
 export const VIEWER_FIELDS = gql`
@@ -59,6 +60,8 @@ type State = {
 export class ProjectPageComponent implements OnInit {
   readonly state$ = this.state.select();
   private readonly onInit$ = new Subject();
+
+  readonly onClickedTaskCard$ = new Subject<void>();
 
   readonly project: Project = {
     id: 'project0001',
@@ -174,12 +177,16 @@ export class ProjectPageComponent implements OnInit {
 
   constructor(
     private state: RxState<State>,
-    @Inject(APOLLO_DATA_QUERY) private apolloDataQuery: IApolloDataQuery
+    @Inject(APOLLO_DATA_QUERY) private apolloDataQuery: IApolloDataQuery,
+    private taskDialogService: TaskDialogService
   ) {}
 
   ngOnInit() {
     this.setupEventHandler();
     this.onInit$.next();
+    this.state.hold(this.onClickedTaskCard$, () => {
+      this.taskDialogService.open();
+    });
   }
 
   private setupEventHandler() {

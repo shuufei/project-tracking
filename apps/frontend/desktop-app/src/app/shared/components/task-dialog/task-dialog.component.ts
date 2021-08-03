@@ -9,6 +9,7 @@ import { Subtask, TaskGroup } from '@bison/shared/domain';
 import { RxState } from '@rx-angular/state';
 import { Subject } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
+import { TaskDialogService } from './task-dialog.service';
 
 type State = {
   contentsHistory: (Task | Subtask | TaskGroup)[]; // TODO: SubtaskとTaskGroupはコンポーネントで扱いやすいようにfrontend/domeinに別途型定義して利用する
@@ -23,8 +24,6 @@ type State = {
   providers: [RxState],
 })
 export class TaskDialogComponent implements OnInit {
-  @Input() triggerEl?: HTMLElement;
-  @Input() isOpen$ = new Subject<boolean>();
   @Input() set task(value: Task) {
     this.state.set('contentsHistory', (state) => [
       ...state.contentsHistory,
@@ -36,7 +35,7 @@ export class TaskDialogComponent implements OnInit {
    * State
    */
   readonly state$ = this.state.select();
-  readonly isOpenDialog$ = this.state.select('isOpenDialog');
+  readonly isOpenedDialog$ = this.taskDialogService.isOpened$;
   readonly task$ = this.state.select('contentsHistory').pipe(
     map((contentsHistory) => {
       const latestContents = contentsHistory[contentsHistory.length - 1];
@@ -54,7 +53,10 @@ export class TaskDialogComponent implements OnInit {
   readonly onOpenedDialog$ = new Subject<void>();
   readonly onClosedDialog$ = new Subject<void>();
 
-  constructor(private state: RxState<State>) {
+  constructor(
+    private state: RxState<State>,
+    private taskDialogService: TaskDialogService
+  ) {
     this.state.set({
       isOpenDialog: false,
       contentsHistory: [],
@@ -62,9 +64,11 @@ export class TaskDialogComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.state.connect('isOpenDialog', this.onClickedCloseButton$, () => false);
-    this.state.connect('isOpenDialog', this.onOpenedDialog$, () => true);
-    this.state.connect('isOpenDialog', this.onClosedDialog$, () => false);
+    this.state.hold(this.onClickedCloseButton$, () =>
+      this.taskDialogService.close()
+    );
+    this.state.hold(this.onOpenedDialog$, () => this.taskDialogService.open());
+    this.state.hold(this.onClosedDialog$, () => this.taskDialogService.close());
   }
 
   private isTask(value: State['contentsHistory'][number]): value is Task {
