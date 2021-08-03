@@ -23,9 +23,10 @@ import { TaskDialogStatusChangeButtonModule } from '../task-dialog-status-change
 import { TaskDialogTemplateModule } from '../task-dialog-template/task-dialog-template.module';
 import { TrackingBarModule } from '../tracking-bar/tracking-bar.module';
 import { TaskDialogComponent } from './task-dialog.component';
+import { TaskDialogTaskContentComponent } from './task-dialog-task-content/task-dialog-task-content.component';
 
 @NgModule({
-  declarations: [TaskDialogComponent],
+  declarations: [TaskDialogComponent, TaskDialogTaskContentComponent],
   imports: [
     CommonModule,
     DialogModule,

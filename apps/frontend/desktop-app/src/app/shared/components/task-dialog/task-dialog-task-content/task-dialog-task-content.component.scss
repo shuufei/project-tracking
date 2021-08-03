@@ -1,0 +1,27 @@
+:host {
+  display: block;
+}
+
+.task-title {
+  font-size: var(--bison-font-size-l1);
+  font-weight: var(--bison-font-weight-medium);
+  padding: 8px 12px;
+}
+
+.task-description {
+  font-size: var(--bison-font-size-s2);
+  font-weight: var(--bison-font-weight-medium);
+  padding: 8px 12px;
+}
+
+.cdk-drag-placeholder {
+  opacity: 0;
+}
+
+.cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.cdk-drop-list-dragging .cdk-drag {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
