@@ -1,5 +1,6 @@
 <ui-dialog
-  [isOpen$]="isOpenedDialog$"
+  [triggerEl]="triggerEl"
+  [isOpen$]="isOpenDialog$"
   (opened)="onOpenedDialog$.next()"
   (closed)="onClosedDialog$.next()"
 >

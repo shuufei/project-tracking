@@ -15,7 +15,6 @@ import {
   TextFieldModule,
   TooltipModule,
 } from '@bison/frontend/ui';
-import { RxState } from '@rx-angular/state';
 import { SubtaskCardModule } from '../subtask-card/subtask-card.module';
 import { TaskDialogAssignChangeButtonModule } from '../task-dialog-assign-change-button/task-dialog-assign-change-button.module';
 import { TaskDialogBoardChangeButtonModule } from '../task-dialog-board-change-button/task-dialog-board-change-button.module';
@@ -24,11 +23,6 @@ import { TaskDialogStatusChangeButtonModule } from '../task-dialog-status-change
 import { TaskDialogTemplateModule } from '../task-dialog-template/task-dialog-template.module';
 import { TrackingBarModule } from '../tracking-bar/tracking-bar.module';
 import { TaskDialogComponent } from './task-dialog.component';
-import {
-  TaskDialogService,
-  TaskDialogServiceState,
-  TASK_DIALOG_SERVICE_STATE,
-} from './task-dialog.service';
 
 @NgModule({
   declarations: [TaskDialogComponent],
@@ -58,11 +52,6 @@ import {
     {
       provide: UPDATE_TASK_USECASE,
       useClass: UpdateTaskUsecase,
-    },
-    TaskDialogService,
-    {
-      provide: TASK_DIALOG_SERVICE_STATE,
-      useFactory: () => new RxState<TaskDialogServiceState>(),
     },
   ],
 })
