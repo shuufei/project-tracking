@@ -24,6 +24,7 @@ type State = {
   providers: [RxState],
 })
 export class TaskDialogComponent implements OnInit {
+  @Input() triggerEl?: HTMLElement;
   @Input() set task(value: Task) {
     this.state.set('contentsHistory', (state) => [
       ...state.contentsHistory,
@@ -49,7 +50,6 @@ export class TaskDialogComponent implements OnInit {
   /**
    * Event
    */
-  readonly onClickedCloseButton$ = new Subject<void>();
   readonly onOpenedDialog$ = new Subject<void>();
   readonly onClosedDialog$ = new Subject<void>();
 
@@ -64,9 +64,6 @@ export class TaskDialogComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.state.hold(this.onClickedCloseButton$, () =>
-      this.taskDialogService.close()
-    );
     this.state.hold(this.onOpenedDialog$, () => this.taskDialogService.open());
     this.state.hold(this.onClosedDialog$, () => this.taskDialogService.close());
   }

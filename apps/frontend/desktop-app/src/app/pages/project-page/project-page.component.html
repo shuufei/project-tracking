@@ -44,10 +44,11 @@
   </div>
 
   <div class="m-4">
-    <button ui-stroked-button (click)="onClickedTaskCard$.next()">
-      タスクを確認
-    </button>
-    <bis-task-dialog [task]="task"></bis-task-dialog>
+    <button ui-stroked-button #showTaskDialogButton>タスクを確認</button>
+    <bis-task-dialog
+      [task]="task"
+      [triggerEl]="showTaskDialogButton.elementRef.nativeElement"
+    ></bis-task-dialog>
   </div>
 
   <ul>

@@ -21,6 +21,7 @@ import { gql } from 'apollo-angular';
 import { of, Subject } from 'rxjs';
 import { exhaustMap, filter, map, tap } from 'rxjs/operators';
 import { convertToApiStatusFromDomainStatus } from '../../../../util/convert-to-api-status-from-domain-status';
+import { TaskDialogService } from '../task-dialog.service';
 
 const USER_FIELDS = gql`
   fragment UserPartsInTaskDialog on User {
@@ -89,6 +90,7 @@ export class TaskDialogTaskContentComponent implements OnInit {
   /**
    * Event
    */
+  readonly onClickedCloseButton$ = new Subject<void>();
   readonly onClickedEditTitleAndDescButton$ = new Subject<void>();
   readonly onClickedEditTitleAndDescCancelButton$ = new Subject<void>();
   readonly onClickedUpdateTitleAndDescButton$ = new Subject<void>();
@@ -101,6 +103,7 @@ export class TaskDialogTaskContentComponent implements OnInit {
 
   constructor(
     private state: RxState<State>,
+    private taskDialogService: TaskDialogService,
     @Inject(APOLLO_DATA_QUERY) private apolloDataQuery: IApolloDataQuery,
     @Inject(UPDATE_TASK_USECASE) private updateTaskUsecase: IUpdateTaskUsecase
   ) {
@@ -150,6 +153,10 @@ export class TaskDialogTaskContentComponent implements OnInit {
         return { description, title: state.editState?.title ?? '' };
       }
     );
+
+    this.state.hold(this.onClickedCloseButton$, () => {
+      this.taskDialogService.close();
+    });
     this.state.hold(
       this.onClickedUpdateTitleAndDescButton$.pipe(
         exhaustMap(() => {
