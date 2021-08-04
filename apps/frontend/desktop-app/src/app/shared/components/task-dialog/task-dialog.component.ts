@@ -5,14 +5,15 @@ import {
   OnInit,
 } from '@angular/core';
 import { Task } from '@bison/frontend/domain';
-import { Subtask, TaskGroup } from '@bison/shared/domain';
 import { RxState } from '@rx-angular/state';
 import { Subject } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
-import { TaskDialogService } from './task-dialog.service';
+import {
+  TaskDialogService,
+  TaskDialogServiceState,
+} from './task-dialog.service';
 
 type State = {
-  contentsHistory: (Task | Subtask | TaskGroup)[]; // TODO: SubtaskとTaskGroupはコンポーネントで扱いやすいようにfrontend/domeinに別途型定義して利用する
   isOpenDialog: boolean;
 };
 
@@ -26,10 +27,7 @@ type State = {
 export class TaskDialogComponent implements OnInit {
   @Input() triggerEl?: HTMLElement;
   @Input() set task(value: Task) {
-    this.state.set('contentsHistory', (state) => [
-      ...state.contentsHistory,
-      value,
-    ]);
+    this.taskDialogService.pushContent(value);
   }
 
   /**
@@ -37,9 +35,9 @@ export class TaskDialogComponent implements OnInit {
    */
   readonly state$ = this.state.select();
   readonly isOpenedDialog$ = this.taskDialogService.isOpened$;
-  readonly task$ = this.state.select('contentsHistory').pipe(
-    map((contentsHistory) => {
-      const latestContents = contentsHistory[contentsHistory.length - 1];
+  readonly task$ = this.taskDialogService.contentHistory$.pipe(
+    map((contentHistory) => {
+      const latestContents = contentHistory[contentHistory.length - 1];
       return latestContents;
     }),
     filter((latestContents): latestContents is Task => {
@@ -59,7 +57,6 @@ export class TaskDialogComponent implements OnInit {
   ) {
     this.state.set({
       isOpenDialog: false,
-      contentsHistory: [],
     });
   }
 
@@ -68,7 +65,9 @@ export class TaskDialogComponent implements OnInit {
     this.state.hold(this.onClosedDialog$, () => this.taskDialogService.close());
   }
 
-  private isTask(value: State['contentsHistory'][number]): value is Task {
+  private isTask(
+    value: TaskDialogServiceState['contentHistory'][number]
+  ): value is Task {
     // TODO: Task判定実装
     return true;
   }
