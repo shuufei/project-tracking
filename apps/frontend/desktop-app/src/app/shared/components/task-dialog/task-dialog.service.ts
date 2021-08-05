@@ -23,10 +23,7 @@ export class TaskDialogService {
     @Inject(TASK_DIALOG_SERVICE_STATE)
     private readonly state: RxState<TaskDialogServiceState>
   ) {
-    this.state.set({
-      isOpened: false,
-      contentHistory: [],
-    });
+    this.resetState();
   }
 
   open() {
@@ -34,12 +31,19 @@ export class TaskDialogService {
   }
 
   close() {
-    this.state.set('isOpened', () => false);
+    this.resetState();
   }
 
   pushContent(content: TaskDialogServiceState['contentHistory'][number]) {
     this.state.set('contentHistory', (state) => {
       return [...state.contentHistory, content];
+    });
+  }
+
+  private resetState() {
+    this.state.set({
+      isOpened: false,
+      contentHistory: [],
     });
   }
 }

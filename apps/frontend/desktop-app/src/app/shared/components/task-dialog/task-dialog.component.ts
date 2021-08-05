@@ -7,7 +7,7 @@ import {
 import { Task } from '@bison/frontend/domain';
 import { RxState } from '@rx-angular/state';
 import { Observable, Subject } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
+import { filter, map, withLatestFrom } from 'rxjs/operators';
 import {
   TaskDialogService,
   TaskDialogServiceState,
@@ -80,7 +80,13 @@ export class TaskDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.state.hold(this.onOpenedDialog$, () => this.taskDialogService.open());
-    this.state.hold(this.onClosedDialog$, () => this.taskDialogService.close());
+    this.state.hold(
+      this.onClosedDialog$.pipe(
+        withLatestFrom(this.taskDialogService.isOpened$),
+        filter(([, isOpened]) => isOpened)
+      ),
+      () => this.taskDialogService.close()
+    );
   }
 
   private isTask(
