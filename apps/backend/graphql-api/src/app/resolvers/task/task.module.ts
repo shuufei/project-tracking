@@ -7,10 +7,12 @@ import {
   DELETE_TASK_SERVICE,
   GetBoardByIdService,
   GetProjectByBoardIdService,
+  GetTaskByIdService,
   GetTaskGroupByIdService,
   GetUserByIdService,
   GET_BOARD_BY_ID_SERVICE,
   GET_PROJECT_BY_BOARD_ID_SERVICE,
+  GET_TASK_BY_ID_SERVICE,
   GET_TASK_GROUP_BY_ID_SERVICE,
   GET_USER_BY_ID_SERVICE,
   ListSubtasksByTaskIdService,
@@ -104,6 +106,10 @@ import { TaskResolver } from './task.resolver';
     {
       provide: CAN_ACCESS_PROJECT_SERVICE,
       useClass: CanAccessProjectService,
+    },
+    {
+      provide: GET_TASK_BY_ID_SERVICE,
+      useClass: GetTaskByIdService,
     },
   ],
   imports: [ParseUserPipeModule],

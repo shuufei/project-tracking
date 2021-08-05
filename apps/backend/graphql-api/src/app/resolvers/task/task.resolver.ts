@@ -4,6 +4,7 @@ import type {
   IDeleteTaskService,
   IGetBoardByIdService,
   IGetProjectByBoardIdService,
+  IGetTaskByIdService,
   IGetTaskGroupByIdService,
   IGetUserByIdService,
   IListSubtasksByTaskIdService,
@@ -15,12 +16,13 @@ import {
   DELETE_TASK_SERVICE,
   GET_BOARD_BY_ID_SERVICE,
   GET_PROJECT_BY_BOARD_ID_SERVICE,
+  GET_TASK_BY_ID_SERVICE,
   GET_TASK_GROUP_BY_ID_SERVICE,
   GET_USER_BY_ID_SERVICE,
   LIST_SUBTASKS_BY_TASK_ID_SERVICE,
   UPDATE_TASK_SERVICE,
 } from '@bison/backend/application';
-import type { User } from '@bison/shared/domain';
+import type { Id, User } from '@bison/shared/domain';
 import type {
   CreateTaskOnBoardInput,
   CreateTaskOnTaskGroupInput,
@@ -30,8 +32,10 @@ import type {
 import { Inject } from '@nestjs/common';
 import {
   Args,
+  ID,
   Mutation,
   Parent,
+  Query,
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
@@ -71,8 +75,19 @@ export class TaskResolver {
     @Inject(DELETE_TASK_SERVICE)
     private readonly deleteTaskService: IDeleteTaskService,
     @Inject(UPDATE_TASK_SERVICE)
-    private readonly udpateTaskService: IUpdateTaskService
+    private readonly udpateTaskService: IUpdateTaskService,
+    @Inject(GET_TASK_BY_ID_SERVICE)
+    private readonly getTaskByIdService: IGetTaskByIdService
   ) {}
+
+  @Query()
+  async task(
+    @IdpUserId(ParseUserPipe) user: User,
+    @Args('id', { type: () => ID }) id: Id
+  ): Promise<ResolvedTask> {
+    const task = await this.getTaskByIdService.handle(id);
+    return convertToResolvedTaskFromDomainTask(task);
+  }
 
   @ResolveField()
   async board(@Parent() task: ResolvedTask): Promise<ResolvedBoard> {
