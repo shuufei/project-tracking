@@ -4,7 +4,7 @@ import {
   Input,
   OnInit,
 } from '@angular/core';
-import { Task } from '@bison/frontend/domain';
+import { Subtask, Task, TaskGroup } from '@bison/frontend/domain';
 import { RxState } from '@rx-angular/state';
 import { Observable, Subject } from 'rxjs';
 import { filter, map, withLatestFrom } from 'rxjs/operators';
@@ -49,6 +49,16 @@ export class TaskDialogComponent implements OnInit {
   readonly task$ = this.currentContent$.pipe(
     filter((latestContent): latestContent is Task => {
       return this.isTask(latestContent);
+    })
+  );
+  readonly subtask$ = this.currentContent$.pipe(
+    filter((v): v is Subtask => {
+      return this.isSubtask(v);
+    })
+  );
+  readonly taskGroup$ = this.currentContent$.pipe(
+    filter((v): v is TaskGroup => {
+      return this.isTaskGroup(v);
     })
   );
   readonly currentContentType$: Observable<ContentType> = this.currentContent$.pipe(
@@ -97,7 +107,7 @@ export class TaskDialogComponent implements OnInit {
 
   private isTaskGroup(
     value: TaskDialogServiceState['contentHistory'][number]
-  ): value is NonNullable<Task['taskGroup']> {
+  ): value is TaskGroup {
     return (
       (value as Task).subtasks == null &&
       (value as Task['subtasks'][number]).isDone == null
@@ -106,7 +116,7 @@ export class TaskDialogComponent implements OnInit {
 
   private isSubtask(
     value: TaskDialogServiceState['contentHistory'][number]
-  ): value is NonNullable<Task['subtasks'][number]> {
+  ): value is Subtask {
     return (value as Task['subtasks'][number]).isDone != null;
   }
 }

@@ -12,5 +12,17 @@
         ></bis-task-dialog-task-content>
       </ng-container>
     </ng-container>
+
+    <ng-container *ngSwitchCase="'subtask'">
+      <ng-container *ngIf="subtask$ | async as subtask">
+        {{ subtask | json }}
+      </ng-container>
+    </ng-container>
+
+    <ng-container *ngSwitchCase="'taskGroup'">
+      <ng-container *ngIf="taskGroup$ | async as taskGroup">
+        {{ taskGroup | json }}
+      </ng-container>
+    </ng-container>
   </ng-container>
 </ui-dialog>

@@ -19,8 +19,10 @@ import { UpdateTaskInput } from '@bison/shared/schema';
 import { RxState } from '@rx-angular/state';
 import { gql } from 'apollo-angular';
 import { of, Subject } from 'rxjs';
-import { exhaustMap, filter, map, tap } from 'rxjs/operators';
+import { exhaustMap, filter, map, switchMap, tap } from 'rxjs/operators';
 import { convertToApiStatusFromDomainStatus } from '../../../../util/convert-to-api-status-from-domain-status';
+import { convertToDomainSubtaskFromApiSubtask } from '../../../../util/convert-to-domain-subtask-from-api-subtask';
+import { convertToDomainTaskGroupFromApiTaskGroup } from '../../../../util/convert-to-domain-task-group-from-api-task-group';
 import { TaskDialogService } from '../task-dialog.service';
 
 const USER_FIELDS = gql`
@@ -28,6 +30,48 @@ const USER_FIELDS = gql`
     id
     name
     icon
+  }
+`;
+
+const SUBTASK_FIELDS = gql`
+  fragment SubtaskPartsInTaskDialog on Subtask {
+    id
+    title
+    description
+    isDone
+    task {
+      id
+    }
+    scheduledTimeSec
+    workTimeSec
+    assign {
+      id
+      name
+      icon
+    }
+  }
+`;
+
+const TASKGROUP_FIELDS = gql`
+  fragment TaskGroupPartsInTaskDialog on TaskGroup {
+    id
+    title
+    description
+    status
+    scheduledTimeSec
+    tasksOrder
+    assign {
+      id
+      name
+      icon
+    }
+    board {
+      id
+      name
+      project {
+        id
+      }
+    }
   }
 `;
 
@@ -250,14 +294,50 @@ export class TaskDialogTaskContentComponent implements OnInit {
         })
       )
     );
-    this.state.hold(this.onClickedTaskGroup$, () => {
-      const task = this.state.get('task');
-      if (task == null || task?.taskGroup == null) return;
-      this.taskDialogService.pushContent(task.taskGroup);
-    });
-    this.state.hold(this.onClickedSubtask$, (subtask) => {
-      this.taskDialogService.pushContent(subtask);
-    });
+    this.state.hold(
+      this.onClickedTaskGroup$.pipe(
+        switchMap(() => {
+          const task = this.state.get('task');
+          if (task == null || task?.taskGroup == null) return of(undefined);
+          return this.apolloDataQuery.queryTaskGroup(
+            { fields: TASKGROUP_FIELDS, name: 'TaskGroupPartsInTaskDialog' },
+            task.taskGroup.id,
+            { nextFetchPolicy: 'cache-only' }
+          );
+        }),
+        map((v) => {
+          return v?.data.taskGroup;
+        }),
+        filter((v): v is NonNullable<typeof v> => v != null),
+        map((taskGroup) => {
+          return convertToDomainTaskGroupFromApiTaskGroup(taskGroup);
+        })
+      ),
+      (taskGroup) => {
+        this.taskDialogService.pushContent(taskGroup);
+      }
+    );
+    this.state.hold(
+      this.onClickedSubtask$.pipe(
+        switchMap(({ id }) => {
+          return this.apolloDataQuery.querySubtask(
+            { fields: SUBTASK_FIELDS, name: 'SubtaskPartsInTaskDialog' },
+            id,
+            {
+              nextFetchPolicy: 'cache-only',
+            }
+          );
+        }),
+        map((v) => v.data.subtask),
+        filter((v): v is NonNullable<typeof v> => v != null),
+        map((subtask) => {
+          return convertToDomainSubtaskFromApiSubtask(subtask);
+        })
+      ),
+      (subtask) => {
+        this.taskDialogService.pushContent(subtask);
+      }
+    );
   }
 
   private updateTitleAndDescription() {

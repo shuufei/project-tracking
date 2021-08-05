@@ -1,16 +1,10 @@
 import { Inject, Injectable, InjectionToken } from '@angular/core';
-import { Task } from '@bison/frontend/domain';
+import { Subtask, Task, TaskGroup } from '@bison/frontend/domain';
 import { RxState } from '@rx-angular/state';
 
 export type TaskDialogServiceState = {
   isOpened: boolean;
-  contentHistory: (
-    | Task
-    | NonNullable<Task['taskGroup']> // TODO: taskGroupのQueryが実装されるまでをこの定義を利用
-    | NonNullable<Task['subtasks'][number]> // TODO: subtaskのQueryが実装されるまでをこの定義を利用
-    // | Subtask
-    // | TaskGroup
-  )[]; // TODO: SubtaskとTaskGroupはコンポーネントで扱いやすいようにfrontend/domeinに別途型定義して利用する
+  contentHistory: (Task | Subtask | TaskGroup)[];
 };
 
 @Injectable()
