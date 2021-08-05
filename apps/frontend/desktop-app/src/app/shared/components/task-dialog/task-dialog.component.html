@@ -4,11 +4,13 @@
   (opened)="onOpenedDialog$.next()"
   (closed)="onClosedDialog$.next()"
 >
-  <ng-container *ngIf="state$ | async as state">
-    <ng-container *ngIf="task$ | async as task">
-      <bis-task-dialog-task-content
-        [task]="task"
-      ></bis-task-dialog-task-content>
+  <ng-container [ngSwitch]="currentContentType$ | async">
+    <ng-container *ngSwitchCase="'task'">
+      <ng-container *ngIf="task$ | async as task">
+        <bis-task-dialog-task-content
+          [task]="task"
+        ></bis-task-dialog-task-content>
+      </ng-container>
     </ng-container>
   </ng-container>
 </ui-dialog>

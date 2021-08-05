@@ -5,6 +5,7 @@
         <ui-checkbox
           [checked]="state.subtask?.isDone || false"
           (changedCheck)="onChangedCheck$.next($event)"
+          (click)="$event.stopPropagation()"
         ></ui-checkbox>
         <span class="text-s2 text-black-default font-medium ml-2">{{
           state.subtask?.title
@@ -27,6 +28,7 @@
               [color]="'warn'"
               [icon]="'trash-2'"
               (clickedItem)="clickedDelete.emit()"
+              (click)="$event.stopPropagation()"
             ></ui-menu-item>
           </div>
         </ui-popup>
@@ -37,6 +39,7 @@
       <ui-assign-change-button
         [users]="state.users"
         [selectedUserId]="state.subtask?.assignUser?.id"
+        (click)="$event.stopPropagation()"
       ></ui-assign-change-button>
     </div>
   </div>

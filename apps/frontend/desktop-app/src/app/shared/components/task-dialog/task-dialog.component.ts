@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 import { Task } from '@bison/frontend/domain';
 import { RxState } from '@rx-angular/state';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import {
   TaskDialogService,
@@ -16,6 +16,8 @@ import {
 type State = {
   isOpenDialog: boolean;
 };
+
+type ContentType = 'task' | 'taskGroup' | 'subtask' | 'none';
 
 @Component({
   selector: 'bis-task-dialog',
@@ -35,13 +37,29 @@ export class TaskDialogComponent implements OnInit {
    */
   readonly state$ = this.state.select();
   readonly isOpenedDialog$ = this.taskDialogService.isOpened$;
-  readonly task$ = this.taskDialogService.contentHistory$.pipe(
+  readonly currentContent$ = this.taskDialogService.contentHistory$.pipe(
     map((contentHistory) => {
-      const latestContents = contentHistory[contentHistory.length - 1];
-      return latestContents;
+      const latestContent = contentHistory[contentHistory.length - 1];
+      return latestContent;
     }),
-    filter((latestContents): latestContents is Task => {
-      return latestContents && this.isTask(latestContents);
+    filter((v): v is NonNullable<typeof v> => {
+      return v != null;
+    })
+  );
+  readonly task$ = this.currentContent$.pipe(
+    filter((latestContent): latestContent is Task => {
+      return this.isTask(latestContent);
+    })
+  );
+  readonly currentContentType$: Observable<ContentType> = this.currentContent$.pipe(
+    map((content) => {
+      return this.isTask(content)
+        ? 'task'
+        : this.isTaskGroup(content)
+        ? 'taskGroup'
+        : this.isSubtask(content)
+        ? 'subtask'
+        : 'none';
     })
   );
 
@@ -68,7 +86,21 @@ export class TaskDialogComponent implements OnInit {
   private isTask(
     value: TaskDialogServiceState['contentHistory'][number]
   ): value is Task {
-    // TODO: Task判定実装
-    return true;
+    return (value as Task).subtasks != null;
+  }
+
+  private isTaskGroup(
+    value: TaskDialogServiceState['contentHistory'][number]
+  ): value is NonNullable<Task['taskGroup']> {
+    return (
+      (value as Task).subtasks == null &&
+      (value as Task['subtasks'][number]).isDone == null
+    );
+  }
+
+  private isSubtask(
+    value: TaskDialogServiceState['contentHistory'][number]
+  ): value is NonNullable<Task['subtasks'][number]> {
+    return (value as Task['subtasks'][number]).isDone != null;
   }
 }

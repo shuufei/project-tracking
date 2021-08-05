@@ -14,6 +14,7 @@
             class="text-s2 text-black-light2 block mb-2 underline cursor-pointer"
             [uiTooltip]="'タスクグループ'"
             [uiTooltipDirection]="'top-left'"
+            (click)="onClickedTaskGroup$.next()"
             >{{ state.task.taskGroup.title }}</span
           >
         </ng-container>
@@ -95,6 +96,7 @@
                     <bis-subtask-card
                       [subtask]="subtask"
                       [ngClass]="[isFirst ? '' : 'mt-1']"
+                      (click)="onClickedSubtask$.next(subtask)"
                     ></bis-subtask-card>
                   </div>
                 </ng-container>

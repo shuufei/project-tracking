@@ -7,6 +7,7 @@
       [isTracking]="isTracking"
       (changedTrackingTimeSec)="changedTrackingTimeSec.emit($event)"
       (changedPlannedTimeSec)="changedScheduledTimeSec.emit($event)"
+      (click)="$event.stopPropagation()"
     ></ui-tracking-log-change-button>
     <ng-container *ngIf="isTracking; else paused">
       <span [uiTooltip]="'トラッキング停止'">
@@ -15,6 +16,7 @@
           size="s"
           color="primary"
           class="ml-2 cursor-pointer"
+          (click)="$event.stopPropagation()"
         ></ui-icon>
       </span>
     </ng-container>
@@ -25,6 +27,7 @@
           size="s"
           color="primary"
           class="ml-2 cursor-pointer"
+          (click)="$event.stopPropagation()"
         ></ui-icon>
       </span>
     </ng-template>

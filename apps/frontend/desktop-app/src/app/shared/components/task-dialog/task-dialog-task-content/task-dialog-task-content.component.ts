@@ -100,6 +100,8 @@ export class TaskDialogTaskContentComponent implements OnInit {
   readonly onChangedStatus$ = new Subject<Task['status']>();
   readonly onChangedBoard$ = new Subject<Board['id']>();
   readonly onDrop$ = new Subject<CdkDragDrop<Task['subtasks']>>();
+  readonly onClickedTaskGroup$ = new Subject<void>();
+  readonly onClickedSubtask$ = new Subject<Task['subtasks'][number]>();
 
   constructor(
     private state: RxState<State>,
@@ -248,6 +250,14 @@ export class TaskDialogTaskContentComponent implements OnInit {
         })
       )
     );
+    this.state.hold(this.onClickedTaskGroup$, () => {
+      const task = this.state.get('task');
+      if (task == null || task?.taskGroup == null) return;
+      this.taskDialogService.pushContent(task.taskGroup);
+    });
+    this.state.hold(this.onClickedSubtask$, (subtask) => {
+      this.taskDialogService.pushContent(subtask);
+    });
   }
 
   private updateTitleAndDescription() {
