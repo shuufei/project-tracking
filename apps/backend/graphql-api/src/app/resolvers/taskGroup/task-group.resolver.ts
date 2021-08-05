@@ -3,6 +3,7 @@ import type {
   IDeleteTaskGroupService,
   IGetBoardByIdService,
   IGetProjectByBoardIdService,
+  IGetTaskGroupByIdService,
   IGetUserByIdService,
   IListTasksByTaskGroupIdService,
   IUpdateTaskGroupService,
@@ -12,11 +13,12 @@ import {
   DELETE_TASK_GROUP_SERVICE,
   GET_BOARD_BY_ID_SERVICE,
   GET_PROJECT_BY_BOARD_ID_SERVICE,
+  GET_TASK_GROUP_BY_ID_SERVICE,
   GET_USER_BY_ID_SERVICE,
   LIST_TASKS_BY_TASK_GROUP_ID_SERVICE,
   UPDATE_TASK_GROUP_SERVICE,
 } from '@bison/backend/application';
-import type { User } from '@bison/shared/domain';
+import type { Id, User } from '@bison/shared/domain';
 import type {
   CreateTaskGroupInput,
   DeleteTaskGroupInput,
@@ -25,8 +27,10 @@ import type {
 import { Inject } from '@nestjs/common';
 import {
   Args,
+  ID,
   Mutation,
   Parent,
+  Query,
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
@@ -60,8 +64,19 @@ export class TaskGroupResolver {
     @Inject(UPDATE_TASK_GROUP_SERVICE)
     private updateTaskGroupService: IUpdateTaskGroupService,
     @Inject(DELETE_TASK_GROUP_SERVICE)
-    private deleteTaskGroupService: IDeleteTaskGroupService
+    private deleteTaskGroupService: IDeleteTaskGroupService,
+    @Inject(GET_TASK_GROUP_BY_ID_SERVICE)
+    private getTaskGroupByIdService: IGetTaskGroupByIdService
   ) {}
+
+  @Query()
+  async taskGroup(
+    @IdpUserId(ParseUserPipe) user: User,
+    @Args('id', { type: () => ID }) id: Id
+  ): Promise<ResolvedTaskGroup> {
+    const taskGroup = await this.getTaskGroupByIdService.handle(id);
+    return convertToResolvedTaskGroupFromDomainTaskGroup(taskGroup);
+  }
 
   @ResolveField()
   async board(@Parent() taskGroup: ResolvedTaskGroup): Promise<ResolvedBoard> {
