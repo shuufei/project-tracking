@@ -82,6 +82,7 @@ type Subtask implements Node {
   task: Task!
   workTimeSec: Int!
   scheduledTimeSec: Int
+  workStartDateTimestamp: Int
 }
 
 type Task implements Node {
@@ -96,6 +97,7 @@ type Task implements Node {
   taskGroup: TaskGroup
   workTimeSec: Int!
   scheduledTimeSec: Int
+  workStartDateTimestamp: Int
   subtasksOrder: [ID!]
 }
 

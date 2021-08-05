@@ -237,6 +237,7 @@ export interface Subtask extends Node {
     task: Task;
     workTimeSec: number;
     scheduledTimeSec?: number;
+    workStartDateTimestamp?: number;
 }
 
 export interface Task extends Node {
@@ -251,6 +252,7 @@ export interface Task extends Node {
     taskGroup?: TaskGroup;
     workTimeSec: number;
     scheduledTimeSec?: number;
+    workStartDateTimestamp?: number;
     subtasksOrder?: string[];
 }
 

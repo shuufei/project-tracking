@@ -40,6 +40,7 @@ export type ResolvedTask = Pick<
   | 'workTimeSec'
   | 'scheduledTimeSec'
   | 'subtasksOrder'
+  | 'workStartDateTimestamp'
 > & {
   assign?: Pick<User, 'id'>;
   board: Pick<Task['board'], 'id'>;
@@ -48,7 +49,13 @@ export type ResolvedTask = Pick<
 
 export type ResolvedSubtask = Pick<
   Subtask,
-  'id' | 'title' | 'description' | 'isDone' | 'workTimeSec' | 'scheduledTimeSec'
+  | 'id'
+  | 'title'
+  | 'description'
+  | 'isDone'
+  | 'workTimeSec'
+  | 'scheduledTimeSec'
+  | 'workStartDateTimestamp'
 > & {
   assign?: Pick<User, 'id'>;
   task: Pick<Subtask['task'], 'id'>;

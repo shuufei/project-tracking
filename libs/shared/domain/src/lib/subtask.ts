@@ -10,6 +10,7 @@ export type Subtask = {
   assignUserId?: User['id'];
   workTimeSec: number;
   scheduledTimeSec?: number;
+  workStartDateTimestamp?: number;
   taskId: Id;
 };
 

@@ -15,6 +15,7 @@ export type Task = {
   taskGroupId?: TaskGroup['id'];
   workTimeSec: number;
   scheduledTimeSec?: number;
+  workStartDateTimestamp?: number;
   subtasksOrder: Subtask['id'][];
 };
 
