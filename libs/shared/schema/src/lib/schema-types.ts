@@ -170,6 +170,9 @@ export interface IQuery {
     project(id: string): Project | Promise<Project>;
     board(id: string): Board | Promise<Board>;
     users(): User[] | Promise<User[]>;
+    task(id: string): Task | Promise<Task>;
+    taskGroup(id: string): TaskGroup | Promise<TaskGroup>;
+    subtask(id: string): Subtask | Promise<Subtask>;
 }
 
 export interface IMutation {

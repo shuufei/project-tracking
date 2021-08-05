@@ -3,6 +3,9 @@ type Query {
   project(id: ID!): Project
   board(id: ID!): Board
   users: [User!]!
+  task(id: ID!): Task
+  taskGroup(id: ID!): TaskGroup
+  subtask(id: ID!): Subtask
 }
 
 type Mutation {
