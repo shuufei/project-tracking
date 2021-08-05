@@ -6,7 +6,7 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { Board } from '@bison/shared/domain';
+import { Board } from '@bison/frontend/ui';
 import { RxState } from '@rx-angular/state';
 import { combineLatest, Subject } from 'rxjs';
 import { filter, map } from 'rxjs/operators';

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Subtask, TaskGroup, User } from '@bison/shared/schema';
+import { Project, Subtask, TaskGroup, User } from '@bison/shared/schema';
 import { Apollo, gql } from 'apollo-angular';
 import { IApolloDataQuery } from './apollo-data.query.interface';
 
@@ -71,6 +71,26 @@ export class ApolloDataQuery implements IApolloDataQuery {
         ${fields}
         query SubtaskQuery($id: ID!) {
           subtask(id: $id) {
+            ...${name}
+          }
+        }
+      `,
+      variables: {
+        id,
+      },
+    }).valueChanges;
+  }
+
+  queryProject(
+    ...args: Parameters<IApolloDataQuery['queryProject']>
+  ): ReturnType<IApolloDataQuery['queryProject']> {
+    const [{ name, fields }, id, options] = args;
+    return this.apollo.watchQuery<{ project?: Project }>({
+      ...options,
+      query: gql`
+        ${fields}
+        query ProjectQuery($id: ID!) {
+          project(id: $id) {
             ...${name}
           }
         }

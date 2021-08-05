@@ -146,7 +146,7 @@
           ></bis-task-dialog-project-change-button>
           <bis-task-dialog-board-change-button
             class="w-full mt-3"
-            [boards]="boards"
+            [boards]="state.boards"
             [selectedBoardId]="state.task.board.id"
             (selectedBoard)="onChangedBoard$.next($event)"
           ></bis-task-dialog-board-change-button>

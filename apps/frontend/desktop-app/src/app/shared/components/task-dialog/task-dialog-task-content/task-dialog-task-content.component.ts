@@ -13,8 +13,7 @@ import {
   UPDATE_TASK_USECASE,
 } from '@bison/frontend/application';
 import { Task } from '@bison/frontend/domain';
-import { User } from '@bison/frontend/ui';
-import { Board } from '@bison/shared/domain';
+import { Board, User } from '@bison/frontend/ui';
 import { UpdateTaskInput } from '@bison/shared/schema';
 import { RxState } from '@rx-angular/state';
 import { gql } from 'apollo-angular';
@@ -75,6 +74,16 @@ const TASKGROUP_FIELDS = gql`
   }
 `;
 
+const PROJECT_FIELDS = gql`
+  fragment ProjectPartsInTaskDialog on Project {
+    id
+    boards {
+      id
+      name
+    }
+  }
+`;
+
 type State = {
   task?: Task;
   isEditableTitleAndDesc: boolean;
@@ -83,6 +92,7 @@ type State = {
     description: Task['description'];
   };
   users: User[];
+  boards: Board[];
 };
 
 @Component({
@@ -97,34 +107,6 @@ export class TaskDialogTaskContentComponent implements OnInit {
   set task(value: Task) {
     this.state.set('task', () => value);
   }
-
-  // TODO: Apollo Clientから取得
-  readonly boards: Board[] = [
-    {
-      id: 'board0001',
-      name: 'board 0001',
-      description:
-        'プロジェクト管理サービスの開発。\nプロジェクト管理サービスの開発。',
-      projectId: 'project0001',
-      tasksOrder: [],
-    },
-    {
-      id: 'board0002',
-      name: 'board 0002',
-      description:
-        'プロジェクト管理サービスの開発。\nプロジェクト管理サービスの開発。',
-      projectId: 'project0001',
-      tasksOrder: [],
-    },
-    {
-      id: 'board0003',
-      name: 'backlog',
-      description:
-        'プロジェクト管理サービスの開発。\nプロジェクト管理サービスの開発。',
-      projectId: 'project0001',
-      tasksOrder: [],
-    },
-  ];
 
   /**
    * State
@@ -156,15 +138,14 @@ export class TaskDialogTaskContentComponent implements OnInit {
     this.state.set({
       isEditableTitleAndDesc: false,
       users: [],
+      boards: [],
     });
   }
 
   ngOnInit(): void {
     /**
      * TODO:
-     * - タスクグループ詳細表示
      * - 削除確認、削除実施
-     * - サブタスク詳細表示
      * - サブタスク追加
      * - トラッキング開始
      * - トラッキング時間、作業予定時間更新
@@ -198,6 +179,32 @@ export class TaskDialogTaskContentComponent implements OnInit {
       (state, description) => {
         return { description, title: state.editState?.title ?? '' };
       }
+    );
+    this.state.connect(
+      'boards',
+      this.state.select('task').pipe(
+        map((v) => v?.board.project.id),
+        filter((v): v is NonNullable<typeof v> => v != null),
+        switchMap((projectId) => {
+          return this.apolloDataQuery.queryProject(
+            {
+              fields: PROJECT_FIELDS,
+              name: 'ProjectPartsInTaskDialog',
+            },
+            projectId
+          );
+        }),
+        map((v) => v.data.project),
+        filter((v): v is NonNullable<typeof v> => v != null),
+        map((project) => {
+          return project.boards.map((board) => {
+            return {
+              id: board.id,
+              name: board.name,
+            };
+          });
+        })
+      )
     );
 
     this.state.hold(this.onClickedCloseButton$, () => {

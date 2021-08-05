@@ -96,7 +96,7 @@ export class ProjectPageComponent implements OnInit {
       name: 'board name 0001',
       description: 'board description',
       project: {
-        id: 'projec0001',
+        id: 'project0001',
         name: 'project name',
       },
     },
