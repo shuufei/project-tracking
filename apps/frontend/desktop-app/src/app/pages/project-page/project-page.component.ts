@@ -107,6 +107,7 @@ export class ProjectPageComponent implements OnInit {
     },
     workTimeSec: 60 * 60 * 1 + 60 + 30,
     scheduledTimeSec: 60 * 60 * 2,
+    // workStartDateTimestamp: Math.ceil(new Date().valueOf() / 1000),
     subtasksOrder: [],
     subtasks: [
       {

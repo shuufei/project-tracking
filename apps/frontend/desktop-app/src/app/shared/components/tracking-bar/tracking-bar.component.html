@@ -10,7 +10,7 @@
       (click)="$event.stopPropagation()"
     ></ui-tracking-log-change-button>
     <ng-container *ngIf="isTracking; else paused">
-      <span [uiTooltip]="'トラッキング停止'">
+      <span [uiTooltip]="'トラッキング停止'" class="leading-none">
         <ui-icon
           icon="pause"
           size="s"
@@ -21,7 +21,7 @@
       </span>
     </ng-container>
     <ng-template #paused>
-      <span [uiTooltip]="'トラッキング開始'">
+      <span [uiTooltip]="'トラッキング開始'" class="leading-none">
         <ui-icon
           icon="play"
           size="s"
