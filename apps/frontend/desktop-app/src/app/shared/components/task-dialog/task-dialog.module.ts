@@ -4,6 +4,8 @@ import { NgModule } from '@angular/core';
 import {
   ApolloDataQuery,
   APOLLO_DATA_QUERY,
+  DeleteTaskUsecase,
+  DELETE_TASK_USECASE,
   UpdateTaskUsecase,
   UPDATE_TASK_USECASE,
 } from '@bison/frontend/application';
@@ -16,6 +18,8 @@ import {
   TooltipModule,
 } from '@bison/frontend/ui';
 import { RxState } from '@rx-angular/state';
+import { TuiNotificationsModule } from '@taiga-ui/core';
+import { DeleteConfirmPopupModule } from '../delete-confirm-popup/delete-confirm-popup.module';
 import { SubtaskCardModule } from '../subtask-card/subtask-card.module';
 import { TaskDialogAssignChangeButtonModule } from '../task-dialog-assign-change-button/task-dialog-assign-change-button.module';
 import { TaskDialogBoardChangeButtonModule } from '../task-dialog-board-change-button/task-dialog-board-change-button.module';
@@ -49,6 +53,8 @@ import {
     TextareaModule,
     TooltipModule,
     DragDropModule,
+    DeleteConfirmPopupModule,
+    TuiNotificationsModule,
   ],
   exports: [TaskDialogComponent],
   providers: [
@@ -59,6 +65,10 @@ import {
     {
       provide: UPDATE_TASK_USECASE,
       useClass: UpdateTaskUsecase,
+    },
+    {
+      provide: DELETE_TASK_USECASE,
+      useClass: DeleteTaskUsecase,
     },
     TaskDialogService,
     {

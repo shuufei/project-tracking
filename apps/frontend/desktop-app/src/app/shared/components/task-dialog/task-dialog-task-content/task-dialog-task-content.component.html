@@ -155,13 +155,18 @@
             (selectedBoard)="onChangedBoard$.next($event)"
           ></bis-task-dialog-board-change-button>
         </div>
-        <div class="mt-6">
+        <div class="mt-6 relative">
           <button
             class="focus:outline-none text-s2 text-warn-default font-medium flex items-center w-full"
+            #deleteButton
           >
             <ui-icon size="s" icon="trash-2" color="warn"></ui-icon>
             <span class="ml-3">削除</span>
           </button>
+          <bis-delete-confirm-popup
+            [triggerEl]="deleteButton"
+            (delete)="onDelete$.next()"
+          ></bis-delete-confirm-popup>
         </div>
       </ng-container>
     </div>

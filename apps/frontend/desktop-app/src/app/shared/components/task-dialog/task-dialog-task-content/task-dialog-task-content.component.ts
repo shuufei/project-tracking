@@ -8,14 +8,17 @@ import {
 } from '@angular/core';
 import {
   APOLLO_DATA_QUERY,
+  DELETE_TASK_USECASE,
   IApolloDataQuery,
+  IDeleteTaskUsecase,
   IUpdateTaskUsecase,
   UPDATE_TASK_USECASE,
 } from '@bison/frontend/application';
 import { Task } from '@bison/frontend/domain';
 import { Board, User } from '@bison/frontend/ui';
-import { UpdateTaskInput } from '@bison/shared/schema';
+import { DeleteTaskInput, UpdateTaskInput } from '@bison/shared/schema';
 import { RxState } from '@rx-angular/state';
+import { TuiNotificationsService } from '@taiga-ui/core';
 import { gql } from 'apollo-angular';
 import { of, Subject } from 'rxjs';
 import { exhaustMap, filter, map, switchMap, tap } from 'rxjs/operators';
@@ -132,12 +135,16 @@ export class TaskDialogTaskContentComponent implements OnInit {
   readonly onClickedPause$ = new Subject<void>();
   readonly onChangedWorkTimeSec$ = new Subject<number>();
   readonly onChangedScheduledTimeSec$ = new Subject<number>();
+  readonly onDelete$ = new Subject<void>();
 
   constructor(
     private state: RxState<State>,
     private taskDialogService: TaskDialogService,
     @Inject(APOLLO_DATA_QUERY) private apolloDataQuery: IApolloDataQuery,
-    @Inject(UPDATE_TASK_USECASE) private updateTaskUsecase: IUpdateTaskUsecase
+    @Inject(UPDATE_TASK_USECASE) private updateTaskUsecase: IUpdateTaskUsecase,
+    @Inject(DELETE_TASK_USECASE) private deleteTaskUsecase: IDeleteTaskUsecase,
+    @Inject(TuiNotificationsService)
+    private readonly notificationsService: TuiNotificationsService
   ) {
     this.state.set({
       isEditableTitleAndDesc: false,
@@ -382,6 +389,24 @@ export class TaskDialogTaskContentComponent implements OnInit {
       (subtask) => {
         this.taskDialogService.pushContent(subtask);
       }
+    );
+    this.state.hold(
+      this.onDelete$.pipe(
+        exhaustMap(() => {
+          const taskId = this.state.get('task')?.id;
+          if (taskId == null) return of(undefined);
+          const input: DeleteTaskInput = {
+            id: taskId,
+          };
+          return this.deleteTaskUsecase.execute(input);
+        }),
+        switchMap(() => {
+          this.taskDialogService.close();
+          return this.notificationsService.show('タスクが削除されました', {
+            hasCloseButton: true,
+          });
+        })
+      )
     );
   }
 

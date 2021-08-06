@@ -1,0 +1,23 @@
+<ui-popup
+  [triggerEl]="triggerEl"
+  [isCloseWhenPopupAction]="true"
+  class="w-full"
+>
+  <ng-container *ngIf="state$ | async as state">
+    <div class="p-1 w-full">
+      <p class="text-s3 text-black-default">削除しますか？</p>
+      <div class="flex mt-4 flex-col">
+        <button
+          ui-fill-button
+          color="warn"
+          class="w-full"
+          (click)="delete.emit()"
+        >
+          <ui-icon icon="trash-2" size="s" color="white"></ui-icon>
+          <span class="ml-1">削除</span>
+        </button>
+        <button ui-button color="warn" class="mt-1 w-full">キャンセル</button>
+      </div>
+    </div>
+  </ng-container>
+</ui-popup>
