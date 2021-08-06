@@ -5,6 +5,10 @@
       class="w-full"
       [trackingTimeSec]="state.task?.workTimeSec || 0"
       [scheduledTimeSec]="state.task?.scheduledTimeSec || 0"
+      (clickedPlay)="onClickedPlay$.next()"
+      (clickedPause)="onClickedPause$.next()"
+      (changedTrackingTimeSec)="onChangedWorkTimeSec$.next($event)"
+      (changedScheduledTimeSec)="onChangedScheduledTimeSec$.next($event)"
     ></bis-tracking-bar>
 
     <div main>
@@ -83,7 +87,6 @@
             <ng-container
               *ngIf="state.task.subtasks.length > 0; else nonSubtasks"
             >
-              <!-- TODO: DnDの動作改善。bis-subtask-cardを利用しているとDnDの動作がなぜか重くなる。*ngIf="state$ | async as state"移行の要素が全てレンダリングされなおされてるのが原因？ -->
               <div
                 class="p-2 rounded-s bg-primary-light3 subtasks-box"
                 cdkDropList

@@ -128,6 +128,10 @@ export class TaskDialogTaskContentComponent implements OnInit {
   readonly onDrop$ = new Subject<CdkDragDrop<Task['subtasks']>>();
   readonly onClickedTaskGroup$ = new Subject<void>();
   readonly onClickedSubtask$ = new Subject<Task['subtasks'][number]>();
+  readonly onClickedPlay$ = new Subject<void>();
+  readonly onClickedPause$ = new Subject<void>();
+  readonly onChangedWorkTimeSec$ = new Subject<number>();
+  readonly onChangedScheduledTimeSec$ = new Subject<number>();
 
   constructor(
     private state: RxState<State>,
@@ -244,6 +248,40 @@ export class TaskDialogTaskContentComponent implements OnInit {
         }),
         exhaustMap((boardId) => {
           return this.updateBoard(boardId);
+        })
+      )
+    );
+    this.state.hold(
+      this.onClickedPlay$.pipe(
+        exhaustMap(() => {
+          return this.startTracking();
+        })
+      )
+    );
+    this.state.hold(
+      this.onClickedPause$.pipe(
+        exhaustMap(() => {
+          return this.stopTracking();
+        })
+      )
+    );
+    this.state.hold(
+      this.onChangedWorkTimeSec$.pipe(
+        filter((sec) => {
+          return sec !== this.state.get('task')?.workTimeSec;
+        }),
+        exhaustMap((sec) => {
+          return this.updateWorkTimeSec(sec);
+        })
+      )
+    );
+    this.state.hold(
+      this.onChangedScheduledTimeSec$.pipe(
+        filter((sec) => {
+          return sec !== this.state.get('task')?.scheduledTimeSec;
+        }),
+        exhaustMap((sec) => {
+          return this.updateScheduledTimeSec(sec);
         })
       )
     );
@@ -387,6 +425,42 @@ export class TaskDialogTaskContentComponent implements OnInit {
     return this.updateTaskUsecase.execute(input);
   }
 
+  private startTracking() {
+    const now = new Date().valueOf();
+    const input = this.generateUpdateTaskInput({
+      workStartDateTimestamp: now,
+    });
+    if (input == null) return of(undefined);
+    return this.updateTaskUsecase.execute(input);
+  }
+
+  private stopTracking() {
+    const start = this.state.get('task')?.workStartDateTimestamp;
+    const currentWorkTimeSec = this.state.get('task')?.workTimeSec;
+    if (start == null || currentWorkTimeSec == null) return of(undefined);
+    const now = new Date().valueOf();
+    const diffTimeMilliSec = now - start;
+    const updatedWorkTimeSec =
+      currentWorkTimeSec + Math.ceil(diffTimeMilliSec / 1000);
+    const input = this.generateUpdateTaskInput({
+      workTimeSec: updatedWorkTimeSec,
+    });
+    if (input == null) return of(undefined);
+    return this.updateTaskUsecase.execute(input);
+  }
+
+  private updateWorkTimeSec(sec: Task['workTimeSec']) {
+    const input = this.generateUpdateTaskInput({ workTimeSec: sec });
+    if (input == null) return of(undefined);
+    return this.updateTaskUsecase.execute(input);
+  }
+
+  private updateScheduledTimeSec(sec: Task['scheduledTimeSec']) {
+    const input = this.generateUpdateTaskInput({ scheduledTimeSec: sec });
+    if (input == null) return of(undefined);
+    return this.updateTaskUsecase.execute(input);
+  }
+
   private generateUpdateTaskInput(updateValue: Partial<UpdateTaskInput>) {
     const task = this.state.get('task');
     if (task == null) {
@@ -404,6 +478,8 @@ export class TaskDialogTaskContentComponent implements OnInit {
       boardId: updateValue.boardId ?? task.board.id,
       subtasksOrder: updateValue.subtasksOrder ?? task.subtasksOrder,
       taskGroupId: updateValue.taskGroupId ?? task.taskGroup?.id,
+      workStartDateTimestamp:
+        updateValue.workStartDateTimestamp ?? task.workStartDateTimestamp,
     };
     return input;
   }

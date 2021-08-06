@@ -16,6 +16,7 @@ export type Task = Pick<
   | 'workTimeSec'
   | 'scheduledTimeSec'
   | 'subtasksOrder'
+  | 'workStartDateTimestamp'
 > & {
   board: Pick<Board, 'id' | 'name' | 'description'> & {
     project: Pick<Project, 'id' | 'name'>;

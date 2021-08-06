@@ -36,6 +36,7 @@ export class UpdateTaskUsecase implements IUpdateTaskUsecase {
             workTimeSec
             scheduledTimeSec
             subtasksOrder
+            workStartDateTimestamp
           }
         }
       `,

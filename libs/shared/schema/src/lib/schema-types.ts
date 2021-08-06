@@ -95,6 +95,7 @@ export interface UpdateTaskInput {
     assignUserId?: string;
     workTimeSec: number;
     scheduledTimeSec?: number;
+    workStartDateTimestamp?: number;
     boardId: string;
     subtasksOrder: string[];
     taskGroupId?: string;
@@ -143,6 +144,7 @@ export interface UpdateSubtaskInput {
     assignUserId?: string;
     workTimeSec: number;
     scheduledTimeSec?: number;
+    workStartDateTimestamp?: number;
     taskId: string;
 }
 

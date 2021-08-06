@@ -82,7 +82,7 @@ type Subtask implements Node {
   task: Task!
   workTimeSec: Int!
   scheduledTimeSec: Int
-  workStartDateTimestamp: Int
+  workStartDateTimestamp: Float
 }
 
 type Task implements Node {
@@ -97,7 +97,7 @@ type Task implements Node {
   taskGroup: TaskGroup
   workTimeSec: Int!
   scheduledTimeSec: Int
-  workStartDateTimestamp: Int
+  workStartDateTimestamp: Float
   subtasksOrder: [ID!]
 }
 
@@ -202,6 +202,7 @@ input UpdateTaskInput {
   assignUserId: ID
   workTimeSec: Int!
   scheduledTimeSec: Int
+  workStartDateTimestamp: Float
   boardId: ID!
   subtasksOrder: [ID!]!
   taskGroupId: ID
@@ -250,6 +251,7 @@ input UpdateSubtaskInput {
   assignUserId: ID
   workTimeSec: Int!
   scheduledTimeSec: Int
+  workStartDateTimestamp: Float
   taskId: ID!
 }
 
