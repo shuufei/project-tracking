@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { RxState } from '@rx-angular/state';
 import { interval, of, Subject } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { filter, map, switchMap } from 'rxjs/operators';
 import { ChangedTimeEvent } from '../input-time/input-time.component';
 import {
   convertToSecFromTime,
@@ -84,13 +84,12 @@ export class TrackingLogChangeButtonComponent implements OnInit {
     });
     this.state.connect(
       'trackingTimeSec',
-      this.state
-        .select('isTracking')
-        .pipe(
-          switchMap((isTracking) =>
-            isTracking ? interval(1000) : of(undefined)
-          )
-        ),
+      this.state.select('isTracking').pipe(
+        switchMap((isTracking) => {
+          return isTracking ? interval(1000) : of(undefined);
+        }),
+        filter((v) => v != null)
+      ),
       (state) => {
         return state.trackingTimeSec + 1;
       }
