@@ -144,6 +144,7 @@ export class TaskDialogTaskContentComponent implements OnInit {
   readonly onChangedWorkTimeSec$ = new Subject<number>();
   readonly onChangedScheduledTimeSec$ = new Subject<number>();
   readonly onDelete$ = new Subject<void>();
+  readonly onClickedAddSubtask$ = new Subject<void>();
 
   constructor(
     private state: RxState<State>,
@@ -222,6 +223,38 @@ export class TaskDialogTaskContentComponent implements OnInit {
         })
       )
     );
+    this.state.connect(
+      'users',
+      this.apolloDataQuery
+        .queryUsers(
+          { name: 'UserPartsInTaskDialog', fields: USER_FIELDS },
+          { fetchPolicy: 'cache-only' }
+        )
+        .pipe(
+          map((response) => {
+            if (response.data?.users == null) {
+              return [];
+            }
+            const { users } = response.data;
+            return users.map((user) => {
+              return {
+                id: user.id,
+                name: user.name,
+                icon: user.icon,
+              };
+            });
+          })
+        )
+    );
+    this.state.connect('task', this.onClickedAddSubtask$, (state) => {
+      const task = state.task;
+      return task == null
+        ? task
+        : {
+            ...task,
+            subtasks: [...task.subtasks],
+          };
+    });
 
     this.state.hold(this.onClickedCloseButton$, () => {
       this.taskDialogService.close();
@@ -307,30 +340,6 @@ export class TaskDialogTaskContentComponent implements OnInit {
         })
       )
     );
-    this.state.connect(
-      'users',
-      this.apolloDataQuery
-        .queryUsers(
-          { name: 'UserPartsInTaskDialog', fields: USER_FIELDS },
-          { fetchPolicy: 'cache-only' }
-        )
-        .pipe(
-          map((response) => {
-            if (response.data?.users == null) {
-              return [];
-            }
-            const { users } = response.data;
-            return users.map((user) => {
-              return {
-                id: user.id,
-                name: user.name,
-                icon: user.icon,
-              };
-            });
-          })
-        )
-    );
-
     this.state.hold(
       this.onDrop$.pipe(
         map((dropEvent) => {
@@ -436,6 +445,16 @@ export class TaskDialogTaskContentComponent implements OnInit {
       description: editState.description,
     });
     if (input == null) return of(undefined);
+    this.state.set('task', (state) => {
+      const task = state.task;
+      return task == null
+        ? task
+        : {
+            ...task,
+            title: editState.title,
+            description: editState.description,
+          };
+    });
     return this.updateTaskUsecase.execute(input);
   }
 
@@ -450,6 +469,15 @@ export class TaskDialogTaskContentComponent implements OnInit {
       status: convertToApiStatusFromDomainStatus(status),
     });
     if (input == null) return of(undefined);
+    this.state.set('task', (state) => {
+      const task = state.task;
+      return task == null
+        ? task
+        : {
+            ...task,
+            status,
+          };
+    });
     return this.updateTaskUsecase.execute(input);
   }
 
@@ -471,6 +499,15 @@ export class TaskDialogTaskContentComponent implements OnInit {
       workStartDateTimestamp: now,
     });
     if (input == null) return of(undefined);
+    this.state.set('task', (state) => {
+      const task = state.task;
+      return task == null
+        ? task
+        : {
+            ...task,
+            workStartDateTimestamp: now,
+          };
+    });
     return this.updateTaskUsecase.execute(input);
   }
 
@@ -484,25 +521,56 @@ export class TaskDialogTaskContentComponent implements OnInit {
       currentWorkTimeSec + Math.ceil(diffTimeMilliSec / 1000);
     const input = this.generateUpdateTaskInput({
       workTimeSec: updatedWorkTimeSec,
+      workStartDateTimestamp: undefined,
     });
     if (input == null) return of(undefined);
+    this.state.set('task', (state) => {
+      const task = state.task;
+      return task == null
+        ? task
+        : {
+            ...task,
+            workTimeSec: updatedWorkTimeSec,
+            workStartDateTimestamp: undefined,
+          };
+    });
     return this.updateTaskUsecase.execute(input);
   }
 
   private updateWorkTimeSec(sec: Task['workTimeSec']) {
-    const workStartTimestamp = this.state.get('task')?.workStartDateTimestamp;
+    const workStartDateTimestamp =
+      this.state.get('task')?.workStartDateTimestamp && new Date().valueOf();
     const input = this.generateUpdateTaskInput({
       workTimeSec: sec,
       // トラッキング中に更新する場合、開始時間を更新する
-      workStartDateTimestamp: workStartTimestamp && new Date().valueOf(),
+      workStartDateTimestamp,
     });
     if (input == null) return of(undefined);
+    this.state.set('task', (state) => {
+      const task = state.task;
+      return task == null
+        ? task
+        : {
+            ...task,
+            workTimeSec: sec,
+            workStartDateTimestamp,
+          };
+    });
     return this.updateTaskUsecase.execute(input);
   }
 
   private updateScheduledTimeSec(sec: Task['scheduledTimeSec']) {
     const input = this.generateUpdateTaskInput({ scheduledTimeSec: sec });
     if (input == null) return of(undefined);
+    this.state.set('task', (state) => {
+      const task = state.task;
+      return task == null
+        ? task
+        : {
+            ...task,
+            scheduledTimeSec: sec,
+          };
+    });
     return this.updateTaskUsecase.execute(input);
   }
 

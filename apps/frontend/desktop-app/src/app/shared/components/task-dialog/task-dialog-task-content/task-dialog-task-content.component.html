@@ -107,6 +107,7 @@
 
                 <button
                   class="mt-1 px-2 py-1 focus:outline-none focus:shadow-outline_primary flex items-center justify-center rounded-s w-full"
+                  (click)="onClickedAddSubtask$.next()"
                 >
                   <ui-icon icon="plus" size="s" color="primary"></ui-icon>
                   <span class="text-s3 text-black-default ml-1"
@@ -118,6 +119,7 @@
             <ng-template #nonSubtasks>
               <button
                 class="p-2 focus:outline-none focus:shadow-outline_primary flex items-center justify-start rounded-s"
+                (click)="onClickedAddSubtask$.next()"
               >
                 <ui-icon icon="plus" size="s" color="primary"></ui-icon>
                 <span class="text-s3 text-black-default ml-1"
