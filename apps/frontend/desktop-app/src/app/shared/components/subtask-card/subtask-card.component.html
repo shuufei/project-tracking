@@ -52,6 +52,9 @@
       class="w-full"
       [trackingTimeSec]="state.subtask?.workTimeSec || 0"
       [scheduledTimeSec]="state.subtask?.scheduledTimeSec || 0"
+      [isTracking]="state.subtask?.workStartDateTimestamp ? true : false"
+      (clickedPlay)="onClickedPlay$.next()"
+      (clickedPause)="onClickedPause$.next()"
       (changedTrackingTimeSec)="onChangedWorkTimeSec$.next($event)"
       (changedScheduledTimeSec)="onChangedScheduledTimeSec$.next($event)"
     ></bis-tracking-bar>

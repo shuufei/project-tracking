@@ -17,7 +17,14 @@ import { UpdateSubtaskInput } from '@bison/shared/schema';
 import { RxState } from '@rx-angular/state';
 import { gql } from 'apollo-angular';
 import { of, Subject } from 'rxjs';
-import { distinctUntilChanged, exhaustMap, filter, map } from 'rxjs/operators';
+import {
+  distinctUntilChanged,
+  exhaustMap,
+  filter,
+  map,
+  pairwise,
+  startWith,
+} from 'rxjs/operators';
 
 const USER_FIELDS = gql`
   fragment UserPartsInSubtaskCard on User {
@@ -57,6 +64,8 @@ export class SubtaskCardComponent implements OnInit {
   readonly onChangedScheduledTimeSec$ = new Subject<number>();
   readonly onChangedCheck$ = new Subject<boolean>();
   readonly onChangedAssignUser$ = new Subject<User['id'] | undefined>();
+  readonly onClickedPlay$ = new Subject<void>();
+  readonly onClickedPause$ = new Subject<void>();
 
   constructor(
     private state: RxState<State>,
@@ -142,8 +151,56 @@ export class SubtaskCardComponent implements OnInit {
         map((subtask) => subtask?.isDone),
         filter((v): v is NonNullable<typeof v> => v != null),
         distinctUntilChanged(),
+        filter((isDone) => {
+          return isDone !== this.state.get('subtask')?.isDone;
+        }),
         exhaustMap((isDone) => {
           return this.updateIsDone(isDone);
+        })
+      )
+    );
+    // TODO: taskと同じ処理になるので共通化する
+    this.state.hold(
+      this.onChangedWorkTimeSec$.pipe(
+        startWith(this.state.get('subtask')?.workTimeSec ?? 0),
+        pairwise(),
+        filter(([prev, sec]) => {
+          const diff = sec - prev;
+          const isChangedByCtrlBtn = diff > 1;
+          const isTracking =
+            this.state.get('subtask')?.workStartDateTimestamp != null;
+          return isChangedByCtrlBtn || !isTracking;
+        }),
+        map(([, current]) => current),
+        filter((sec) => {
+          return sec !== this.state.get('subtask')?.workTimeSec;
+        }),
+        exhaustMap((sec) => {
+          return this.updateWorkTimeSec(sec);
+        })
+      )
+    );
+    this.state.hold(
+      this.onChangedScheduledTimeSec$.pipe(
+        filter((sec) => {
+          return sec !== this.state.get('subtask')?.scheduledTimeSec;
+        }),
+        exhaustMap((sec) => {
+          return this.updateScheduledTimeSec(sec);
+        })
+      )
+    );
+    this.state.hold(
+      this.onClickedPlay$.pipe(
+        exhaustMap(() => {
+          return this.startTracking();
+        })
+      )
+    );
+    this.state.hold(
+      this.onClickedPause$.pipe(
+        exhaustMap(() => {
+          return this.stopTracking();
         })
       )
     );
@@ -151,7 +208,6 @@ export class SubtaskCardComponent implements OnInit {
     /**
      * TODO:
      *   - 削除処理
-     *   - 更新処理(shceudledTimeSec, workTimeSec, isTracking)
      */
   }
 
@@ -169,9 +225,103 @@ export class SubtaskCardComponent implements OnInit {
   private updateIsDone(isDone: Subtask['isDone']) {
     const input = this.generateUpdateInputBase();
     if (input == null) return of(undefined);
+    this.state.set('subtask', ({ subtask }) => {
+      return subtask == null
+        ? subtask
+        : {
+            ...subtask,
+            isDone,
+          };
+    });
     return this.updateSubtaskUsecase.execute({
       ...input,
       isDone,
+    });
+  }
+
+  private updateWorkTimeSec(sec: Subtask['workTimeSec']) {
+    const workStartDateTimestamp =
+      this.state.get('subtask')?.workStartDateTimestamp && new Date().valueOf();
+    const input = this.generateUpdateInputBase();
+    if (input == null) return of(undefined);
+    this.state.set('subtask', (state) => {
+      const subtask = state.subtask;
+      return subtask == null
+        ? subtask
+        : {
+            ...subtask,
+            workTimeSec: sec,
+            workStartDateTimestamp,
+          };
+    });
+    return this.updateSubtaskUsecase.execute({
+      ...input,
+      workTimeSec: sec,
+      workStartDateTimestamp,
+    });
+  }
+
+  private updateScheduledTimeSec(sec: Subtask['scheduledTimeSec']) {
+    const input = this.generateUpdateInputBase();
+    if (input == null) return of(undefined);
+    this.state.set('subtask', (state) => {
+      const subtask = state.subtask;
+      return subtask == null
+        ? subtask
+        : {
+            ...subtask,
+            scheduledTimeSec: sec,
+          };
+    });
+    return this.updateSubtaskUsecase.execute({
+      ...input,
+      scheduledTimeSec: sec,
+    });
+  }
+
+  private startTracking() {
+    const now = new Date().valueOf();
+    const input = this.generateUpdateInputBase();
+    if (input == null) return of(undefined);
+    this.state.set('subtask', (state) => {
+      const subtask = state.subtask;
+      return subtask == null
+        ? subtask
+        : {
+            ...subtask,
+            workStartDateTimestamp: now,
+          };
+    });
+    return this.updateSubtaskUsecase.execute({
+      ...input,
+      workStartDateTimestamp: now,
+    });
+  }
+
+  private stopTracking() {
+    const start = this.state.get('subtask')?.workStartDateTimestamp;
+    const currentWorkTimeSec = this.state.get('subtask')?.workTimeSec;
+    if (start == null || currentWorkTimeSec == null) return of(undefined);
+    const now = new Date().valueOf();
+    const diffTimeMilliSec = now - start;
+    const updatedWorkTimeSec =
+      currentWorkTimeSec + Math.ceil(diffTimeMilliSec / 1000);
+    const input = this.generateUpdateInputBase();
+    if (input == null) return of(undefined);
+    this.state.set('subtask', (state) => {
+      const subtask = state.subtask;
+      return subtask == null
+        ? subtask
+        : {
+            ...subtask,
+            workTimeSec: updatedWorkTimeSec,
+            workStartDateTimestamp: undefined,
+          };
+    });
+    return this.updateSubtaskUsecase.execute({
+      ...input,
+      workTimeSec: updatedWorkTimeSec,
+      workStartDateTimestamp: undefined,
     });
   }
 
