@@ -8,12 +8,16 @@ import {
 import {
   APOLLO_DATA_QUERY,
   IApolloDataQuery,
+  IUpdateSubtaskUsecase,
+  UPDATE_SUBTASK_USECASE,
 } from '@bison/frontend/application';
-import { Subtask, User } from '@bison/shared/domain';
+import { Task } from '@bison/frontend/domain';
+import { User } from '@bison/shared/domain';
+import { UpdateSubtaskInput } from '@bison/shared/schema';
 import { RxState } from '@rx-angular/state';
 import { gql } from 'apollo-angular';
-import { Subject } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { of, Subject } from 'rxjs';
+import { exhaustMap, filter, map } from 'rxjs/operators';
 
 const USER_FIELDS = gql`
   fragment UserPartsInSubtaskCard on User {
@@ -24,7 +28,7 @@ const USER_FIELDS = gql`
 `;
 
 type State = {
-  subtask?: Subtask;
+  subtask?: Task['subtasks'][number];
   users: User[];
 };
 
@@ -37,7 +41,7 @@ type State = {
 })
 export class SubtaskCardComponent implements OnInit {
   @Input()
-  set subtask(value: Subtask) {
+  set subtask(value: State['subtask']) {
     this.state.set('subtask', () => value);
   }
 
@@ -52,10 +56,13 @@ export class SubtaskCardComponent implements OnInit {
   readonly onChangedWorkTimeSec$ = new Subject<number>();
   readonly onChangedScheduledTimeSec$ = new Subject<number>();
   readonly onChangedCheck$ = new Subject<boolean>();
+  readonly onChangedAssignUser$ = new Subject<User['id'] | undefined>();
 
   constructor(
     private state: RxState<State>,
-    @Inject(APOLLO_DATA_QUERY) private apolloDataQuery: IApolloDataQuery
+    @Inject(APOLLO_DATA_QUERY) private apolloDataQuery: IApolloDataQuery,
+    @Inject(UPDATE_SUBTASK_USECASE)
+    private updateSubtaskUsecase: IUpdateSubtaskUsecase
   ) {
     this.state.set({ users: [] });
   }
@@ -120,11 +127,50 @@ export class SubtaskCardComponent implements OnInit {
         )
     );
 
+    this.state.hold(
+      this.onChangedAssignUser$.pipe(
+        filter(
+          (userId) => userId !== this.state.get('subtask')?.assignUser?.id
+        ),
+        exhaustMap((userId) => {
+          return this.updateAssignUser(userId);
+        })
+      )
+    );
+
     /**
      * TODO:
      *   - 削除処理
      *   - 更新処理(isDone, assign, shceudledTimeSec, workTimeSec, isTracking)
      *   - 詳細ダイアログ表示
      */
+  }
+
+  private updateAssignUser(userId?: User['id']) {
+    const subtask = this.state.get('subtask');
+    if (subtask == null) return of(undefined);
+    const input = this.generateUpdateInputBase();
+    if (input == null) return of(undefined);
+    return this.updateSubtaskUsecase.execute({
+      ...input,
+      assignUserId: userId,
+    });
+  }
+
+  private generateUpdateInputBase() {
+    const subtask = this.state.get('subtask');
+    if (subtask == null) return;
+    const input: UpdateSubtaskInput = {
+      id: subtask.id,
+      title: subtask.title,
+      description: subtask.description,
+      isDone: subtask.isDone,
+      assignUserId: subtask.assignUser?.id,
+      workTimeSec: subtask.workTimeSec,
+      scheduledTimeSec: subtask.scheduledTimeSec,
+      workStartDateTimestamp: subtask.workStartDateTimestamp,
+      taskId: subtask.taskId,
+    };
+    return input;
   }
 }

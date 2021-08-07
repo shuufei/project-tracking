@@ -31,5 +31,7 @@ export type Task = Pick<
     | 'isDone'
     | 'scheduledTimeSec'
     | 'workTimeSec'
-  > & { assignUser: User })[];
+    | 'workStartDateTimestamp'
+    | 'taskId'
+  > & { assignUser?: User })[];
 };

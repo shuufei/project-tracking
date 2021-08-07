@@ -8,12 +8,12 @@ import {
 } from '@angular/core';
 import { RxState } from '@rx-angular/state';
 import { combineLatest, Subject } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { filter, map, pairwise } from 'rxjs/operators';
 import type { User } from '../user-select-popup/user-select-popup.component';
 
 type State = {
   users: User[];
-  selectedUserId: User['id'];
+  selectedUserId?: User['id'];
 };
 
 @Component({
@@ -29,10 +29,10 @@ export class AssignChangeButtonComponent implements OnInit {
     this.state.set('users', () => value);
   }
   @Input()
-  set selectedUserId(value: User['id']) {
+  set selectedUserId(value: User['id'] | undefined) {
     this.state.set('selectedUserId', () => value);
   }
-  @Output() selectedUser = new EventEmitter<User['id']>();
+  @Output() selectedUser = new EventEmitter<User['id'] | undefined>();
 
   // State
   readonly state$ = this.state.select();
@@ -52,8 +52,15 @@ export class AssignChangeButtonComponent implements OnInit {
 
   ngOnInit() {
     this.state.connect('selectedUserId', this.onChangedSelectedUserId$);
-    this.state.hold(this.state.select('selectedUserId'), (userId) => {
-      this.selectedUser.emit(userId);
-    });
+    this.state.hold(
+      this.state.$.pipe(
+        map((v) => v.selectedUserId),
+        pairwise(),
+        filter(([prev, current]) => prev !== current)
+      ),
+      ([, userId]) => {
+        this.selectedUser.emit(userId);
+      }
+    );
   }
 }

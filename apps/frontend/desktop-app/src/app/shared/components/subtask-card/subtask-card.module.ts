@@ -3,6 +3,8 @@ import { NgModule } from '@angular/core';
 import {
   ApolloDataQuery,
   APOLLO_DATA_QUERY,
+  UpdateSubtaskUsecase,
+  UPDATE_SUBTASK_USECASE,
 } from '@bison/frontend/application';
 import {
   AssignChangeButtonModule,
@@ -30,6 +32,10 @@ import { SubtaskCardComponent } from './subtask-card.component';
     {
       provide: APOLLO_DATA_QUERY,
       useClass: ApolloDataQuery,
+    },
+    {
+      provide: UPDATE_SUBTASK_USECASE,
+      useClass: UpdateSubtaskUsecase,
     },
   ],
 })

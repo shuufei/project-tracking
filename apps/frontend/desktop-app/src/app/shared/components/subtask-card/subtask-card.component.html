@@ -39,6 +39,7 @@
       <ui-assign-change-button
         [users]="state.users"
         [selectedUserId]="state.subtask?.assignUser?.id"
+        (selectedUser)="onChangedAssignUser$.next($event)"
         (click)="$event.stopPropagation()"
       ></ui-assign-change-button>
     </div>

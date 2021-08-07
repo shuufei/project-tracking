@@ -121,6 +121,7 @@ export class ProjectPageComponent implements OnInit {
           id: 'user0002',
           name: 'user name 0002',
         },
+        taskId: 'task0001',
       },
       {
         id: 'subtask0002',
@@ -133,6 +134,7 @@ export class ProjectPageComponent implements OnInit {
           id: 'user0002',
           name: 'user name 0002',
         },
+        taskId: 'task0001',
       },
       {
         id: 'subtask0003',
@@ -145,6 +147,7 @@ export class ProjectPageComponent implements OnInit {
           id: 'user0002',
           name: 'user name 0002',
         },
+        taskId: 'task0001',
       },
       {
         id: 'subtask0004',
@@ -157,6 +160,7 @@ export class ProjectPageComponent implements OnInit {
           id: 'user0002',
           name: 'user name 0002',
         },
+        taskId: 'task0001',
       },
       {
         id: 'subtask0005',
@@ -169,6 +173,7 @@ export class ProjectPageComponent implements OnInit {
           id: 'user0002',
           name: 'user name 0002',
         },
+        taskId: 'task0001',
       },
     ],
   };
