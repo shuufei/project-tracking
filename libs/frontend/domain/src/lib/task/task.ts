@@ -1,11 +1,11 @@
 import {
   Board,
   Project,
-  Subtask,
   Task as DomainTask,
   TaskGroup,
   User,
 } from '@bison/shared/domain';
+import { Subtask } from '../subtask';
 
 export type Task = Pick<
   DomainTask,
@@ -23,15 +23,5 @@ export type Task = Pick<
   };
   assignUser?: User;
   taskGroup?: Pick<TaskGroup, 'id' | 'title' | 'description'>;
-  subtasks: (Pick<
-    Subtask,
-    | 'id'
-    | 'title'
-    | 'description'
-    | 'isDone'
-    | 'scheduledTimeSec'
-    | 'workTimeSec'
-    | 'workStartDateTimestamp'
-    | 'taskId'
-  > & { assignUser?: User })[];
+  subtasks: Subtask[];
 };
