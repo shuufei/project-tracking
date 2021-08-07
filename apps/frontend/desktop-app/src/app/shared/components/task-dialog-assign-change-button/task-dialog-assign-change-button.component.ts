@@ -32,7 +32,7 @@ export class TaskDialogAssignChangeButtonComponent implements OnInit {
   set selectedUserId(value: User['id']) {
     this.state.set('selectedUserId', () => value);
   }
-  @Output() selectedUser = new EventEmitter<User['id']>();
+  @Output() selectedUser = new EventEmitter<User['id'] | undefined>();
 
   /**
    * State
@@ -55,8 +55,11 @@ export class TaskDialogAssignChangeButtonComponent implements OnInit {
       users: [],
     });
     this.state.connect('selectedUserId', this.onChangedSelectedUserId$);
-    this.state.hold(this.state.select('selectedUserId'), (userId) => {
-      this.selectedUser.emit(userId);
-    });
+    this.state.hold(
+      this.state.$.pipe(map((v) => v.selectedUserId)),
+      (userId) => {
+        this.selectedUser.emit(userId);
+      }
+    );
   }
 }

@@ -133,7 +133,7 @@ export class TaskDialogTaskContentComponent implements OnInit {
   readonly onClickedUpdateTitleAndDescButton$ = new Subject<void>();
   readonly onChangedTitle$ = new Subject<Task['title']>();
   readonly onChangedDescription$ = new Subject<Task['description']>();
-  readonly onChangedAssignUser$ = new Subject<User['id']>();
+  readonly onChangedAssignUser$ = new Subject<User['id'] | undefined>();
   readonly onChangedStatus$ = new Subject<Task['status']>();
   readonly onChangedBoard$ = new Subject<Board['id']>();
   readonly onDrop$ = new Subject<CdkDragDrop<Task['subtasks']>>();
@@ -461,6 +461,9 @@ export class TaskDialogTaskContentComponent implements OnInit {
   private updateAssignUser(userId: User['id']) {
     const input = this.generateUpdateTaskInput({ assignUserId: userId });
     if (input == null) return of(undefined);
+    if (userId == null) {
+      input.assignUserId = undefined;
+    }
     return this.updateTaskUsecase.execute(input);
   }
 

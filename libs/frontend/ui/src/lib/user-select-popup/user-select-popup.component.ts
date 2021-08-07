@@ -33,7 +33,7 @@ export class UserSelectPopupComponent implements OnInit {
   set selectedUserId(value: User['id']) {
     this.state.set('selectedUserId', () => value);
   }
-  @Output() selectUser = new EventEmitter<User['id']>();
+  @Output() selectUser = new EventEmitter<User['id'] | undefined>();
 
   // State
   readonly state$ = this.state.select();
@@ -80,7 +80,7 @@ export class UserSelectPopupComponent implements OnInit {
       ...state,
       searchWord: searchWord || undefined,
     }));
-    this.state.hold(this.state.select('selectedUserId'), (id) => {
+    this.state.hold(this.state.$.pipe(map((v) => v.selectedUserId)), (id) => {
       this.selectUser.emit(id);
     });
   }
