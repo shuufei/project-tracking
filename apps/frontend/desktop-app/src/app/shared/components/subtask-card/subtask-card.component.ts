@@ -103,15 +103,6 @@ export class SubtaskCardComponent implements OnInit {
         };
       }
     );
-    this.state.connect('subtask', this.onChangedCheck$, (state, checked) => {
-      if (state.subtask == null) {
-        return state.subtask;
-      }
-      return {
-        ...state.subtask,
-        isDone: checked,
-      };
-    });
     this.state.connect(
       'users',
       this.apolloDataQuery
@@ -147,9 +138,7 @@ export class SubtaskCardComponent implements OnInit {
       )
     );
     this.state.hold(
-      this.state.select('subtask').pipe(
-        map((subtask) => subtask?.isDone),
-        filter((v): v is NonNullable<typeof v> => v != null),
+      this.onChangedCheck$.pipe(
         distinctUntilChanged(),
         filter((isDone) => {
           return isDone !== this.state.get('subtask')?.isDone;
