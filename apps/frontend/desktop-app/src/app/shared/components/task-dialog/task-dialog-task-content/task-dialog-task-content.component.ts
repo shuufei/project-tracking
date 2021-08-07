@@ -458,7 +458,7 @@ export class TaskDialogTaskContentComponent implements OnInit {
     return this.updateTaskUsecase.execute(input);
   }
 
-  private updateAssignUser(userId: User['id']) {
+  private updateAssignUser(userId?: User['id']) {
     const input = this.generateUpdateTaskInput({ assignUserId: userId });
     if (input == null) return of(undefined);
     if (userId == null) {
