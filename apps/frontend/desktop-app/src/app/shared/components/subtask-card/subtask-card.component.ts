@@ -11,13 +11,13 @@ import {
   IUpdateSubtaskUsecase,
   UPDATE_SUBTASK_USECASE,
 } from '@bison/frontend/application';
-import { Task } from '@bison/frontend/domain';
+import { Subtask } from '@bison/frontend/domain';
 import { User } from '@bison/shared/domain';
 import { UpdateSubtaskInput } from '@bison/shared/schema';
 import { RxState } from '@rx-angular/state';
 import { gql } from 'apollo-angular';
 import { of, Subject } from 'rxjs';
-import { exhaustMap, filter, map } from 'rxjs/operators';
+import { distinctUntilChanged, exhaustMap, filter, map } from 'rxjs/operators';
 
 const USER_FIELDS = gql`
   fragment UserPartsInSubtaskCard on User {
@@ -28,7 +28,7 @@ const USER_FIELDS = gql`
 `;
 
 type State = {
-  subtask?: Task['subtasks'][number];
+  subtask?: Subtask;
   users: User[];
 };
 
@@ -137,12 +137,21 @@ export class SubtaskCardComponent implements OnInit {
         })
       )
     );
+    this.state.hold(
+      this.state.select('subtask').pipe(
+        map((subtask) => subtask?.isDone),
+        filter((v): v is NonNullable<typeof v> => v != null),
+        distinctUntilChanged(),
+        exhaustMap((isDone) => {
+          return this.updateIsDone(isDone);
+        })
+      )
+    );
 
     /**
      * TODO:
      *   - 削除処理
-     *   - 更新処理(isDone, assign, shceudledTimeSec, workTimeSec, isTracking)
-     *   - 詳細ダイアログ表示
+     *   - 更新処理(shceudledTimeSec, workTimeSec, isTracking)
      */
   }
 
@@ -154,6 +163,15 @@ export class SubtaskCardComponent implements OnInit {
     return this.updateSubtaskUsecase.execute({
       ...input,
       assignUserId: userId,
+    });
+  }
+
+  private updateIsDone(isDone: Subtask['isDone']) {
+    const input = this.generateUpdateInputBase();
+    if (input == null) return of(undefined);
+    return this.updateSubtaskUsecase.execute({
+      ...input,
+      isDone,
     });
   }
 
