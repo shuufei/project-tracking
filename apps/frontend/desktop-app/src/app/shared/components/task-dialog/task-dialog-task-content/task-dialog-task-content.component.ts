@@ -21,7 +21,15 @@ import { RxState } from '@rx-angular/state';
 import { TuiNotificationsService } from '@taiga-ui/core';
 import { gql } from 'apollo-angular';
 import { of, Subject } from 'rxjs';
-import { exhaustMap, filter, map, switchMap, tap } from 'rxjs/operators';
+import {
+  exhaustMap,
+  filter,
+  map,
+  pairwise,
+  startWith,
+  switchMap,
+  tap,
+} from 'rxjs/operators';
 import { convertToApiStatusFromDomainStatus } from '../../../../util/convert-to-api-status-from-domain-status';
 import { convertToDomainSubtaskFromApiSubtask } from '../../../../util/convert-to-domain-subtask-from-api-subtask';
 import { convertToDomainTaskGroupFromApiTaskGroup } from '../../../../util/convert-to-domain-task-group-from-api-task-group';
@@ -156,10 +164,7 @@ export class TaskDialogTaskContentComponent implements OnInit {
   ngOnInit(): void {
     /**
      * TODO:
-     * - 削除確認、削除実施
      * - サブタスク追加
-     * - トラッキング開始
-     * - トラッキング時間、作業予定時間更新
      */
     this.state.connect(this.onClickedEditTitleAndDescButton$, (state) => {
       return {
@@ -274,6 +279,16 @@ export class TaskDialogTaskContentComponent implements OnInit {
     );
     this.state.hold(
       this.onChangedWorkTimeSec$.pipe(
+        startWith(this.state.get('task')?.workTimeSec ?? 0),
+        pairwise(),
+        filter(([prev, sec]) => {
+          const diff = sec - prev;
+          const isChangedByCtrlBtn = diff > 1;
+          const isTracking =
+            this.state.get('task')?.workStartDateTimestamp != null;
+          return isChangedByCtrlBtn || !isTracking;
+        }),
+        map(([, current]) => current),
         filter((sec) => {
           return sec !== this.state.get('task')?.workTimeSec;
         }),
@@ -475,7 +490,12 @@ export class TaskDialogTaskContentComponent implements OnInit {
   }
 
   private updateWorkTimeSec(sec: Task['workTimeSec']) {
-    const input = this.generateUpdateTaskInput({ workTimeSec: sec });
+    const workStartTimestamp = this.state.get('task')?.workStartDateTimestamp;
+    const input = this.generateUpdateTaskInput({
+      workTimeSec: sec,
+      // トラッキング中に更新する場合、開始時間を更新する
+      workStartDateTimestamp: workStartTimestamp && new Date().valueOf(),
+    });
     if (input == null) return of(undefined);
     return this.updateTaskUsecase.execute(input);
   }
