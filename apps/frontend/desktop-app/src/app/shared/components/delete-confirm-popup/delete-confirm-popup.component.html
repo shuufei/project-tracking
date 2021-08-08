@@ -1,7 +1,10 @@
 <ui-popup
   [triggerEl]="triggerEl"
+  [isOpened$]="isOpened$"
   [isCloseWhenPopupAction]="true"
-  class="w-full"
+  (opened)="opened.emit()"
+  (closed)="closed.emit()"
+  class="w-full delete-confirm-popup"
 >
   <ng-container *ngIf="state$ | async as state">
     <div class="p-1 w-full">

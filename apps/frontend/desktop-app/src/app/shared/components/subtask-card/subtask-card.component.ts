@@ -7,13 +7,15 @@ import {
 } from '@angular/core';
 import {
   APOLLO_DATA_QUERY,
+  DELETE_SUBTASK_USECASE,
   IApolloDataQuery,
+  IDeleteSubtaskUsecase,
   IUpdateSubtaskUsecase,
   UPDATE_SUBTASK_USECASE,
 } from '@bison/frontend/application';
 import { Subtask } from '@bison/frontend/domain';
 import { User } from '@bison/shared/domain';
-import { UpdateSubtaskInput } from '@bison/shared/schema';
+import { DeleteSubtaskInput, UpdateSubtaskInput } from '@bison/shared/schema';
 import { RxState } from '@rx-angular/state';
 import { gql } from 'apollo-angular';
 import { of, Subject } from 'rxjs';
@@ -37,6 +39,7 @@ const USER_FIELDS = gql`
 type State = {
   subtask?: Subtask;
   users: User[];
+  isOpenedDeletePopup: boolean;
 };
 
 @Component({
@@ -56,6 +59,7 @@ export class SubtaskCardComponent implements OnInit {
    * State
    */
   readonly state$ = this.state.select();
+  readonly isOpenedDeletePopup$ = this.state.select('isOpenedDeletePopup');
 
   /**
    * Event
@@ -66,14 +70,20 @@ export class SubtaskCardComponent implements OnInit {
   readonly onChangedAssignUser$ = new Subject<User['id'] | undefined>();
   readonly onClickedPlay$ = new Subject<void>();
   readonly onClickedPause$ = new Subject<void>();
+  readonly onClickedDeleteMenuItem$ = new Subject<void>();
+  readonly onOpenedDeletePopup$ = new Subject<void>();
+  readonly onClosedDeletePopup$ = new Subject<void>();
+  readonly onDelete$ = new Subject<void>();
 
   constructor(
     private state: RxState<State>,
     @Inject(APOLLO_DATA_QUERY) private apolloDataQuery: IApolloDataQuery,
     @Inject(UPDATE_SUBTASK_USECASE)
-    private updateSubtaskUsecase: IUpdateSubtaskUsecase
+    private updateSubtaskUsecase: IUpdateSubtaskUsecase,
+    @Inject(DELETE_SUBTASK_USECASE)
+    private deleteSubtaskUsecase: IDeleteSubtaskUsecase
   ) {
-    this.state.set({ users: [] });
+    this.state.set({ users: [], isOpenedDeletePopup: false });
   }
 
   ngOnInit(): void {
@@ -125,6 +135,21 @@ export class SubtaskCardComponent implements OnInit {
             });
           })
         )
+    );
+    this.state.connect(
+      'isOpenedDeletePopup',
+      this.onClickedDeleteMenuItem$,
+      () => true
+    );
+    this.state.connect(
+      'isOpenedDeletePopup',
+      this.onOpenedDeletePopup$,
+      () => true
+    );
+    this.state.connect(
+      'isOpenedDeletePopup',
+      this.onClosedDeletePopup$,
+      () => false
     );
 
     this.state.hold(
@@ -193,11 +218,18 @@ export class SubtaskCardComponent implements OnInit {
         })
       )
     );
-
-    /**
-     * TODO:
-     *   - 削除処理
-     */
+    this.state.hold(
+      this.onDelete$.pipe(
+        exhaustMap(() => {
+          const subtaskId = this.state.get('subtask')?.id;
+          if (subtaskId == null) return of(undefined);
+          const input: DeleteSubtaskInput = {
+            id: subtaskId,
+          };
+          return this.deleteSubtaskUsecase.execute(input);
+        })
+      )
+    );
   }
 
   private updateAssignUser(userId?: User['id']) {

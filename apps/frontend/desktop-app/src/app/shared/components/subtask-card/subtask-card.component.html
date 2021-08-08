@@ -27,11 +27,18 @@
               [itemName]="'削除'"
               [color]="'warn'"
               [icon]="'trash-2'"
-              (clickedItem)="clickedDelete.emit()"
+              (clickedItem)="onClickedDeleteMenuItem$.next()"
               (click)="$event.stopPropagation()"
             ></ui-menu-item>
           </div>
         </ui-popup>
+        <bis-delete-confirm-popup
+          [isOpened$]="isOpenedDeletePopup$"
+          (opened)="onOpenedDeletePopup$.next()"
+          (closed)="onClosedDeletePopup$.next()"
+          (click)="$event.stopPropagation()"
+          (delete)="onDelete$.next()"
+        ></bis-delete-confirm-popup>
       </div>
     </div>
 

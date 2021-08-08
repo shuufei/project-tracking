@@ -3,6 +3,8 @@ import { NgModule } from '@angular/core';
 import {
   ApolloDataQuery,
   APOLLO_DATA_QUERY,
+  DeleteSubtaskUsecase,
+  DELETE_SUBTASK_USECASE,
   UpdateSubtaskUsecase,
   UPDATE_SUBTASK_USECASE,
 } from '@bison/frontend/application';
@@ -13,6 +15,7 @@ import {
   MenuItemModule,
   PopupModule,
 } from '@bison/frontend/ui';
+import { DeleteConfirmPopupModule } from '../delete-confirm-popup/delete-confirm-popup.module';
 import { TrackingBarModule } from '../tracking-bar/tracking-bar.module';
 import { SubtaskCardComponent } from './subtask-card.component';
 
@@ -26,6 +29,7 @@ import { SubtaskCardComponent } from './subtask-card.component';
     TrackingBarModule,
     CheckboxModule,
     AssignChangeButtonModule,
+    DeleteConfirmPopupModule,
   ],
   exports: [SubtaskCardComponent],
   providers: [
@@ -36,6 +40,10 @@ import { SubtaskCardComponent } from './subtask-card.component';
     {
       provide: UPDATE_SUBTASK_USECASE,
       useClass: UpdateSubtaskUsecase,
+    },
+    {
+      provide: DELETE_SUBTASK_USECASE,
+      useClass: DeleteSubtaskUsecase,
     },
   ],
 })
