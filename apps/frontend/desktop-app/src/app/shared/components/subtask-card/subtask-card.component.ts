@@ -59,7 +59,7 @@ export class SubtaskCardComponent implements OnInit {
    * State
    */
   readonly state$ = this.state.select();
-  readonly isOpenedDeletePopup$ = this.state.select('isOpenedDeletePopup');
+  readonly isOpenedDeletePopup$ = new Subject<boolean>();
 
   /**
    * Event
@@ -70,9 +70,6 @@ export class SubtaskCardComponent implements OnInit {
   readonly onChangedAssignUser$ = new Subject<User['id'] | undefined>();
   readonly onClickedPlay$ = new Subject<void>();
   readonly onClickedPause$ = new Subject<void>();
-  readonly onClickedDeleteMenuItem$ = new Subject<void>();
-  readonly onOpenedDeletePopup$ = new Subject<void>();
-  readonly onClosedDeletePopup$ = new Subject<void>();
   readonly onDelete$ = new Subject<void>();
 
   constructor(
@@ -135,21 +132,6 @@ export class SubtaskCardComponent implements OnInit {
             });
           })
         )
-    );
-    this.state.connect(
-      'isOpenedDeletePopup',
-      this.onClickedDeleteMenuItem$,
-      () => true
-    );
-    this.state.connect(
-      'isOpenedDeletePopup',
-      this.onOpenedDeletePopup$,
-      () => true
-    );
-    this.state.connect(
-      'isOpenedDeletePopup',
-      this.onClosedDeletePopup$,
-      () => false
     );
 
     this.state.hold(
