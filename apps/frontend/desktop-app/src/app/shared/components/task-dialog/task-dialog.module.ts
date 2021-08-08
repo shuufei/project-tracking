@@ -4,6 +4,8 @@ import { NgModule } from '@angular/core';
 import {
   ApolloDataQuery,
   APOLLO_DATA_QUERY,
+  CreateSubtaskUsecase,
+  CREATE_SUBTASK_USECASE,
   DeleteTaskUsecase,
   DELETE_TASK_USECASE,
   UpdateTaskUsecase,
@@ -69,6 +71,10 @@ import {
     {
       provide: DELETE_TASK_USECASE,
       useClass: DeleteTaskUsecase,
+    },
+    {
+      provide: CREATE_SUBTASK_USECASE,
+      useClass: CreateSubtaskUsecase,
     },
     TaskDialogService,
     {

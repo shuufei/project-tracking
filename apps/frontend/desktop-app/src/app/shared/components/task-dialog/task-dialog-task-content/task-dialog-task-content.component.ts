@@ -8,15 +8,21 @@ import {
 } from '@angular/core';
 import {
   APOLLO_DATA_QUERY,
+  CREATE_SUBTASK_USECASE,
   DELETE_TASK_USECASE,
   IApolloDataQuery,
+  ICreateSubtaskUsecase,
   IDeleteTaskUsecase,
   IUpdateTaskUsecase,
   UPDATE_TASK_USECASE,
 } from '@bison/frontend/application';
 import { Task } from '@bison/frontend/domain';
 import { Board, User } from '@bison/frontend/ui';
-import { DeleteTaskInput, UpdateTaskInput } from '@bison/shared/schema';
+import {
+  CreateSubtaskInput,
+  DeleteTaskInput,
+  UpdateTaskInput,
+} from '@bison/shared/schema';
 import { RxState } from '@rx-angular/state';
 import { TuiNotificationsService } from '@taiga-ui/core';
 import { gql } from 'apollo-angular';
@@ -152,6 +158,8 @@ export class TaskDialogTaskContentComponent implements OnInit {
     @Inject(APOLLO_DATA_QUERY) private apolloDataQuery: IApolloDataQuery,
     @Inject(UPDATE_TASK_USECASE) private updateTaskUsecase: IUpdateTaskUsecase,
     @Inject(DELETE_TASK_USECASE) private deleteTaskUsecase: IDeleteTaskUsecase,
+    @Inject(CREATE_SUBTASK_USECASE)
+    private createSubtaskUsecase: ICreateSubtaskUsecase,
     @Inject(TuiNotificationsService)
     private readonly notificationsService: TuiNotificationsService
   ) {
@@ -255,6 +263,49 @@ export class TaskDialogTaskContentComponent implements OnInit {
             subtasks: [...task.subtasks],
           };
     });
+    this.state.hold(
+      this.onClickedAddSubtask$.pipe(
+        exhaustMap(() => {
+          const task = this.state.get('task');
+          if (task == null) {
+            return of(undefined);
+          }
+          const input: CreateSubtaskInput = {
+            title: '',
+            taskId: task.id,
+          };
+          return this.createSubtaskUsecase.execute(input, {
+            fields: SUBTASK_FIELDS,
+            name: 'SubtaskPartsInTaskDialog',
+          });
+        }),
+        tap((response) => {
+          const subtask = response?.data?.createSubtask;
+          if (subtask == null) return;
+          this.state.set('task', ({ task }) => {
+            if (task == null) return task;
+            return {
+              ...task,
+              subtasks: [
+                ...task.subtasks,
+                {
+                  id: subtask.id,
+                  title: subtask.title,
+                  description: subtask.description,
+                  isDone: subtask.isDone,
+                  scheduledTimeSec: subtask.scheduledTimeSec,
+                  workTimeSec: subtask.workTimeSec,
+                  workStartDateTimestamp: subtask.workStartDateTimestamp,
+                  taskId: subtask.task.id,
+                  assignUser: subtask.assign,
+                },
+              ],
+              subtasksOrder: [...task.subtasksOrder, subtask.id],
+            };
+          });
+        })
+      )
+    );
 
     this.state.hold(this.onClickedCloseButton$, () => {
       this.taskDialogService.close();
