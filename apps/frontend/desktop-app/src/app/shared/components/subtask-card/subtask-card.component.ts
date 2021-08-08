@@ -26,6 +26,7 @@ import {
   map,
   pairwise,
   startWith,
+  tap,
 } from 'rxjs/operators';
 
 const USER_FIELDS = gql`
@@ -40,6 +41,7 @@ type State = {
   subtask?: Subtask;
   users: User[];
   isOpenedDeletePopup: boolean;
+  isEditableTitle: boolean;
 };
 
 @Component({
@@ -53,6 +55,9 @@ export class SubtaskCardComponent implements OnInit {
   @Input()
   set subtask(value: State['subtask']) {
     this.state.set('subtask', () => value);
+  }
+  @Input() set isTitleEditable(value: State['isEditableTitle']) {
+    this.state.set('isEditableTitle', () => value);
   }
 
   /**
@@ -71,6 +76,7 @@ export class SubtaskCardComponent implements OnInit {
   readonly onClickedPlay$ = new Subject<void>();
   readonly onClickedPause$ = new Subject<void>();
   readonly onDelete$ = new Subject<void>();
+  readonly onSubmitTitle$ = new Subject<string>();
 
   constructor(
     private state: RxState<State>,
@@ -212,6 +218,16 @@ export class SubtaskCardComponent implements OnInit {
         })
       )
     );
+    this.state.hold(
+      this.onSubmitTitle$.pipe(
+        tap(() => {
+          this.state.set('isEditableTitle', () => false);
+        }),
+        exhaustMap((title) => {
+          return this.updateTitle(title);
+        })
+      )
+    );
   }
 
   private updateAssignUser(userId?: User['id']) {
@@ -325,6 +341,25 @@ export class SubtaskCardComponent implements OnInit {
       ...input,
       workTimeSec: updatedWorkTimeSec,
       workStartDateTimestamp: undefined,
+    });
+  }
+
+  private updateTitle(title: string) {
+    const input = this.generateUpdateInputBase();
+    if (input == null) {
+      return of(undefined);
+    }
+    this.state.set('subtask', ({ subtask }) => {
+      return subtask == null
+        ? subtask
+        : {
+            ...subtask,
+            title,
+          };
+    });
+    return this.updateSubtaskUsecase.execute({
+      ...input,
+      title,
     });
   }
 

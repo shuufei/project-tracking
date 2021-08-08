@@ -6,4 +6,5 @@
   class="outline-none w-full"
   [placeholder]="placeholder"
   [formControl]="textFormCtrl"
+  (keypress)="onKeypress$.next($event)"
 />

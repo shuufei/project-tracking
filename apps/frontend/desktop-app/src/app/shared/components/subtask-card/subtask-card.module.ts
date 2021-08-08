@@ -14,6 +14,7 @@ import {
   IconModule,
   MenuItemModule,
   PopupModule,
+  TextFieldModule,
 } from '@bison/frontend/ui';
 import { DeleteConfirmPopupModule } from '../delete-confirm-popup/delete-confirm-popup.module';
 import { TrackingBarModule } from '../tracking-bar/tracking-bar.module';
@@ -30,6 +31,7 @@ import { SubtaskCardComponent } from './subtask-card.component';
     CheckboxModule,
     AssignChangeButtonModule,
     DeleteConfirmPopupModule,
+    TextFieldModule,
   ],
   exports: [SubtaskCardComponent],
   providers: [
