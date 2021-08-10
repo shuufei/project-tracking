@@ -10,10 +10,10 @@ import {
 } from '@bison/frontend/application';
 import {
   ButtonModule,
+  MultiUserSelectPopupModule,
   SheetFooterModule,
   SheetModule,
   UserIconModule,
-  UserSelectPopupModule,
 } from '@bison/frontend/ui';
 import { TuiNotificationsModule } from '@taiga-ui/core';
 import { BoardCreateSheetModule } from '../../shared/components/board-create-sheet/board-create-sheet.module';
@@ -39,13 +39,13 @@ import { ProjectPageComponent } from './project-page.component';
     ButtonModule,
     ProjectPropertyEditFormModule,
     SheetFooterModule,
-    UserSelectPopupModule,
     UserIconModule,
     TuiNotificationsModule,
     BoardCreateSheetModule,
     BoardUpdateSheetModule,
     BoardDeleteDialogModule,
     TaskDialogModule,
+    MultiUserSelectPopupModule,
   ],
   exports: [ProjectPageComponent],
   providers: [

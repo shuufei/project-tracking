@@ -22,6 +22,8 @@ export * from './lib/input-time/input-time.component';
 export * from './lib/input-time/input-time.module';
 export * from './lib/menu-item/menu-item.component';
 export * from './lib/menu-item/menu-item.module';
+export * from './lib/multi-user-select-popup/multi-user-select-popup.component';
+export * from './lib/multi-user-select-popup/multi-user-select-popup.module';
 export * from './lib/navigation/navigation.component';
 export * from './lib/navigation/navigation.module';
 export * from './lib/popup/popup.component';
