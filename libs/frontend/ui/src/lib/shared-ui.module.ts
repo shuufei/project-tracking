@@ -12,6 +12,7 @@ import { HeaderModule } from './header/header.module';
 import { IconModule } from './icon/icon.module';
 import { InputTimeModule } from './input-time/input-time.module';
 import { MenuItemModule } from './menu-item/menu-item.module';
+import { MultiUserSelectPopupModule } from './multi-user-select-popup/multi-user-select-popup.module';
 import { NavigationModule } from './navigation/navigation.module';
 import { PopupModule } from './popup/popup.module';
 import { ProjectBoardSelectPopupModule } from './project-board-select-popup/project-board-select-popup.module';
@@ -70,6 +71,7 @@ import { UserSelectPopupModule } from './user-select-popup/user-select-popup.mod
     SheetFooterModule,
     DialogModule,
     BoardSelectPopupModule,
+    MultiUserSelectPopupModule,
   ],
 })
 export class SharedUiModule {}

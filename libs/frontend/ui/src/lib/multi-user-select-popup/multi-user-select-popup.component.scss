@@ -1,0 +1,12 @@
+:host {
+  display: block;
+  position: relative;
+  min-width: 200px;
+}
+
+.user-name {
+  max-width: 200px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
