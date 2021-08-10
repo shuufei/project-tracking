@@ -6,86 +6,89 @@ import {
   EventEmitter,
   Input,
   NgZone,
-  OnDestroy,
   OnInit,
   Output,
 } from '@angular/core';
-import { BehaviorSubject, fromEvent, merge, Subject } from 'rxjs';
-import { filter, takeUntil, tap } from 'rxjs/operators';
+import { RxState } from '@rx-angular/state';
+import { fromEvent, Observable, Subject } from 'rxjs';
+import { filter, tap } from 'rxjs/operators';
+
+type State = {
+  isOpened: boolean;
+};
 
 @Component({
   selector: 'ui-popup',
   templateUrl: './popup.component.html',
   styleUrls: ['./popup.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [RxState],
 })
-export class PopupComponent implements OnInit, OnDestroy {
+export class PopupComponent implements OnInit {
   @Input() triggerEl?: HTMLElement;
   @Input() isCloseWhenPopupAction = false;
+  @Input()
+  isOpened$: Observable<boolean> = new Subject<boolean>().asObservable();
+  @Output() opened = new EventEmitter<void>();
   @Output() closed = new EventEmitter<void>();
 
-  readonly isOpen$ = new BehaviorSubject<boolean>(false);
+  readonly isOpenedPopup$ = this.state.select('isOpened');
 
-  private readonly onDestroy$ = new Subject<void>();
-
-  private readonly changePopupPositionHandler$ = this.isOpen$.pipe(
-    filter((isOpen) => isOpen),
-    tap(() => {
-      if (this.triggerEl === undefined) {
-        return;
-      }
-      const triggerRect = this.triggerEl.getBoundingClientRect();
-      const leftSpace = triggerRect.x;
-      // TODO: windowをDI経由で利用するようにする
-      const rightSpace =
-        window.innerWidth - (triggerRect.x + triggerRect.width);
-      (this.elementRef.nativeElement as HTMLElement).style[
-        leftSpace > rightSpace ? 'right' : 'left'
-      ] = '0';
-    })
-  );
+  private readonly changePopupPositionHandler$ = this.state
+    .select('isOpened')
+    .pipe(
+      filter((isOpen) => isOpen),
+      tap(() => {
+        if (this.triggerEl === undefined) {
+          return;
+        }
+        const triggerRect = this.triggerEl.getBoundingClientRect();
+        const leftSpace = triggerRect.x;
+        // TODO: windowをDI経由で利用するようにする
+        const rightSpace =
+          window.innerWidth - (triggerRect.x + triggerRect.width);
+        (this.elementRef.nativeElement as HTMLElement).style[
+          leftSpace > rightSpace ? 'right' : 'left'
+        ] = '0';
+      })
+    );
 
   constructor(
     private elementRef: ElementRef,
     private zone: NgZone,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private state: RxState<State>
   ) {}
 
   ngOnInit(): void {
-    if (this.triggerEl == null) {
-      throw new Error('trigger element is undefined.');
-    }
-    merge(this.changePopupPositionHandler$)
-      .pipe(takeUntil(this.onDestroy$))
-      .subscribe();
+    this.state.hold(this.changePopupPositionHandler$);
     this.enableOpenPopupHandler();
     this.enableClosePopupHandler();
-  }
-
-  ngOnDestroy() {
-    this.onDestroy$.next();
+    this.state.connect('isOpened', this.isOpened$);
+    this.state.hold(this.isOpenedPopup$, (isOpened) =>
+      isOpened ? this.opened.emit() : this.closed.emit()
+    );
   }
 
   private enableOpenPopupHandler() {
     if (this.triggerEl == null) {
       return;
     }
-    fromEvent(this.triggerEl, 'click')
-      .pipe(
+    this.state.hold(
+      fromEvent(this.triggerEl, 'click').pipe(
         tap((e) => {
-          this.isOpen$.next(true);
+          this.state.set('isOpened', () => true);
           e.stopPropagation();
-        }),
-        takeUntil(this.onDestroy$)
+        })
       )
-      .subscribe();
+    );
   }
 
   private enableClosePopupHandler() {
     this.zone.runOutsideAngular(() => {
       // stopPropagation()しているイベントも捕捉するため、capture: trueをつける。
-      fromEvent(document, 'click', { capture: true })
-        .pipe(
+      this.state.hold(
+        fromEvent(document, 'click', { capture: true }).pipe(
           filter((event) => {
             const isHostClicked = (this.elementRef
               .nativeElement as HTMLElement)?.contains(event.target as Node);
@@ -98,13 +101,11 @@ export class PopupComponent implements OnInit, OnDestroy {
             );
           }),
           tap(() => {
-            this.isOpen$.next(false);
-            this.closed.emit();
+            this.state.set('isOpened', () => false);
             this.cd.detectChanges();
-          }),
-          takeUntil(this.onDestroy$)
+          })
         )
-        .subscribe();
+      );
     });
   }
 }

@@ -1,0 +1,26 @@
+<ng-container *ngIf="state$ | async as state">
+  <div
+    class="inline-block w-full"
+    [uiTooltip]="'ステータス'"
+    [uiTooltipDirection]="'top-left'"
+  >
+    <button
+      #trigger
+      class="focus:outline-none text-s2 text-black-light1 font-medium flex items-center justify-between change-button w-full"
+    >
+      {{ state.status }}
+      <ui-icon
+        class="icon"
+        [size]="'m'"
+        [icon]="'chevron-down'"
+        [color]="'primary-light1'"
+        [hoverColor]="'primary'"
+      ></ui-icon>
+    </button>
+  </div>
+  <ui-status-select-popup
+    [triggerEl]="trigger"
+    [currentStatus]="state.status"
+    (changedStatus)="onChangedStatus$.next($event)"
+  ></ui-status-select-popup>
+</ng-container>

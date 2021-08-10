@@ -112,6 +112,7 @@
     "eslint-config-prettier": "6.0.0",
     "eslint-plugin-cypress": "^2.10.3",
     "jest": "26.2.2",
+    "jest-createspyobj": "^2.0.0",
     "jest-preset-angular": "8.3.2",
     "less-loader": "^7.3.0",
     "postcss": "8.2.6",

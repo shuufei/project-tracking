@@ -9,6 +9,8 @@ import {
 } from '@angular/core';
 import { FormControl } from '@ngneat/reactive-forms';
 import { RxState } from '@rx-angular/state';
+import { Subject } from 'rxjs';
+import { filter, tap } from 'rxjs/operators';
 import type { IconName } from '../icon/icon.component';
 
 type State = {
@@ -34,11 +36,21 @@ export class TextFieldComponent implements OnInit {
   @Input() placeholder = '';
   @Input() borderless = false;
   @Output() changedValue = new EventEmitter<string>();
+  @Output() keypressEnter = new EventEmitter<string>();
   @HostBinding('class.borderless') get isBorderless() {
     return this.borderless;
   }
 
   readonly textFormCtrl = new FormControl('');
+  readonly onKeypress$ = new Subject<KeyboardEvent>();
+  readonly onKeypressEnter$ = this.onKeypress$
+    .pipe(
+      filter((event) => event.key === 'Enter'),
+      tap(() => {
+        this.keypressEnter.emit(this.textFormCtrl.value);
+      })
+    )
+    .subscribe();
 
   constructor(private state: RxState<State>) {}
 

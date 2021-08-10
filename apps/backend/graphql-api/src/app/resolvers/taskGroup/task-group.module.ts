@@ -5,9 +5,11 @@ import {
   DELETE_TASK_GROUP_SERVICE,
   GetBoardByIdService,
   GetProjectByBoardIdService,
+  GetTaskGroupByIdService,
   GetUserByIdService,
   GET_BOARD_BY_ID_SERVICE,
   GET_PROJECT_BY_BOARD_ID_SERVICE,
+  GET_TASK_GROUP_BY_ID_SERVICE,
   GET_USER_BY_ID_SERVICE,
   ListTasksByTaskGroupIdService,
   LIST_TASKS_BY_TASK_GROUP_ID_SERVICE,
@@ -86,6 +88,10 @@ import { TaskGroupResolver } from './task-group.resolver';
     {
       provide: CAN_ACCESS_PROJECT_SERVICE,
       useClass: CanAccessProjectService,
+    },
+    {
+      provide: GET_TASK_GROUP_BY_ID_SERVICE,
+      useClass: GetTaskGroupByIdService,
     },
   ],
   imports: [ParseUserPipeModule],

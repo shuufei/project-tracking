@@ -8,6 +8,7 @@ import {
 import { Color } from '@bison/shared/domain';
 import { RxState } from '@rx-angular/state';
 import { Subject } from 'rxjs';
+import { Board } from '../board-select-popup/board-select-popup.component';
 
 type State = {
   projects: Project[];
@@ -81,9 +82,4 @@ export type Project = {
   id: string;
   name: string;
   color: Color;
-};
-
-export type Board = {
-  id: string;
-  name: string;
 };

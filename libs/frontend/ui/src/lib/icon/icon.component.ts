@@ -54,5 +54,6 @@ export const Icons = [
   'clock',
   'trash-2',
   'x',
+  'folder',
 ] as const;
 export type IconName = typeof Icons[number];

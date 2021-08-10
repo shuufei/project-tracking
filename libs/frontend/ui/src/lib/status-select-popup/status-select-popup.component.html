@@ -1,4 +1,4 @@
-<ui-popup [triggerEl]="triggerEl" class="py-1">
+<ui-popup [triggerEl]="triggerEl" class="py-1" [isCloseWhenPopupAction]="true">
   <ng-container *ngFor="let status of statusList; index as i">
     <ui-select-item
       [selected]="(currentStatus$ | async) === status"

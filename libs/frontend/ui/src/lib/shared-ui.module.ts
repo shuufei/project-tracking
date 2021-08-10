@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { AssignChangeButtonModule } from './assign-change-button/assign-change-button.module';
 import { BoardItemModule } from './board-item/board-item.module';
+import { BoardSelectPopupModule } from './board-select-popup/board-select-popup.module';
 import { ButtonModule } from './button/button.module';
 import { CheckboxModule } from './checkbox/checkbox.module';
 import { ColorIconModule } from './color-icon/color-icon.module';
@@ -68,6 +69,7 @@ import { UserSelectPopupModule } from './user-select-popup/user-select-popup.mod
     TextareaModule,
     SheetFooterModule,
     DialogModule,
+    BoardSelectPopupModule,
   ],
 })
 export class SharedUiModule {}

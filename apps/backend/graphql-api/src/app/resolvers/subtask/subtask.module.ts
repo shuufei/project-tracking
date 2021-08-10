@@ -3,8 +3,10 @@ import {
   CREATE_SUBTASK_SERVICE,
   DeleteSubtaskService,
   DELETE_SUBTASK_SERVICE,
+  GetSubtaskByIdService,
   GetTaskByIdService,
   GetUserByIdService,
+  GET_SUBTASK_BY_ID_SERVICE,
   GET_TASK_BY_ID_SERVICE,
   GET_USER_BY_ID_SERVICE,
   UpdateSubtaskService,
@@ -74,6 +76,10 @@ import { SubtaskResolver } from './subtask.resolver';
     {
       provide: CAN_ACCESS_PROJECT_SERVICE,
       useClass: CanAccessProjectService,
+    },
+    {
+      provide: GET_SUBTASK_BY_ID_SERVICE,
+      useClass: GetSubtaskByIdService,
     },
   ],
   imports: [ParseUserPipeModule],

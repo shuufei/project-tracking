@@ -1,6 +1,7 @@
 import type {
   ICreateSubtaskService,
   IDeleteSubtaskService,
+  IGetSubtaskByIdService,
   IGetTaskByIdService,
   IGetUserByIdService,
   IUpdateSubtaskService,
@@ -8,11 +9,12 @@ import type {
 import {
   CREATE_SUBTASK_SERVICE,
   DELETE_SUBTASK_SERVICE,
+  GET_SUBTASK_BY_ID_SERVICE,
   GET_TASK_BY_ID_SERVICE,
   GET_USER_BY_ID_SERVICE,
   UPDATE_SUBTASK_SERVICE,
 } from '@bison/backend/application';
-import type { User } from '@bison/shared/domain';
+import type { Id, User } from '@bison/shared/domain';
 import type {
   CreateSubtaskInput,
   UpdateSubtaskInput,
@@ -20,8 +22,10 @@ import type {
 import { Inject } from '@nestjs/common';
 import {
   Args,
+  ID,
   Mutation,
   Parent,
+  Query,
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
@@ -47,8 +51,19 @@ export class SubtaskResolver {
     @Inject(UPDATE_SUBTASK_SERVICE)
     private updateSubtaskService: IUpdateSubtaskService,
     @Inject(DELETE_SUBTASK_SERVICE)
-    private deleteSubtaskService: IDeleteSubtaskService
+    private deleteSubtaskService: IDeleteSubtaskService,
+    @Inject(GET_SUBTASK_BY_ID_SERVICE)
+    private getSubtaskByIdService: IGetSubtaskByIdService
   ) {}
+
+  @Query()
+  async subtask(
+    @IdpUserId(ParseUserPipe) user: User,
+    @Args('id', { type: () => ID }) id: Id
+  ) {
+    const subtask = await this.getSubtaskByIdService.handle(id);
+    return convertToResolvedSubtaskFromDomainSubtask(subtask);
+  }
 
   @ResolveField()
   async task(@Parent() subtask: ResolvedSubtask): Promise<ResolvedTask> {

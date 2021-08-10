@@ -8,12 +8,12 @@ import {
 } from '@angular/core';
 import { RxState } from '@rx-angular/state';
 import { combineLatest, Subject } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { filter, map, pairwise } from 'rxjs/operators';
 import type { User } from '../user-select-popup/user-select-popup.component';
 
 type State = {
   users: User[];
-  selectedUserIds: User['id'][];
+  selectedUserId?: User['id'];
 };
 
 @Component({
@@ -29,36 +29,38 @@ export class AssignChangeButtonComponent implements OnInit {
     this.state.set('users', () => value);
   }
   @Input()
-  set selectedUserIds(value: User['id'][]) {
-    this.state.set('selectedUserIds', () => value);
+  set selectedUserId(value: User['id'] | undefined) {
+    this.state.set('selectedUserId', () => value);
   }
-  @Output() selectedUsers = new EventEmitter<User['id'][]>();
+  @Output() selectedUser = new EventEmitter<User['id'] | undefined>();
 
   // State
   readonly state$ = this.state.select();
-  readonly selectedUserImageSrcList$ = combineLatest([
+  readonly selectedUserImageSrc$ = combineLatest([
     this.state.select('users'),
-    this.state.select('selectedUserIds'),
-  ]).pipe(
-    map(([users, ids]) =>
-      users.filter((user) => ids.includes(user.id)).map((user) => user.imageSrc)
-    )
-  );
+    this.state.select('selectedUserId'),
+  ]).pipe(map(([users, id]) => users.find((v) => v.id === id)?.imageSrc));
 
   // Events
-  readonly onChangedSelectedUserIds$ = new Subject<User['id'][]>();
+  readonly onChangedSelectedUserId$ = new Subject<User['id']>();
 
   constructor(private state: RxState<State>) {
     this.state.set({
       users: [],
-      selectedUserIds: [],
     });
   }
 
   ngOnInit() {
-    this.state.connect('selectedUserIds', this.onChangedSelectedUserIds$);
-    this.state.hold(this.state.select('selectedUserIds'), (userIds) => {
-      this.selectedUsers.emit(userIds);
-    });
+    this.state.connect('selectedUserId', this.onChangedSelectedUserId$);
+    this.state.hold(
+      this.state.$.pipe(
+        map((v) => v.selectedUserId),
+        pairwise(),
+        filter(([prev, current]) => prev !== current)
+      ),
+      ([, userId]) => {
+        this.selectedUser.emit(userId);
+      }
+    );
   }
 }

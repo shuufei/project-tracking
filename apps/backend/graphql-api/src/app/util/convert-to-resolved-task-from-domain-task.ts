@@ -13,6 +13,7 @@ export const convertToResolvedTaskFromDomainTask = (
     workTimeSec: task.workTimeSec,
     scheduledTimeSec: task.scheduledTimeSec,
     subtasksOrder: task.subtasksOrder,
+    workStartDateTimestamp: task.workStartDateTimestamp,
     assign:
       task.assignUserId !== undefined ? { id: task.assignUserId } : undefined,
     board: {

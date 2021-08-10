@@ -43,6 +43,14 @@
     ></bis-board-delete-dialog>
   </div>
 
+  <div class="m-4">
+    <button ui-stroked-button #showTaskDialogButton>タスクを確認</button>
+    <bis-task-dialog
+      [task]="task"
+      [triggerEl]="showTaskDialogButton.elementRef.nativeElement"
+    ></bis-task-dialog>
+  </div>
+
   <ul>
     <ng-container *ngFor="let project of state.projects">
       <li class="mt-4">

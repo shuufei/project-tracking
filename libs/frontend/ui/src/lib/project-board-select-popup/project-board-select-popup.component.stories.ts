@@ -1,5 +1,6 @@
 import { COLOR } from '@bison/shared/domain';
-import type { Board, Project } from './project-board-select-popup.component';
+import { Board } from '../board-select-popup/board-select-popup.component';
+import type { Project } from './project-board-select-popup.component';
 import { ProjectBoardSelectPopupModule } from './project-board-select-popup.module';
 
 export default {

@@ -10,7 +10,13 @@ type State = {
     minutes: number;
     seconds: number;
   };
+  scheduledTime?: {
+    hours: number;
+    minutes: number;
+    seconds: number;
+  };
   isShowSec: boolean;
+  isShowScheduledTime: boolean;
 };
 
 @Component({
@@ -30,11 +36,20 @@ export class TimeLabelComponent {
     this.onChangedSec$.next(value);
   }
   @Input()
+  set scheduledTimeSec(value: number | undefined) {
+    this.onChangedScheduledTimeSec$.next(value);
+  }
+  @Input()
   set isShowSec(value: boolean) {
     this.state.set('isShowSec', () => value);
   }
+  @Input()
+  set isShowScheduledTime(value: boolean) {
+    this.state.set('isShowScheduledTime', () => value);
+  }
 
   // State
+  readonly state$ = this.state.select();
   readonly status$ = this.state.select('status');
   readonly hours$ = this.state.select('time', 'hours');
   readonly minutes$ = this.state.select('time', 'minutes');
@@ -43,6 +58,9 @@ export class TimeLabelComponent {
 
   // Events
   private readonly onChangedSec$ = new Subject<number>();
+  private readonly onChangedScheduledTimeSec$ = new Subject<
+    number | undefined
+  >();
 
   constructor(private state: RxState<State>) {
     this.state.connect('time', this.onChangedSec$, (_, sec) =>
@@ -56,7 +74,13 @@ export class TimeLabelComponent {
         seconds: 0,
       },
       isShowSec: false,
+      isShowScheduledTime: false,
     });
+    this.state.connect(
+      'scheduledTime',
+      this.onChangedScheduledTimeSec$,
+      (_, sec) => (sec != null ? convertToTimeFromSec(sec) : undefined)
+    );
   }
 }
 

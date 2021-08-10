@@ -8,7 +8,7 @@
         ? 'text-black-light2 bg-white'
         : status === 'tracking'
         ? 'text-white bg-primary-default'
-        : 'hoge'
+        : ''
     ]"
   >
     <span>{{ hours$ | async | number: '2.0-2' }}</span>
@@ -17,6 +17,31 @@
     <ng-container *ngIf="isShowSec$ | async">
       <span class="colon">:</span>
       <span>{{ seconds$ | async | number: '2.0-2' }}</span>
+    </ng-container>
+
+    <ng-container *ngIf="state$ | async as state">
+      <ng-container *ngIf="state.isShowScheduledTime">
+        <span class="mx-1">/</span>
+        <span>{{
+          state.scheduledTime
+            ? (state.scheduledTime.hours | number: '2.0-2')
+            : '--'
+        }}</span>
+        <span class="colon">:</span>
+        <span>{{
+          state.scheduledTime
+            ? (state.scheduledTime.minutes | number: '2.0-2')
+            : '--'
+        }}</span>
+        <ng-container *ngIf="state.isShowSec">
+          <span class="colon">:</span>
+          <span>{{
+            state.scheduledTime
+              ? (state.scheduledTime.seconds | number: '2.0-2')
+              : '--'
+          }}</span>
+        </ng-container>
+      </ng-container>
     </ng-container>
   </div>
 </ng-container>

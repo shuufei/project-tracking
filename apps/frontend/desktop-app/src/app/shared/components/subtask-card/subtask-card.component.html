@@ -1,0 +1,76 @@
+<ng-container *ngIf="state$ | async as state">
+  <div class="task-card-content">
+    <div class="flex justify-between items-center px-3 pt-2">
+      <div class="flex justify-start items-center w-full">
+        <ui-checkbox
+          [checked]="state.subtask?.isDone || false"
+          (changedCheck)="onChangedCheck$.next($event)"
+          (click)="$event.stopPropagation()"
+        ></ui-checkbox>
+        <ng-container *ngIf="state.isEditableTitle; else readonlyMode">
+          <ui-text-field
+            class="text-s2 text-black-default font-medium ml-2 w-full"
+            (click)="$event.stopPropagation()"
+            (keypressEnter)="onSubmitTitle$.next($event)"
+          ></ui-text-field>
+        </ng-container>
+        <ng-template #readonlyMode>
+          <span class="text-s2 text-black-default font-medium ml-2">{{
+            state.subtask?.title
+          }}</span>
+        </ng-template>
+      </div>
+      <div class="relative ml-2">
+        <div #triggerEl class="menu-trigger flex invisible">
+          <ui-icon
+            class="menu-icon cursor-pointer"
+            [icon]="'more-horizontal'"
+            [size]="'s'"
+            [color]="'primary-light2'"
+            [hoverColor]="'primary'"
+          ></ui-icon>
+        </div>
+        <ui-popup [triggerEl]="triggerEl" [isCloseWhenPopupAction]="true">
+          <div class="menu-items">
+            <ui-menu-item
+              [itemName]="'削除'"
+              [color]="'warn'"
+              [icon]="'trash-2'"
+              (clickedItem)="isOpenedDeletePopup$.next(true)"
+              (click)="$event.stopPropagation()"
+            ></ui-menu-item>
+          </div>
+        </ui-popup>
+        <bis-delete-confirm-popup
+          [isOpened$]="isOpenedDeletePopup$"
+          (click)="$event.stopPropagation()"
+          (delete)="onDelete$.next()"
+        ></bis-delete-confirm-popup>
+      </div>
+    </div>
+
+    <div class="py-1 px-3 mt-1">
+      <ui-assign-change-button
+        [users]="state.users"
+        [selectedUserId]="state.subtask?.assignUser?.id"
+        (selectedUser)="onChangedAssignUser$.next($event)"
+        (click)="$event.stopPropagation()"
+      ></ui-assign-change-button>
+    </div>
+  </div>
+
+  <hr class="bg-primary-light3" />
+
+  <div class="py-2 px-3">
+    <bis-tracking-bar
+      class="w-full"
+      [trackingTimeSec]="state.subtask?.workTimeSec || 0"
+      [scheduledTimeSec]="state.subtask?.scheduledTimeSec || 0"
+      [isTracking]="state.subtask?.workStartDateTimestamp ? true : false"
+      (clickedPlay)="onClickedPlay$.next()"
+      (clickedPause)="onClickedPause$.next()"
+      (changedTrackingTimeSec)="onChangedWorkTimeSec$.next($event)"
+      (changedScheduledTimeSec)="onChangedScheduledTimeSec$.next($event)"
+    ></bis-tracking-bar>
+  </div>
+</ng-container>

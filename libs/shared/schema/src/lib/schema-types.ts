@@ -95,6 +95,7 @@ export interface UpdateTaskInput {
     assignUserId?: string;
     workTimeSec: number;
     scheduledTimeSec?: number;
+    workStartDateTimestamp?: number;
     boardId: string;
     subtasksOrder: string[];
     taskGroupId?: string;
@@ -143,6 +144,7 @@ export interface UpdateSubtaskInput {
     assignUserId?: string;
     workTimeSec: number;
     scheduledTimeSec?: number;
+    workStartDateTimestamp?: number;
     taskId: string;
 }
 
@@ -170,6 +172,9 @@ export interface IQuery {
     project(id: string): Project | Promise<Project>;
     board(id: string): Board | Promise<Board>;
     users(): User[] | Promise<User[]>;
+    task(id: string): Task | Promise<Task>;
+    taskGroup(id: string): TaskGroup | Promise<TaskGroup>;
+    subtask(id: string): Subtask | Promise<Subtask>;
 }
 
 export interface IMutation {
@@ -234,6 +239,7 @@ export interface Subtask extends Node {
     task: Task;
     workTimeSec: number;
     scheduledTimeSec?: number;
+    workStartDateTimestamp?: number;
 }
 
 export interface Task extends Node {
@@ -248,6 +254,7 @@ export interface Task extends Node {
     taskGroup?: TaskGroup;
     workTimeSec: number;
     scheduledTimeSec?: number;
+    workStartDateTimestamp?: number;
     subtasksOrder?: string[];
 }
 

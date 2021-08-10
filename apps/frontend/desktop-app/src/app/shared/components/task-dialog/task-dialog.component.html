@@ -1,0 +1,28 @@
+<ui-dialog
+  [triggerEl]="triggerEl"
+  [isOpen$]="isOpenedDialog$"
+  (opened)="onOpenedDialog$.next()"
+  (closed)="onClosedDialog$.next()"
+>
+  <ng-container [ngSwitch]="currentContentType$ | async">
+    <ng-container *ngSwitchCase="'task'">
+      <ng-container *ngIf="task$ | async as task">
+        <bis-task-dialog-task-content
+          [task]="task"
+        ></bis-task-dialog-task-content>
+      </ng-container>
+    </ng-container>
+
+    <ng-container *ngSwitchCase="'subtask'">
+      <ng-container *ngIf="subtask$ | async as subtask">
+        {{ subtask | json }}
+      </ng-container>
+    </ng-container>
+
+    <ng-container *ngSwitchCase="'taskGroup'">
+      <ng-container *ngIf="taskGroup$ | async as taskGroup">
+        {{ taskGroup | json }}
+      </ng-container>
+    </ng-container>
+  </ng-container>
+</ui-dialog>

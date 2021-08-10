@@ -1,0 +1,20 @@
+<div
+  class="py-1 px-4 flex justify-between items-center sticky top-0 bg-white z-10 head"
+>
+  <ng-content select="[head]"></ng-content>
+  <ui-icon
+    icon="x"
+    size="m"
+    color="primary-light1"
+    class="p-1 cursor-pointer ml-3"
+    (click)="clickedCloseButton.emit()"
+  ></ui-icon>
+</div>
+<div class="flex main">
+  <div class="pt-4 px-6 pb-8 flex-1">
+    <ng-content select="[main]"></ng-content>
+  </div>
+  <div class="pt-4 px-4 pb-8 border-l bg-primary-light4 side-panel">
+    <ng-content select="[side-panel]"></ng-content>
+  </div>
+</div>

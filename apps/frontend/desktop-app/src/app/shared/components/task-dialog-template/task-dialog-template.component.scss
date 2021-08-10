@@ -1,0 +1,17 @@
+:host {
+  display: block;
+}
+
+.main {
+  min-height: 300px;
+}
+
+.head {
+  border-color: var(--bison-primary-light2);
+  border-bottom-width: 0.5px;
+}
+
+.side-panel {
+  border-color: var(--bison-primary-light2);
+  border-left-width: 0.5px;
+}

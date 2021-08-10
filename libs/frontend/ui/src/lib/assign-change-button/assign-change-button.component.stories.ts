@@ -37,10 +37,10 @@ export const Set_Selected_Users = () => ({
     imports: [AssignChangeButtonModule],
   },
   template: `
-    <ui-assign-change-button class="p-4" [users]="users" [selectedUserIds]="selectedUserIds"><ui-assign-change-button>
+    <ui-assign-change-button class="p-4" [users]="users" [selectedUserId]="selectedUserId"><ui-assign-change-button>
   `,
   props: {
     users,
-    selectedUserIds: [users[0].id, users[1].id],
+    selectedUserId: users[0].id,
   },
 });

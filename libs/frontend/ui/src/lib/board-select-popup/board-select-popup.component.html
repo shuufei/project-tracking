@@ -1,0 +1,21 @@
+<ui-popup [triggerEl]="triggerEl" [isCloseWhenPopupAction]="true">
+  <ng-container *ngIf="state$ | async as state">
+    <div class="pb-2">
+      <p class="text-s4 text-black-light2">ボード</p>
+      <div class="mt-2">
+        <ng-container *ngFor="let board of state.boards; index as i">
+          <ui-select-item
+            class="select-item cursor-pointer"
+            [ngClass]="{
+              'mt-1': i !== 0
+            }"
+            [selected]="board.id === state.selectedBoardId"
+            (click)="onClickedBoard$.next(board.id)"
+          >
+            <span class="ml-1 select-item-text">{{ board.name }}</span>
+          </ui-select-item>
+        </ng-container>
+      </div>
+    </div>
+  </ng-container>
+</ui-popup>

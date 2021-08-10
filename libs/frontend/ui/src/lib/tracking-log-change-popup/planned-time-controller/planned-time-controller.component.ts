@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { RxState } from '@rx-angular/state';
 import { Subject } from 'rxjs';
-import { distinctUntilChanged } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { ChangedTimeEvent } from '../../input-time/input-time.component';
 import { convertToTimeFromSec } from '../../utils/convert-time';
 
@@ -73,7 +73,8 @@ export class PlannedTimeControllerComponent {
             prev.hours === current.hours &&
             prev.minutes === current.minutes &&
             prev.seconds === current.seconds
-        )
+        ),
+        debounceTime(500)
       ),
       (state) => {
         this.changedTime.emit(state);

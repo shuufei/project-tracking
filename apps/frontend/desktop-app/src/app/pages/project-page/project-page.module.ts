@@ -20,6 +20,7 @@ import { BoardCreateSheetModule } from '../../shared/components/board-create-she
 import { BoardDeleteDialogModule } from '../../shared/components/board-delete-dialog/board-delete-dialog.module';
 import { BoardUpdateSheetModule } from '../../shared/components/board-update-sheet/board-update-sheet.module';
 import { ProjectPropertyEditFormModule } from '../../shared/components/project-property-edit-form/project-property-edit-form.module';
+import { TaskDialogModule } from '../../shared/components/task-dialog/task-dialog.module';
 import { ProjectMemberUpdateSheetComponent } from './components/project-member-update-sheet/project-member-update-sheet.component';
 import { ProjectUpdateSheetComponent } from './components/project-update-sheet/project-update-sheet.component';
 import { ProjectPageRoutingModule } from './project-page-routing.module';
@@ -44,6 +45,7 @@ import { ProjectPageComponent } from './project-page.component';
     BoardCreateSheetModule,
     BoardUpdateSheetModule,
     BoardDeleteDialogModule,
+    TaskDialogModule,
   ],
   exports: [ProjectPageComponent],
   providers: [

@@ -12,7 +12,7 @@ import { map, pluck, startWith } from 'rxjs/operators';
 
 type State = {
   users: User[];
-  selectedUserIds: User['id'][];
+  selectedUserId?: User['id'];
   searchWord?: string;
 };
 
@@ -30,16 +30,17 @@ export class UserSelectPopupComponent implements OnInit {
     this.state.set('users', () => value);
   }
   @Input()
-  set selectedUserIds(value: User['id'][]) {
-    this.state.set('selectedUserIds', () => value);
+  set selectedUserId(value: User['id']) {
+    this.state.set('selectedUserId', () => value);
   }
-  @Output() selectUsers = new EventEmitter<User['id'][]>();
+  @Output() selectUser = new EventEmitter<User['id'] | undefined>();
 
   // State
+  readonly state$ = this.state.select();
   readonly users$ = this.state.select('users');
   readonly isShowResetButton$ = this.state
-    .select('selectedUserIds')
-    .pipe(stateful(map((userIds) => userIds.length >= 1)));
+    .select('selectedUserId')
+    .pipe(stateful(map((userId) => userId != null)));
   readonly filteredUsers$ = combineLatest([
     this.users$,
     this.state.$.pipe(pluck('searchWord'), startWith(undefined)),
@@ -61,36 +62,27 @@ export class UserSelectPopupComponent implements OnInit {
   constructor(private state: RxState<State>) {
     this.state.set({
       users: [],
-      selectedUserIds: [],
     });
   }
 
   ngOnInit(): void {
     this.state.connect(this.onClickedUser$, (state, userId) => {
-      const userIds = state.selectedUserIds.find((v) => v === userId)
-        ? state.selectedUserIds.filter((v) => v !== userId)
-        : [...state.selectedUserIds, userId];
       return {
         ...state,
-        selectedUserIds: userIds,
+        selectedUserId: userId,
       };
     });
     this.state.connect(this.onClickedReset$, (state) => ({
       ...state,
-      selectedUserIds: [],
+      selectedUserId: undefined,
     }));
     this.state.connect(this.onInputedSearchWord$, (state, searchWord) => ({
       ...state,
       searchWord: searchWord || undefined,
     }));
-    this.state.hold(this.state.select('selectedUserIds'), (ids) => {
-      this.selectUsers.emit(ids);
+    this.state.hold(this.state.$.pipe(map((v) => v.selectedUserId)), (id) => {
+      this.selectUser.emit(id);
     });
-  }
-
-  isSelected(userId: User['id']) {
-    const selectedUserIds = this.state.get('selectedUserIds');
-    return selectedUserIds.includes(userId);
   }
 }
 

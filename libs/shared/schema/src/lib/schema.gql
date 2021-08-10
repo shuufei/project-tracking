@@ -3,6 +3,9 @@ type Query {
   project(id: ID!): Project
   board(id: ID!): Board
   users: [User!]!
+  task(id: ID!): Task
+  taskGroup(id: ID!): TaskGroup
+  subtask(id: ID!): Subtask
 }
 
 type Mutation {
@@ -79,6 +82,7 @@ type Subtask implements Node {
   task: Task!
   workTimeSec: Int!
   scheduledTimeSec: Int
+  workStartDateTimestamp: Float
 }
 
 type Task implements Node {
@@ -93,6 +97,7 @@ type Task implements Node {
   taskGroup: TaskGroup
   workTimeSec: Int!
   scheduledTimeSec: Int
+  workStartDateTimestamp: Float
   subtasksOrder: [ID!]
 }
 
@@ -197,6 +202,7 @@ input UpdateTaskInput {
   assignUserId: ID
   workTimeSec: Int!
   scheduledTimeSec: Int
+  workStartDateTimestamp: Float
   boardId: ID!
   subtasksOrder: [ID!]!
   taskGroupId: ID
@@ -245,6 +251,7 @@ input UpdateSubtaskInput {
   assignUserId: ID
   workTimeSec: Int!
   scheduledTimeSec: Int
+  workStartDateTimestamp: Float
   taskId: ID!
 }
 
