@@ -8,21 +8,15 @@ import {
 } from '@angular/core';
 import {
   APOLLO_DATA_QUERY,
-  CREATE_SUBTASK_USECASE,
   DELETE_TASK_USECASE,
   IApolloDataQuery,
-  ICreateSubtaskUsecase,
   IDeleteTaskUsecase,
   IUpdateTaskUsecase,
   UPDATE_TASK_USECASE,
 } from '@bison/frontend/application';
 import { Task } from '@bison/frontend/domain';
 import { Board, User } from '@bison/frontend/ui';
-import {
-  CreateSubtaskInput,
-  DeleteTaskInput,
-  UpdateTaskInput,
-} from '@bison/shared/schema';
+import { DeleteTaskInput, UpdateTaskInput } from '@bison/shared/schema';
 import { RxState } from '@rx-angular/state';
 import { TuiNotificationsService } from '@taiga-ui/core';
 import { gql } from 'apollo-angular';
@@ -39,6 +33,7 @@ import {
 import { convertToApiStatusFromDomainStatus } from '../../../../util/convert-to-api-status-from-domain-status';
 import { convertToDomainSubtaskFromApiSubtask } from '../../../../util/convert-to-domain-subtask-from-api-subtask';
 import { convertToDomainTaskGroupFromApiTaskGroup } from '../../../../util/convert-to-domain-task-group-from-api-task-group';
+import { SubtaskFacadeService } from '../../../facade/subtask-facade/subtask-facade.service';
 import { TaskDialogService } from '../task-dialog.service';
 
 const USER_FIELDS = gql`
@@ -158,10 +153,9 @@ export class TaskDialogTaskContentComponent implements OnInit {
     @Inject(APOLLO_DATA_QUERY) private apolloDataQuery: IApolloDataQuery,
     @Inject(UPDATE_TASK_USECASE) private updateTaskUsecase: IUpdateTaskUsecase,
     @Inject(DELETE_TASK_USECASE) private deleteTaskUsecase: IDeleteTaskUsecase,
-    @Inject(CREATE_SUBTASK_USECASE)
-    private createSubtaskUsecase: ICreateSubtaskUsecase,
     @Inject(TuiNotificationsService)
-    private readonly notificationsService: TuiNotificationsService
+    private readonly notificationsService: TuiNotificationsService,
+    private readonly subtaskFacadeService: SubtaskFacadeService
   ) {
     this.state.set({
       isEditableTitleAndDesc: false,
@@ -270,36 +264,15 @@ export class TaskDialogTaskContentComponent implements OnInit {
           if (task == null) {
             return of(undefined);
           }
-          const input: CreateSubtaskInput = {
-            title: '',
-            taskId: task.id,
-          };
-          return this.createSubtaskUsecase.execute(input, {
-            fields: SUBTASK_FIELDS,
-            name: 'SubtaskPartsInTaskDialog',
-          });
+          return this.subtaskFacadeService.create('', task.id);
         }),
-        tap((response) => {
-          const subtask = response?.data?.createSubtask;
-          if (subtask == null) return;
+        filter((v): v is NonNullable<typeof v> => v != null),
+        tap((subtask) => {
           this.state.set('task', ({ task }) => {
             if (task == null) return task;
             return {
               ...task,
-              subtasks: [
-                ...task.subtasks,
-                {
-                  id: subtask.id,
-                  title: subtask.title,
-                  description: subtask.description,
-                  isDone: subtask.isDone,
-                  scheduledTimeSec: subtask.scheduledTimeSec,
-                  workTimeSec: subtask.workTimeSec,
-                  workStartDateTimestamp: subtask.workStartDateTimestamp,
-                  taskId: subtask.task.id,
-                  assignUser: subtask.assign,
-                },
-              ],
+              subtasks: [...task.subtasks, subtask],
               subtasksOrder: [...task.subtasksOrder, subtask.id],
             };
           });

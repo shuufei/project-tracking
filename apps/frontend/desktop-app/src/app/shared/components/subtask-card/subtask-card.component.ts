@@ -7,15 +7,10 @@ import {
 } from '@angular/core';
 import {
   APOLLO_DATA_QUERY,
-  DELETE_SUBTASK_USECASE,
   IApolloDataQuery,
-  IDeleteSubtaskUsecase,
-  IUpdateSubtaskUsecase,
-  UPDATE_SUBTASK_USECASE,
 } from '@bison/frontend/application';
 import { Subtask } from '@bison/frontend/domain';
 import { User } from '@bison/shared/domain';
-import { DeleteSubtaskInput, UpdateSubtaskInput } from '@bison/shared/schema';
 import { RxState } from '@rx-angular/state';
 import { gql } from 'apollo-angular';
 import { of, Subject } from 'rxjs';
@@ -28,6 +23,7 @@ import {
   startWith,
   tap,
 } from 'rxjs/operators';
+import { SubtaskFacadeService } from '../../facade/subtask-facade/subtask-facade.service';
 
 const USER_FIELDS = gql`
   fragment UserPartsInSubtaskCard on User {
@@ -81,10 +77,7 @@ export class SubtaskCardComponent implements OnInit {
   constructor(
     private state: RxState<State>,
     @Inject(APOLLO_DATA_QUERY) private apolloDataQuery: IApolloDataQuery,
-    @Inject(UPDATE_SUBTASK_USECASE)
-    private updateSubtaskUsecase: IUpdateSubtaskUsecase,
-    @Inject(DELETE_SUBTASK_USECASE)
-    private deleteSubtaskUsecase: IDeleteSubtaskUsecase
+    private subtaskFacade: SubtaskFacadeService
   ) {
     this.state.set({ users: [], isOpenedDeletePopup: false });
   }
@@ -146,7 +139,9 @@ export class SubtaskCardComponent implements OnInit {
           (userId) => userId !== this.state.get('subtask')?.assignUser?.id
         ),
         exhaustMap((userId) => {
-          return this.updateAssignUser(userId);
+          const subtask = this.state.get('subtask');
+          if (subtask == null) return of(undefined);
+          return this.subtaskFacade.updateAssignUser(userId, subtask);
         })
       )
     );
@@ -156,8 +151,20 @@ export class SubtaskCardComponent implements OnInit {
         filter((isDone) => {
           return isDone !== this.state.get('subtask')?.isDone;
         }),
+        tap((isDone) => {
+          this.state.set('subtask', ({ subtask }) => {
+            return subtask == null
+              ? subtask
+              : {
+                  ...subtask,
+                  isDone,
+                };
+          });
+        }),
         exhaustMap((isDone) => {
-          return this.updateIsDone(isDone);
+          const subtask = this.state.get('subtask');
+          if (subtask == null) return of(undefined);
+          return this.subtaskFacade.updateIsDoone(isDone, subtask);
         })
       )
     );
@@ -178,7 +185,15 @@ export class SubtaskCardComponent implements OnInit {
           return sec !== this.state.get('subtask')?.workTimeSec;
         }),
         exhaustMap((sec) => {
-          return this.updateWorkTimeSec(sec);
+          const subtask = this.state.get('subtask');
+          if (subtask == null) return of(undefined);
+          const workStartDateTimestamp =
+            subtask.workStartDateTimestamp && new Date().valueOf();
+          return this.subtaskFacade.updateWorkTimeSec(
+            sec,
+            workStartDateTimestamp,
+            subtask
+          );
         })
       )
     );
@@ -187,22 +202,66 @@ export class SubtaskCardComponent implements OnInit {
         filter((sec) => {
           return sec !== this.state.get('subtask')?.scheduledTimeSec;
         }),
+        tap((sec) => {
+          this.state.set('subtask', (state) => {
+            const subtask = state.subtask;
+            return subtask == null
+              ? subtask
+              : {
+                  ...subtask,
+                  scheduledTimeSec: sec,
+                };
+          });
+        }),
         exhaustMap((sec) => {
-          return this.updateScheduledTimeSec(sec);
+          const subtask = this.state.get('subtask');
+          if (subtask == null) return of(undefined);
+          return this.subtaskFacade.updateScheduledTimeSec(sec, subtask);
         })
       )
     );
     this.state.hold(
       this.onClickedPlay$.pipe(
         exhaustMap(() => {
-          return this.startTracking();
+          const subtask = this.state.get('subtask');
+          if (subtask == null) return of(undefined);
+          const now = new Date();
+          this.state.set('subtask', (state) => {
+            const subtask = state.subtask;
+            return subtask == null
+              ? subtask
+              : {
+                  ...subtask,
+                  workStartDateTimestamp: now.valueOf(),
+                };
+          });
+          return this.subtaskFacade.startTracking(now, subtask);
         })
       )
     );
     this.state.hold(
       this.onClickedPause$.pipe(
         exhaustMap(() => {
-          return this.stopTracking();
+          const subtask = this.state.get('subtask');
+          if (subtask == null) return of(undefined);
+          const start = subtask.workStartDateTimestamp;
+          const currentWorkTimeSec = subtask.workTimeSec;
+          if (start == null || currentWorkTimeSec == null) return of(undefined);
+          const now = new Date();
+          const diffTimeMilliSec = now.valueOf() - start;
+          const updatedWorkTimeSec =
+            currentWorkTimeSec + Math.ceil(diffTimeMilliSec / 1000);
+          this.state.set('subtask', (state) => {
+            const subtask = state.subtask;
+            return subtask == null
+              ? subtask
+              : {
+                  ...subtask,
+                  workTimeSec: updatedWorkTimeSec,
+                  workStartDateTimestamp: undefined,
+                };
+          });
+          return this.subtaskFacade.stopTracking(now, subtask);
         })
       )
     );
@@ -211,172 +270,29 @@ export class SubtaskCardComponent implements OnInit {
         exhaustMap(() => {
           const subtaskId = this.state.get('subtask')?.id;
           if (subtaskId == null) return of(undefined);
-          const input: DeleteSubtaskInput = {
-            id: subtaskId,
-          };
-          return this.deleteSubtaskUsecase.execute(input);
+          return this.subtaskFacade.delete(subtaskId);
         })
       )
     );
     this.state.hold(
       this.onSubmitTitle$.pipe(
-        tap(() => {
+        tap((title) => {
           this.state.set('isEditableTitle', () => false);
+          this.state.set('subtask', ({ subtask }) => {
+            return subtask == null
+              ? subtask
+              : {
+                  ...subtask,
+                  title,
+                };
+          });
         }),
         exhaustMap((title) => {
-          return this.updateTitle(title);
+          const subtask = this.state.get('subtask');
+          if (subtask == null) return of(undefined);
+          return this.subtaskFacade.updateTitle(title, subtask);
         })
       )
     );
-  }
-
-  private updateAssignUser(userId?: User['id']) {
-    const subtask = this.state.get('subtask');
-    if (subtask == null) return of(undefined);
-    const input = this.generateUpdateInputBase();
-    if (input == null) return of(undefined);
-    return this.updateSubtaskUsecase.execute({
-      ...input,
-      assignUserId: userId,
-    });
-  }
-
-  private updateIsDone(isDone: Subtask['isDone']) {
-    const input = this.generateUpdateInputBase();
-    if (input == null) return of(undefined);
-    this.state.set('subtask', ({ subtask }) => {
-      return subtask == null
-        ? subtask
-        : {
-            ...subtask,
-            isDone,
-          };
-    });
-    return this.updateSubtaskUsecase.execute({
-      ...input,
-      isDone,
-    });
-  }
-
-  private updateWorkTimeSec(sec: Subtask['workTimeSec']) {
-    const workStartDateTimestamp =
-      this.state.get('subtask')?.workStartDateTimestamp && new Date().valueOf();
-    const input = this.generateUpdateInputBase();
-    if (input == null) return of(undefined);
-    this.state.set('subtask', (state) => {
-      const subtask = state.subtask;
-      return subtask == null
-        ? subtask
-        : {
-            ...subtask,
-            workTimeSec: sec,
-            workStartDateTimestamp,
-          };
-    });
-    return this.updateSubtaskUsecase.execute({
-      ...input,
-      workTimeSec: sec,
-      workStartDateTimestamp,
-    });
-  }
-
-  private updateScheduledTimeSec(sec: Subtask['scheduledTimeSec']) {
-    const input = this.generateUpdateInputBase();
-    if (input == null) return of(undefined);
-    this.state.set('subtask', (state) => {
-      const subtask = state.subtask;
-      return subtask == null
-        ? subtask
-        : {
-            ...subtask,
-            scheduledTimeSec: sec,
-          };
-    });
-    return this.updateSubtaskUsecase.execute({
-      ...input,
-      scheduledTimeSec: sec,
-    });
-  }
-
-  private startTracking() {
-    const now = new Date().valueOf();
-    const input = this.generateUpdateInputBase();
-    if (input == null) return of(undefined);
-    this.state.set('subtask', (state) => {
-      const subtask = state.subtask;
-      return subtask == null
-        ? subtask
-        : {
-            ...subtask,
-            workStartDateTimestamp: now,
-          };
-    });
-    return this.updateSubtaskUsecase.execute({
-      ...input,
-      workStartDateTimestamp: now,
-    });
-  }
-
-  private stopTracking() {
-    const start = this.state.get('subtask')?.workStartDateTimestamp;
-    const currentWorkTimeSec = this.state.get('subtask')?.workTimeSec;
-    if (start == null || currentWorkTimeSec == null) return of(undefined);
-    const now = new Date().valueOf();
-    const diffTimeMilliSec = now - start;
-    const updatedWorkTimeSec =
-      currentWorkTimeSec + Math.ceil(diffTimeMilliSec / 1000);
-    const input = this.generateUpdateInputBase();
-    if (input == null) return of(undefined);
-    this.state.set('subtask', (state) => {
-      const subtask = state.subtask;
-      return subtask == null
-        ? subtask
-        : {
-            ...subtask,
-            workTimeSec: updatedWorkTimeSec,
-            workStartDateTimestamp: undefined,
-          };
-    });
-    return this.updateSubtaskUsecase.execute({
-      ...input,
-      workTimeSec: updatedWorkTimeSec,
-      workStartDateTimestamp: undefined,
-    });
-  }
-
-  private updateTitle(title: string) {
-    const input = this.generateUpdateInputBase();
-    if (input == null) {
-      return of(undefined);
-    }
-    this.state.set('subtask', ({ subtask }) => {
-      return subtask == null
-        ? subtask
-        : {
-            ...subtask,
-            title,
-          };
-    });
-    return this.updateSubtaskUsecase.execute({
-      ...input,
-      title,
-    });
-  }
-
-  private generateUpdateInputBase() {
-    const subtask = this.state.get('subtask');
-    if (subtask == null) return;
-    const input: UpdateSubtaskInput = {
-      id: subtask.id,
-      title: subtask.title,
-      description: subtask.description,
-      isDone: subtask.isDone,
-      assignUserId: subtask.assignUser?.id,
-      workTimeSec: subtask.workTimeSec,
-      scheduledTimeSec: subtask.scheduledTimeSec,
-      workStartDateTimestamp: subtask.workStartDateTimestamp,
-      taskId: subtask.taskId,
-    };
-    return input;
   }
 }

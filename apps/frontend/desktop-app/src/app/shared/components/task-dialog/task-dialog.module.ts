@@ -8,7 +8,9 @@ import {
   CREATE_SUBTASK_USECASE,
   DeleteTaskUsecase,
   DELETE_TASK_USECASE,
+  UpdateSubtaskUsecase,
   UpdateTaskUsecase,
+  UPDATE_SUBTASK_USECASE,
   UPDATE_TASK_USECASE,
 } from '@bison/frontend/application';
 import {
@@ -82,6 +84,10 @@ import {
     {
       provide: CREATE_SUBTASK_USECASE,
       useClass: CreateSubtaskUsecase,
+    },
+    {
+      provide: UPDATE_SUBTASK_USECASE,
+      useClass: UpdateSubtaskUsecase,
     },
     TaskDialogService,
     {
