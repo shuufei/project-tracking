@@ -12,10 +12,21 @@ import {
 import { Subtask, Task } from '@bison/frontend/domain';
 import { User } from '@bison/frontend/ui';
 import { RxState } from '@rx-angular/state';
+import { TuiNotificationsService } from '@taiga-ui/core';
 import { gql } from 'apollo-angular';
 import { of, Subject } from 'rxjs';
-import { exhaustMap, filter, map, switchMap } from 'rxjs/operators';
+import {
+  distinctUntilChanged,
+  exhaustMap,
+  filter,
+  map,
+  pairwise,
+  startWith,
+  switchMap,
+  tap,
+} from 'rxjs/operators';
 import { convertToDomainTaskFromApiTask } from '../../../../util/convert-to-domain-task-from-api-task';
+import { SubtaskFacadeService } from '../../../facade/subtask-facade/subtask-facade.service';
 import { TaskDialogService } from '../task-dialog.service';
 
 const USER_FIELDS = gql`
@@ -57,11 +68,20 @@ export class TaskDialogSubtaskContentComponent implements OnInit {
   readonly onClickedBackButton$ = new Subject<void>();
   readonly onChangedAssignUser$ = new Subject<User['id'] | undefined>();
   readonly onClickedTask$ = new Subject<void>();
+  readonly onChangedCheck$ = new Subject<boolean>();
+  readonly onChangedWorkTimeSec$ = new Subject<number>();
+  readonly onChangedScheduledTimeSec$ = new Subject<number>();
+  readonly onClickedPlay$ = new Subject<void>();
+  readonly onClickedPause$ = new Subject<void>();
+  readonly onDelete$ = new Subject<void>();
 
   constructor(
     private state: RxState<State>,
     private taskDialogService: TaskDialogService,
-    @Inject(APOLLO_DATA_QUERY) private apolloDataQuery: IApolloDataQuery
+    @Inject(APOLLO_DATA_QUERY) private apolloDataQuery: IApolloDataQuery,
+    private subtaskFacade: SubtaskFacadeService,
+    @Inject(TuiNotificationsService)
+    private readonly notificationsService: TuiNotificationsService
   ) {
     this.state.set({ users: [] });
   }
@@ -116,16 +136,170 @@ export class TaskDialogSubtaskContentComponent implements OnInit {
     this.state.hold(this.onClickedBackButton$, () => {
       this.taskDialogService.back();
     });
+    this.state.hold(this.onClickedTask$, () => {
+      const task = this.state.get('parentTask');
+      if (task == null) {
+        return;
+      }
+      this.taskDialogService.pushContent(task);
+    });
+
+    /**
+     * subtask-card.componentの実装とほぼ同じなので共通化したい
+     */
     this.state.hold(
       this.onChangedAssignUser$.pipe(
         filter((id) => {
           return id !== this.state.get('subtask')?.assignUser?.id;
         }),
         exhaustMap((id) => {
-          // TODO: 更新処理実装
-          return of(id);
+          const subtask = this.state.get('subtask');
+          if (subtask == null) return of(undefined);
+          return this.subtaskFacade.updateAssignUser(id, subtask);
         })
       )
     );
+    this.state.hold(
+      this.onChangedCheck$.pipe(
+        distinctUntilChanged(),
+        filter((isDone) => {
+          return isDone !== this.state.get('subtask')?.isDone;
+        }),
+        tap((isDone) => {
+          this.state.set('subtask', ({ subtask }) => {
+            return subtask == null
+              ? subtask
+              : {
+                  ...subtask,
+                  isDone,
+                };
+          });
+        }),
+        exhaustMap((isDone) => {
+          const subtask = this.state.get('subtask');
+          if (subtask == null) return of(undefined);
+          return this.subtaskFacade.updateIsDoone(isDone, subtask);
+        })
+      )
+    );
+    this.state.hold(
+      this.onChangedWorkTimeSec$.pipe(
+        startWith(this.state.get('subtask')?.workTimeSec ?? 0),
+        pairwise(),
+        filter(([prev, sec]) => {
+          const diff = sec - prev;
+          const isChangedByCtrlBtn = diff > 1;
+          const isTracking =
+            this.state.get('subtask')?.workStartDateTimestamp != null;
+          return isChangedByCtrlBtn || !isTracking;
+        }),
+        map(([, current]) => current),
+        filter((sec) => {
+          return sec !== this.state.get('subtask')?.workTimeSec;
+        }),
+        exhaustMap((sec) => {
+          const subtask = this.state.get('subtask');
+          if (subtask == null) return of(undefined);
+          const workStartDateTimestamp =
+            subtask.workStartDateTimestamp && new Date().valueOf();
+          return this.subtaskFacade.updateWorkTimeSec(
+            sec,
+            workStartDateTimestamp,
+            subtask
+          );
+        })
+      )
+    );
+    this.state.hold(
+      this.onChangedScheduledTimeSec$.pipe(
+        filter((sec) => {
+          return sec !== this.state.get('subtask')?.scheduledTimeSec;
+        }),
+        tap((sec) => {
+          this.state.set('subtask', (state) => {
+            const subtask = state.subtask;
+            return subtask == null
+              ? subtask
+              : {
+                  ...subtask,
+                  scheduledTimeSec: sec,
+                };
+          });
+        }),
+        exhaustMap((sec) => {
+          const subtask = this.state.get('subtask');
+          if (subtask == null) return of(undefined);
+          return this.subtaskFacade.updateScheduledTimeSec(sec, subtask);
+        })
+      )
+    );
+    this.state.hold(
+      this.onClickedPlay$.pipe(
+        exhaustMap(() => {
+          const subtask = this.state.get('subtask');
+          if (subtask == null) return of(undefined);
+          const now = new Date();
+          this.state.set('subtask', (state) => {
+            const subtask = state.subtask;
+            return subtask == null
+              ? subtask
+              : {
+                  ...subtask,
+                  workStartDateTimestamp: now.valueOf(),
+                };
+          });
+          return this.subtaskFacade.startTracking(now, subtask);
+        })
+      )
+    );
+    this.state.hold(
+      this.onClickedPause$.pipe(
+        exhaustMap(() => {
+          const subtask = this.state.get('subtask');
+          if (subtask == null) return of(undefined);
+          const start = subtask.workStartDateTimestamp;
+          const currentWorkTimeSec = subtask.workTimeSec;
+          if (start == null || currentWorkTimeSec == null) return of(undefined);
+          const now = new Date();
+          const diffTimeMilliSec = now.valueOf() - start;
+          const updatedWorkTimeSec =
+            currentWorkTimeSec + Math.ceil(diffTimeMilliSec / 1000);
+          this.state.set('subtask', (state) => {
+            const subtask = state.subtask;
+            return subtask == null
+              ? subtask
+              : {
+                  ...subtask,
+                  workTimeSec: updatedWorkTimeSec,
+                  workStartDateTimestamp: undefined,
+                };
+          });
+          return this.subtaskFacade.stopTracking(now, subtask);
+        })
+      )
+    );
+    this.state.hold(
+      this.onDelete$.pipe(
+        exhaustMap(() => {
+          const subtaskId = this.state.get('subtask')?.id;
+          if (subtaskId == null) return of(undefined);
+          return this.subtaskFacade.delete(subtaskId);
+        }),
+        tap(() => {
+          this.taskDialogService.close();
+        }),
+        switchMap(() => {
+          return this.notificationsService.show('サブタスクが削除されました', {
+            hasCloseButton: true,
+          });
+        })
+      )
+    );
+
+    /**
+     * TODO:
+     * - タイトル編集
+     * - 説明編集
+     */
   }
 }

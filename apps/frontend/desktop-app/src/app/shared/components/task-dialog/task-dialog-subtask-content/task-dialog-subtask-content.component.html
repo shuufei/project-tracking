@@ -5,7 +5,16 @@
         <ui-icon icon="chevron-left" size="s" color="white"></ui-icon>
         <span class="ml-1">戻る</span>
       </button>
-      <bis-tracking-bar [shouldShowClockIcon]="false"></bis-tracking-bar>
+      <bis-tracking-bar
+        [trackingTimeSec]="state.subtask?.workTimeSec || 0"
+        [scheduledTimeSec]="state.subtask?.scheduledTimeSec || 0"
+        [isTracking]="state.subtask?.workStartDateTimestamp ? true : false"
+        [shouldShowClockIcon]="false"
+        (clickedPlay)="onClickedPlay$.next()"
+        (clickedPause)="onClickedPause$.next()"
+        (changedTrackingTimeSec)="onChangedWorkTimeSec$.next($event)"
+        (changedScheduledTimeSec)="onChangedScheduledTimeSec$.next($event)"
+      ></bis-tracking-bar>
     </div>
 
     <div main>
@@ -21,7 +30,10 @@
         </ng-container>
 
         <div class="flex items-center">
-          <ui-checkbox [checked]="state.subtask.isDone"></ui-checkbox>
+          <ui-checkbox
+            [checked]="state.subtask.isDone"
+            (changedCheck)="onChangedCheck$.next($event)"
+          ></ui-checkbox>
           <h2 class="text-l1 text-black-default leading-normal ml-2">
             {{ state.subtask.title }}
           </h2>
@@ -29,6 +41,8 @@
         <pre class="mt-2 text-black-default leading-normal text-s2">{{
           state.subtask.description
         }}</pre>
+
+        <button ui-fill-button color="primary-light3" class="mt-4">編集</button>
       </ng-container>
     </div>
 
@@ -51,6 +65,7 @@
           </button>
           <bis-delete-confirm-popup
             [triggerEl]="deleteButton"
+            (delete)="onDelete$.next()"
           ></bis-delete-confirm-popup>
         </div>
       </ng-container>
