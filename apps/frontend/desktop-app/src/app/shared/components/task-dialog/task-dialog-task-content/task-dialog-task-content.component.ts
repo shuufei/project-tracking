@@ -124,6 +124,7 @@ export class TaskDialogTaskContentComponent implements OnInit {
    * State
    */
   readonly state$ = this.state.select();
+  readonly existsDialogPrevContent$ = this.taskDialogService.existsPrevContent$;
 
   /**
    * Event
@@ -146,6 +147,7 @@ export class TaskDialogTaskContentComponent implements OnInit {
   readonly onChangedScheduledTimeSec$ = new Subject<number>();
   readonly onDelete$ = new Subject<void>();
   readonly onClickedAddSubtask$ = new Subject<void>();
+  readonly onClickedBackButton$ = new Subject<void>();
 
   constructor(
     private state: RxState<State>,
@@ -456,6 +458,9 @@ export class TaskDialogTaskContentComponent implements OnInit {
         })
       )
     );
+    this.state.hold(this.onClickedBackButton$, () => {
+      this.taskDialogService.back();
+    });
   }
 
   private updateTitleAndDescription() {

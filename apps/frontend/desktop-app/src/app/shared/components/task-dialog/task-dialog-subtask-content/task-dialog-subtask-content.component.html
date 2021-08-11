@@ -1,15 +1,18 @@
 <ng-container *ngIf="state$ | async as state">
   <bis-task-dialog-template (clickedCloseButton)="onClickedCloseButton$.next()">
     <div head class="w-full flex justify-between items-center">
-      <button ui-button color="primary" (click)="onClickedBackButton$.next()">
-        <ui-icon icon="chevron-left" size="s" color="white"></ui-icon>
-        <span class="ml-1">戻る</span>
-      </button>
+      <ng-container *ngIf="existsDialogPrevContent$ | async">
+        <button ui-button color="primary" (click)="onClickedBackButton$.next()">
+          <ui-icon icon="chevron-left" size="s" color="white"></ui-icon>
+          <span class="ml-1">戻る</span>
+        </button>
+      </ng-container>
       <bis-tracking-bar
+        class="flex-1"
         [trackingTimeSec]="state.subtask?.workTimeSec || 0"
         [scheduledTimeSec]="state.subtask?.scheduledTimeSec || 0"
         [isTracking]="state.subtask?.workStartDateTimestamp ? true : false"
-        [shouldShowClockIcon]="false"
+        [shouldShowClockIcon]="!(existsDialogPrevContent$ | async)"
         (clickedPlay)="onClickedPlay$.next()"
         (clickedPause)="onClickedPause$.next()"
         (changedTrackingTimeSec)="onChangedWorkTimeSec$.next($event)"

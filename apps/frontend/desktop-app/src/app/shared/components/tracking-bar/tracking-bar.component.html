@@ -1,7 +1,10 @@
 <div class="flex justify-between w-full items-center">
-  <ng-container *ngIf="shouldShowClockIcon">
-    <ui-icon icon="clock" size="s" color="primary-light2"></ui-icon>
-  </ng-container>
+  <ui-icon
+    icon="clock"
+    size="s"
+    color="primary-light2"
+    [ngClass]="[shouldShowClockIcon ? '' : 'visibility-hidden']"
+  ></ui-icon>
   <div class="flex items-center">
     <ui-tracking-log-change-button
       [trackingTimeSec]="trackingTimeSec"

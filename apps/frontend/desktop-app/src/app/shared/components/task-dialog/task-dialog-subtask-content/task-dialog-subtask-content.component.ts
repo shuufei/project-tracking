@@ -60,6 +60,7 @@ export class TaskDialogSubtaskContentComponent implements OnInit {
    * State
    */
   readonly state$ = this.state.select();
+  readonly existsDialogPrevContent$ = this.taskDialogService.existsPrevContent$;
 
   /**
    * Event
