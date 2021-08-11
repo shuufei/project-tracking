@@ -145,6 +145,19 @@ export class SubtaskFacadeService {
     });
   }
 
+  updateTitleAndDescription(
+    title: Subtask['title'],
+    description: Subtask['description'],
+    currentSubtask: Subtask
+  ) {
+    const input = this.generateUpdateInputBase(currentSubtask);
+    return this.updateSubtaskUsecase.execute({
+      ...input,
+      title,
+      description,
+    });
+  }
+
   delete(id: Subtask['id']) {
     const input: DeleteSubtaskInput = {
       id,

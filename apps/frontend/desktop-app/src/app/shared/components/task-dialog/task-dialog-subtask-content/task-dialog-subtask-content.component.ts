@@ -41,6 +41,11 @@ type State = {
   subtask?: Subtask;
   users: User[];
   parentTask?: Task;
+  isEditableTitleAndDesc: boolean;
+  editState?: {
+    title: Subtask['title'];
+    description: Subtask['description'];
+  };
 };
 
 @Component({
@@ -75,6 +80,11 @@ export class TaskDialogSubtaskContentComponent implements OnInit {
   readonly onClickedPlay$ = new Subject<void>();
   readonly onClickedPause$ = new Subject<void>();
   readonly onDelete$ = new Subject<void>();
+  readonly onClickedEditTitleAndDescButton$ = new Subject<void>();
+  readonly onClickedEditTitleAndDescCancelButton$ = new Subject<void>();
+  readonly onClickedUpdateTitleAndDescButton$ = new Subject<void>();
+  readonly onChangedTitle$ = new Subject<Subtask['title']>();
+  readonly onChangedDescription$ = new Subject<Subtask['description']>();
 
   constructor(
     private state: RxState<State>,
@@ -84,7 +94,7 @@ export class TaskDialogSubtaskContentComponent implements OnInit {
     @Inject(TuiNotificationsService)
     private readonly notificationsService: TuiNotificationsService
   ) {
-    this.state.set({ users: [] });
+    this.state.set({ users: [], isEditableTitleAndDesc: false });
   }
 
   ngOnInit(): void {
@@ -130,7 +140,62 @@ export class TaskDialogSubtaskContentComponent implements OnInit {
         })
       )
     );
+    this.state.connect(this.onClickedEditTitleAndDescButton$, (state) => {
+      return {
+        ...state,
+        isEditableTitleAndDesc: true,
+        editState: {
+          title: state.subtask?.title ?? '',
+          description: state.subtask?.description,
+        },
+      };
+    });
+    this.state.connect(
+      'isEditableTitleAndDesc',
+      this.onClickedEditTitleAndDescCancelButton$,
+      () => {
+        return false;
+      }
+    );
+    this.state.connect(
+      'isEditableTitleAndDesc',
+      this.onClickedUpdateTitleAndDescButton$,
+      () => {
+        return false;
+      }
+    );
+    this.state.connect('editState', this.onChangedTitle$, (state, title) => {
+      return { title, description: state.editState?.description };
+    });
+    this.state.connect(
+      'editState',
+      this.onChangedDescription$,
+      (state, description) => {
+        return { description, title: state.editState?.title ?? '' };
+      }
+    );
 
+    this.state.hold(
+      this.onClickedUpdateTitleAndDescButton$.pipe(
+        exhaustMap(() => {
+          const subtask = this.state.get('subtask');
+          const editState = this.state.get('editState');
+          if (subtask == null || editState == null) return of(undefined);
+          this.state.set('subtask', () => {
+            return {
+              ...subtask,
+              title: editState.title,
+              description: editState.description,
+            };
+          });
+          return this.subtaskFacade.updateTitleAndDescription(
+            editState.title,
+            editState.description,
+            subtask
+          );
+        })
+      )
+    );
     this.state.hold(this.onClickedCloseButton$, () => {
       this.taskDialogService.close();
     });

@@ -32,20 +32,69 @@
           >
         </ng-container>
 
-        <div class="flex items-center">
-          <ui-checkbox
-            [checked]="state.subtask.isDone"
-            (changedCheck)="onChangedCheck$.next($event)"
-          ></ui-checkbox>
-          <h2 class="text-l1 text-black-default leading-normal ml-2">
-            {{ state.subtask.title }}
-          </h2>
-        </div>
-        <pre class="mt-2 text-black-default leading-normal text-s2">{{
-          state.subtask.description
-        }}</pre>
+        <ng-container *ngIf="!state.isEditableTitleAndDesc; else editMode">
+          <div class="flex items-center">
+            <ui-checkbox
+              [checked]="state.subtask.isDone"
+              (changedCheck)="onChangedCheck$.next($event)"
+            ></ui-checkbox>
+            <h2 class="text-l1 text-black-default leading-normal ml-2">
+              {{ state.subtask.title }}
+            </h2>
+          </div>
+          <pre class="mt-2 text-black-default leading-normal text-s2">{{
+            state.subtask.description
+          }}</pre>
 
-        <button ui-fill-button color="primary-light3" class="mt-4">編集</button>
+          <button
+            ui-fill-button
+            color="primary-light3"
+            class="mt-4"
+            (click)="onClickedEditTitleAndDescButton$.next()"
+          >
+            編集
+          </button>
+        </ng-container>
+        <ng-template #editMode>
+          <div class="mt-2">
+            <label for="" class="text-s2 text-black-light2 font-medium block"
+              >サブタスク名</label
+            >
+            <ui-text-field
+              placeholder="サブタスク名を入力してください"
+              [text]="state.editState?.title"
+              class="subtask-title mt-2"
+              (changedValue)="onChangedTitle$.next($event)"
+            ></ui-text-field>
+          </div>
+          <div class="mt-4">
+            <label for="" class="text-s2 text-black-light2 font-medium block"
+              >説明</label
+            >
+            <ui-textarea
+              placeholder="サブタスクの説明を入力してください"
+              [text]="state.editState?.description"
+              class="subtask-description leading-normal mt-2"
+              (changedValue)="onChangedDescription$.next($event)"
+            ></ui-textarea>
+          </div>
+          <div class="flex items-center justify-end mt-4">
+            <button
+              ui-fill-button
+              (click)="onClickedEditTitleAndDescCancelButton$.next()"
+            >
+              キャンセル
+            </button>
+            <button
+              ui-fill-button
+              color="primary"
+              class="ml-4"
+              (click)="onClickedUpdateTitleAndDescButton$.next()"
+            >
+              更新
+            </button>
+          </div>
+        </ng-template>
       </ng-container>
     </div>
 

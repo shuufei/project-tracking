@@ -1,3 +1,15 @@
 :host {
   display: block;
 }
+
+.subtask-title {
+  font-size: var(--bison-font-size-l1);
+  font-weight: var(--bison-font-weight-medium);
+  padding: 8px 12px;
+}
+
+.subtask-description {
+  font-size: var(--bison-font-size-s2);
+  font-weight: var(--bison-font-weight-medium);
+  padding: 8px 12px;
+}
