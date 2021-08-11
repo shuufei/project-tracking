@@ -13,6 +13,7 @@ import {
 } from '@bison/frontend/application';
 import {
   ButtonModule,
+  CheckboxModule,
   DialogModule,
   IconModule,
   TextareaModule,
@@ -29,6 +30,7 @@ import { TaskDialogProjectChangeButtonModule } from '../task-dialog-project-chan
 import { TaskDialogStatusChangeButtonModule } from '../task-dialog-status-change-button/task-dialog-status-change-button.module';
 import { TaskDialogTemplateModule } from '../task-dialog-template/task-dialog-template.module';
 import { TrackingBarModule } from '../tracking-bar/tracking-bar.module';
+import { TaskDialogSubtaskContentComponent } from './task-dialog-subtask-content/task-dialog-subtask-content.component';
 import { TaskDialogTaskContentComponent } from './task-dialog-task-content/task-dialog-task-content.component';
 import { TaskDialogComponent } from './task-dialog.component';
 import {
@@ -38,7 +40,11 @@ import {
 } from './task-dialog.service';
 
 @NgModule({
-  declarations: [TaskDialogComponent, TaskDialogTaskContentComponent],
+  declarations: [
+    TaskDialogComponent,
+    TaskDialogTaskContentComponent,
+    TaskDialogSubtaskContentComponent,
+  ],
   imports: [
     CommonModule,
     DialogModule,
@@ -57,6 +63,7 @@ import {
     DragDropModule,
     DeleteConfirmPopupModule,
     TuiNotificationsModule,
+    CheckboxModule,
   ],
   exports: [TaskDialogComponent],
   providers: [

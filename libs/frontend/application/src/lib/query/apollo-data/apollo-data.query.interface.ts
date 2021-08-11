@@ -1,6 +1,6 @@
 import { InjectionToken } from '@angular/core';
 import { ApolloQueryResult, WatchQueryFetchPolicy } from '@apollo/client';
-import { Project, Subtask, TaskGroup, User } from '@bison/shared/schema';
+import { Project, Subtask, Task, TaskGroup, User } from '@bison/shared/schema';
 import { Observable } from 'rxjs';
 import { Fragment } from '../../types';
 
@@ -30,6 +30,12 @@ export interface IApolloDataQuery {
     subtaskId: Subtask['id'],
     options?: QueryOptions
   ) => Observable<ApolloQueryResult<{ subtask?: Subtask }>>;
+
+  queryTask: (
+    taskId: Task['id'],
+    fragment?: Fragment,
+    options?: QueryOptions
+  ) => Observable<ApolloQueryResult<{ task?: Task }>>;
 
   queryProject: (
     fragment: Fragment,

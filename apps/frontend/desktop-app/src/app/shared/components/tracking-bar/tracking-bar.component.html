@@ -1,5 +1,7 @@
 <div class="flex justify-between w-full items-center">
-  <ui-icon icon="clock" size="s" color="primary-light2"></ui-icon>
+  <ng-container *ngIf="shouldShowClockIcon">
+    <ui-icon icon="clock" size="s" color="primary-light2"></ui-icon>
+  </ng-container>
   <div class="flex items-center">
     <ui-tracking-log-change-button
       [trackingTimeSec]="trackingTimeSec"
@@ -10,7 +12,7 @@
       (click)="$event.stopPropagation()"
     ></ui-tracking-log-change-button>
     <ng-container *ngIf="isTracking; else paused">
-      <span [uiTooltip]="'トラッキング停止'" class="leading-none">
+      <span [uiTooltip]="'トラッキング停止'" class="icon-wrapper">
         <ui-icon
           icon="pause"
           size="s"
@@ -21,7 +23,7 @@
       </span>
     </ng-container>
     <ng-template #paused>
-      <span [uiTooltip]="'トラッキング開始'" class="leading-none">
+      <span [uiTooltip]="'トラッキング開始'" class="icon-wrapper">
         <ui-icon
           icon="play"
           size="s"

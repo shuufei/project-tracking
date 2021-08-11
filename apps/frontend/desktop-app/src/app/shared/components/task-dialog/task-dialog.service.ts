@@ -34,6 +34,17 @@ export class TaskDialogService {
     });
   }
 
+  back() {
+    if (this.state.get('contentHistory').length < 2) {
+      return;
+    }
+    this.state.set('contentHistory', (state) => {
+      const history = [...state.contentHistory];
+      history.pop();
+      return history;
+    });
+  }
+
   private resetState() {
     this.state.set({
       isOpened: false,
