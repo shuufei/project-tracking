@@ -361,11 +361,5 @@ export class TaskDialogSubtaskContentComponent implements OnInit {
         })
       )
     );
-
-    /**
-     * TODO:
-     * - タイトル編集
-     * - 説明編集
-     */
   }
 }
