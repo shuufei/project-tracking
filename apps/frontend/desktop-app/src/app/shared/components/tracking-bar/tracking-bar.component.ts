@@ -16,6 +16,7 @@ export class TrackingBarComponent {
   @Input() trackingTimeSec = 0;
   @Input() scheduledTimeSec = 0;
   @Input() isTracking = false;
+  @Input() shouldShowClockIcon = true;
   @Output() clickedPlay = new EventEmitter<void>();
   @Output() clickedPause = new EventEmitter<void>();
   @Output() changedTrackingTimeSec = new EventEmitter<number>();

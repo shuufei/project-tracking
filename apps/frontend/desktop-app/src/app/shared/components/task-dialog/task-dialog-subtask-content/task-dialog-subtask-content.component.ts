@@ -9,9 +9,10 @@ import {
   APOLLO_DATA_QUERY,
   IApolloDataQuery,
 } from '@bison/frontend/application';
-import { Subtask } from '@bison/frontend/domain';
-import { User } from '@bison/shared/domain';
+import { Subtask, Task } from '@bison/frontend/domain';
+import { User } from '@bison/frontend/ui';
 import { RxState } from '@rx-angular/state';
+import { TuiNotificationsService } from '@taiga-ui/core';
 import { gql } from 'apollo-angular';
 import { of, Subject } from 'rxjs';
 import {
@@ -21,12 +22,15 @@ import {
   map,
   pairwise,
   startWith,
+  switchMap,
   tap,
 } from 'rxjs/operators';
-import { SubtaskFacadeService } from '../../facade/subtask-facade/subtask-facade.service';
+import { convertToDomainTaskFromApiTask } from '../../../../util/convert-to-domain-task-from-api-task';
+import { SubtaskFacadeService } from '../../../facade/subtask-facade/subtask-facade.service';
+import { TaskDialogService } from '../task-dialog.service';
 
 const USER_FIELDS = gql`
-  fragment UserPartsInSubtaskCard on User {
+  fragment UserPartsInSubtaskDialog on User {
     id
     name
     icon
@@ -36,84 +40,69 @@ const USER_FIELDS = gql`
 type State = {
   subtask?: Subtask;
   users: User[];
-  isOpenedDeletePopup: boolean;
-  isEditableTitle: boolean;
+  parentTask?: Task;
+  isEditableTitleAndDesc: boolean;
+  editState?: {
+    title: Subtask['title'];
+    description: Subtask['description'];
+  };
 };
 
 @Component({
-  selector: 'bis-subtask-card',
-  templateUrl: './subtask-card.component.html',
-  styleUrls: ['./subtask-card.component.scss'],
+  selector: 'bis-task-dialog-subtask-content',
+  templateUrl: './task-dialog-subtask-content.component.html',
+  styleUrls: ['./task-dialog-subtask-content.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [RxState],
 })
-export class SubtaskCardComponent implements OnInit {
+export class TaskDialogSubtaskContentComponent implements OnInit {
   @Input()
-  set subtask(value: State['subtask']) {
+  set subtask(value: Subtask) {
     this.state.set('subtask', () => value);
-  }
-  @Input() set isTitleEditable(value: State['isEditableTitle']) {
-    this.state.set('isEditableTitle', () => value);
   }
 
   /**
    * State
    */
   readonly state$ = this.state.select();
-  readonly isOpenedDeletePopup$ = new Subject<boolean>();
+  readonly existsDialogPrevContent$ = this.taskDialogService.existsPrevContent$;
 
   /**
    * Event
    */
+  readonly onClickedCloseButton$ = new Subject<void>();
+  readonly onClickedBackButton$ = new Subject<void>();
+  readonly onChangedAssignUser$ = new Subject<User['id'] | undefined>();
+  readonly onClickedTask$ = new Subject<void>();
+  readonly onChangedCheck$ = new Subject<boolean>();
   readonly onChangedWorkTimeSec$ = new Subject<number>();
   readonly onChangedScheduledTimeSec$ = new Subject<number>();
-  readonly onChangedCheck$ = new Subject<boolean>();
-  readonly onChangedAssignUser$ = new Subject<User['id'] | undefined>();
   readonly onClickedPlay$ = new Subject<void>();
   readonly onClickedPause$ = new Subject<void>();
   readonly onDelete$ = new Subject<void>();
-  readonly onSubmitTitle$ = new Subject<string>();
+  readonly onClickedEditTitleAndDescButton$ = new Subject<void>();
+  readonly onClickedEditTitleAndDescCancelButton$ = new Subject<void>();
+  readonly onClickedUpdateTitleAndDescButton$ = new Subject<void>();
+  readonly onChangedTitle$ = new Subject<Subtask['title']>();
+  readonly onChangedDescription$ = new Subject<Subtask['description']>();
 
   constructor(
     private state: RxState<State>,
+    private taskDialogService: TaskDialogService,
     @Inject(APOLLO_DATA_QUERY) private apolloDataQuery: IApolloDataQuery,
-    private subtaskFacade: SubtaskFacadeService
+    private subtaskFacade: SubtaskFacadeService,
+    @Inject(TuiNotificationsService)
+    private readonly notificationsService: TuiNotificationsService
   ) {
-    this.state.set({ users: [], isOpenedDeletePopup: false });
+    this.state.set({ users: [], isEditableTitleAndDesc: false });
   }
 
   ngOnInit(): void {
     this.state.connect(
-      'subtask',
-      this.onChangedWorkTimeSec$,
-      (state, workTimeSec) => {
-        if (state.subtask == null) {
-          return state.subtask;
-        }
-        return {
-          ...state.subtask,
-          workTimeSec,
-        };
-      }
-    );
-    this.state.connect(
-      'subtask',
-      this.onChangedScheduledTimeSec$,
-      (state, scheduledTimeSec) => {
-        if (state.subtask == null) {
-          return state.subtask;
-        }
-        return {
-          ...state.subtask,
-          scheduledTimeSec,
-        };
-      }
-    );
-    this.state.connect(
       'users',
       this.apolloDataQuery
         .queryUsers(
-          { name: 'UserPartsInSubtaskCard', fields: USER_FIELDS },
+          { name: 'UserPartsInSubtaskDialog', fields: USER_FIELDS },
           { fetchPolicy: 'cache-only' }
         )
         .pipe(
@@ -132,16 +121,107 @@ export class SubtaskCardComponent implements OnInit {
           })
         )
     );
+    this.state.connect(
+      'parentTask',
+      this.state.select('subtask').pipe(
+        filter((v): v is NonNullable<typeof v> => v != null),
+        switchMap((subtask) => {
+          return this.apolloDataQuery.queryTask(subtask.taskId, undefined, {
+            fetchPolicy: 'cache-and-network',
+            nextFetchPolicy: 'cache-only',
+          });
+        }),
+        map((response) => {
+          return response.data.task;
+        }),
+        filter((v): v is NonNullable<typeof v> => v != null),
+        map((task) => {
+          return convertToDomainTaskFromApiTask(task);
+        })
+      )
+    );
+    this.state.connect(this.onClickedEditTitleAndDescButton$, (state) => {
+      return {
+        ...state,
+        isEditableTitleAndDesc: true,
+        editState: {
+          title: state.subtask?.title ?? '',
+          description: state.subtask?.description,
+        },
+      };
+    });
+    this.state.connect(
+      'isEditableTitleAndDesc',
+      this.onClickedEditTitleAndDescCancelButton$,
+      () => {
+        return false;
+      }
+    );
+    this.state.connect(
+      'isEditableTitleAndDesc',
+      this.onClickedUpdateTitleAndDescButton$,
+      () => {
+        return false;
+      }
+    );
+    this.state.connect('editState', this.onChangedTitle$, (state, title) => {
+      return { title, description: state.editState?.description };
+    });
+    this.state.connect(
+      'editState',
+      this.onChangedDescription$,
+      (state, description) => {
+        return { description, title: state.editState?.title ?? '' };
+      }
+    );
 
     this.state.hold(
+      this.onClickedUpdateTitleAndDescButton$.pipe(
+        exhaustMap(() => {
+          const subtask = this.state.get('subtask');
+          const editState = this.state.get('editState');
+          if (subtask == null || editState == null) return of(undefined);
+          this.state.set('subtask', () => {
+            return {
+              ...subtask,
+              title: editState.title,
+              description: editState.description,
+            };
+          });
+          return this.subtaskFacade.updateTitleAndDescription(
+            editState.title,
+            editState.description,
+            subtask
+          );
+        })
+      )
+    );
+    this.state.hold(this.onClickedCloseButton$, () => {
+      this.taskDialogService.close();
+    });
+    this.state.hold(this.onClickedBackButton$, () => {
+      this.taskDialogService.back();
+    });
+    this.state.hold(this.onClickedTask$, () => {
+      const task = this.state.get('parentTask');
+      if (task == null) {
+        return;
+      }
+      this.taskDialogService.pushContent(task);
+    });
+
+    /**
+     * subtask-card.componentの実装とほぼ同じなので共通化したい
+     */
+    this.state.hold(
       this.onChangedAssignUser$.pipe(
-        filter(
-          (userId) => userId !== this.state.get('subtask')?.assignUser?.id
-        ),
-        exhaustMap((userId) => {
+        filter((id) => {
+          return id !== this.state.get('subtask')?.assignUser?.id;
+        }),
+        exhaustMap((id) => {
           const subtask = this.state.get('subtask');
           if (subtask == null) return of(undefined);
-          return this.subtaskFacade.updateAssignUser(userId, subtask);
+          return this.subtaskFacade.updateAssignUser(id, subtask);
         })
       )
     );
@@ -168,7 +248,6 @@ export class SubtaskCardComponent implements OnInit {
         })
       )
     );
-    // TODO: taskと同じ処理になるので共通化する
     this.state.hold(
       this.onChangedWorkTimeSec$.pipe(
         startWith(this.state.get('subtask')?.workTimeSec ?? 0),
@@ -271,26 +350,14 @@ export class SubtaskCardComponent implements OnInit {
           const subtaskId = this.state.get('subtask')?.id;
           if (subtaskId == null) return of(undefined);
           return this.subtaskFacade.delete(subtaskId);
-        })
-      )
-    );
-    this.state.hold(
-      this.onSubmitTitle$.pipe(
-        tap((title) => {
-          this.state.set('isEditableTitle', () => false);
-          this.state.set('subtask', ({ subtask }) => {
-            return subtask == null
-              ? subtask
-              : {
-                  ...subtask,
-                  title,
-                };
-          });
         }),
-        exhaustMap((title) => {
-          const subtask = this.state.get('subtask');
-          if (subtask == null) return of(undefined);
-          return this.subtaskFacade.updateTitle(title, subtask);
+        tap(() => {
+          this.taskDialogService.close();
+        }),
+        switchMap(() => {
+          return this.notificationsService.show('サブタスクが削除されました', {
+            hasCloseButton: true,
+          });
         })
       )
     );

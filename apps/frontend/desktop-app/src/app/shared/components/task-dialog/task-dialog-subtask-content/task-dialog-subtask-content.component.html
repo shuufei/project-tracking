@@ -1,0 +1,126 @@
+<ng-container *ngIf="state$ | async as state">
+  <bis-task-dialog-template (clickedCloseButton)="onClickedCloseButton$.next()">
+    <div head class="w-full flex justify-between items-center">
+      <ng-container *ngIf="existsDialogPrevContent$ | async">
+        <button ui-button color="primary" (click)="onClickedBackButton$.next()">
+          <ui-icon icon="chevron-left" size="s" color="white"></ui-icon>
+          <span class="ml-1">戻る</span>
+        </button>
+      </ng-container>
+      <bis-tracking-bar
+        class="flex-1"
+        [trackingTimeSec]="state.subtask?.workTimeSec || 0"
+        [scheduledTimeSec]="state.subtask?.scheduledTimeSec || 0"
+        [isTracking]="state.subtask?.workStartDateTimestamp ? true : false"
+        [shouldShowClockIcon]="!(existsDialogPrevContent$ | async)"
+        (clickedPlay)="onClickedPlay$.next()"
+        (clickedPause)="onClickedPause$.next()"
+        (changedTrackingTimeSec)="onChangedWorkTimeSec$.next($event)"
+        (changedScheduledTimeSec)="onChangedScheduledTimeSec$.next($event)"
+      ></bis-tracking-bar>
+    </div>
+
+    <div main>
+      <ng-container *ngIf="state.subtask">
+        <ng-container *ngIf="state.parentTask">
+          <span
+            class="text-s2 text-black-light2 block mb-2 underline cursor-pointer"
+            [uiTooltip]="'タスク'"
+            [uiTooltipDirection]="'top-left'"
+            (click)="onClickedTask$.next()"
+            >{{ state.parentTask.title }}</span
+          >
+        </ng-container>
+
+        <ng-container *ngIf="!state.isEditableTitleAndDesc; else editMode">
+          <div class="flex items-center">
+            <ui-checkbox
+              [checked]="state.subtask.isDone"
+              (changedCheck)="onChangedCheck$.next($event)"
+            ></ui-checkbox>
+            <h2 class="text-l1 text-black-default leading-normal ml-2">
+              {{ state.subtask.title }}
+            </h2>
+          </div>
+          <pre class="mt-2 text-black-default leading-normal text-s2">{{
+            state.subtask.description
+          }}</pre>
+
+          <button
+            ui-fill-button
+            color="primary-light3"
+            class="mt-4"
+            (click)="onClickedEditTitleAndDescButton$.next()"
+          >
+            編集
+          </button>
+        </ng-container>
+        <ng-template #editMode>
+          <div class="mt-2">
+            <label for="" class="text-s2 text-black-light2 font-medium block"
+              >サブタスク名</label
+            >
+            <ui-text-field
+              placeholder="サブタスク名を入力してください"
+              [text]="state.editState?.title"
+              class="subtask-title mt-2"
+              (changedValue)="onChangedTitle$.next($event)"
+            ></ui-text-field>
+          </div>
+          <div class="mt-4">
+            <label for="" class="text-s2 text-black-light2 font-medium block"
+              >説明</label
+            >
+            <ui-textarea
+              placeholder="サブタスクの説明を入力してください"
+              [text]="state.editState?.description"
+              class="subtask-description leading-normal mt-2"
+              (changedValue)="onChangedDescription$.next($event)"
+            ></ui-textarea>
+          </div>
+          <div class="flex items-center justify-end mt-4">
+            <button
+              ui-fill-button
+              (click)="onClickedEditTitleAndDescCancelButton$.next()"
+            >
+              キャンセル
+            </button>
+            <button
+              ui-fill-button
+              color="primary"
+              class="ml-4"
+              (click)="onClickedUpdateTitleAndDescButton$.next()"
+            >
+              更新
+            </button>
+          </div>
+        </ng-template>
+      </ng-container>
+    </div>
+
+    <div side-panel>
+      <ng-container *ngIf="state.subtask">
+        <bis-task-dialog-assign-change-button
+          class="w-full"
+          [users]="state.users"
+          [selectedUserId]="state.subtask.assignUser?.id"
+          (selectedUser)="onChangedAssignUser$.next($event)"
+        ></bis-task-dialog-assign-change-button>
+
+        <div class="mt-6 relative">
+          <button
+            class="focus:outline-none text-s2 text-warn-default font-medium flex items-center w-full"
+            #deleteButton
+          >
+            <ui-icon size="s" icon="trash-2" color="warn"></ui-icon>
+            <span class="ml-3">削除</span>
+          </button>
+          <bis-delete-confirm-popup
+            [triggerEl]="deleteButton"
+            (delete)="onDelete$.next()"
+          ></bis-delete-confirm-popup>
+        </div>
+      </ng-container>
+    </div>
+  </bis-task-dialog-template>
+</ng-container>

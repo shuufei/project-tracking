@@ -16,6 +16,7 @@ import {
   PopupModule,
   TextFieldModule,
 } from '@bison/frontend/ui';
+import { SubtaskFacadeModule } from '../../facade/subtask-facade/subtask-facade.module';
 import { DeleteConfirmPopupModule } from '../delete-confirm-popup/delete-confirm-popup.module';
 import { TrackingBarModule } from '../tracking-bar/tracking-bar.module';
 import { SubtaskCardComponent } from './subtask-card.component';
@@ -32,6 +33,7 @@ import { SubtaskCardComponent } from './subtask-card.component';
     AssignChangeButtonModule,
     DeleteConfirmPopupModule,
     TextFieldModule,
+    SubtaskFacadeModule,
   ],
   exports: [SubtaskCardComponent],
   providers: [
