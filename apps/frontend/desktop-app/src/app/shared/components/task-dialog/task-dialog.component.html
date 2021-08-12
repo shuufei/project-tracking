@@ -6,25 +6,15 @@
 >
   <ng-container [ngSwitch]="currentContentType$ | async">
     <ng-container *ngSwitchCase="'task'">
-      <ng-container *ngIf="task$ | async as task">
-        <bis-task-dialog-task-content
-          [task]="task"
-        ></bis-task-dialog-task-content>
-      </ng-container>
+      <bis-task-dialog-task-content></bis-task-dialog-task-content>
     </ng-container>
 
     <ng-container *ngSwitchCase="'subtask'">
-      <ng-container *ngIf="subtask$ | async as subtask">
-        <bis-task-dialog-subtask-content
-          [subtask]="subtask"
-        ></bis-task-dialog-subtask-content>
-      </ng-container>
+      <bis-task-dialog-subtask-content></bis-task-dialog-subtask-content>
     </ng-container>
 
     <ng-container *ngSwitchCase="'taskGroup'">
-      <ng-container *ngIf="taskGroup$ | async as taskGroup">
-        {{ taskGroup | json }}
-      </ng-container>
+      <bis-task-dialog-task-group-content></bis-task-dialog-task-group-content>
     </ng-container>
   </ng-container>
 </ui-dialog>

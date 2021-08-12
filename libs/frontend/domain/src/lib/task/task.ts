@@ -25,3 +25,11 @@ export type Task = Pick<
   taskGroup?: Pick<TaskGroup, 'id' | 'title' | 'description'>;
   subtasks: Subtask[];
 };
+
+export const isTask = (value: Task | unknown): value is Task => {
+  return (
+    (value as Task).subtasks != null &&
+    (value as Task).title != null &&
+    (value as Task).subtasksOrder != null
+  );
+};
