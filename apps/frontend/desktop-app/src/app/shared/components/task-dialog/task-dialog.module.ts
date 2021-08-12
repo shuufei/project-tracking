@@ -40,12 +40,14 @@ import {
   TaskDialogServiceState,
   TASK_DIALOG_SERVICE_STATE,
 } from './task-dialog.service';
+import { TaskDialogTaskGroupContentComponent } from './task-dialog-task-group-content/task-dialog-task-group-content.component';
 
 @NgModule({
   declarations: [
     TaskDialogComponent,
     TaskDialogTaskContentComponent,
     TaskDialogSubtaskContentComponent,
+    TaskDialogTaskGroupContentComponent,
   ],
   imports: [
     CommonModule,

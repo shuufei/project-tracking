@@ -12,11 +12,21 @@ export const convertToDomainTaskGroupFromApiTaskGroup = (
     status: convertToDomainStatusFromApiStatus(taskGroup.status),
     scheduledTimeSec: taskGroup.scheduledTimeSec,
     tasksOrder: taskGroup.tasksOrder,
-    assign: taskGroup.assign,
+    assignUser: taskGroup.assign,
     board: {
       id: taskGroup.board.id,
       name: taskGroup.board.name,
       projectId: taskGroup.board.project.id,
     },
+    tasks: taskGroup.tasks.map((task) => ({
+      id: task.id,
+      title: task.title,
+      description: task.description,
+      status: convertToDomainStatusFromApiStatus(task.status),
+      workTimeSec: task.workTimeSec,
+      scheduledTimeSec: task.scheduledTimeSec,
+      workStartDateTimestamp: task.workStartDateTimestamp,
+      assignUser: task.assign,
+    })),
   };
 };

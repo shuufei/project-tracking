@@ -82,6 +82,20 @@ const TASKGROUP_FIELDS = gql`
         id
       }
     }
+    tasks {
+      id
+      title
+      description
+      status
+      workTimeSec
+      scheduledTimeSec
+      workStartDateTimestamp
+      assign {
+        id
+        name
+        icon
+      }
+    }
   }
 `;
 

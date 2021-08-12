@@ -1,0 +1,107 @@
+<ng-container *ngIf="state$ | async as state">
+  <bis-task-dialog-template (clickedCloseButton)="onClickedCloseButton$.next()">
+    <div head class="w-full flex justify-between items-center">
+      <ng-container *ngIf="existsDialogPrevContent$ | async">
+        <button ui-button color="primary" (click)="onClickedBackButton$.next()">
+          <ui-icon icon="chevron-left" size="s" color="white"></ui-icon>
+          <span class="ml-1">戻る</span>
+        </button>
+      </ng-container>
+      <bis-tracking-bar
+        class="flex-1"
+        [trackingTimeSec]="state.taskGroup?.workTimeSec || 0"
+        [scheduledTimeSec]="state.taskGroup?.scheduledTimeSec || 0"
+        [isTracking]="state.taskGroup?.workStartDateTimestamp ? true : false"
+        [shouldShowClockIcon]="!(existsDialogPrevContent$ | async)"
+        (changedScheduledTimeSec)="onChangedScheduledTimeSec$.next($event)"
+      ></bis-tracking-bar>
+    </div>
+
+    <div main>
+      <ng-container *ngIf="state.taskGroup">
+        <h2 class="text-l1 text-black-default leading-normal">
+          {{ state.taskGroup.title }}
+        </h2>
+        <pre class="mt-2 text-black-default leading-normal text-s2">{{
+          state.taskGroup.description
+        }}</pre>
+        <button ui-fill-button color="primary-light3" class="mt-4">編集</button>
+
+        <div class="mt-8">
+          <span class="text-s2 text-black-light1 block">タスク</span>
+          <div class="mt-2">
+            <ng-container
+              *ngIf="state.taskGroup.tasks.length > 0; else nonSubtasks"
+            >
+              <div class="p-2 rounded-s bg-primary-light3">
+                <ng-container
+                  *ngFor="let task of state.taskGroup.tasks; first as isFirst"
+                >
+                  <div class="p-2 bg-white" [ngClass]="[isFirst ? '' : 'mt-1']">
+                    {{ task.title }}
+                  </div>
+                </ng-container>
+                <button
+                  class="mt-1 px-2 py-1 focus:outline-none focus:shadow-outline_primary flex items-center justify-center rounded-s w-full"
+                >
+                  <ui-icon icon="plus" size="s" color="primary"></ui-icon>
+                  <span class="text-s3 text-black-default ml-1"
+                    >タスクを追加</span
+                  >
+                </button>
+              </div>
+            </ng-container>
+            <ng-template #nonSubtasks>
+              <button
+                class="p-2 focus:outline-none focus:shadow-outline_primary flex items-center justify-start rounded-s"
+              >
+                <ui-icon icon="plus" size="s" color="primary"></ui-icon>
+                <span class="text-s3 text-black-default ml-1"
+                  >サブタスクを追加</span
+                >
+              </button>
+            </ng-template>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+
+    <div side-panel>
+      <ng-container *ngIf="state.taskGroup">
+        <bis-task-dialog-status-change-button
+          class="w-full"
+          [status]="state.taskGroup.status"
+        ></bis-task-dialog-status-change-button>
+        <div class="mt-4">
+          <bis-task-dialog-assign-change-button
+            class="w-full"
+            [users]="state.users"
+            [selectedUserId]="state.taskGroup.assignUser?.id"
+          ></bis-task-dialog-assign-change-button>
+          <bis-task-dialog-project-change-button
+            class="w-full mt-3"
+            [project]="state.taskGroup.board.project"
+          ></bis-task-dialog-project-change-button>
+          <bis-task-dialog-board-change-button
+            class="w-full mt-3"
+            [boards]="state.boards"
+            [selectedBoardId]="state.taskGroup.board.id"
+          ></bis-task-dialog-board-change-button>
+        </div>
+
+        <div class="mt-6 relative">
+          <button
+            class="focus:outline-none text-s2 text-warn-default font-medium flex items-center w-full"
+            #deleteButton
+          >
+            <ui-icon size="s" icon="trash-2" color="warn"></ui-icon>
+            <span class="ml-3">削除</span>
+          </button>
+          <bis-delete-confirm-popup
+            [triggerEl]="deleteButton"
+          ></bis-delete-confirm-popup>
+        </div>
+      </ng-container>
+    </div>
+  </bis-task-dialog-template>
+</ng-container>
