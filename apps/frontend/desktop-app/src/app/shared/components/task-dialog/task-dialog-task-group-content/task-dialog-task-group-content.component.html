@@ -78,6 +78,7 @@
             class="w-full"
             [users]="state.users"
             [selectedUserId]="state.taskGroup.assignUser?.id"
+            (selectedUser)="onChangedAssignUser$.next($event)"
           ></bis-task-dialog-assign-change-button>
           <bis-task-dialog-project-change-button
             class="w-full mt-3"

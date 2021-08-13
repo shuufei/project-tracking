@@ -62,6 +62,7 @@ export class TaskDialogTaskGroupContentComponent implements OnInit {
   readonly onClickedBackButton$ = new Subject<void>();
   readonly onChangedScheduledTimeSec$ = new Subject<number>();
   readonly onChangedStatus$ = new Subject<TaskGroup['status']>();
+  readonly onChangedAssignUser$ = new Subject<User['id'] | undefined>();
 
   constructor(
     private state: RxState<State>,
@@ -147,10 +148,31 @@ export class TaskDialogTaskGroupContentComponent implements OnInit {
         filter((status) => {
           return status !== this.state.get('taskGroup')?.status;
         }),
+        tap((status) => {
+          this.state.set('taskGroup', ({ taskGroup }) => {
+            if (taskGroup == null) return taskGroup;
+            return {
+              ...taskGroup,
+              status,
+            };
+          });
+        }),
         exhaustMap((status) => {
           const taskGroup = this.state.get('taskGroup');
           if (taskGroup == null) return of(undefined);
           return this.taskGroupFacade.updateStatus(status, taskGroup);
+        })
+      )
+    );
+    this.state.hold(
+      this.onChangedAssignUser$.pipe(
+        filter((id) => {
+          return id !== this.state.get('taskGroup')?.assignUser?.id;
+        }),
+        exhaustMap((id) => {
+          const taskGroup = this.state.get('taskGroup');
+          if (taskGroup == null) return of(undefined);
+          return this.taskGroupFacade.updateAssignUser(id, taskGroup);
         })
       )
     );

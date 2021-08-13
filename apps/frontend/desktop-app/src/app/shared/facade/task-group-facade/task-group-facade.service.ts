@@ -4,7 +4,7 @@ import {
   UPDATE_TASK_GROUP_USECASE,
 } from '@bison/frontend/application';
 import { TaskGroup } from '@bison/frontend/domain';
-import { UpdateTaskGroupInput } from '@bison/shared/schema';
+import { UpdateTaskGroupInput, User } from '@bison/shared/schema';
 import { convertToApiStatusFromDomainStatus } from '../../../util/convert-to-api-status-from-domain-status';
 
 @Injectable()
@@ -19,6 +19,17 @@ export class TaskGroupFacadeService {
     return this.updateTaskGroupUsecase.execute({
       ...input,
       status: convertToApiStatusFromDomainStatus(status),
+    });
+  }
+
+  updateAssignUser(
+    userId: User['id'] | undefined,
+    currentTaskGroup: TaskGroup
+  ) {
+    const input = this.generateUpdateInputBase(currentTaskGroup);
+    return this.updateTaskGroupUsecase.execute({
+      ...input,
+      assignUserId: userId,
     });
   }
 
