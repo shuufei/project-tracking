@@ -4,6 +4,7 @@ import {
   UPDATE_TASK_GROUP_USECASE,
 } from '@bison/frontend/application';
 import { TaskGroup } from '@bison/frontend/domain';
+import { Board } from '@bison/shared/domain';
 import { UpdateTaskGroupInput, User } from '@bison/shared/schema';
 import { convertToApiStatusFromDomainStatus } from '../../../util/convert-to-api-status-from-domain-status';
 
@@ -30,6 +31,14 @@ export class TaskGroupFacadeService {
     return this.updateTaskGroupUsecase.execute({
       ...input,
       assignUserId: userId,
+    });
+  }
+
+  updateBoard(boardId: Board['id'], currentTaskGroup: TaskGroup) {
+    const input = this.generateUpdateInputBase(currentTaskGroup);
+    return this.updateTaskGroupUsecase.execute({
+      ...input,
+      boardId,
     });
   }
 

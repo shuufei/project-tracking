@@ -88,6 +88,7 @@
             class="w-full mt-3"
             [boards]="state.boards"
             [selectedBoardId]="state.taskGroup.board.id"
+            (selectedBoard)="onChangedBoard$.next($event)"
           ></bis-task-dialog-board-change-button>
         </div>
 
