@@ -12,6 +12,7 @@ import {
 import { isTaskGroup, TaskGroup } from '@bison/frontend/domain';
 import { Board, User } from '@bison/frontend/ui';
 import { RxState } from '@rx-angular/state';
+import { TuiNotificationsService } from '@taiga-ui/core';
 import { gql } from 'apollo-angular';
 import { of, Subject } from 'rxjs';
 import { exhaustMap, filter, map, switchMap, tap } from 'rxjs/operators';
@@ -85,7 +86,9 @@ export class TaskDialogTaskGroupContentComponent implements OnInit {
     private taskDialogService: TaskDialogService,
     @Inject(APOLLO_DATA_QUERY) private apolloDataQuery: IApolloDataQuery,
     private taskGroupFacade: TaskGroupFacadeService,
-    private taskFacade: TaskFacadeService
+    private taskFacade: TaskFacadeService,
+    @Inject(TuiNotificationsService)
+    private readonly notificationsService: TuiNotificationsService
   ) {
     this.state.set({
       users: [],
@@ -98,8 +101,7 @@ export class TaskDialogTaskGroupContentComponent implements OnInit {
     this.state.connect(
       'taskGroup',
       this.taskDialogService.currentContent$.pipe(
-        filter((v): v is TaskGroup => isTaskGroup(v)),
-        tap((v) => console.log(v))
+        filter((v): v is TaskGroup => isTaskGroup(v))
       )
     );
     this.state.connect(
@@ -323,6 +325,24 @@ export class TaskDialogTaskGroupContentComponent implements OnInit {
               tasksOrder: [...taskGroup.tasksOrder, task.id],
             };
           });
+        })
+      )
+    );
+    this.state.hold(
+      this.onDelete$.pipe(
+        exhaustMap(() => {
+          const taskGroupId = this.state.get('taskGroup')?.id;
+          if (taskGroupId == null) return of(undefined);
+          return this.taskGroupFacade.delete(taskGroupId);
+        }),
+        tap(() => {
+          this.taskDialogService.close();
+        }),
+        switchMap(() => {
+          return this.notificationsService.show(
+            'タスクグループが削除されました',
+            { hasCloseButton: true }
+          );
         })
       )
     );

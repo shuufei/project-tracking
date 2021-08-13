@@ -161,6 +161,7 @@
           </button>
           <bis-delete-confirm-popup
             [triggerEl]="deleteButton"
+            (delete)="onDelete$.next()"
           ></bis-delete-confirm-popup>
         </div>
       </ng-container>

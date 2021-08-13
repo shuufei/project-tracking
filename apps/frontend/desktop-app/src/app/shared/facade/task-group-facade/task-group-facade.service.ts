@@ -1,5 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import {
+  DELETE_TASK_GROUP_USECASE,
+  IDeleteTaskGroupUsecase,
   IUpdateTaskGroupUsecase,
   UPDATE_TASK_GROUP_USECASE,
 } from '@bison/frontend/application';
@@ -12,7 +14,9 @@ import { convertToApiStatusFromDomainStatus } from '../../../util/convert-to-api
 export class TaskGroupFacadeService {
   constructor(
     @Inject(UPDATE_TASK_GROUP_USECASE)
-    private readonly updateTaskGroupUsecase: IUpdateTaskGroupUsecase
+    private readonly updateTaskGroupUsecase: IUpdateTaskGroupUsecase,
+    @Inject(DELETE_TASK_GROUP_USECASE)
+    private readonly deleteTaskGroupUsecase: IDeleteTaskGroupUsecase
   ) {}
 
   updateStatus(status: TaskGroup['status'], currentTaskGroup: TaskGroup) {
@@ -64,6 +68,10 @@ export class TaskGroupFacadeService {
       ...input,
       tasksOrder,
     });
+  }
+
+  delete(id: TaskGroup['id']) {
+    return this.deleteTaskGroupUsecase.execute({ id });
   }
 
   private generateUpdateInputBase(taskGroup: TaskGroup) {
