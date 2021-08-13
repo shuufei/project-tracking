@@ -19,13 +19,62 @@
 
     <div main>
       <ng-container *ngIf="state.taskGroup">
-        <h2 class="text-l1 text-black-default leading-normal">
-          {{ state.taskGroup.title }}
-        </h2>
-        <pre class="mt-2 text-black-default leading-normal text-s2">{{
-          state.taskGroup.description
-        }}</pre>
-        <button ui-fill-button color="primary-light3" class="mt-4">編集</button>
+        <ng-container *ngIf="!state.isEditableTitleAndDesc; else editMode">
+          <h2 class="text-l1 text-black-default leading-normal">
+            {{ state.taskGroup.title }}
+          </h2>
+          <pre class="mt-2 text-black-default leading-normal text-s2">{{
+            state.taskGroup.description
+          }}</pre>
+          <button
+            ui-fill-button
+            color="primary-light3"
+            class="mt-4"
+            (click)="onClickedEditTitleAndDescButton$.next()"
+          >
+            編集
+          </button>
+        </ng-container>
+        <ng-template #editMode>
+          <div class="mt-2">
+            <label for="" class="text-s2 text-black-light2 font-medium block"
+              >タスクグループ名</label
+            >
+            <ui-text-field
+              placeholder="タスクグループ名を入力してください"
+              [text]="state.editState?.title"
+              class="task-group-title mt-2"
+              (changedValue)="onChangedTitle$.next($event)"
+            ></ui-text-field>
+          </div>
+          <div class="mt-4">
+            <label for="" class="text-s2 text-black-light2 font-medium block"
+              >説明</label
+            >
+            <ui-textarea
+              placeholder="タスクグループの説明を入力してください"
+              [text]="state.editState?.description"
+              class="task-group-description leading-normal mt-2"
+              (changedValue)="onChangedDescription$.next($event)"
+            ></ui-textarea>
+          </div>
+          <div class="flex items-center justify-end mt-4">
+            <button
+              ui-fill-button
+              (click)="onClickedEditTitleAndDescCancelButton$.next()"
+            >
+              キャンセル
+            </button>
+            <button
+              ui-fill-button
+              color="primary"
+              class="ml-4"
+              (click)="onClickedUpdateTitleAndDescButton$.next()"
+            >
+              更新
+            </button>
+          </div>
+        </ng-template>
 
         <div class="mt-8">
           <span class="text-s2 text-black-light1 block">タスク</span>

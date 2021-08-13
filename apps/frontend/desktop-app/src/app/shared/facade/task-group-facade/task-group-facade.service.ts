@@ -42,6 +42,19 @@ export class TaskGroupFacadeService {
     });
   }
 
+  updateTitleAndDescription(
+    title: TaskGroup['title'],
+    description: TaskGroup['description'],
+    currentTaskGroup: TaskGroup
+  ) {
+    const input = this.generateUpdateInputBase(currentTaskGroup);
+    return this.updateTaskGroupUsecase.execute({
+      ...input,
+      title,
+      description,
+    });
+  }
+
   private generateUpdateInputBase(taskGroup: TaskGroup) {
     const input: UpdateTaskGroupInput = {
       id: taskGroup.id,

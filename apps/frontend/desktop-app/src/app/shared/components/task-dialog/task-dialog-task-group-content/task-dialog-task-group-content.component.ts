@@ -39,6 +39,11 @@ type State = {
   taskGroup?: TaskGroup;
   users: User[];
   boards: Board[];
+  isEditableTitleAndDesc: boolean;
+  editState?: {
+    title: TaskGroup['title'];
+    description: TaskGroup['description'];
+  };
 };
 
 @Component({
@@ -64,6 +69,11 @@ export class TaskDialogTaskGroupContentComponent implements OnInit {
   readonly onChangedStatus$ = new Subject<TaskGroup['status']>();
   readonly onChangedAssignUser$ = new Subject<User['id'] | undefined>();
   readonly onChangedBoard$ = new Subject<Board['id']>();
+  readonly onClickedEditTitleAndDescButton$ = new Subject<void>();
+  readonly onClickedEditTitleAndDescCancelButton$ = new Subject<void>();
+  readonly onClickedUpdateTitleAndDescButton$ = new Subject<void>();
+  readonly onChangedTitle$ = new Subject<TaskGroup['title']>();
+  readonly onChangedDescription$ = new Subject<TaskGroup['description']>();
 
   constructor(
     private state: RxState<State>,
@@ -74,6 +84,7 @@ export class TaskDialogTaskGroupContentComponent implements OnInit {
     this.state.set({
       users: [],
       boards: [],
+      isEditableTitleAndDesc: false,
     });
   }
 
@@ -137,6 +148,36 @@ export class TaskDialogTaskGroupContentComponent implements OnInit {
           })
         )
     );
+    this.state.connect(this.onClickedEditTitleAndDescButton$, (state) => {
+      return {
+        ...state,
+        isEditableTitleAndDesc: true,
+        editState: {
+          title: state.taskGroup?.title ?? '',
+          description: state.taskGroup?.description,
+        },
+      };
+    });
+    this.state.connect(this.onClickedEditTitleAndDescCancelButton$, (state) => {
+      return { ...state, isEditableTitleAndDesc: false };
+    });
+    this.state.connect(
+      'isEditableTitleAndDesc',
+      this.onClickedUpdateTitleAndDescButton$,
+      () => {
+        return false;
+      }
+    );
+    this.state.connect('editState', this.onChangedTitle$, (state, title) => {
+      return { title, description: state.editState?.description };
+    });
+    this.state.connect(
+      'editState',
+      this.onChangedDescription$,
+      (state, description) => {
+        return { description, title: state.editState?.title ?? '' };
+      }
+    );
 
     this.state.hold(this.onClickedCloseButton$, () => {
       this.taskDialogService.close();
@@ -186,6 +227,31 @@ export class TaskDialogTaskGroupContentComponent implements OnInit {
           const taskGroup = this.state.get('taskGroup');
           if (taskGroup == null) return of(undefined);
           return this.taskGroupFacade.updateBoard(boardId, taskGroup);
+        })
+      )
+    );
+    this.state.hold(
+      this.onClickedUpdateTitleAndDescButton$.pipe(
+        tap(() => {
+          this.state.set('taskGroup', (state) => {
+            if (state.editState == null || state.taskGroup == null)
+              return state.taskGroup;
+            return {
+              ...state.taskGroup,
+              title: state.editState.title,
+              description: state.editState.description,
+            };
+          });
+        }),
+        exhaustMap(() => {
+          const taskGroup = this.state.get('taskGroup');
+          const editState = this.state.get('editState');
+          if (taskGroup == null || editState == null) return of(undefined);
+          return this.taskGroupFacade.updateTitleAndDescription(
+            editState.title,
+            editState.description,
+            taskGroup
+          );
         })
       )
     );
