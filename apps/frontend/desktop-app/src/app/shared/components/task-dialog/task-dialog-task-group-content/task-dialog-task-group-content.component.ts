@@ -15,6 +15,7 @@ import { RxState } from '@rx-angular/state';
 import { gql } from 'apollo-angular';
 import { of, Subject } from 'rxjs';
 import { exhaustMap, filter, map, switchMap, tap } from 'rxjs/operators';
+import { TaskFacadeService } from '../../../facade/task-facade/task-facade.service';
 import { TaskGroupFacadeService } from '../../../facade/task-group-facade/task-group-facade.service';
 import { TaskDialogService } from '../task-dialog.service';
 
@@ -76,12 +77,15 @@ export class TaskDialogTaskGroupContentComponent implements OnInit {
   readonly onChangedTitle$ = new Subject<TaskGroup['title']>();
   readonly onChangedDescription$ = new Subject<TaskGroup['description']>();
   readonly onDrop$ = new Subject<CdkDragDrop<TaskGroup['tasks']>>();
+  readonly onDelete$ = new Subject<void>();
+  readonly onClickedAddTask$ = new Subject<void>();
 
   constructor(
     private state: RxState<State>,
     private taskDialogService: TaskDialogService,
     @Inject(APOLLO_DATA_QUERY) private apolloDataQuery: IApolloDataQuery,
-    private taskGroupFacade: TaskGroupFacadeService
+    private taskGroupFacade: TaskGroupFacadeService,
+    private taskFacade: TaskFacadeService
   ) {
     this.state.set({
       users: [],
@@ -291,6 +295,34 @@ export class TaskDialogTaskGroupContentComponent implements OnInit {
             tasks.map((v) => v.id),
             taskGroup
           );
+        })
+      )
+    );
+    this.state.hold(
+      this.onClickedAddTask$.pipe(
+        exhaustMap(() => {
+          const taskGroup = this.state.get('taskGroup');
+          if (taskGroup == null) {
+            return of(undefined);
+          }
+          return this.taskFacade.createOnTaskGroup(
+            '',
+            '',
+            undefined,
+            taskGroup.id,
+            undefined
+          );
+        }),
+        filter((v): v is NonNullable<typeof v> => v != null),
+        tap((task) => {
+          this.state.set('taskGroup', ({ taskGroup }) => {
+            if (taskGroup == null) return taskGroup;
+            return {
+              ...taskGroup,
+              tasks: [...taskGroup.tasks, task],
+              tasksOrder: [...taskGroup.tasksOrder, task.id],
+            };
+          });
         })
       )
     );

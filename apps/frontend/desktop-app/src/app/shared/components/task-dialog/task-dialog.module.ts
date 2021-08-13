@@ -24,6 +24,7 @@ import {
 } from '@bison/frontend/ui';
 import { RxState } from '@rx-angular/state';
 import { TuiNotificationsModule } from '@taiga-ui/core';
+import { TaskFacadeModule } from '../../facade/task-facade/task-facade.module';
 import { TaskGroupFacadeModule } from '../../facade/task-group-facade/task-group-facade.module';
 import { DeleteConfirmPopupModule } from '../delete-confirm-popup/delete-confirm-popup.module';
 import { SubtaskCardModule } from '../subtask-card/subtask-card.module';
@@ -70,6 +71,7 @@ import {
     TuiNotificationsModule,
     CheckboxModule,
     TaskGroupFacadeModule,
+    TaskFacadeModule,
   ],
   exports: [TaskDialogComponent],
   providers: [
