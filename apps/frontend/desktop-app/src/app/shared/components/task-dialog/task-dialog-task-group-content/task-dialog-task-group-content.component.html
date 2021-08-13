@@ -71,6 +71,7 @@
         <bis-task-dialog-status-change-button
           class="w-full"
           [status]="state.taskGroup.status"
+          (changedStatus)="onChangedStatus$.next($event)"
         ></bis-task-dialog-status-change-button>
         <div class="mt-4">
           <bis-task-dialog-assign-change-button

@@ -12,8 +12,9 @@ import { isTaskGroup, TaskGroup } from '@bison/frontend/domain';
 import { Board, User } from '@bison/frontend/ui';
 import { RxState } from '@rx-angular/state';
 import { gql } from 'apollo-angular';
-import { Subject } from 'rxjs';
-import { filter, map, switchMap, tap } from 'rxjs/operators';
+import { of, Subject } from 'rxjs';
+import { exhaustMap, filter, map, switchMap, tap } from 'rxjs/operators';
+import { TaskGroupFacadeService } from '../../../facade/task-group-facade/task-group-facade.service';
 import { TaskDialogService } from '../task-dialog.service';
 
 const PROJECT_FIELDS = gql`
@@ -60,11 +61,13 @@ export class TaskDialogTaskGroupContentComponent implements OnInit {
   readonly onClickedCloseButton$ = new Subject<void>();
   readonly onClickedBackButton$ = new Subject<void>();
   readonly onChangedScheduledTimeSec$ = new Subject<number>();
+  readonly onChangedStatus$ = new Subject<TaskGroup['status']>();
 
   constructor(
     private state: RxState<State>,
     private taskDialogService: TaskDialogService,
-    @Inject(APOLLO_DATA_QUERY) private apolloDataQuery: IApolloDataQuery
+    @Inject(APOLLO_DATA_QUERY) private apolloDataQuery: IApolloDataQuery,
+    private taskGroupFacade: TaskGroupFacadeService
   ) {
     this.state.set({
       users: [],
@@ -139,5 +142,17 @@ export class TaskDialogTaskGroupContentComponent implements OnInit {
     this.state.hold(this.onClickedBackButton$, () => {
       this.taskDialogService.back();
     });
+    this.state.hold(
+      this.onChangedStatus$.pipe(
+        filter((status) => {
+          return status !== this.state.get('taskGroup')?.status;
+        }),
+        exhaustMap((status) => {
+          const taskGroup = this.state.get('taskGroup');
+          if (taskGroup == null) return of(undefined);
+          return this.taskGroupFacade.updateStatus(status, taskGroup);
+        })
+      )
+    );
   }
 }

@@ -225,7 +225,7 @@ input UpdateTaskGroupInput {
   title: String!
   description: String
   status: Status!
-  assignUserId: ID!
+  assignUserId: ID
   scheduledTimeSec: Int
   boardId: ID!
   tasksOrder: [ID!]!
