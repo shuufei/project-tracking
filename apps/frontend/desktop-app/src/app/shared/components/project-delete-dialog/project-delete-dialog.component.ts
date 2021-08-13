@@ -99,12 +99,9 @@ export class ProjectDeleteDialogComponent implements OnInit {
       .pipe(
         switchMap(() => {
           this.state.set('isOpen', () => false);
-          return this.notificationsService.show(
-            'プロジェクトが削除されました',
-            {
-              hasCloseButton: true,
-            }
-          );
+          return this.notificationsService.show('プロジェクトを削除しました', {
+            hasCloseButton: true,
+          });
         })
       );
   }

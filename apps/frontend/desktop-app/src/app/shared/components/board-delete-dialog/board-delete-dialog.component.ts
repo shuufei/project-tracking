@@ -92,7 +92,7 @@ export class BoardDeleteDialogComponent implements OnInit {
     return this.deleteBoardUsecase.execute(input).pipe(
       switchMap(() => {
         this.state.set('isOpen', () => false);
-        return this.notificationsService.show('ボードが削除されました', {
+        return this.notificationsService.show('ボードを削除しました', {
           hasCloseButton: true,
         });
       })

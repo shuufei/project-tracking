@@ -464,7 +464,7 @@ export class TaskDialogTaskContentComponent implements OnInit {
         }),
         switchMap(() => {
           this.taskDialogService.close();
-          return this.notificationsService.show('タスクが削除されました', {
+          return this.notificationsService.show('タスクを削除しました', {
             hasCloseButton: true,
           });
         })

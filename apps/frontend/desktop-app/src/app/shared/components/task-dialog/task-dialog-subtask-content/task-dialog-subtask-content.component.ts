@@ -357,7 +357,7 @@ export class TaskDialogSubtaskContentComponent implements OnInit {
           this.taskDialogService.close();
         }),
         switchMap(() => {
-          return this.notificationsService.show('サブタスクが削除されました', {
+          return this.notificationsService.show('サブタスクを削除しました', {
             hasCloseButton: true,
           });
         })

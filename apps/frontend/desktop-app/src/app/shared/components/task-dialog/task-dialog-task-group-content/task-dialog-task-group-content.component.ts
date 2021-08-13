@@ -340,7 +340,7 @@ export class TaskDialogTaskGroupContentComponent implements OnInit {
         }),
         switchMap(() => {
           return this.notificationsService.show(
-            'タスクグループが削除されました',
+            'タスクグループを削除しました',
             { hasCloseButton: true }
           );
         })
