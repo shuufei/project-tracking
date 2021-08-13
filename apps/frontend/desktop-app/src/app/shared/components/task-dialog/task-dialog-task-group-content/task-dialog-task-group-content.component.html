@@ -82,11 +82,19 @@
             <ng-container
               *ngIf="state.taskGroup.tasks.length > 0; else nonSubtasks"
             >
-              <div class="p-2 rounded-s bg-primary-light3">
+              <div
+                class="p-2 rounded-s bg-primary-light3"
+                cdkDropList
+                (cdkDropListDropped)="onDrop$.next($event)"
+              >
                 <ng-container
                   *ngFor="let task of state.taskGroup.tasks; first as isFirst"
                 >
-                  <div class="p-2 bg-white" [ngClass]="[isFirst ? '' : 'mt-1']">
+                  <div
+                    class="p-2 bg-white"
+                    [ngClass]="[isFirst ? '' : 'mt-1']"
+                    cdkDrag
+                  >
                     {{ task.title }}
                   </div>
                 </ng-container>

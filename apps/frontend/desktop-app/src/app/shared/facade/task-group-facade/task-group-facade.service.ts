@@ -55,6 +55,17 @@ export class TaskGroupFacadeService {
     });
   }
 
+  updateTasksOrder(
+    tasksOrder: TaskGroup['tasksOrder'],
+    currentTaskGroup: TaskGroup
+  ) {
+    const input = this.generateUpdateInputBase(currentTaskGroup);
+    return this.updateTaskGroupUsecase.execute({
+      ...input,
+      tasksOrder,
+    });
+  }
+
   private generateUpdateInputBase(taskGroup: TaskGroup) {
     const input: UpdateTaskGroupInput = {
       id: taskGroup.id,

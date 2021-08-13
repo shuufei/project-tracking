@@ -1,3 +1,4 @@
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -74,6 +75,7 @@ export class TaskDialogTaskGroupContentComponent implements OnInit {
   readonly onClickedUpdateTitleAndDescButton$ = new Subject<void>();
   readonly onChangedTitle$ = new Subject<TaskGroup['title']>();
   readonly onChangedDescription$ = new Subject<TaskGroup['description']>();
+  readonly onDrop$ = new Subject<CdkDragDrop<TaskGroup['tasks']>>();
 
   constructor(
     private state: RxState<State>,
@@ -250,6 +252,43 @@ export class TaskDialogTaskGroupContentComponent implements OnInit {
           return this.taskGroupFacade.updateTitleAndDescription(
             editState.title,
             editState.description,
+            taskGroup
+          );
+        })
+      )
+    );
+    this.state.hold(
+      this.onDrop$.pipe(
+        map((dropEvent) => {
+          const taskGroup = this.state.get('taskGroup');
+          if (taskGroup == null) {
+            return [];
+          }
+          const tasks = [...(taskGroup?.tasks ?? [])];
+          moveItemInArray(
+            tasks,
+            dropEvent.previousIndex,
+            dropEvent.currentIndex
+          );
+          return tasks;
+        }),
+        tap((tasks) => {
+          const taskGroup = this.state.get('taskGroup');
+          if (taskGroup == null) {
+            return taskGroup;
+          }
+          const tasksOrder = tasks.map((v) => v.id);
+          this.state.set('taskGroup', () => {
+            return { ...taskGroup, tasks, tasksOrder };
+          });
+        }),
+        exhaustMap((tasks) => {
+          const taskGroup = this.state.get('taskGroup');
+          if (taskGroup == null) {
+            return of(undefined);
+          }
+          return this.taskGroupFacade.updateTasksOrder(
+            tasks.map((v) => v.id),
             taskGroup
           );
         })
