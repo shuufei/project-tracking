@@ -30,11 +30,11 @@ type State = {
 export class ScheduledTimeSecChangeButtonComponent implements OnInit {
   @Input()
   set workTimeSec(value: number) {
-    return;
+    this.state.set('workTimeSec', () => value);
   }
   @Input()
   set scheduledTimeSec(value: number) {
-    return;
+    this.state.set('scheduledTimeSec', () => value);
   }
   @Output() changedScheduledTimeSec = new EventEmitter<number>();
 
@@ -42,9 +42,6 @@ export class ScheduledTimeSecChangeButtonComponent implements OnInit {
    * State
    */
   readonly state$ = this.state.select();
-  readonly workTime$ = this.state
-    .select('workTimeSec')
-    .pipe(map((sec) => convertToTimeFromSec(sec)));
   readonly scheduledTime$ = this.state
     .select('scheduledTimeSec')
     .pipe(map((sec) => convertToTimeFromSec(sec)));

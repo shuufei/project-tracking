@@ -18,6 +18,7 @@ import {
   CheckboxModule,
   DialogModule,
   IconModule,
+  ScheduledTimeSecChangeButtonModule,
   TextareaModule,
   TextFieldModule,
   TooltipModule,
@@ -72,6 +73,7 @@ import {
     CheckboxModule,
     TaskGroupFacadeModule,
     TaskFacadeModule,
+    ScheduledTimeSecChangeButtonModule,
   ],
   exports: [TaskDialogComponent],
   providers: [

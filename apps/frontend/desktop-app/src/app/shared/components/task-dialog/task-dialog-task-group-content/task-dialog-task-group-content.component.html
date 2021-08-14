@@ -7,14 +7,21 @@
           <span class="ml-1 text-s3">戻る</span>
         </button>
       </ng-container>
-      <bis-tracking-bar
-        class="flex-1"
-        [trackingTimeSec]="state.taskGroup?.workTimeSec || 0"
-        [scheduledTimeSec]="state.taskGroup?.scheduledTimeSec || 0"
-        [isTracking]="state.taskGroup?.workStartDateTimestamp ? true : false"
-        [shouldShowClockIcon]="!(existsDialogPrevContent$ | async)"
-        (changedScheduledTimeSec)="onChangedScheduledTimeSec$.next($event)"
-      ></bis-tracking-bar>
+      <div class="flex-1 flex justify-between w-full items-center">
+        <ui-icon
+          icon="clock"
+          size="s"
+          color="primary-light2"
+          [ngClass]="[
+            (existsDialogPrevContent$ | async) ? 'visibility-hidden' : ''
+          ]"
+        ></ui-icon>
+        <ui-scheduled-time-sec-change-button
+          [workTimeSec]="state.taskGroup?.workTimeSec || 0"
+          [scheduledTimeSec]="state.taskGroup?.scheduledTimeSec || 0"
+          (changedScheduledTimeSec)="onChangedScheduledTimeSec$.next($event)"
+        ></ui-scheduled-time-sec-change-button>
+      </div>
     </div>
 
     <div main>

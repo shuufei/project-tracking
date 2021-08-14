@@ -346,5 +346,28 @@ export class TaskDialogTaskGroupContentComponent implements OnInit {
         })
       )
     );
+    this.state.hold(
+      this.onChangedScheduledTimeSec$.pipe(
+        filter((sec) => {
+          return sec !== (this.state.get('taskGroup')?.scheduledTimeSec ?? 0);
+        }),
+        tap((sec) => {
+          this.state.set('taskGroup', (state) => {
+            const taskGroup = state.taskGroup;
+            return taskGroup == null
+              ? taskGroup
+              : {
+                  ...taskGroup,
+                  scheduledTimeSec: sec,
+                };
+          });
+        }),
+        exhaustMap((sec) => {
+          const taskGroup = this.state.get('taskGroup');
+          if (taskGroup == null) return of(undefined);
+          return this.taskGroupFacade.updateScheduledTimeSec(sec, taskGroup);
+        })
+      )
+    );
   }
 }

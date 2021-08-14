@@ -70,6 +70,17 @@ export class TaskGroupFacadeService {
     });
   }
 
+  updateScheduledTimeSec(
+    scheduledTimeSec: TaskGroup['scheduledTimeSec'],
+    currentTaskGroup: TaskGroup
+  ) {
+    const input = this.generateUpdateInputBase(currentTaskGroup);
+    return this.updateTaskGroupUsecase.execute({
+      ...input,
+      scheduledTimeSec,
+    });
+  }
+
   delete(id: TaskGroup['id']) {
     return this.deleteTaskGroupUsecase.execute({ id });
   }
