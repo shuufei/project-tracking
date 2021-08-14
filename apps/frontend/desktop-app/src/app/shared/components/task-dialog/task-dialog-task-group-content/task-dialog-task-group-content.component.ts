@@ -16,6 +16,7 @@ import { TuiNotificationsService } from '@taiga-ui/core';
 import { gql } from 'apollo-angular';
 import { of, Subject } from 'rxjs';
 import { exhaustMap, filter, map, switchMap, tap } from 'rxjs/operators';
+import { convertToDomainTaskFromApiTask } from '../../../../util/convert-to-domain-task-from-api-task';
 import { TaskFacadeService } from '../../../facade/task-facade/task-facade.service';
 import { TaskGroupFacadeService } from '../../../facade/task-group-facade/task-group-facade.service';
 import { TaskDialogService } from '../task-dialog.service';
@@ -80,6 +81,7 @@ export class TaskDialogTaskGroupContentComponent implements OnInit {
   readonly onDrop$ = new Subject<CdkDragDrop<TaskGroup['tasks']>>();
   readonly onDelete$ = new Subject<void>();
   readonly onClickedAddTask$ = new Subject<void>();
+  readonly onClickedTask$ = new Subject<TaskGroup['tasks'][number]>();
 
   constructor(
     private state: RxState<State>,
@@ -366,6 +368,20 @@ export class TaskDialogTaskGroupContentComponent implements OnInit {
           const taskGroup = this.state.get('taskGroup');
           if (taskGroup == null) return of(undefined);
           return this.taskGroupFacade.updateScheduledTimeSec(sec, taskGroup);
+        })
+      )
+    );
+    this.state.hold(
+      this.onClickedTask$.pipe(
+        switchMap((task) => {
+          return this.apolloDataQuery.queryTask(task.id);
+        }),
+        map((response) => response.data.task),
+        filter((v): v is NonNullable<typeof v> => v != null),
+        tap((task) => {
+          this.taskDialogService.pushContent(
+            convertToDomainTaskFromApiTask(task)
+          );
         })
       )
     );

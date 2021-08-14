@@ -101,6 +101,7 @@
                     class="p-2 bg-white"
                     [ngClass]="[isFirst ? '' : 'mt-1']"
                     cdkDrag
+                    (click)="onClickedTask$.next(task)"
                   >
                     {{ task.title }}
                   </div>
