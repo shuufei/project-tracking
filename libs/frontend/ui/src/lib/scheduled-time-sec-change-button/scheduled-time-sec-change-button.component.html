@@ -1,0 +1,23 @@
+<ng-container *ngIf="state$ | async as state">
+  <div #trigger class="inline-block">
+    <ui-time-label
+      class="rounded-s hover:shadow-outline_primary cursor-pointer"
+      [status]="'editable'"
+      [sec]="state.workTimeSec"
+      [scheduledTimeSec]="state.scheduledTimeSec || undefined"
+      [isShowScheduledTime]="true"
+      [isShowSec]="false"
+    ></ui-time-label>
+    <ui-popup [triggerEl]="trigger">
+      <ng-container *ngIf="scheduledTime$ | async as scheduledTime">
+        <ui-planned-time-controller
+          class="column"
+          [hours]="scheduledTime?.hours"
+          [minutes]="scheduledTime?.minutes"
+          [seconds]="scheduledTime?.seconds"
+          (changedTime)="onChangedScheduledTime$.next($event)"
+        ></ui-planned-time-controller>
+      </ng-container>
+    </ui-popup>
+  </div>
+</ng-container>
