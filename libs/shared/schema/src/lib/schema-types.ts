@@ -118,7 +118,7 @@ export interface UpdateTaskGroupInput {
     title: string;
     description?: string;
     status: Status;
-    assignUserId: string;
+    assignUserId?: string;
     scheduledTimeSec?: number;
     boardId: string;
     tasksOrder: string[];

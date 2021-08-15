@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { AdjustButtonModule } from './adjust-button/adjust-button.module';
 import { AssignChangeButtonModule } from './assign-change-button/assign-change-button.module';
 import { BoardItemModule } from './board-item/board-item.module';
 import { BoardSelectPopupModule } from './board-select-popup/board-select-popup.module';
@@ -14,6 +15,7 @@ import { InputTimeModule } from './input-time/input-time.module';
 import { MenuItemModule } from './menu-item/menu-item.module';
 import { MultiUserSelectPopupModule } from './multi-user-select-popup/multi-user-select-popup.module';
 import { NavigationModule } from './navigation/navigation.module';
+import { PlannedTimeControllerModule } from './planned-time-controller/planned-time-controller.module';
 import { PopupModule } from './popup/popup.module';
 import { ProjectBoardSelectPopupModule } from './project-board-select-popup/project-board-select-popup.module';
 import { ProjectCardModule } from './project-card/project-card.module';
@@ -72,6 +74,8 @@ import { UserSelectPopupModule } from './user-select-popup/user-select-popup.mod
     DialogModule,
     BoardSelectPopupModule,
     MultiUserSelectPopupModule,
+    AdjustButtonModule,
+    PlannedTimeControllerModule,
   ],
 })
 export class SharedUiModule {}

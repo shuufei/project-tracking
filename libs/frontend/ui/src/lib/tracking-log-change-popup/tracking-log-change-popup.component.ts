@@ -6,6 +6,7 @@ import {
   Output,
 } from '@angular/core';
 import { ChangedTimeEvent } from '../input-time/input-time.component';
+import type { Time } from '../types';
 
 @Component({
   selector: 'ui-tracking-log-change-popup',
@@ -24,9 +25,3 @@ export class TrackingLogChangePopupComponent {
   @Output() changedTrackingTime = new EventEmitter<ChangedTimeEvent>();
   @Output() changedPlannedTime = new EventEmitter<ChangedTimeEvent>();
 }
-
-export type Time = {
-  hours: number;
-  minutes: number;
-  seconds: number;
-};

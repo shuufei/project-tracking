@@ -2,14 +2,13 @@ import {
   ChangeDetectionStrategy,
   Component,
   Inject,
-  Input,
   OnInit,
 } from '@angular/core';
 import {
   APOLLO_DATA_QUERY,
   IApolloDataQuery,
 } from '@bison/frontend/application';
-import { Subtask, Task } from '@bison/frontend/domain';
+import { isSubtask, Subtask, Task } from '@bison/frontend/domain';
 import { User } from '@bison/frontend/ui';
 import { RxState } from '@rx-angular/state';
 import { TuiNotificationsService } from '@taiga-ui/core';
@@ -56,11 +55,6 @@ type State = {
   providers: [RxState],
 })
 export class TaskDialogSubtaskContentComponent implements OnInit {
-  @Input()
-  set subtask(value: Subtask) {
-    this.state.set('subtask', () => value);
-  }
-
   /**
    * State
    */
@@ -98,6 +92,14 @@ export class TaskDialogSubtaskContentComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.state.connect(
+      'subtask',
+      this.taskDialogService.currentContent$.pipe(
+        filter((v): v is Subtask => {
+          return isSubtask(v);
+        })
+      )
+    );
     this.state.connect(
       'users',
       this.apolloDataQuery
@@ -355,7 +357,7 @@ export class TaskDialogSubtaskContentComponent implements OnInit {
           this.taskDialogService.close();
         }),
         switchMap(() => {
-          return this.notificationsService.show('サブタスクが削除されました', {
+          return this.notificationsService.show('サブタスクを削除しました', {
             hasCloseButton: true,
           });
         })

@@ -13,3 +13,7 @@ export type Subtask = Pick<
 > & {
   assignUser?: User;
 };
+
+export const isSubtask = (value: Subtask | unknown): value is Subtask => {
+  return (value as Subtask).isDone != null;
+};

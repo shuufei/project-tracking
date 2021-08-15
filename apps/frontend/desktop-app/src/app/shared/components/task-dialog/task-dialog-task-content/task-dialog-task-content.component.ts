@@ -3,7 +3,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   Inject,
-  Input,
   OnInit,
 } from '@angular/core';
 import {
@@ -14,7 +13,7 @@ import {
   IUpdateTaskUsecase,
   UPDATE_TASK_USECASE,
 } from '@bison/frontend/application';
-import { Task } from '@bison/frontend/domain';
+import { isTask, Task } from '@bison/frontend/domain';
 import { Board, User } from '@bison/frontend/ui';
 import { DeleteTaskInput, UpdateTaskInput } from '@bison/shared/schema';
 import { RxState } from '@rx-angular/state';
@@ -83,6 +82,20 @@ const TASKGROUP_FIELDS = gql`
         id
       }
     }
+    tasks {
+      id
+      title
+      description
+      status
+      workTimeSec
+      scheduledTimeSec
+      workStartDateTimestamp
+      assign {
+        id
+        name
+        icon
+      }
+    }
   }
 `;
 
@@ -115,11 +128,6 @@ type State = {
   providers: [RxState],
 })
 export class TaskDialogTaskContentComponent implements OnInit {
-  @Input()
-  set task(value: Task) {
-    this.state.set('task', () => value);
-  }
-
   /**
    * State
    */
@@ -167,10 +175,14 @@ export class TaskDialogTaskContentComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    /**
-     * TODO:
-     * - サブタスク追加
-     */
+    this.state.connect(
+      'task',
+      this.taskDialogService.currentContent$.pipe(
+        filter((latestContent): latestContent is Task => {
+          return isTask(latestContent);
+        })
+      )
+    );
     this.state.connect(this.onClickedEditTitleAndDescButton$, (state) => {
       return {
         ...state,
@@ -452,7 +464,7 @@ export class TaskDialogTaskContentComponent implements OnInit {
         }),
         switchMap(() => {
           this.taskDialogService.close();
-          return this.notificationsService.show('タスクが削除されました', {
+          return this.notificationsService.show('タスクを削除しました', {
             hasCloseButton: true,
           });
         })

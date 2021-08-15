@@ -34,6 +34,8 @@ export * from './lib/project-card/project-card.component';
 export * from './lib/project-card/project-card.module';
 export * from './lib/project-navigation/project-navigation.component';
 export * from './lib/project-navigation/project-navigation.module';
+export * from './lib/scheduled-time-sec-change-button/scheduled-time-sec-change-button.component';
+export * from './lib/scheduled-time-sec-change-button/scheduled-time-sec-change-button.module';
 export * from './lib/select-item/select-item.component';
 export * from './lib/select-item/select-item.module';
 export * from './lib/shared-ui.module';

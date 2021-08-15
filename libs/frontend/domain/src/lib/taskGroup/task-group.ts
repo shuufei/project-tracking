@@ -3,11 +3,30 @@ import {
   TaskGroup as DomainTaskGroup,
   User,
 } from '@bison/shared/domain';
+import { Task } from '../task/task';
 
 export type TaskGroup = Pick<
   DomainTaskGroup,
   'id' | 'title' | 'description' | 'scheduledTimeSec' | 'status' | 'tasksOrder'
 > & {
   board: Pick<Board, 'id' | 'name' | 'projectId' | 'description'>;
-  assign?: User;
+  assignUser?: User;
+  tasks: Pick<
+    Task,
+    | 'id'
+    | 'title'
+    | 'description'
+    | 'status'
+    | 'workTimeSec'
+    | 'scheduledTimeSec'
+    | 'workStartDateTimestamp'
+    | 'assignUser'
+  >[];
+};
+
+export const isTaskGroup = (value: TaskGroup | unknown): value is TaskGroup => {
+  return (
+    (value as TaskGroup).title != null &&
+    (value as TaskGroup).tasksOrder != null
+  );
 };

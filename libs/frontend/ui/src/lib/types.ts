@@ -6,3 +6,9 @@ export type Color =
   | 'primary-light3'
   | 'success'
   | 'warn';
+
+export type Time = {
+  hours: number;
+  minutes: number;
+  seconds: number;
+};

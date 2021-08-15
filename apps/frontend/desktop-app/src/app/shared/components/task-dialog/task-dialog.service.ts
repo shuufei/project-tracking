@@ -1,7 +1,7 @@
 import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { Subtask, Task, TaskGroup } from '@bison/frontend/domain';
 import { RxState } from '@rx-angular/state';
-import { map } from 'rxjs/operators';
+import { filter, map } from 'rxjs/operators';
 
 export type TaskDialogServiceState = {
   isOpened: boolean;
@@ -15,6 +15,15 @@ export class TaskDialogService {
   readonly contentHistory$ = this.state.select('contentHistory');
   readonly existsPrevContent$ = this.contentHistory$.pipe(
     map((history) => history.length >= 2)
+  );
+  readonly currentContent$ = this.contentHistory$.pipe(
+    map((contentHistory) => {
+      const latestContent = contentHistory[contentHistory.length - 1];
+      return latestContent;
+    }),
+    filter((v): v is NonNullable<typeof v> => {
+      return v != null;
+    })
   );
 
   constructor(

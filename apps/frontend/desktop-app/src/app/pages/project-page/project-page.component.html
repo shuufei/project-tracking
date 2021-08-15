@@ -50,12 +50,4 @@
       [triggerEl]="showTaskDialogButton.elementRef.nativeElement"
     ></bis-task-dialog>
   </div>
-
-  <ul>
-    <ng-container *ngFor="let project of state.projects">
-      <li class="mt-4">
-        {{ project | json }}
-      </li>
-    </ng-container>
-  </ul>
 </ng-container>
