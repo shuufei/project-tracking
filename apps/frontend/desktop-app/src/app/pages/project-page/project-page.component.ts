@@ -66,8 +66,8 @@ export class ProjectPageComponent implements OnInit {
     description: 'description',
     color: COLOR.Red,
     admin: {
-      id: 'id',
-      name: 'admin name',
+      id: 'user0001',
+      name: 'user name 0001',
     },
     members: [
       {
