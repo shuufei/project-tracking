@@ -6,7 +6,6 @@
     <ui-text-field
       placeholder="プロジェクト名を入力してください"
       class="project-name w-full mt-2"
-      [borderless]="true"
       [text]="state.name"
       (changedValue)="onChangedName$.next($event)"
     ></ui-text-field>
@@ -19,7 +18,6 @@
     <ui-textarea
       placeholder="任意: プロジェクトの説明を入力してください"
       [rows]="5"
-      [borderless]="true"
       [text]="state.description"
       class="w-full mt-2 project-description"
       (changedValue)="onChangedDescription$.next($event)"
