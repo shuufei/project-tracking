@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import {
   ApolloDataQuery,
@@ -18,6 +19,7 @@ import { ProjectMemberUpdateSheetComponent } from './project-member-update-sheet
 @NgModule({
   declarations: [ProjectMemberUpdateSheetComponent],
   imports: [
+    CommonModule,
     SheetModule,
     ButtonModule,
     MultiUserSelectPopupModule,

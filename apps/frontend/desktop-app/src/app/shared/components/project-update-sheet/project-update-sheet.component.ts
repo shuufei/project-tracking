@@ -16,8 +16,8 @@ import { TuiNotificationsService } from '@taiga-ui/core';
 import { gql } from 'apollo-angular';
 import { Subject } from 'rxjs';
 import { exhaustMap, switchMap } from 'rxjs/operators';
-import { ChangedPropertyEvent } from '../../../../shared/components/project-property-edit-form/project-property-edit-form.component';
-import { convertToApiColorFromDomainColor } from '../../../../util/convert-to-api-color-from-domain-color';
+import { convertToApiColorFromDomainColor } from '../../../util/convert-to-api-color-from-domain-color';
+import { ChangedPropertyEvent } from '../project-property-edit-form/project-property-edit-form.component';
 
 export const PROJECT_PARTS = gql`
   fragment ProjectParts on Project {

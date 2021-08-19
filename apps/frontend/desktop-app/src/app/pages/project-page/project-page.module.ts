@@ -5,9 +5,9 @@ import { BoardCreateSheetModule } from '../../shared/components/board-create-she
 import { BoardDeleteDialogModule } from '../../shared/components/board-delete-dialog/board-delete-dialog.module';
 import { BoardUpdateSheetModule } from '../../shared/components/board-update-sheet/board-update-sheet.module';
 import { ProjectAdminUpdateSheetModule } from '../../shared/components/project-admin-update-sheet/project-admin-update-sheet.module';
+import { ProjectMemberUpdateSheetModule } from '../../shared/components/project-member-update-sheet/project-member-update-sheet.module';
+import { ProjectUpdateSheetModule } from '../../shared/components/project-update-sheet/project-update-sheet.module';
 import { TaskDialogModule } from '../../shared/components/task-dialog/task-dialog.module';
-import { ProjectMemberUpdateSheetModule } from './components/project-member-update-sheet/project-member-update-sheet.module';
-import { ProjectUpdateSheetModule } from './components/project-update-sheet/project-update-sheet.module';
 import { ProjectPageRoutingModule } from './project-page-routing.module';
 import { ProjectPageComponent } from './project-page.component';
 
