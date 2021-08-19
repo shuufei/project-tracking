@@ -12,7 +12,6 @@
     <ui-text-field
       placeholder="ボード名を入力してください"
       class="board-name w-full mt-2"
-      [borderless]="true"
       [text]="state.name"
       (changedValue)="onChangedName$.next($event)"
     ></ui-text-field>
@@ -25,7 +24,6 @@
     <ui-textarea
       placeholder="任意: ボードの説明を入力してください"
       [rows]="5"
-      [borderless]="true"
       [text]="state.description"
       class="w-full mt-2 board-description"
       (changedValue)="onChangedDescription$.next($event)"

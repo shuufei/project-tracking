@@ -1,34 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import {
-  APOLLO_DATA_QUERY,
-  IApolloDataQuery,
-} from '@bison/frontend/application';
 import { COLOR } from '@bison/shared/domain';
-import { of } from 'rxjs';
-import { mockViewer } from '../../../../../testing/mock';
-import { ProjectPageModule } from '../../project-page.module';
 import { ProjectUpdateSheetComponent } from './project-update-sheet.component';
+import { ProjectUpdateSheetModule } from './project-update-sheet.module';
 
 describe('ProjectUpdateSheetComponent', () => {
   let component: ProjectUpdateSheetComponent;
   let fixture: ComponentFixture<ProjectUpdateSheetComponent>;
-  let apolloDataQuery: IApolloDataQuery;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ProjectPageModule],
+      imports: [ProjectUpdateSheetModule],
     }).compileComponents();
-  });
-
-  beforeEach(() => {
-    apolloDataQuery = TestBed.inject(APOLLO_DATA_QUERY);
-    jest.spyOn(apolloDataQuery, 'queryViewer').mockReturnValue(
-      of({
-        data: { viewer: mockViewer },
-        loading: false,
-        networkStatus: 7,
-      }) as ReturnType<IApolloDataQuery['queryViewer']>
-    );
   });
 
   beforeEach(() => {

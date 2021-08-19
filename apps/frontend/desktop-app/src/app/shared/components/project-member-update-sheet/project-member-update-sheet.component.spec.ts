@@ -4,8 +4,8 @@ import {
   IApolloDataQuery,
 } from '@bison/frontend/application';
 import { of } from 'rxjs';
-import { ProjectPageModule } from '../../project-page.module';
 import { ProjectMemberUpdateSheetComponent } from './project-member-update-sheet.component';
+import { ProjectMemberUpdateSheetModule } from './project-member-update-sheet.module';
 
 describe('ProjectMemberUpdateSheetComponent', () => {
   let component: ProjectMemberUpdateSheetComponent;
@@ -14,7 +14,7 @@ describe('ProjectMemberUpdateSheetComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ProjectPageModule],
+      imports: [ProjectMemberUpdateSheetModule],
     }).compileComponents();
   });
 
