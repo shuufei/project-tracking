@@ -4,14 +4,6 @@ import { NgModule } from '@angular/core';
 import {
   ApolloDataQuery,
   APOLLO_DATA_QUERY,
-  CreateSubtaskUsecase,
-  CREATE_SUBTASK_USECASE,
-  DeleteTaskUsecase,
-  DELETE_TASK_USECASE,
-  UpdateSubtaskUsecase,
-  UpdateTaskUsecase,
-  UPDATE_SUBTASK_USECASE,
-  UPDATE_TASK_USECASE,
 } from '@bison/frontend/application';
 import {
   ButtonModule,
@@ -80,22 +72,6 @@ import {
     {
       provide: APOLLO_DATA_QUERY,
       useClass: ApolloDataQuery,
-    },
-    {
-      provide: UPDATE_TASK_USECASE,
-      useClass: UpdateTaskUsecase,
-    },
-    {
-      provide: DELETE_TASK_USECASE,
-      useClass: DeleteTaskUsecase,
-    },
-    {
-      provide: CREATE_SUBTASK_USECASE,
-      useClass: CreateSubtaskUsecase,
-    },
-    {
-      provide: UPDATE_SUBTASK_USECASE,
-      useClass: UpdateSubtaskUsecase,
     },
     TaskDialogService,
     {
