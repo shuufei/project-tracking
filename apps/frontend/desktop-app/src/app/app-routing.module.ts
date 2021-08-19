@@ -17,6 +17,13 @@ const routes: Routes = [
       ),
   },
   {
+    path: 'sandbox',
+    loadChildren: () =>
+      import('./pages/sandbox-page/sandbox-page.module').then(
+        (m) => m.SandboxPageModule
+      ),
+  },
+  {
     path: '**',
     redirectTo: '/project',
   },
