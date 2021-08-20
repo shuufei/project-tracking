@@ -12,9 +12,8 @@ import { Subject } from 'rxjs';
 
 type State = {
   title: string;
-  plannedTimeSec?: number;
-  selfTrackingTimeSec?: number;
-  otherTrackingTimeSec?: number;
+  scheduledTimeSec?: number;
+  workTimeSec?: number;
   isTracking: boolean;
   isHover: boolean;
 };
@@ -32,16 +31,12 @@ export class TaskCardComponent implements OnInit {
     this.state.set('title', () => value);
   }
   @Input()
-  set plannedTimeSec(value: number) {
-    this.state.set('plannedTimeSec', () => value);
+  set scheduledTimeSec(value: number) {
+    this.state.set('scheduledTimeSec', () => value);
   }
   @Input()
-  set selfTrackingTimeSec(value: number) {
-    this.state.set('selfTrackingTimeSec', () => value);
-  }
-  @Input()
-  set otherTrackingTimeSec(value: number) {
-    this.state.set('otherTrackingTimeSec', () => value);
+  set workTimeSec(value: number) {
+    this.state.set('workTimeSec', () => value);
   }
   @Input()
   set isTracking(value: boolean) {
@@ -66,12 +61,12 @@ export class TaskCardComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.state.connect('selfTrackingTimeSec', this.onChangedTrackingTimeSec$);
-    this.state.connect('plannedTimeSec', this.onChangedPlannedTimeSec$);
-    this.state.hold(this.state.select('selfTrackingTimeSec'), (sec) => {
+    this.state.connect('workTimeSec', this.onChangedTrackingTimeSec$);
+    this.state.connect('scheduledTimeSec', this.onChangedPlannedTimeSec$);
+    this.state.hold(this.state.select('workTimeSec'), (sec) => {
       this.changedTrackingTimeSec.emit(sec);
     });
-    this.state.hold(this.state.select('plannedTimeSec'), (sec) => {
+    this.state.hold(this.state.select('scheduledTimeSec'), (sec) => {
       this.changedPlannedTimeSec.emit(sec);
     });
     this.state.hold(this.state.select('isHover'), (isHover) => {

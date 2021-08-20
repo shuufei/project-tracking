@@ -60,40 +60,41 @@
     </div>
   </div>
 
-  <ng-container
-    *ngIf="
-      state.selfTrackingTimeSec !== undefined ||
-      state.otherTrackingTimeSec !== undefined ||
-      state.plannedTimeSec !== undefined
-    "
-  >
-    <hr class="bg-primary-light3" />
-    <div class="flex items-center justify-between py-2 px-3">
-      <ui-icon
-        [icon]="'clock'"
-        [size]="'s'"
-        [color]="'primary-light2'"
-      ></ui-icon>
-      <div class="flex items-center">
-        <ng-container *ngIf="state.otherTrackingTimeSec !== undefined">
-          <ui-time-label
-            [status]="'readonly'"
-            [sec]="state.otherTrackingTimeSec"
-          ></ui-time-label>
+  <hr class="bg-primary-light3" />
+  <div class="flex items-center justify-between py-2 px-3">
+    <ui-icon [icon]="'clock'" [size]="'s'" [color]="'primary-light2'"></ui-icon>
+    <div class="flex items-center">
+      <ng-container *ngIf="state.workTimeSec !== undefined">
+        <ui-tracking-log-change-button
+          class="ml-2"
+          [trackingTimeSec]="state.workTimeSec || 0"
+          [plannedTimeSec]="state.scheduledTimeSec || 0"
+          [isTracking]="state.isTracking"
+          (changedTrackingTimeSec)="onChangedTrackingTimeSec$.next($event)"
+          (changedPlannedTimeSec)="onChangedPlannedTimeSec$.next($event)"
+        ></ui-tracking-log-change-button>
+      </ng-container>
+
+      <button class="focus:outline-none leading-none ml-2 tracking-button">
+        <ng-container *ngIf="!state.isTracking; else trackingStopButton">
+          <span
+            class="inline-block"
+            uiTooltip="トラッキング開始"
+            uiTooltipDirection="bottom-right"
+          >
+            <ui-icon icon="play" size="s"></ui-icon>
+          </span>
         </ng-container>
-        <ng-container
-          *ngIf="state.selfTrackingTimeSec !== undefined || state.isTracking"
-        >
-          <ui-tracking-log-change-button
-            class="ml-2"
-            [trackingTimeSec]="state.selfTrackingTimeSec || 0"
-            [plannedTimeSec]="state.plannedTimeSec || 0"
-            [isTracking]="state.isTracking"
-            (changedTrackingTimeSec)="onChangedTrackingTimeSec$.next($event)"
-            (changedPlannedTimeSec)="onChangedPlannedTimeSec$.next($event)"
-          ></ui-tracking-log-change-button>
-        </ng-container>
-      </div>
+        <ng-template #trackingStopButton>
+          <span
+            class="inline-block"
+            uiTooltip="トラッキング停止"
+            uiTooltipDirection="bottom-right"
+          >
+            <ui-icon icon="pause" size="s"></ui-icon>
+          </span>
+        </ng-template>
+      </button>
     </div>
-  </ng-container>
+  </div>
 </ng-container>
