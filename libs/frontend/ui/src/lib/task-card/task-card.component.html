@@ -34,21 +34,27 @@
               [itemName]="'別のボードに移動'"
               [color]="'primary'"
               [icon]="'arrow-right'"
-              (clickedItem)="clickedMoveBoard.emit()"
+              (clickedItem)="openeSelectBoardPopup$.next(true)"
             ></ui-menu-item>
             <ui-menu-item
               class="mt-2"
               [itemName]="'削除'"
               [color]="'warn'"
               [icon]="'trash-2'"
-              (clickedItem)="isOpenedDeleteConfirm$.next(true)"
+              (clickedItem)="openeDeleteConfirmPopup$.next(true)"
             ></ui-menu-item>
           </div>
         </ui-popup>
         <ui-delete-confirm-popup
-          [isOpened$]="isOpenedDeleteConfirm$.asObservable()"
+          [isOpened$]="openeDeleteConfirmPopup$.asObservable()"
           (delete)="delete.emit()"
         ></ui-delete-confirm-popup>
+        <ui-board-select-popup
+          [isOpened$]="openeSelectBoardPopup$.asObservable()"
+          [boards]="state.boards"
+          [selectedBoardId]="state.selectedBoardId"
+          (selectBoard)="selectBoard.emit($event)"
+        ></ui-board-select-popup>
       </div>
     </div>
 

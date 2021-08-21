@@ -11,7 +11,7 @@ import {
   IApolloDataQuery,
 } from '@bison/frontend/application';
 import { Task } from '@bison/frontend/domain';
-import { User } from '@bison/frontend/ui';
+import { Board, User } from '@bison/frontend/ui';
 import { RxState } from '@rx-angular/state';
 import { TuiNotificationsService } from '@taiga-ui/core';
 import { gql } from 'apollo-angular';
@@ -35,10 +35,21 @@ const USER_FIELDS = gql`
   }
 `;
 
+const PROJECT_FIELDS = gql`
+  fragment ProjectPartsInTaskCard on Project {
+    id
+    boards {
+      id
+      name
+    }
+  }
+`;
+
 type State = {
   task?: Task;
   isHovered: boolean;
   users: User[];
+  boards: Board[];
 };
 
 @Component({
@@ -69,6 +80,7 @@ export class TaskCardComponent implements OnInit {
   readonly onChangedWorkTimeSec$ = new Subject<number>();
   readonly onChangedScheduledTimeSec$ = new Subject<number>();
   readonly onDelete$ = new Subject<void>();
+  readonly onSelectedBoard$ = new Subject<Board['id']>();
   readonly onDrop$ = new Subject<CdkDragDrop<Task['subtasks']>>();
 
   constructor(
@@ -81,6 +93,7 @@ export class TaskCardComponent implements OnInit {
     this.state.set({
       isHovered: false,
       users: [],
+      boards: [],
     });
   }
 
@@ -108,6 +121,33 @@ export class TaskCardComponent implements OnInit {
             });
           })
         )
+    );
+    this.state.connect(
+      'boards',
+      this.state.select('task').pipe(
+        map((task) => task?.board.project.id),
+        filter((v): v is NonNullable<typeof v> => v != null),
+        switchMap((projectId) => {
+          return this.apolloDataQuery.queryProject(
+            {
+              fields: PROJECT_FIELDS,
+              name: 'ProjectPartsInTaskCard',
+            },
+            projectId,
+            { fetchPolicy: 'cache-only' }
+          );
+        }),
+        map((response) => {
+          return (
+            response.data.project?.boards.map((board) => {
+              return {
+                id: board.id,
+                name: board.name,
+              };
+            }) ?? []
+          );
+        })
+      )
     );
 
     this.state.hold(
@@ -274,6 +314,18 @@ export class TaskCardComponent implements OnInit {
           return this.notificationsService.show('タスクを削除しました', {
             hasCloseButton: true,
           });
+        })
+      )
+    );
+    this.state.hold(
+      this.onSelectedBoard$.pipe(
+        filter((boardId) => {
+          return boardId !== this.state.get('task')?.board.id;
+        }),
+        exhaustMap((boardId) => {
+          const task = this.state.get('task');
+          if (task == null) return of(undefined);
+          return this.taskFacadeService.updateBoard(boardId, task);
         })
       )
     );

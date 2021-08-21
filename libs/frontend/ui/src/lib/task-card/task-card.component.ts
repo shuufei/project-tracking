@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { RxState } from '@rx-angular/state';
 import { Subject } from 'rxjs';
+import { Board } from '../board-select-popup/board-select-popup.component';
 
 type State = {
   title: string;
@@ -16,6 +17,8 @@ type State = {
   workTimeSec?: number;
   isTracking: boolean;
   isHover: boolean;
+  boards: Board[];
+  selectedBoardId: Board['id'];
 };
 
 @Component({
@@ -42,28 +45,38 @@ export class TaskCardComponent implements OnInit {
   set isTracking(value: boolean) {
     this.state.set('isTracking', () => value);
   }
+  @Input()
+  set boardId(value: Board['id']) {
+    this.state.set('selectedBoardId', () => value);
+  }
+  @Input()
+  set boards(value: Board[]) {
+    this.state.set('boards', () => value);
+  }
   @Output() hover = new EventEmitter<boolean>();
   @Output() changedWorkTimeSec = new EventEmitter<number>();
   @Output() changedScheduledTimeSec = new EventEmitter<number>();
   @Output() clickedPlay = new EventEmitter<void>();
   @Output() clickedPause = new EventEmitter<void>();
   @Output() delete = new EventEmitter<void>();
-  @Output() clickedMoveBoard = new EventEmitter<void>();
+  @Output() selectBoard = new EventEmitter<Board['id']>();
   @Output() clickedAddSubtask = new EventEmitter<void>();
   @Output() clickedEdit = new EventEmitter<void>();
 
   // State
   readonly state$ = this.state.select();
-  readonly isOpenedDeleteConfirm$ = new Subject<boolean>();
 
   // Events
   readonly onChangedWorkTimeSec$ = new Subject<number>();
   readonly onChangedScheduledTimeSec$ = new Subject<number>();
+  readonly openeDeleteConfirmPopup$ = new Subject<boolean>();
+  readonly openeSelectBoardPopup$ = new Subject<boolean>();
 
   constructor(private state: RxState<State>) {
     this.state.set({
       title: '',
       isTracking: false,
+      boards: [],
     });
   }
 

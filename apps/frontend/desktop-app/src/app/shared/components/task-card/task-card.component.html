@@ -5,12 +5,15 @@
       [workTimeSec]="state.task.workTimeSec"
       [scheduledTimeSec]="state.task.scheduledTimeSec"
       [isTracking]="state.task.workStartDateTimestamp !== undefined"
+      [boards]="state.boards"
+      [boardId]="state.task.board.id"
       (hover)="onHover$.next($event)"
       (clickedPlay)="onClickedPlay$.next()"
       (clickedPause)="onClickedPause$.next()"
       (changedWorkTimeSec)="onChangedWorkTimeSec$.next($event)"
       (changedScheduledTimeSec)="onChangedScheduledTimeSec$.next($event)"
       (delete)="onDelete$.next()"
+      (selectBoard)="onSelectedBoard$.next($event)"
     >
       <ng-container *ngIf="state.task.subtasks.length > 0">
         <div

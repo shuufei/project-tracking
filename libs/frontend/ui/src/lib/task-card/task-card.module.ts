@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { BoardSelectPopupModule } from '../board-select-popup/board-select-popup.module';
 import { ButtonModule } from '../button/button.module';
 import { DeleteConfirmPopupModule } from '../delete-confirm-popup/delete-confirm-popup.module';
 import { IconModule } from '../icon/icon.module';
@@ -22,6 +23,7 @@ import { TaskCardComponent } from './task-card.component';
     ButtonModule,
     TooltipModule,
     DeleteConfirmPopupModule,
+    BoardSelectPopupModule,
   ],
   exports: [TaskCardComponent],
 })
