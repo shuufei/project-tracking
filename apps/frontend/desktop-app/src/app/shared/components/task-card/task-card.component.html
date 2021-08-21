@@ -12,7 +12,11 @@
       (changedScheduledTimeSec)="onChangedScheduledTimeSec$.next($event)"
     >
       <ng-container *ngIf="state.task.subtasks.length > 0">
-        <div class="mt-1 mb-2">
+        <div
+          class="mt-1 mb-2"
+          cdkDropList
+          (cdkDropListDropped)="onDrop$.next($event)"
+        >
           <ng-container *ngFor="let subtask of state.task.subtasks">
             <ui-subtask
               [title]="subtask.title"
@@ -20,6 +24,7 @@
               [workTimeSec]="subtask.workTimeSec"
               [scheduledTimeSec]="subtask.scheduledTimeSec"
               [isTrackiing]="subtask.workStartDateTimestamp !== undefinied"
+              cdkDrag
             ></ui-subtask>
           </ng-container>
         </div>

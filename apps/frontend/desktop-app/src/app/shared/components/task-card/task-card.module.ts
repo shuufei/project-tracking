@@ -1,3 +1,4 @@
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import {
@@ -24,6 +25,7 @@ import { TaskCardComponent } from './task-card.component';
     TooltipModule,
     SubtaskModule,
     TaskFacadeModule,
+    DragDropModule,
   ],
   exports: [TaskCardComponent],
   providers: [

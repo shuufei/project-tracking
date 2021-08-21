@@ -1,3 +1,4 @@
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -66,6 +67,7 @@ export class TaskCardComponent implements OnInit {
   readonly onChangedWorkTimeSec$ = new Subject<number>();
   readonly onChangedScheduledTimeSec$ = new Subject<number>();
   readonly onDelete$ = new Subject<void>();
+  readonly onDrop$ = new Subject<CdkDragDrop<Task['subtasks']>>();
 
   constructor(
     private state: RxState<State>,
@@ -219,6 +221,41 @@ export class TaskCardComponent implements OnInit {
           const task = this.state.get('task');
           if (task == null) return of(undefined);
           return this.taskFacadeService.updateScheduledTimeSec(sec, task);
+        })
+      )
+    );
+    this.state.hold(
+      this.onDrop$.pipe(
+        map((dropEvent) => {
+          const task = this.state.get('task');
+          if (task == null) {
+            return [];
+          }
+          const subtasks = [...(task?.subtasks ?? [])];
+          moveItemInArray(
+            subtasks,
+            dropEvent.previousIndex,
+            dropEvent.currentIndex
+          );
+          return subtasks;
+        }),
+        tap((subtasks) => {
+          const task = this.state.get('task');
+          if (task == null) {
+            return task;
+          }
+          const subtasksOrder = subtasks.map((v) => v.id);
+          this.state.set('task', () => {
+            return { ...task, subtasks, subtasksOrder };
+          });
+        }),
+        exhaustMap((subtasks) => {
+          const task = this.state.get('task');
+          if (task == null) return of(undefined);
+          return this.taskFacadeService.updateSubtasksOrder(
+            subtasks.map((v) => v.id),
+            task
+          );
         })
       )
     );
