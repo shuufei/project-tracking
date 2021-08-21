@@ -10,6 +10,7 @@
       (clickedPause)="onClickedPause$.next()"
       (changedWorkTimeSec)="onChangedWorkTimeSec$.next($event)"
       (changedScheduledTimeSec)="onChangedScheduledTimeSec$.next($event)"
+      (delete)="onDelete$.next()"
     >
       <ng-container *ngIf="state.task.subtasks.length > 0">
         <div

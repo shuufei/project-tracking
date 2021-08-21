@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ButtonModule } from '../button/button.module';
+import { DeleteConfirmPopupModule } from '../delete-confirm-popup/delete-confirm-popup.module';
 import { IconModule } from '../icon/icon.module';
 import { MenuItemModule } from '../menu-item/menu-item.module';
 import { PopupModule } from '../popup/popup.module';
@@ -20,6 +21,7 @@ import { TaskCardComponent } from './task-card.component';
     TrackingLogChangeButtonModule,
     ButtonModule,
     TooltipModule,
+    DeleteConfirmPopupModule,
   ],
   exports: [TaskCardComponent],
 })

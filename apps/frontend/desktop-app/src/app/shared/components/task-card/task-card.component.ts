@@ -13,6 +13,7 @@ import {
 import { Task } from '@bison/frontend/domain';
 import { User } from '@bison/frontend/ui';
 import { RxState } from '@rx-angular/state';
+import { TuiNotificationsService } from '@taiga-ui/core';
 import { gql } from 'apollo-angular';
 import { of, Subject } from 'rxjs';
 import {
@@ -21,6 +22,7 @@ import {
   map,
   pairwise,
   startWith,
+  switchMap,
   tap,
 } from 'rxjs/operators';
 import { TaskFacadeService } from '../../facade/task-facade/task-facade.service';
@@ -72,7 +74,9 @@ export class TaskCardComponent implements OnInit {
   constructor(
     private state: RxState<State>,
     @Inject(APOLLO_DATA_QUERY) private apolloDataQuery: IApolloDataQuery,
-    private taskFacadeService: TaskFacadeService
+    private taskFacadeService: TaskFacadeService,
+    @Inject(TuiNotificationsService)
+    private readonly notificationsService: TuiNotificationsService
   ) {
     this.state.set({
       isHovered: false,
@@ -256,6 +260,20 @@ export class TaskCardComponent implements OnInit {
             subtasks.map((v) => v.id),
             task
           );
+        })
+      )
+    );
+    this.state.hold(
+      this.onDelete$.pipe(
+        exhaustMap(() => {
+          const taskId = this.state.get('task')?.id;
+          if (taskId == null) return of(undefined);
+          return this.taskFacadeService.delete(taskId);
+        }),
+        switchMap(() => {
+          return this.notificationsService.show('タスクを削除しました', {
+            hasCloseButton: true,
+          });
         })
       )
     );

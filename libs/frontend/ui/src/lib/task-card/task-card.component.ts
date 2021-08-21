@@ -47,9 +47,14 @@ export class TaskCardComponent implements OnInit {
   @Output() changedScheduledTimeSec = new EventEmitter<number>();
   @Output() clickedPlay = new EventEmitter<void>();
   @Output() clickedPause = new EventEmitter<void>();
+  @Output() delete = new EventEmitter<void>();
+  @Output() clickedMoveBoard = new EventEmitter<void>();
+  @Output() clickedAddSubtask = new EventEmitter<void>();
+  @Output() clickedEdit = new EventEmitter<void>();
 
   // State
   readonly state$ = this.state.select();
+  readonly isOpenedDeleteConfirm$ = new Subject<boolean>();
 
   // Events
   readonly onChangedWorkTimeSec$ = new Subject<number>();

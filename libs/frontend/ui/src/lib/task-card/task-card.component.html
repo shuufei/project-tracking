@@ -41,10 +41,14 @@
               [itemName]="'削除'"
               [color]="'warn'"
               [icon]="'trash-2'"
-              (clickedItem)="clickedDelete.emit()"
+              (clickedItem)="isOpenedDeleteConfirm$.next(true)"
             ></ui-menu-item>
           </div>
         </ui-popup>
+        <ui-delete-confirm-popup
+          [isOpened$]="isOpenedDeleteConfirm$.asObservable()"
+          (delete)="delete.emit()"
+        ></ui-delete-confirm-popup>
       </div>
     </div>
 
