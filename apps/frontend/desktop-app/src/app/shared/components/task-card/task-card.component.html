@@ -1,0 +1,33 @@
+<ng-container *ngIf="state$ | async as state">
+  <ng-container *ngIf="state.task">
+    <ui-task-card
+      [title]="state.task.title"
+      [workTimeSec]="state.task.workTimeSec"
+      [scheduledTimeSec]="state.task.scheduledTimeSec"
+      [isTracking]="state.task.workStartDateTimestamp !== undefined"
+      (hover)="onHover$.next($event)"
+    >
+      <ng-container *ngIf="state.task.subtasks.length > 0">
+        <div class="mt-1 mb-2">
+          <ng-container *ngFor="let subtask of state.task.subtasks">
+            <ui-subtask
+              [title]="subtask.title"
+              [done]="subtask.isDone"
+              [workTimeSec]="subtask.workTimeSec"
+              [scheduledTimeSec]="subtask.scheduledTimeSec"
+              [isTrackiing]="subtask.workStartDateTimestamp !== undefinied"
+            ></ui-subtask>
+          </ng-container>
+        </div>
+      </ng-container>
+
+      <div class="flex justify-between mt-1">
+        <ui-assign-change-button
+          [users]="state.users"
+          [selectedUserId]="state.task?.assignUser?.id"
+          (selectedUser)="onChangedAssignUser$.next($event)"
+        ></ui-assign-change-button>
+      </div>
+    </ui-task-card>
+  </ng-container>
+</ng-container>
