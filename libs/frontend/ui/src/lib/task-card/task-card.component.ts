@@ -43,15 +43,17 @@ export class TaskCardComponent implements OnInit {
     this.state.set('isTracking', () => value);
   }
   @Output() hover = new EventEmitter<boolean>();
-  @Output() changedTrackingTimeSec = new EventEmitter<number>();
-  @Output() changedPlannedTimeSec = new EventEmitter<number>();
+  @Output() changedWorkTimeSec = new EventEmitter<number>();
+  @Output() changedScheduledTimeSec = new EventEmitter<number>();
+  @Output() clickedPlay = new EventEmitter<void>();
+  @Output() clickedPause = new EventEmitter<void>();
 
   // State
   readonly state$ = this.state.select();
 
   // Events
-  readonly onChangedTrackingTimeSec$ = new Subject<number>();
-  readonly onChangedPlannedTimeSec$ = new Subject<number>();
+  readonly onChangedWorkTimeSec$ = new Subject<number>();
+  readonly onChangedScheduledTimeSec$ = new Subject<number>();
 
   constructor(private state: RxState<State>) {
     this.state.set({
@@ -61,13 +63,13 @@ export class TaskCardComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.state.connect('workTimeSec', this.onChangedTrackingTimeSec$);
-    this.state.connect('scheduledTimeSec', this.onChangedPlannedTimeSec$);
+    this.state.connect('workTimeSec', this.onChangedWorkTimeSec$);
+    this.state.connect('scheduledTimeSec', this.onChangedScheduledTimeSec$);
     this.state.hold(this.state.select('workTimeSec'), (sec) => {
-      this.changedTrackingTimeSec.emit(sec);
+      this.changedWorkTimeSec.emit(sec);
     });
     this.state.hold(this.state.select('scheduledTimeSec'), (sec) => {
-      this.changedPlannedTimeSec.emit(sec);
+      this.changedScheduledTimeSec.emit(sec);
     });
     this.state.hold(this.state.select('isHover'), (isHover) => {
       this.hover.emit(isHover);

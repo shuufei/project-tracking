@@ -14,7 +14,14 @@ import { User } from '@bison/frontend/ui';
 import { RxState } from '@rx-angular/state';
 import { gql } from 'apollo-angular';
 import { of, Subject } from 'rxjs';
-import { exhaustMap, filter, map } from 'rxjs/operators';
+import {
+  exhaustMap,
+  filter,
+  map,
+  pairwise,
+  startWith,
+  tap,
+} from 'rxjs/operators';
 import { TaskFacadeService } from '../../facade/task-facade/task-facade.service';
 
 const USER_FIELDS = gql`
@@ -54,6 +61,11 @@ export class TaskCardComponent implements OnInit {
    */
   readonly onHover$ = new Subject<boolean>();
   readonly onChangedAssignUser$ = new Subject<User['id'] | undefined>();
+  readonly onClickedPlay$ = new Subject<void>();
+  readonly onClickedPause$ = new Subject<void>();
+  readonly onChangedWorkTimeSec$ = new Subject<number>();
+  readonly onChangedScheduledTimeSec$ = new Subject<number>();
+  readonly onDelete$ = new Subject<void>();
 
   constructor(
     private state: RxState<State>,
@@ -101,6 +113,112 @@ export class TaskCardComponent implements OnInit {
           const task = this.state.get('task');
           if (task == null) return of(undefined);
           return this.taskFacadeService.updateAssignUser(id, task);
+        })
+      )
+    );
+    this.state.hold(
+      this.onClickedPlay$.pipe(
+        exhaustMap(() => {
+          const now = new Date();
+          this.state.set('task', (state) => {
+            const task = state.task;
+            return task == null
+              ? task
+              : {
+                  ...task,
+                  workStartDateTimestamp: now.valueOf(),
+                };
+          });
+          const task = this.state.get('task');
+          if (task == null) return of(undefined);
+          return this.taskFacadeService.startTracking(now, task);
+        })
+      )
+    );
+    this.state.hold(
+      this.onClickedPause$.pipe(
+        exhaustMap(() => {
+          const task = this.state.get('task');
+          if (task == null) return of(undefined);
+          const start = task.workStartDateTimestamp;
+          const currentWorkTimeSec = task.workTimeSec;
+          if (start == null || currentWorkTimeSec == null) return of(undefined);
+          const now = new Date();
+          const diffTimeMilliSec = now.valueOf() - start;
+          const updatedWorkTimeSec =
+            currentWorkTimeSec + Math.ceil(diffTimeMilliSec / 1000);
+          this.state.set('task', (state) => {
+            const task = state.task;
+            return task == null
+              ? task
+              : {
+                  ...task,
+                  workTimeSec: updatedWorkTimeSec,
+                  workStartDateTimestamp: undefined,
+                };
+          });
+          return this.taskFacadeService.stopTracking(now, task);
+        })
+      )
+    );
+    this.state.hold(
+      this.onChangedWorkTimeSec$.pipe(
+        startWith(this.state.get('task')?.workTimeSec ?? 0),
+        pairwise(),
+        filter(([prev, sec]) => {
+          const diff = sec - prev;
+          const isChangedByCtrlBtn = diff > 1;
+          const isTracking =
+            this.state.get('task')?.workStartDateTimestamp != null;
+          return isChangedByCtrlBtn || !isTracking;
+        }),
+        map(([, current]) => current),
+        filter((sec) => {
+          return sec !== this.state.get('task')?.workTimeSec;
+        }),
+        exhaustMap((sec) => {
+          const task = this.state.get('task');
+          if (task == null) return of(undefined);
+          const workStartDateTimestamp =
+            task.workStartDateTimestamp && new Date().valueOf();
+          this.state.set('task', (state) => {
+            const task = state.task;
+            return task == null
+              ? task
+              : {
+                  ...task,
+                  workTimeSec: sec,
+                  workStartDateTimestamp,
+                };
+          });
+          return this.taskFacadeService.updateWorkTimeSec(
+            sec,
+            workStartDateTimestamp,
+            task
+          );
+        })
+      )
+    );
+    this.state.hold(
+      this.onChangedScheduledTimeSec$.pipe(
+        filter((sec) => {
+          return sec !== this.state.get('task')?.scheduledTimeSec;
+        }),
+        tap((sec) => {
+          this.state.set('task', (state) => {
+            const task = state.task;
+            return task == null
+              ? task
+              : {
+                  ...task,
+                  scheduledTimeSec: sec,
+                };
+          });
+        }),
+        exhaustMap((sec) => {
+          const task = this.state.get('task');
+          if (task == null) return of(undefined);
+          return this.taskFacadeService.updateScheduledTimeSec(sec, task);
         })
       )
     );

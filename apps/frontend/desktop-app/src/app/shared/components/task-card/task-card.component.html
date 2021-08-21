@@ -6,6 +6,10 @@
       [scheduledTimeSec]="state.task.scheduledTimeSec"
       [isTracking]="state.task.workStartDateTimestamp !== undefined"
       (hover)="onHover$.next($event)"
+      (clickedPlay)="onClickedPlay$.next()"
+      (clickedPause)="onClickedPause$.next()"
+      (changedWorkTimeSec)="onChangedWorkTimeSec$.next($event)"
+      (changedScheduledTimeSec)="onChangedScheduledTimeSec$.next($event)"
     >
       <ng-container *ngIf="state.task.subtasks.length > 0">
         <div class="mt-1 mb-2">

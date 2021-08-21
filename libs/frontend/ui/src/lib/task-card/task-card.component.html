@@ -63,8 +63,8 @@
           [trackingTimeSec]="state.workTimeSec || 0"
           [plannedTimeSec]="state.scheduledTimeSec || 0"
           [isTracking]="state.isTracking"
-          (changedTrackingTimeSec)="onChangedTrackingTimeSec$.next($event)"
-          (changedPlannedTimeSec)="onChangedPlannedTimeSec$.next($event)"
+          (changedTrackingTimeSec)="onChangedWorkTimeSec$.next($event)"
+          (changedPlannedTimeSec)="onChangedScheduledTimeSec$.next($event)"
         ></ui-tracking-log-change-button>
       </ng-container>
 
@@ -74,6 +74,7 @@
             class="inline-block"
             uiTooltip="トラッキング開始"
             uiTooltipDirection="bottom-right"
+            (click)="clickedPlay.emit()"
           >
             <ui-icon icon="play" size="s"></ui-icon>
           </span>
@@ -83,6 +84,7 @@
             class="inline-block"
             uiTooltip="トラッキング停止"
             uiTooltipDirection="bottom-right"
+            (click)="clickedPause.emit()"
           >
             <ui-icon icon="pause" size="s"></ui-icon>
           </span>
