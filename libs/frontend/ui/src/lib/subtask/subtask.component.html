@@ -18,48 +18,47 @@
         class="ml-2 w-full"
         [text]="state.title"
         (changedValue)="onChangedTitle$.next($event)"
+        (keypressEnter)="submitTitle.emit($event)"
       ></ui-text-field>
     </ng-template>
   </div>
 
-  <ng-container *ngIf="!state.isEditing">
-    <div class="flex items-center">
-      <ui-tracking-log-change-button
-        [trackingTimeSec]="state.workTimeSec || 0"
-        [plannedTimeSec]="state.scheduledTimeSec || 0"
-        [isTracking]="state.isTracking"
-        (changedTrackingTimeSec)="onChangedWorkTimeSec$.next($event)"
-        (changedPlannedTimeSec)="onChangedScheduledTimeSec$.next($event)"
-      ></ui-tracking-log-change-button>
+  <div class="flex items-center ml-2">
+    <ui-tracking-log-change-button
+      [trackingTimeSec]="state.workTimeSec || 0"
+      [plannedTimeSec]="state.scheduledTimeSec || 0"
+      [isTracking]="state.isTracking"
+      (changedTrackingTimeSec)="onChangedWorkTimeSec$.next($event)"
+      (changedPlannedTimeSec)="onChangedScheduledTimeSec$.next($event)"
+    ></ui-tracking-log-change-button>
 
-      <ng-container *ngIf="state.isTracking; else isPaused">
-        <span
-          [ngClass]="state.done ? 'invisible' : ''"
-          uiTooltip="トラッキング停止"
-          uiTooltipDirection="bottom-right"
-          class="inline-block"
-        >
-          <ui-icon
-            class="cursor-pointer ml-2"
-            [icon]="'pause'"
-            [size]="'s'"
-          ></ui-icon>
-        </span>
-      </ng-container>
-      <ng-template #isPaused>
-        <span
-          [ngClass]="state.done ? 'invisible' : ''"
-          uiTooltip="トラッキング開始"
-          uiTooltipDirection="bottom-right"
-          class="inline-block"
-        >
-          <ui-icon
-            class="cursor-pointer ml-2"
-            [icon]="'play'"
-            [size]="'s'"
-          ></ui-icon>
-        </span>
-      </ng-template>
-    </div>
-  </ng-container>
+    <ng-container *ngIf="state.isTracking; else isPaused">
+      <span
+        [ngClass]="state.done ? 'invisible' : ''"
+        uiTooltip="トラッキング停止"
+        uiTooltipDirection="bottom-right"
+        class="inline-block"
+      >
+        <ui-icon
+          class="cursor-pointer ml-2"
+          [icon]="'pause'"
+          [size]="'s'"
+        ></ui-icon>
+      </span>
+    </ng-container>
+    <ng-template #isPaused>
+      <span
+        [ngClass]="state.done ? 'invisible' : ''"
+        uiTooltip="トラッキング開始"
+        uiTooltipDirection="bottom-right"
+        class="inline-block"
+      >
+        <ui-icon
+          class="cursor-pointer ml-2"
+          [icon]="'play'"
+          [size]="'s'"
+        ></ui-icon>
+      </span>
+    </ng-template>
+  </div>
 </ng-container>

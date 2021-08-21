@@ -60,7 +60,7 @@ export class TaskCardComponent implements OnInit {
   @Output() clickedPause = new EventEmitter<void>();
   @Output() delete = new EventEmitter<void>();
   @Output() selectBoard = new EventEmitter<Board['id']>();
-  @Output() clickedAddSubtask = new EventEmitter<void>();
+  @Output() addSubtask = new EventEmitter<void>();
   @Output() clickedEdit = new EventEmitter<void>();
 
   // State

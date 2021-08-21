@@ -13,6 +13,7 @@ import {
   TooltipModule,
 } from '@bison/frontend/ui';
 import { TuiNotificationsModule } from '@taiga-ui/core';
+import { SubtaskFacadeModule } from '../../facade/subtask-facade/subtask-facade.module';
 import { TaskFacadeModule } from '../../facade/task-facade/task-facade.module';
 import { TaskCardComponent } from './task-card.component';
 
@@ -26,6 +27,7 @@ import { TaskCardComponent } from './task-card.component';
     TooltipModule,
     SubtaskModule,
     TaskFacadeModule,
+    SubtaskFacadeModule,
     DragDropModule,
     TuiNotificationsModule,
   ],

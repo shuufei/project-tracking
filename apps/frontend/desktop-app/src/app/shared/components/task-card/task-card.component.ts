@@ -12,7 +12,7 @@ import {
 } from '@bison/frontend/application';
 import { Task } from '@bison/frontend/domain';
 import { Board, User } from '@bison/frontend/ui';
-import { RxState } from '@rx-angular/state';
+import { RxState, update } from '@rx-angular/state';
 import { TuiNotificationsService } from '@taiga-ui/core';
 import { gql } from 'apollo-angular';
 import { of, Subject } from 'rxjs';
@@ -25,6 +25,7 @@ import {
   switchMap,
   tap,
 } from 'rxjs/operators';
+import { SubtaskFacadeService } from '../../facade/subtask-facade/subtask-facade.service';
 import { TaskFacadeService } from '../../facade/task-facade/task-facade.service';
 
 const USER_FIELDS = gql`
@@ -82,11 +83,17 @@ export class TaskCardComponent implements OnInit {
   readonly onDelete$ = new Subject<void>();
   readonly onSelectedBoard$ = new Subject<Board['id']>();
   readonly onDrop$ = new Subject<CdkDragDrop<Task['subtasks']>>();
+  readonly onAddSubtask$ = new Subject<void>();
+  readonly onSubmitSutbtaskTitle$ = new Subject<{
+    id: string;
+    title: string;
+  }>();
 
   constructor(
     private state: RxState<State>,
     @Inject(APOLLO_DATA_QUERY) private apolloDataQuery: IApolloDataQuery,
     private taskFacadeService: TaskFacadeService,
+    private readonly subtaskFacadeService: SubtaskFacadeService,
     @Inject(TuiNotificationsService)
     private readonly notificationsService: TuiNotificationsService
   ) {
@@ -326,6 +333,57 @@ export class TaskCardComponent implements OnInit {
           const task = this.state.get('task');
           if (task == null) return of(undefined);
           return this.taskFacadeService.updateBoard(boardId, task);
+        })
+      )
+    );
+    this.state.hold(
+      this.onAddSubtask$.pipe(
+        exhaustMap(() => {
+          const task = this.state.get('task');
+          if (task == null) return of(undefined);
+          return this.subtaskFacadeService.create('', task.id);
+        }),
+        filter((v): v is NonNullable<typeof v> => v != null),
+        tap((subtask) => {
+          this.state.set('task', ({ task }) => {
+            if (task == null) return task;
+            return {
+              ...task,
+              subtasks: [...task.subtasks, subtask],
+              subtasksOrder: [...task.subtasksOrder, subtask.id],
+            };
+          });
+        })
+      )
+    );
+    this.state.hold(
+      this.onSubmitSutbtaskTitle$.pipe(
+        tap(({ id, title }) => {
+          this.state.set('task', (state) => {
+            const task = state.task;
+            if (task == null) return task;
+            const subtask = task.subtasks.find((v) => v.id === id);
+            return subtask == null
+              ? state.task
+              : {
+                  ...task,
+                  subtasks: update(
+                    task.subtasks,
+                    {
+                      ...subtask,
+                      title,
+                    },
+                    'id'
+                  ),
+                };
+          });
+        }),
+        exhaustMap(({ id, title }) => {
+          const subtask = this.state
+            .get('task')
+            ?.subtasks.find((v) => v.id === id);
+          if (subtask == null) return of(undefined);
+          return this.subtaskFacadeService.updateTitle(title, subtask);
         })
       )
     );

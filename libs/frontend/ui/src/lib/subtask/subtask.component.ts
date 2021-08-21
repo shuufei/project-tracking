@@ -60,6 +60,7 @@ export class SubtaskComponent implements OnInit, AfterViewInit {
     this.state.set('isEditing', () => value);
   }
   @Output() changedTitle = new EventEmitter<string>();
+  @Output() submitTitle = new EventEmitter<string>();
   @Output() changedDone = new EventEmitter<boolean>();
   @Output() clickedPlay = new EventEmitter<void>();
   @Output() clickedPause = new EventEmitter<void>();

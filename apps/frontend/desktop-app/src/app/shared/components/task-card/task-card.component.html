@@ -14,6 +14,7 @@
       (changedScheduledTimeSec)="onChangedScheduledTimeSec$.next($event)"
       (delete)="onDelete$.next()"
       (selectBoard)="onSelectedBoard$.next($event)"
+      (addSubtask)="onAddSubtask$.next()"
     >
       <ng-container *ngIf="state.task.subtasks.length > 0">
         <div
@@ -28,6 +29,10 @@
               [workTimeSec]="subtask.workTimeSec"
               [scheduledTimeSec]="subtask.scheduledTimeSec"
               [isTrackiing]="subtask.workStartDateTimestamp !== undefinied"
+              [isEditing]="!subtask.title"
+              (submitTitle)="
+                onSubmitSutbtaskTitle$.next({ id: subtask.id, title: $event })
+              "
               cdkDrag
             ></ui-subtask>
           </ng-container>
