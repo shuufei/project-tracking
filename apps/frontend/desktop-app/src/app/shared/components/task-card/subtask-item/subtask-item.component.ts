@@ -12,6 +12,7 @@ import { MonoTypeOperatorFunction, pipe, Subject } from 'rxjs';
 import { exhaustMap, tap, withLatestFrom } from 'rxjs/operators';
 import { nonNullable } from '../../../../util/custom-operators/non-nullable';
 import { updateScheduledTimeSecState } from '../../../../util/custom-operators/state-updators/update-scheduled-time-sec-state';
+import { updateSubtaskIsDoneState } from '../../../../util/custom-operators/state-updators/update-subtask-is-done-state';
 import { updateWorkTimeSecState } from '../../../../util/custom-operators/state-updators/update-work-time-sec-state';
 import { SubtaskFacadeService } from '../../../facade/subtask-facade/subtask-facade.service';
 
@@ -48,6 +49,7 @@ export class SubtaskItemComponent implements OnInit {
   >();
   readonly onClickedPlay$ = new Subject<void>();
   readonly onClickedPause$ = new Subject<void>();
+  readonly onChangedIsDone$ = new Subject<boolean>();
 
   constructor(
     private state: RxState<State>,
@@ -73,7 +75,15 @@ export class SubtaskItemComponent implements OnInit {
         })
       )
     );
-    this.state.hold(this.onChangedWorkTimeSec$.pipe());
+    this.state.hold(
+      this.onChangedIsDone$.pipe(
+        updateSubtaskIsDoneState(this.state),
+        this.emitUpdateEvent(),
+        exhaustMap(({ updated, current }) => {
+          return this.subtaskFacade.updateIsDoone(updated.isDone, current);
+        })
+      )
+    );
     this.state.hold(
       this.onChangedWorkTimeSec$.pipe(
         updateWorkTimeSecState(this.state, 'subtask'),
