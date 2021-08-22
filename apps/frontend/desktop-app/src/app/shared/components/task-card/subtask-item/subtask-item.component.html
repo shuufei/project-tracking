@@ -9,6 +9,9 @@
       [isEditing]="!state.subtask.title"
       (submitTitle)="onSubmitTitle$.next($event)"
       (changedTrackingTimeSec)="onChangedWorkTimeSec$.next($event)"
+      (changedScheduledTimeSec)="onChangedScheduledTimeSec$.next($event)"
+      (clickedPlay)="onClickedPlay$.next()"
+      (clickedPause)="onClickedPause$.next()"
     ></ui-subtask>
   </ng-container>
 </ng-container>

@@ -8,9 +8,10 @@ import {
 } from '@angular/core';
 import { Subtask } from '@bison/frontend/domain';
 import { RxState } from '@rx-angular/state';
-import { Subject } from 'rxjs';
+import { MonoTypeOperatorFunction, pipe, Subject } from 'rxjs';
 import { exhaustMap, tap, withLatestFrom } from 'rxjs/operators';
 import { nonNullable } from '../../../../util/custom-operators/non-nullable';
+import { updateScheduledTimeSecState } from '../../../../util/custom-operators/state-updators/update-scheduled-time-sec-state';
 import { updateWorkTimeSecState } from '../../../../util/custom-operators/state-updators/update-work-time-sec-state';
 import { SubtaskFacadeService } from '../../../facade/subtask-facade/subtask-facade.service';
 
@@ -42,7 +43,7 @@ export class SubtaskItemComponent implements OnInit {
    */
   readonly onSubmitTitle$ = new Subject<Subtask['title']>();
   readonly onChangedWorkTimeSec$ = new Subject<Subtask['workTimeSec']>();
-  readonly onChangedScheduledWorkTimeSec$ = new Subject<
+  readonly onChangedScheduledTimeSec$ = new Subject<
     NonNullable<Subtask['scheduledTimeSec']>
   >();
   readonly onClickedPlay$ = new Subject<void>();
@@ -76,9 +77,7 @@ export class SubtaskItemComponent implements OnInit {
     this.state.hold(
       this.onChangedWorkTimeSec$.pipe(
         updateWorkTimeSecState(this.state, 'subtask'),
-        tap(({ updated }) => {
-          this.update.emit(updated);
-        }),
+        this.emitUpdateEvent(),
         exhaustMap(({ updated, current }) => {
           return this.subtaskFacade.updateWorkTimeSec(
             updated.workTimeSec,
@@ -87,6 +86,29 @@ export class SubtaskItemComponent implements OnInit {
           );
         })
       )
+    );
+    this.state.hold(
+      this.onChangedScheduledTimeSec$.pipe(
+        updateScheduledTimeSecState(this.state, 'subtask'),
+        this.emitUpdateEvent(),
+        exhaustMap(({ updated, current }) => {
+          return this.subtaskFacade.updateScheduledTimeSec(
+            updated.scheduledTimeSec,
+            current
+          );
+        })
+      )
+    );
+  }
+
+  private emitUpdateEvent(): MonoTypeOperatorFunction<{
+    updated: Subtask;
+    current: Subtask;
+  }> {
+    return pipe(
+      tap(({ updated }) => {
+        this.update.emit(updated);
+      })
     );
   }
 }
