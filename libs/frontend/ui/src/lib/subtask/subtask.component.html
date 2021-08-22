@@ -38,6 +38,7 @@
         uiTooltip="トラッキング停止"
         uiTooltipDirection="bottom-right"
         class="inline-block"
+        (click)="clickedPause.emit()"
       >
         <ui-icon
           class="cursor-pointer ml-2"
@@ -52,6 +53,7 @@
         uiTooltip="トラッキング開始"
         uiTooltipDirection="bottom-right"
         class="inline-block"
+        (click)="clickedPlay.emit()"
       >
         <ui-icon
           class="cursor-pointer ml-2"

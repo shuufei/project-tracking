@@ -12,6 +12,7 @@ import { MonoTypeOperatorFunction, pipe, Subject } from 'rxjs';
 import { exhaustMap, tap, withLatestFrom } from 'rxjs/operators';
 import { nonNullable } from '../../../../util/custom-operators/non-nullable';
 import { updateScheduledTimeSecState } from '../../../../util/custom-operators/state-updators/update-scheduled-time-sec-state';
+import { updateStateOnPlay } from '../../../../util/custom-operators/state-updators/update-state-on-play';
 import { updateSubtaskIsDoneState } from '../../../../util/custom-operators/state-updators/update-subtask-is-done-state';
 import { updateWorkTimeSecState } from '../../../../util/custom-operators/state-updators/update-work-time-sec-state';
 import { SubtaskFacadeService } from '../../../facade/subtask-facade/subtask-facade.service';
@@ -104,6 +105,18 @@ export class SubtaskItemComponent implements OnInit {
         exhaustMap(({ updated, current }) => {
           return this.subtaskFacade.updateScheduledTimeSec(
             updated.scheduledTimeSec,
+            current
+          );
+        })
+      )
+    );
+    this.state.hold(
+      this.onClickedPlay$.pipe(
+        updateStateOnPlay(this.state, 'subtask'),
+        this.emitUpdateEvent(),
+        exhaustMap(({ updated, current }) => {
+          return this.subtaskFacade.startTracking(
+            new Date(updated.workStartDateTimestamp ?? new Date()),
             current
           );
         })

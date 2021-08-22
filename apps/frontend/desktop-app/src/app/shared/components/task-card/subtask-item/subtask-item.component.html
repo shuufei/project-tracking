@@ -5,7 +5,7 @@
       [done]="state.subtask.isDone"
       [workTimeSec]="state.subtask.workTimeSec"
       [scheduledTimeSec]="state.subtask.scheduledTimeSec"
-      [isTrackiing]="state.subtask.workStartDateTimestamp !== undefinied"
+      [isTracking]="state.subtask.workStartDateTimestamp !== undefinied"
       [isEditing]="!state.subtask.title"
       (submitTitle)="onSubmitTitle$.next($event)"
       (changedTrackingTimeSec)="onChangedWorkTimeSec$.next($event)"
