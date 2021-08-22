@@ -23,18 +23,11 @@
           (cdkDropListDropped)="onDrop$.next($event)"
         >
           <ng-container *ngFor="let subtask of state.task.subtasks">
-            <ui-subtask
-              [title]="subtask.title"
-              [done]="subtask.isDone"
-              [workTimeSec]="subtask.workTimeSec"
-              [scheduledTimeSec]="subtask.scheduledTimeSec"
-              [isTrackiing]="subtask.workStartDateTimestamp !== undefinied"
-              [isEditing]="!subtask.title"
-              (submitTitle)="
-                onSubmitSutbtaskTitle$.next({ id: subtask.id, title: $event })
-              "
+            <bis-subtask-item
+              [subtask]="subtask"
+              (update)="onUpdatedSubtask$.next($event)"
               cdkDrag
-            ></ui-subtask>
+            ></bis-subtask-item>
           </ng-container>
         </div>
       </ng-container>

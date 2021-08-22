@@ -1,0 +1,13 @@
+<ng-container *ngIf="state$ | async as state">
+  <ng-container *ngIf="state.subtask">
+    <ui-subtask
+      [title]="state.subtask.title"
+      [done]="state.subtask.isDone"
+      [workTimeSec]="state.subtask.workTimeSec"
+      [scheduledTimeSec]="state.subtask.scheduledTimeSec"
+      [isTrackiing]="state.subtask.workStartDateTimestamp !== undefinied"
+      [isEditing]="!state.subtask.title"
+      (submitTitle)="onSubmitTitle$.next($event)"
+    ></ui-subtask>
+  </ng-container>
+</ng-container>

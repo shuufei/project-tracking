@@ -10,7 +10,7 @@ import {
   APOLLO_DATA_QUERY,
   IApolloDataQuery,
 } from '@bison/frontend/application';
-import { Task } from '@bison/frontend/domain';
+import { Subtask, Task } from '@bison/frontend/domain';
 import { Board, User } from '@bison/frontend/ui';
 import { RxState, update } from '@rx-angular/state';
 import { TuiNotificationsService } from '@taiga-ui/core';
@@ -84,10 +84,17 @@ export class TaskCardComponent implements OnInit {
   readonly onSelectedBoard$ = new Subject<Board['id']>();
   readonly onDrop$ = new Subject<CdkDragDrop<Task['subtasks']>>();
   readonly onAddSubtask$ = new Subject<void>();
-  readonly onSubmitSutbtaskTitle$ = new Subject<{
+  readonly onUpdatedSubtask$ = new Subject<Subtask>();
+  readonly onChangedSubtaskWorkTimeSec$ = new Subject<{
     id: string;
-    title: string;
+    sec: NonNullable<Subtask['scheduledTimeSec']>;
   }>();
+  readonly onChangedScheduledWorkTimeSec$ = new Subject<{
+    id: string;
+    sec: NonNullable<Subtask['scheduledTimeSec']>;
+  }>();
+  readonly onClickedSubtaskPlay$ = new Subject<Subtask['id']>();
+  readonly onClickedSubtaskPause$ = new Subject<Subtask['id']>();
 
   constructor(
     private state: RxState<State>,
@@ -156,6 +163,14 @@ export class TaskCardComponent implements OnInit {
         })
       )
     );
+    this.state.connect('task', this.onUpdatedSubtask$, ({ task }, subtask) => {
+      if (task == null) return task;
+      console.log('update:', subtask);
+      return {
+        ...task,
+        subtaks: update(task.subtasks, subtask, 'id'),
+      };
+    });
 
     this.state.hold(
       this.onChangedAssignUser$.pipe(
@@ -353,37 +368,6 @@ export class TaskCardComponent implements OnInit {
               subtasksOrder: [...task.subtasksOrder, subtask.id],
             };
           });
-        })
-      )
-    );
-    this.state.hold(
-      this.onSubmitSutbtaskTitle$.pipe(
-        tap(({ id, title }) => {
-          this.state.set('task', (state) => {
-            const task = state.task;
-            if (task == null) return task;
-            const subtask = task.subtasks.find((v) => v.id === id);
-            return subtask == null
-              ? state.task
-              : {
-                  ...task,
-                  subtasks: update(
-                    task.subtasks,
-                    {
-                      ...subtask,
-                      title,
-                    },
-                    'id'
-                  ),
-                };
-          });
-        }),
-        exhaustMap(({ id, title }) => {
-          const subtask = this.state
-            .get('task')
-            ?.subtasks.find((v) => v.id === id);
-          if (subtask == null) return of(undefined);
-          return this.subtaskFacadeService.updateTitle(title, subtask);
         })
       )
     );

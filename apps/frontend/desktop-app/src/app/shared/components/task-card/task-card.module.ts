@@ -15,6 +15,7 @@ import {
 import { TuiNotificationsModule } from '@taiga-ui/core';
 import { SubtaskFacadeModule } from '../../facade/subtask-facade/subtask-facade.module';
 import { TaskFacadeModule } from '../../facade/task-facade/task-facade.module';
+import { SubtaskItemModule } from './subtask-item/subtask-item.module';
 import { TaskCardComponent } from './task-card.component';
 
 @NgModule({
@@ -30,6 +31,7 @@ import { TaskCardComponent } from './task-card.component';
     SubtaskFacadeModule,
     DragDropModule,
     TuiNotificationsModule,
+    SubtaskItemModule,
   ],
   exports: [TaskCardComponent],
   providers: [
