@@ -48,12 +48,7 @@ export const updateWorkTimeSecState = <
       };
     }),
     tap(({ updated }) => {
-      /**
-       * TODO:
-       * setを実行すると、Apolloのエラーになる
-       * エラー内容: "Observable cancelled prematurely"
-       */
-      // state.set(key, () => updated);
+      state.set(key, () => updated);
     })
   );
 };
