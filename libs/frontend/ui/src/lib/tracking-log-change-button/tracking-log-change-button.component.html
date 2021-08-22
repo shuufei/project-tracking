@@ -6,7 +6,7 @@
       [sec]="state.trackingTimeSec"
       [scheduledTimeSec]="state.plannedTimeSec || undefined"
       [isShowScheduledTime]="true"
-      [isShowSec]="true"
+      [isShowSec]="state.isTracking"
     ></ui-time-label>
     <ui-tracking-log-change-popup
       class="relative"
