@@ -9,14 +9,16 @@ import {
 } from '@angular/core';
 import { RxState } from '@rx-angular/state';
 import { Subject } from 'rxjs';
+import { Board } from '../board-select-popup/board-select-popup.component';
 
 type State = {
   title: string;
-  plannedTimeSec?: number;
-  selfTrackingTimeSec?: number;
-  otherTrackingTimeSec?: number;
+  scheduledTimeSec?: number;
+  workTimeSec?: number;
   isTracking: boolean;
   isHover: boolean;
+  boards: Board[];
+  selectedBoardId: Board['id'];
 };
 
 @Component({
@@ -32,47 +34,60 @@ export class TaskCardComponent implements OnInit {
     this.state.set('title', () => value);
   }
   @Input()
-  set plannedTimeSec(value: number) {
-    this.state.set('plannedTimeSec', () => value);
+  set scheduledTimeSec(value: number) {
+    this.state.set('scheduledTimeSec', () => value);
   }
   @Input()
-  set selfTrackingTimeSec(value: number) {
-    this.state.set('selfTrackingTimeSec', () => value);
-  }
-  @Input()
-  set otherTrackingTimeSec(value: number) {
-    this.state.set('otherTrackingTimeSec', () => value);
+  set workTimeSec(value: number) {
+    this.state.set('workTimeSec', () => value);
   }
   @Input()
   set isTracking(value: boolean) {
     this.state.set('isTracking', () => value);
   }
+  @Input()
+  set boardId(value: Board['id']) {
+    this.state.set('selectedBoardId', () => value);
+  }
+  @Input()
+  set boards(value: Board[]) {
+    this.state.set('boards', () => value);
+  }
   @Output() hover = new EventEmitter<boolean>();
-  @Output() changedTrackingTimeSec = new EventEmitter<number>();
-  @Output() changedPlannedTimeSec = new EventEmitter<number>();
+  @Output() changedWorkTimeSec = new EventEmitter<number>();
+  @Output() changedScheduledTimeSec = new EventEmitter<number>();
+  @Output() clickedPlay = new EventEmitter<void>();
+  @Output() clickedPause = new EventEmitter<void>();
+  @Output() delete = new EventEmitter<void>();
+  @Output() selectBoard = new EventEmitter<Board['id']>();
+  @Output() addSubtask = new EventEmitter<void>();
+  @Output() clickedEdit = new EventEmitter<void>();
 
   // State
   readonly state$ = this.state.select();
 
   // Events
-  readonly onChangedTrackingTimeSec$ = new Subject<number>();
-  readonly onChangedPlannedTimeSec$ = new Subject<number>();
+  readonly onChangedWorkTimeSec$ = new Subject<number>();
+  readonly onChangedScheduledTimeSec$ = new Subject<number>();
+  readonly openeDeleteConfirmPopup$ = new Subject<boolean>();
+  readonly openeSelectBoardPopup$ = new Subject<boolean>();
 
   constructor(private state: RxState<State>) {
     this.state.set({
       title: '',
       isTracking: false,
+      boards: [],
     });
   }
 
   ngOnInit() {
-    this.state.connect('selfTrackingTimeSec', this.onChangedTrackingTimeSec$);
-    this.state.connect('plannedTimeSec', this.onChangedPlannedTimeSec$);
-    this.state.hold(this.state.select('selfTrackingTimeSec'), (sec) => {
-      this.changedTrackingTimeSec.emit(sec);
+    this.state.connect('workTimeSec', this.onChangedWorkTimeSec$);
+    this.state.connect('scheduledTimeSec', this.onChangedScheduledTimeSec$);
+    this.state.hold(this.state.select('workTimeSec'), (sec) => {
+      this.changedWorkTimeSec.emit(sec);
     });
-    this.state.hold(this.state.select('plannedTimeSec'), (sec) => {
-      this.changedPlannedTimeSec.emit(sec);
+    this.state.hold(this.state.select('scheduledTimeSec'), (sec) => {
+      this.changedScheduledTimeSec.emit(sec);
     });
     this.state.hold(this.state.select('isHover'), (isHover) => {
       this.hover.emit(isHover);

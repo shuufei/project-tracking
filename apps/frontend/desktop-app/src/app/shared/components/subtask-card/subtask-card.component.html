@@ -41,11 +41,11 @@
             ></ui-menu-item>
           </div>
         </ui-popup>
-        <bis-delete-confirm-popup
+        <ui-delete-confirm-popup
           [isOpened$]="isOpenedDeletePopup$"
           (click)="$event.stopPropagation()"
           (delete)="onDelete$.next()"
-        ></bis-delete-confirm-popup>
+        ></ui-delete-confirm-popup>
       </div>
     </div>
 

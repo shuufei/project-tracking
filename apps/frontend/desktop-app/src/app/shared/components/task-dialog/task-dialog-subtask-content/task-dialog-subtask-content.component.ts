@@ -19,12 +19,12 @@ import {
   exhaustMap,
   filter,
   map,
-  pairwise,
-  startWith,
   switchMap,
   tap,
 } from 'rxjs/operators';
 import { convertToDomainTaskFromApiTask } from '../../../../util/convert-to-domain-task-from-api-task';
+import { updateStateOnPause } from '../../../../util/custom-operators/state-updators/update-state-on-pause';
+import { updateWorkTimeSecState } from '../../../../util/custom-operators/state-updators/update-work-time-sec-state';
 import { SubtaskFacadeService } from '../../../facade/subtask-facade/subtask-facade.service';
 import { TaskDialogService } from '../task-dialog.service';
 
@@ -252,28 +252,13 @@ export class TaskDialogSubtaskContentComponent implements OnInit {
     );
     this.state.hold(
       this.onChangedWorkTimeSec$.pipe(
-        startWith(this.state.get('subtask')?.workTimeSec ?? 0),
-        pairwise(),
-        filter(([prev, sec]) => {
-          const diff = sec - prev;
-          const isChangedByCtrlBtn = diff > 1;
-          const isTracking =
-            this.state.get('subtask')?.workStartDateTimestamp != null;
-          return isChangedByCtrlBtn || !isTracking;
-        }),
-        map(([, current]) => current),
-        filter((sec) => {
-          return sec !== this.state.get('subtask')?.workTimeSec;
-        }),
-        exhaustMap((sec) => {
-          const subtask = this.state.get('subtask');
-          if (subtask == null) return of(undefined);
-          const workStartDateTimestamp =
-            subtask.workStartDateTimestamp && new Date().valueOf();
+        updateWorkTimeSecState(this.state, 'subtask'),
+        exhaustMap(({ current, updated }) => {
+          console.log(current, updated);
           return this.subtaskFacade.updateWorkTimeSec(
-            sec,
-            workStartDateTimestamp,
-            subtask
+            updated.workTimeSec,
+            updated.workStartDateTimestamp,
+            current
           );
         })
       )
@@ -322,27 +307,9 @@ export class TaskDialogSubtaskContentComponent implements OnInit {
     );
     this.state.hold(
       this.onClickedPause$.pipe(
-        exhaustMap(() => {
-          const subtask = this.state.get('subtask');
-          if (subtask == null) return of(undefined);
-          const start = subtask.workStartDateTimestamp;
-          const currentWorkTimeSec = subtask.workTimeSec;
-          if (start == null || currentWorkTimeSec == null) return of(undefined);
-          const now = new Date();
-          const diffTimeMilliSec = now.valueOf() - start;
-          const updatedWorkTimeSec =
-            currentWorkTimeSec + Math.ceil(diffTimeMilliSec / 1000);
-          this.state.set('subtask', (state) => {
-            const subtask = state.subtask;
-            return subtask == null
-              ? subtask
-              : {
-                  ...subtask,
-                  workTimeSec: updatedWorkTimeSec,
-                  workStartDateTimestamp: undefined,
-                };
-          });
-          return this.subtaskFacade.stopTracking(now, subtask);
+        updateStateOnPause(this.state, 'subtask'),
+        exhaustMap(({ updated }) => {
+          return this.subtaskFacade.stopTracking(updated);
         })
       )
     );

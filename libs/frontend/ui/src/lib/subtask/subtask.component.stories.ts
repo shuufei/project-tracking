@@ -9,7 +9,7 @@ export const Default = () => ({
     imports: [SubtaskModule],
   },
   template: `
-    <ui-subtask></ui-subtask>
+    <ui-subtask title="subtask title"></ui-subtask>
   `,
   props: {},
 });
@@ -19,7 +19,7 @@ export const Done = () => ({
     imports: [SubtaskModule],
   },
   template: `
-    <ui-subtask [done]="done"></ui-subtask>
+    <ui-subtask title="subtask title" [done]="done"></ui-subtask>
   `,
   props: {
     done: true,
@@ -31,7 +31,7 @@ export const Tracking = () => ({
     imports: [SubtaskModule],
   },
   template: `
-    <ui-subtask [isTracking]="isTracking" [selfTrackingTimeSec]="selfTrackingTimeSec"></ui-subtask>
+    <ui-subtask title="subtask title" [isTracking]="isTracking" [selfTrackingTimeSec]="selfTrackingTimeSec"></ui-subtask>
   `,
   props: {
     isTracking: true,
@@ -44,42 +44,28 @@ export const Editing = () => ({
     imports: [SubtaskModule],
   },
   template: `
-    <ui-subtask [isEditing]="isEditing" title="subtask"></ui-subtask>
+    <ui-subtask title="subtask title" [isEditing]="isEditing" title="subtask"></ui-subtask>
   `,
   props: {
     isEditing: true,
   },
 });
 
-export const Set_Self_Tracking_Time = () => ({
+export const Set_Work_Time = () => ({
   moduleMetadata: {
     imports: [SubtaskModule],
   },
   template: `
     <ui-subtask
+      title="subtask title"
       [isTracking]="isTracking"
-      [selfTrackingTimeSec]="selfTrackingTimeSec"
-      [selfPlannedTimeSec]="selfPlannedTimeSec"
+      [workTimeSec]="workTimeSec"
+      [scheduledTimeSec]="scheduledTimeSec"
     ></ui-subtask>
   `,
   props: {
     isTracking: false,
-    selfTrackingTimeSec: 60 * 60 * 1 + 60 * 12,
-    selfPlannedTimeSec: 60 * 60 * 1 + 60 * 30,
-  },
-});
-
-export const Set_Other_Tracking_Time = () => ({
-  moduleMetadata: {
-    imports: [SubtaskModule],
-  },
-  template: `
-    <ui-subtask
-      [otherTrackingTimeSec]="otherTrackingTimeSec"
-    ></ui-subtask>
-  `,
-  props: {
-    isTracking: false,
-    otherTrackingTimeSec: 60 * 60 * 3 + 60 * 25,
+    workTimeSec: 60 * 60 * 1 + 60 * 12,
+    scheduledTimeSec: 60 * 60 * 1 + 60 * 30,
   },
 });

@@ -12,6 +12,8 @@ export * from './lib/color-icon/color-icon.component';
 export * from './lib/color-icon/color-icon.module';
 export * from './lib/color-select-popup/color-select-popup.component';
 export * from './lib/color-select-popup/color-select-popup.module';
+export * from './lib/delete-confirm-popup/delete-confirm-popup.component';
+export * from './lib/delete-confirm-popup/delete-confirm-popup.module';
 export * from './lib/dialog/dialog.component';
 export * from './lib/dialog/dialog.module';
 export * from './lib/header/header.component';

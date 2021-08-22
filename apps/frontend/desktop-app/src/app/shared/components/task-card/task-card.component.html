@@ -1,0 +1,44 @@
+<ng-container *ngIf="state$ | async as state">
+  <ng-container *ngIf="state.task">
+    <ui-task-card
+      [title]="state.task.title"
+      [workTimeSec]="state.task.workTimeSec"
+      [scheduledTimeSec]="state.task.scheduledTimeSec"
+      [isTracking]="state.task.workStartDateTimestamp !== undefined"
+      [boards]="state.boards"
+      [boardId]="state.task.board.id"
+      (hover)="onHover$.next($event)"
+      (clickedPlay)="onClickedPlay$.next()"
+      (clickedPause)="onClickedPause$.next()"
+      (changedWorkTimeSec)="onChangedWorkTimeSec$.next($event)"
+      (changedScheduledTimeSec)="onChangedScheduledTimeSec$.next($event)"
+      (delete)="onDelete$.next()"
+      (selectBoard)="onSelectedBoard$.next($event)"
+      (addSubtask)="onAddSubtask$.next()"
+    >
+      <ng-container *ngIf="state.task.subtasks.length > 0">
+        <div
+          class="mt-1 mb-2"
+          cdkDropList
+          (cdkDropListDropped)="onDrop$.next($event)"
+        >
+          <ng-container *ngFor="let subtask of state.task.subtasks">
+            <bis-subtask-item
+              [subtask]="subtask"
+              (update)="onUpdatedSubtask$.next($event)"
+              cdkDrag
+            ></bis-subtask-item>
+          </ng-container>
+        </div>
+      </ng-container>
+
+      <div class="flex justify-between mt-1">
+        <ui-assign-change-button
+          [users]="state.users"
+          [selectedUserId]="state.task?.assignUser?.id"
+          (selectedUser)="onChangedAssignUser$.next($event)"
+        ></ui-assign-change-button>
+      </div>
+    </ui-task-card>
+  </ng-container>
+</ng-container>

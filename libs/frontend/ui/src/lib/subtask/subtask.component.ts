@@ -20,9 +20,8 @@ type CompositionStatus = typeof COMPOSITION_START | typeof COMPOSITION_END;
 type State = {
   title: string;
   done: boolean;
-  selfTrackingTimeSec?: number;
-  otherTrackingTimeSec?: number;
-  selfPlannedTimeSec?: number;
+  workTimeSec?: number;
+  scheduledTimeSec?: number;
   isTracking: boolean;
   isEditing: boolean;
 };
@@ -44,16 +43,12 @@ export class SubtaskComponent implements OnInit, AfterViewInit {
     this.state.set('done', () => value);
   }
   @Input()
-  set selfTrackingTimeSec(value: number | undefined) {
-    this.state.set('selfTrackingTimeSec', () => value);
+  set workTimeSec(value: number | undefined) {
+    this.state.set('workTimeSec', () => value);
   }
   @Input()
-  set otherTrackingTimeSec(value: number | undefined) {
-    this.state.set('otherTrackingTimeSec', () => value);
-  }
-  @Input()
-  set selfPlannedTimeSec(value: number | undefined) {
-    this.state.set('selfPlannedTimeSec', () => value);
+  set scheduledTimeSec(value: number | undefined) {
+    this.state.set('scheduledTimeSec', () => value);
   }
   @Input()
   set isTracking(value: boolean) {
@@ -65,11 +60,12 @@ export class SubtaskComponent implements OnInit, AfterViewInit {
     this.state.set('isEditing', () => value);
   }
   @Output() changedTitle = new EventEmitter<string>();
+  @Output() submitTitle = new EventEmitter<string>();
   @Output() changedDone = new EventEmitter<boolean>();
   @Output() clickedPlay = new EventEmitter<void>();
   @Output() clickedPause = new EventEmitter<void>();
   @Output() changedTrackingTimeSec = new EventEmitter<number>();
-  @Output() changedPlannedTimeSec = new EventEmitter<number>();
+  @Output() changedScheduledTimeSec = new EventEmitter<number>();
   @ViewChild('titleField', { read: ElementRef }) titleField?: ElementRef;
 
   // State
@@ -77,8 +73,8 @@ export class SubtaskComponent implements OnInit, AfterViewInit {
 
   // Events
   readonly onChangedChecked$ = new Subject<boolean>();
-  readonly onChangedSelfTrackingTimeSec$ = new Subject<number>();
-  readonly onChangedSelfPlannedTimeSec$ = new Subject<number>();
+  readonly onChangedWorkTimeSec$ = new Subject<number>();
+  readonly onChangedScheduledTimeSec$ = new Subject<number>();
   readonly onClickedPlay$ = new Subject<void>();
   readonly onClickedPause$ = new Subject<void>();
   readonly onChangedTitle$ = new Subject<State['title']>();
@@ -94,11 +90,8 @@ export class SubtaskComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.state.connect('done', this.onChangedChecked$);
-    this.state.connect(
-      'selfTrackingTimeSec',
-      this.onChangedSelfTrackingTimeSec$
-    );
-    this.state.connect('selfPlannedTimeSec', this.onChangedSelfPlannedTimeSec$);
+    this.state.connect('workTimeSec', this.onChangedWorkTimeSec$);
+    this.state.connect('scheduledTimeSec', this.onChangedScheduledTimeSec$);
     this.state.connect('title', this.onChangedTitle$);
     this.state.hold(this.onClickedPlay$, () => {
       this.clickedPlay.emit();
@@ -109,11 +102,11 @@ export class SubtaskComponent implements OnInit, AfterViewInit {
     this.state.hold(this.state.select('done'), (done) => {
       this.changedDone.emit(done);
     });
-    this.state.hold(this.state.select('selfTrackingTimeSec'), (sec) => {
+    this.state.hold(this.state.select('workTimeSec'), (sec) => {
       this.changedTrackingTimeSec.emit(sec);
     });
-    this.state.hold(this.state.select('selfPlannedTimeSec'), (sec) => {
-      this.changedPlannedTimeSec.emit(sec);
+    this.state.hold(this.state.select('scheduledTimeSec'), (sec) => {
+      this.changedScheduledTimeSec.emit(sec);
     });
   }
 

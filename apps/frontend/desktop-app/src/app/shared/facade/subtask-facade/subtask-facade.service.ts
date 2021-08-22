@@ -17,7 +17,7 @@ import {
   User,
 } from '@bison/shared/schema';
 import { gql } from 'apollo-angular';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { convertToDomainSubtaskFromApiSubtask } from '../../../util/convert-to-domain-subtask-from-api-subtask';
 
@@ -122,18 +122,10 @@ export class SubtaskFacadeService {
     });
   }
 
-  stopTracking(now: Date, currentSubtask: Subtask) {
-    const start = currentSubtask.workStartDateTimestamp;
-    const currentWorkTimeSec = currentSubtask.workTimeSec;
-    if (start == null || currentWorkTimeSec == null) return of(undefined);
-    const diffTimeMilliSec = now.valueOf() - start;
-    const updatedWorkTimeSec =
-      currentWorkTimeSec + Math.ceil(diffTimeMilliSec / 1000);
-    const input = this.generateUpdateInputBase(currentSubtask);
+  stopTracking(updatedSubtask: Subtask) {
+    const input = this.generateUpdateInputBase(updatedSubtask);
     return this.updateSubtaskUsecase.execute({
       ...input,
-      workTimeSec: updatedWorkTimeSec,
-      workStartDateTimestamp: undefined,
     });
   }
 

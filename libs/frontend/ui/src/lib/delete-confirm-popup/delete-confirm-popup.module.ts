@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { ButtonModule, IconModule, PopupModule } from '@bison/frontend/ui';
+import { ButtonModule } from '../button/button.module';
+import { IconModule } from '../icon/icon.module';
+import { PopupModule } from '../popup/popup.module';
 import { DeleteConfirmPopupComponent } from './delete-confirm-popup.component';
 
 @NgModule({

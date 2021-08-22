@@ -57,6 +57,58 @@ export const primary_m = () => ({
   props: {},
 });
 
+const primaryLight1STemplate = Icons.map(
+  (icon) => `<ui-icon size="s" color="primary-light1" icon="${icon}"></ui-icon>`
+).join('');
+export const primary_light1_s = () => ({
+  moduleMetadata: {
+    imports: [IconModule],
+  },
+  template: `
+    ${primaryLight1STemplate}
+  `,
+  props: {},
+});
+
+const primaryLight1MTemplate = Icons.map(
+  (icon) => `<ui-icon size="m" color="primary-light1" icon="${icon}"></ui-icon>`
+).join('');
+export const primary_light1_m = () => ({
+  moduleMetadata: {
+    imports: [IconModule],
+  },
+  template: `
+    ${primaryLight1MTemplate}
+  `,
+  props: {},
+});
+
+const primaryLight2STemplate = Icons.map(
+  (icon) => `<ui-icon size="s" color="primary-light2" icon="${icon}"></ui-icon>`
+).join('');
+export const primary_light2_s = () => ({
+  moduleMetadata: {
+    imports: [IconModule],
+  },
+  template: `
+    ${primaryLight2STemplate}
+  `,
+  props: {},
+});
+
+const primaryLight2MTemplate = Icons.map(
+  (icon) => `<ui-icon size="m" color="primary-light2" icon="${icon}"></ui-icon>`
+).join('');
+export const primary_light2_m = () => ({
+  moduleMetadata: {
+    imports: [IconModule],
+  },
+  template: `
+    ${primaryLight2MTemplate}
+  `,
+  props: {},
+});
+
 const successSTemplate = Icons.map(
   (icon) => `<ui-icon size="s" color="success" icon="${icon}"></ui-icon>`
 ).join('');

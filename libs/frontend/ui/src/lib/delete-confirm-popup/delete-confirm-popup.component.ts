@@ -12,7 +12,7 @@ import { Observable, Subject } from 'rxjs';
 type State = Record<string, never>;
 
 @Component({
-  selector: 'bis-delete-confirm-popup',
+  selector: 'ui-delete-confirm-popup',
   templateUrl: './delete-confirm-popup.component.html',
   styleUrls: ['./delete-confirm-popup.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

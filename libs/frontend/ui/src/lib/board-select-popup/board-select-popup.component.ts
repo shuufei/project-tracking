@@ -7,7 +7,7 @@ import {
   Output,
 } from '@angular/core';
 import { RxState } from '@rx-angular/state';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 
 type State = {
   boards: Board[];
@@ -23,6 +23,8 @@ type State = {
 })
 export class BoardSelectPopupComponent implements OnInit {
   @Input() triggerEl?: HTMLElement;
+  @Input()
+  isOpened$: Observable<boolean> = new Subject<boolean>().asObservable();
   @Input()
   set boards(value: Board[]) {
     this.state.set('boards', () => value);
