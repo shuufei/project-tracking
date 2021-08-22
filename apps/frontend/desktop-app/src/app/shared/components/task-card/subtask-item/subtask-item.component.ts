@@ -9,7 +9,9 @@ import {
 import { Subtask } from '@bison/frontend/domain';
 import { RxState } from '@rx-angular/state';
 import { Subject } from 'rxjs';
-import { exhaustMap, filter, tap, withLatestFrom } from 'rxjs/operators';
+import { exhaustMap, tap, withLatestFrom } from 'rxjs/operators';
+import { nonNullable } from '../../../../util/custom-operators/non-nullable';
+import { updateWorkTimeSecState } from '../../../../util/custom-operators/state-updators/update-work-time-sec-state';
 import { SubtaskFacadeService } from '../../../facade/subtask-facade/subtask-facade.service';
 
 type State = {
@@ -35,11 +37,20 @@ export class SubtaskItemComponent implements OnInit {
    */
   readonly state$ = this.state.select();
 
+  /**
+   * Event
+   */
   readonly onSubmitTitle$ = new Subject<Subtask['title']>();
+  readonly onChangedWorkTimeSec$ = new Subject<Subtask['workTimeSec']>();
+  readonly onChangedScheduledWorkTimeSec$ = new Subject<
+    NonNullable<Subtask['scheduledTimeSec']>
+  >();
+  readonly onClickedPlay$ = new Subject<void>();
+  readonly onClickedPause$ = new Subject<void>();
 
   constructor(
     private state: RxState<State>,
-    private subtaskFacadeService: SubtaskFacadeService
+    private subtaskFacade: SubtaskFacadeService
   ) {
     this.state.set({});
   }
@@ -47,11 +58,7 @@ export class SubtaskItemComponent implements OnInit {
   ngOnInit(): void {
     this.state.hold(
       this.onSubmitTitle$.pipe(
-        withLatestFrom(
-          this.state
-            .select('subtask')
-            .pipe(filter((v): v is NonNullable<typeof v> => v != null))
-        ),
+        withLatestFrom(this.state.select('subtask').pipe(nonNullable())),
         tap(([title, subtask]) => {
           const updatedSubtask = {
             ...subtask,
@@ -61,7 +68,23 @@ export class SubtaskItemComponent implements OnInit {
           this.update.emit(updatedSubtask);
         }),
         exhaustMap(([title, subtask]) => {
-          return this.subtaskFacadeService.updateTitle(title, subtask);
+          return this.subtaskFacade.updateTitle(title, subtask);
+        })
+      )
+    );
+    this.state.hold(this.onChangedWorkTimeSec$.pipe());
+    this.state.hold(
+      this.onChangedWorkTimeSec$.pipe(
+        updateWorkTimeSecState(this.state, 'subtask'),
+        tap(({ updated }) => {
+          this.update.emit(updated);
+        }),
+        exhaustMap(({ updated, current }) => {
+          return this.subtaskFacade.updateWorkTimeSec(
+            updated.workTimeSec,
+            updated.workStartDateTimestamp,
+            current
+          );
         })
       )
     );

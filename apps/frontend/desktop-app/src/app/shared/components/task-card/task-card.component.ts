@@ -85,16 +85,6 @@ export class TaskCardComponent implements OnInit {
   readonly onDrop$ = new Subject<CdkDragDrop<Task['subtasks']>>();
   readonly onAddSubtask$ = new Subject<void>();
   readonly onUpdatedSubtask$ = new Subject<Subtask>();
-  readonly onChangedSubtaskWorkTimeSec$ = new Subject<{
-    id: string;
-    sec: NonNullable<Subtask['scheduledTimeSec']>;
-  }>();
-  readonly onChangedScheduledWorkTimeSec$ = new Subject<{
-    id: string;
-    sec: NonNullable<Subtask['scheduledTimeSec']>;
-  }>();
-  readonly onClickedSubtaskPlay$ = new Subject<Subtask['id']>();
-  readonly onClickedSubtaskPause$ = new Subject<Subtask['id']>();
 
   constructor(
     private state: RxState<State>,
@@ -165,7 +155,6 @@ export class TaskCardComponent implements OnInit {
     );
     this.state.connect('task', this.onUpdatedSubtask$, ({ task }, subtask) => {
       if (task == null) return task;
-      console.log('update:', subtask);
       return {
         ...task,
         subtaks: update(task.subtasks, subtask, 'id'),

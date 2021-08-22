@@ -8,6 +8,7 @@
       [isTrackiing]="state.subtask.workStartDateTimestamp !== undefinied"
       [isEditing]="!state.subtask.title"
       (submitTitle)="onSubmitTitle$.next($event)"
+      (changedTrackingTimeSec)="onChangedWorkTimeSec$.next($event)"
     ></ui-subtask>
   </ng-container>
 </ng-container>
