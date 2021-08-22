@@ -167,10 +167,10 @@
             <ui-icon size="s" icon="trash-2" color="warn"></ui-icon>
             <span class="ml-3">削除</span>
           </button>
-          <bis-delete-confirm-popup
+          <ui-delete-confirm-popup
             [triggerEl]="deleteButton"
             (delete)="onDelete$.next()"
-          ></bis-delete-confirm-popup>
+          ></ui-delete-confirm-popup>
         </div>
       </ng-container>
     </div>

@@ -8,6 +8,7 @@ import {
 import {
   ButtonModule,
   CheckboxModule,
+  DeleteConfirmPopupModule,
   DialogModule,
   IconModule,
   ScheduledTimeSecChangeButtonModule,
@@ -19,7 +20,6 @@ import { RxState } from '@rx-angular/state';
 import { TuiNotificationsModule } from '@taiga-ui/core';
 import { TaskFacadeModule } from '../../facade/task-facade/task-facade.module';
 import { TaskGroupFacadeModule } from '../../facade/task-group-facade/task-group-facade.module';
-import { DeleteConfirmPopupModule } from '../delete-confirm-popup/delete-confirm-popup.module';
 import { SubtaskCardModule } from '../subtask-card/subtask-card.module';
 import { TaskDialogAssignChangeButtonModule } from '../task-dialog-assign-change-button/task-dialog-assign-change-button.module';
 import { TaskDialogBoardChangeButtonModule } from '../task-dialog-board-change-button/task-dialog-board-change-button.module';
