@@ -23,6 +23,7 @@ import {
   tap,
 } from 'rxjs/operators';
 import { convertToDomainTaskFromApiTask } from '../../../../util/convert-to-domain-task-from-api-task';
+import { updateScheduledTimeSecState } from '../../../../util/custom-operators/state-updators/update-scheduled-time-sec-state';
 import { updateStateOnPause } from '../../../../util/custom-operators/state-updators/update-state-on-pause';
 import { updateWorkTimeSecState } from '../../../../util/custom-operators/state-updators/update-work-time-sec-state';
 import { SubtaskFacadeService } from '../../../facade/subtask-facade/subtask-facade.service';
@@ -276,24 +277,14 @@ export class TaskDialogSubtaskContentComponent implements OnInit {
     );
     this.state.hold(
       this.onChangedScheduledTimeSec$.pipe(
-        filter((sec) => {
-          return sec !== this.state.get('subtask')?.scheduledTimeSec;
-        }),
-        tap((sec) => {
-          this.state.set('subtask', (state) => {
-            const subtask = state.subtask;
-            return subtask == null
-              ? subtask
-              : {
-                  ...subtask,
-                  scheduledTimeSec: sec,
-                };
-          });
-        }),
-        exhaustMap((sec) => {
+        updateScheduledTimeSecState(this.state, 'subtask'),
+        exhaustMap(({ updated, current }) => {
           const subtask = this.state.get('subtask');
           if (subtask == null) return of(undefined);
-          return this.subtaskFacade.updateScheduledTimeSec(sec, subtask);
+          return this.subtaskFacade.updateScheduledTimeSec(
+            updated.scheduledTimeSec,
+            current
+          );
         })
       )
     );
