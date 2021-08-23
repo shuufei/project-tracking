@@ -56,7 +56,6 @@ export class SubtaskComponent implements OnInit, AfterViewInit {
   }
   @Input()
   set isEditing(value: boolean) {
-    // TODO: 編集モードとそれ以外の状態とでコンポーネントを分割したい
     this.state.set('isEditing', () => value);
   }
   @Output() changedTitle = new EventEmitter<string>();
