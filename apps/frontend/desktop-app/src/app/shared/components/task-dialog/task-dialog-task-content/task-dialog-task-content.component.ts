@@ -25,6 +25,7 @@ import {
   tap,
 } from 'rxjs/operators';
 import { convertToDomainTaskGroupFromApiTaskGroup } from '../../../../util/convert-to-domain-task-group-from-api-task-group';
+import { updateScheduledTimeSecState } from '../../../../util/custom-operators/state-updators/update-scheduled-time-sec-state';
 import { SubtaskFacadeService } from '../../../facade/subtask-facade/subtask-facade.service';
 import { TaskFacadeService } from '../../../facade/task-facade/task-facade.service';
 import {
@@ -397,24 +398,12 @@ export class TaskDialogTaskContentComponent implements OnInit {
     );
     this.state.hold(
       this.onChangedScheduledTimeSec$.pipe(
-        filter((sec) => {
-          return sec !== this.state.get('task')?.scheduledTimeSec;
-        }),
-        tap((sec) => {
-          this.state.set('task', (state) => {
-            const task = state.task;
-            return task == null
-              ? task
-              : {
-                  ...task,
-                  scheduledTimeSec: sec,
-                };
-          });
-        }),
-        exhaustMap((sec) => {
-          const task = this.state.get('task');
-          if (task == null) return of(undefined);
-          return this.taskFacadeService.updateScheduledTimeSec(sec, task);
+        updateScheduledTimeSecState(this.state, 'task'),
+        exhaustMap(({ updated, current }) => {
+          return this.taskFacadeService.updateScheduledTimeSec(
+            updated.scheduledTimeSec,
+            current
+          );
         })
       )
     );
