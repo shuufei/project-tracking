@@ -26,11 +26,12 @@
         ></ui-user-icon-list>
       </ng-template>
     </div>
+    <ui-user-select-popup
+      class="relative"
+      [triggerEl]="trigger"
+      [users]="state.users"
+      [selectedUserId]="state.selectedUserId"
+      (selectUser)="onChangedSelectedUserId$.next($event)"
+    ></ui-user-select-popup>
   </div>
-  <ui-user-select-popup
-    [triggerEl]="trigger"
-    [users]="state.users"
-    [selectedUserId]="state.selectedUserId"
-    (selectUser)="onChangedSelectedUserId$.next($event)"
-  ></ui-user-select-popup>
 </ng-container>
