@@ -9,7 +9,7 @@ import {
   APOLLO_DATA_QUERY,
   IApolloDataQuery,
 } from '@bison/frontend/application';
-import { isTaskGroup, TaskGroup } from '@bison/frontend/domain';
+import { isTaskGroup, Subtask, TaskGroup } from '@bison/frontend/domain';
 import { Board, User } from '@bison/frontend/ui';
 import { RxState } from '@rx-angular/state';
 import { TuiNotificationsService } from '@taiga-ui/core';
@@ -81,6 +81,7 @@ export class TaskDialogTaskGroupContentComponent implements OnInit {
   readonly onDelete$ = new Subject<void>();
   readonly onClickedAddTask$ = new Subject<void>();
   readonly onClickedTask$ = new Subject<TaskGroup['tasks'][number]>();
+  readonly onClickedSubtask$ = new Subject<Subtask>();
 
   constructor(
     private state: RxState<State>,
@@ -374,6 +375,13 @@ export class TaskDialogTaskGroupContentComponent implements OnInit {
       this.onClickedTask$.pipe(
         tap((task) => {
           this.taskDialogService.pushContent(task);
+        })
+      )
+    );
+    this.state.hold(
+      this.onClickedSubtask$.pipe(
+        tap((subtask) => {
+          this.taskDialogService.pushContent(subtask);
         })
       )
     );

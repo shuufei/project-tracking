@@ -2,9 +2,11 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import {
   ChangeDetectionStrategy,
   Component,
+  EventEmitter,
   Inject,
   Input,
   OnInit,
+  Output,
 } from '@angular/core';
 import {
   APOLLO_DATA_QUERY,
@@ -16,15 +18,9 @@ import { RxState, update } from '@rx-angular/state';
 import { TuiNotificationsService } from '@taiga-ui/core';
 import { gql } from 'apollo-angular';
 import { of, Subject } from 'rxjs';
-import {
-  exhaustMap,
-  filter,
-  map,
-  pairwise,
-  startWith,
-  switchMap,
-  tap,
-} from 'rxjs/operators';
+import { exhaustMap, filter, map, switchMap, tap } from 'rxjs/operators';
+import { updateScheduledTimeSecState } from '../../../util/custom-operators/state-updators/update-scheduled-time-sec-state';
+import { updateWorkTimeSecState } from '../../../util/custom-operators/state-updators/update-work-time-sec-state';
 import { SubtaskFacadeService } from '../../facade/subtask-facade/subtask-facade.service';
 import { TaskFacadeService } from '../../facade/task-facade/task-facade.service';
 
@@ -65,6 +61,7 @@ export class TaskCardComponent implements OnInit {
   set task(value: Task) {
     this.state.set('task', () => value);
   }
+  @Output() clickedSubtask = new EventEmitter<Subtask>();
 
   /**
    * State
@@ -85,6 +82,7 @@ export class TaskCardComponent implements OnInit {
   readonly onDrop$ = new Subject<CdkDragDrop<Task['subtasks']>>();
   readonly onAddSubtask$ = new Subject<void>();
   readonly onUpdatedSubtask$ = new Subject<Subtask>();
+  readonly onClickedSubtask$ = new Subject<Subtask['id']>();
 
   constructor(
     private state: RxState<State>,
@@ -220,62 +218,24 @@ export class TaskCardComponent implements OnInit {
     );
     this.state.hold(
       this.onChangedWorkTimeSec$.pipe(
-        startWith(this.state.get('task')?.workTimeSec ?? 0),
-        pairwise(),
-        filter(([prev, sec]) => {
-          const diff = sec - prev;
-          const isChangedByCtrlBtn = diff > 1;
-          const isTracking =
-            this.state.get('task')?.workStartDateTimestamp != null;
-          return isChangedByCtrlBtn || !isTracking;
-        }),
-        map(([, current]) => current),
-        filter((sec) => {
-          return sec !== this.state.get('task')?.workTimeSec;
-        }),
-        exhaustMap((sec) => {
-          const task = this.state.get('task');
-          if (task == null) return of(undefined);
-          const workStartDateTimestamp =
-            task.workStartDateTimestamp && new Date().valueOf();
-          this.state.set('task', (state) => {
-            const task = state.task;
-            return task == null
-              ? task
-              : {
-                  ...task,
-                  workTimeSec: sec,
-                  workStartDateTimestamp,
-                };
-          });
+        updateWorkTimeSecState(this.state, 'task'),
+        exhaustMap(({ updated, current }) => {
           return this.taskFacadeService.updateWorkTimeSec(
-            sec,
-            workStartDateTimestamp,
-            task
+            updated.workTimeSec,
+            updated.workStartDateTimestamp,
+            current
           );
         })
       )
     );
     this.state.hold(
       this.onChangedScheduledTimeSec$.pipe(
-        filter((sec) => {
-          return sec !== this.state.get('task')?.scheduledTimeSec;
-        }),
-        tap((sec) => {
-          this.state.set('task', (state) => {
-            const task = state.task;
-            return task == null
-              ? task
-              : {
-                  ...task,
-                  scheduledTimeSec: sec,
-                };
-          });
-        }),
-        exhaustMap((sec) => {
-          const task = this.state.get('task');
-          if (task == null) return of(undefined);
-          return this.taskFacadeService.updateScheduledTimeSec(sec, task);
+        updateScheduledTimeSecState(this.state, 'task'),
+        exhaustMap(({ updated, current }) => {
+          return this.taskFacadeService.updateScheduledTimeSec(
+            updated.scheduledTimeSec,
+            current
+          );
         })
       )
     );
@@ -360,5 +320,12 @@ export class TaskCardComponent implements OnInit {
         })
       )
     );
+    this.state.hold(this.onClickedSubtask$, (subtaskId) => {
+      const subtask = this.state
+        .get('task')
+        ?.subtasks.find((v) => v.id === subtaskId);
+      if (subtask == null) return;
+      this.clickedSubtask.emit(subtask);
+    });
   }
 }
