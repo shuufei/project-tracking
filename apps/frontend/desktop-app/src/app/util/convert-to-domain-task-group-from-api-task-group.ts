@@ -1,6 +1,7 @@
 import { TaskGroup } from '@bison/frontend/domain';
 import { TaskGroup as ApiTaskGroup } from '@bison/shared/schema';
 import { convertToDomainStatusFromApiStatus } from './convert-to-domain-status-from-api-status';
+import { convertToDomainTaskFromApiTask } from './convert-to-domain-task-from-api-task';
 
 export const convertToDomainTaskGroupFromApiTaskGroup = (
   taskGroup: ApiTaskGroup
@@ -18,15 +19,6 @@ export const convertToDomainTaskGroupFromApiTaskGroup = (
       name: taskGroup.board.name,
       projectId: taskGroup.board.project.id,
     },
-    tasks: taskGroup.tasks.map((task) => ({
-      id: task.id,
-      title: task.title,
-      description: task.description,
-      status: convertToDomainStatusFromApiStatus(task.status),
-      workTimeSec: task.workTimeSec,
-      scheduledTimeSec: task.scheduledTimeSec,
-      workStartDateTimestamp: task.workStartDateTimestamp,
-      assignUser: task.assign,
-    })),
+    tasks: taskGroup.tasks.map(convertToDomainTaskFromApiTask),
   };
 };

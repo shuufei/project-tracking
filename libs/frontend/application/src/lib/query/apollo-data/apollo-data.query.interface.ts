@@ -32,8 +32,8 @@ export interface IApolloDataQuery {
   ) => Observable<ApolloQueryResult<{ subtask?: Subtask }>>;
 
   queryTask: (
+    fragment: Fragment,
     taskId: Task['id'],
-    fragment?: Fragment,
     options?: QueryOptions
   ) => Observable<ApolloQueryResult<{ task?: Task }>>;
 

@@ -16,7 +16,6 @@ import { TuiNotificationsService } from '@taiga-ui/core';
 import { gql } from 'apollo-angular';
 import { of, Subject } from 'rxjs';
 import { exhaustMap, filter, map, switchMap, tap } from 'rxjs/operators';
-import { convertToDomainTaskFromApiTask } from '../../../../util/convert-to-domain-task-from-api-task';
 import { TaskFacadeService } from '../../../facade/task-facade/task-facade.service';
 import { TaskGroupFacadeService } from '../../../facade/task-group-facade/task-group-facade.service';
 import { TaskDialogService } from '../task-dialog.service';
@@ -373,15 +372,8 @@ export class TaskDialogTaskGroupContentComponent implements OnInit {
     );
     this.state.hold(
       this.onClickedTask$.pipe(
-        switchMap((task) => {
-          return this.apolloDataQuery.queryTask(task.id);
-        }),
-        map((response) => response.data.task),
-        filter((v): v is NonNullable<typeof v> => v != null),
         tap((task) => {
-          this.taskDialogService.pushContent(
-            convertToDomainTaskFromApiTask(task)
-          );
+          this.taskDialogService.pushContent(task);
         })
       )
     );

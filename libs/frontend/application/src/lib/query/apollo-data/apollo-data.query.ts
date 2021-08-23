@@ -3,52 +3,6 @@ import { Project, Subtask, Task, TaskGroup, User } from '@bison/shared/schema';
 import { Apollo, gql } from 'apollo-angular';
 import { IApolloDataQuery } from './apollo-data.query.interface';
 
-const QUERY_TASK_DEFAULT_FIELDS = gql`
-  fragment TaskPartsForDefault on Task {
-    id
-    title
-    description
-    status
-    workTimeSec
-    scheduledTimeSec
-    subtasksOrder
-    workStartDateTimestamp
-    board {
-      id
-      name
-      description
-      project {
-        id
-        name
-      }
-    }
-    assign {
-      id
-      name
-      icon
-    }
-    taskGroup {
-      id
-      title
-      description
-    }
-    subtasks {
-      id
-      title
-      description
-      isDone
-      scheduledTimeSec
-      workTimeSec
-      workStartDateTimestamp
-      assign {
-        id
-        name
-        icon
-      }
-    }
-  }
-`;
-
 @Injectable()
 export class ApolloDataQuery implements IApolloDataQuery {
   constructor(private apollo: Apollo) {}
@@ -130,14 +84,14 @@ export class ApolloDataQuery implements IApolloDataQuery {
   queryTask(
     ...args: Parameters<IApolloDataQuery['queryTask']>
   ): ReturnType<IApolloDataQuery['queryTask']> {
-    const [id, fragment, options] = args;
+    const [fragment, id, options] = args;
     return this.apollo.watchQuery<{ task?: Task }>({
       ...options,
       query: gql`
-        ${fragment?.fields ?? QUERY_TASK_DEFAULT_FIELDS}
+        ${fragment.fields}
         query TaskQuery($id: ID!) {
           task(id: $id) {
-            ...${fragment?.name ?? 'TaskPartsForDefault'}
+            ...${fragment.name}
           }
         }
       `,
