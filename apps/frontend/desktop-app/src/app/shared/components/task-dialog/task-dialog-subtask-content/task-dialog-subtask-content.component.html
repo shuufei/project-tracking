@@ -103,13 +103,12 @@
         <bis-task-dialog-assign-change-button
           class="w-full"
           [users]="state.users"
-          [selectedUserId]="state.subtask.assignUser?.id"
+          [selectedUserId]="state.subtask.assignUser?.id || undefined"
           (selectedUser)="onChangedAssignUser$.next($event)"
         ></bis-task-dialog-assign-change-button>
-
         <div class="mt-6 relative">
           <button
-            class="focus:outline-none text-s2 text-warn-default font-medium flex items-center w-full"
+            class="focus:outline-none text-s2 text-warn-default font-medium flex items-center w-full px-2"
             #deleteButton
           >
             <ui-icon size="s" icon="trash-2" color="warn"></ui-icon>

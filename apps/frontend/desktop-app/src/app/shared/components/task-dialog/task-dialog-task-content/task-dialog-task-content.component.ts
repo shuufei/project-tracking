@@ -24,10 +24,14 @@ import {
   switchMap,
   tap,
 } from 'rxjs/operators';
-import { convertToDomainSubtaskFromApiSubtask } from '../../../../util/convert-to-domain-subtask-from-api-subtask';
 import { convertToDomainTaskGroupFromApiTaskGroup } from '../../../../util/convert-to-domain-task-group-from-api-task-group';
+import { updateScheduledTimeSecState } from '../../../../util/custom-operators/state-updators/update-scheduled-time-sec-state';
 import { SubtaskFacadeService } from '../../../facade/subtask-facade/subtask-facade.service';
 import { TaskFacadeService } from '../../../facade/task-facade/task-facade.service';
+import {
+  TASK_GROUP_FIELDS,
+  TASK_GROUP_FRAGMENT_NAME,
+} from '../../../fragments/task-group-fragment';
 import { TaskDialogService } from '../task-dialog.service';
 
 const USER_FIELDS = gql`
@@ -35,62 +39,6 @@ const USER_FIELDS = gql`
     id
     name
     icon
-  }
-`;
-
-const SUBTASK_FIELDS = gql`
-  fragment SubtaskPartsInTaskDialog on Subtask {
-    id
-    title
-    description
-    isDone
-    task {
-      id
-    }
-    scheduledTimeSec
-    workTimeSec
-    assign {
-      id
-      name
-      icon
-    }
-  }
-`;
-
-const TASKGROUP_FIELDS = gql`
-  fragment TaskGroupPartsInTaskDialog on TaskGroup {
-    id
-    title
-    description
-    status
-    scheduledTimeSec
-    tasksOrder
-    assign {
-      id
-      name
-      icon
-    }
-    board {
-      id
-      name
-      project {
-        id
-      }
-    }
-    tasks {
-      id
-      title
-      description
-      status
-      workTimeSec
-      scheduledTimeSec
-      workStartDateTimestamp
-      assign {
-        id
-        name
-        icon
-      }
-    }
   }
 `;
 
@@ -450,24 +398,12 @@ export class TaskDialogTaskContentComponent implements OnInit {
     );
     this.state.hold(
       this.onChangedScheduledTimeSec$.pipe(
-        filter((sec) => {
-          return sec !== this.state.get('task')?.scheduledTimeSec;
-        }),
-        tap((sec) => {
-          this.state.set('task', (state) => {
-            const task = state.task;
-            return task == null
-              ? task
-              : {
-                  ...task,
-                  scheduledTimeSec: sec,
-                };
-          });
-        }),
-        exhaustMap((sec) => {
-          const task = this.state.get('task');
-          if (task == null) return of(undefined);
-          return this.taskFacadeService.updateScheduledTimeSec(sec, task);
+        updateScheduledTimeSecState(this.state, 'task'),
+        exhaustMap(({ updated, current }) => {
+          return this.taskFacadeService.updateScheduledTimeSec(
+            updated.scheduledTimeSec,
+            current
+          );
         })
       )
     );
@@ -512,7 +448,7 @@ export class TaskDialogTaskContentComponent implements OnInit {
           const task = this.state.get('task');
           if (task == null || task?.taskGroup == null) return of(undefined);
           return this.apolloDataQuery.queryTaskGroup(
-            { fields: TASKGROUP_FIELDS, name: 'TaskGroupPartsInTaskDialog' },
+            { fields: TASK_GROUP_FIELDS, name: TASK_GROUP_FRAGMENT_NAME },
             task.taskGroup.id,
             { nextFetchPolicy: 'cache-only' }
           );
@@ -529,27 +465,9 @@ export class TaskDialogTaskContentComponent implements OnInit {
         this.taskDialogService.pushContent(taskGroup);
       }
     );
-    this.state.hold(
-      this.onClickedSubtask$.pipe(
-        switchMap(({ id }) => {
-          return this.apolloDataQuery.querySubtask(
-            { fields: SUBTASK_FIELDS, name: 'SubtaskPartsInTaskDialog' },
-            id,
-            {
-              nextFetchPolicy: 'cache-only',
-            }
-          );
-        }),
-        map((v) => v.data.subtask),
-        filter((v): v is NonNullable<typeof v> => v != null),
-        map((subtask) => {
-          return convertToDomainSubtaskFromApiSubtask(subtask);
-        })
-      ),
-      (subtask) => {
-        this.taskDialogService.pushContent(subtask);
-      }
-    );
+    this.state.hold(this.onClickedSubtask$, (subtask) => {
+      this.taskDialogService.pushContent(subtask);
+    });
     this.state.hold(
       this.onDelete$.pipe(
         exhaustMap(() => {

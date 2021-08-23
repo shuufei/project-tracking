@@ -4,7 +4,7 @@
       [title]="state.task.title"
       [workTimeSec]="state.task.workTimeSec"
       [scheduledTimeSec]="state.task.scheduledTimeSec"
-      [isTracking]="state.task.workStartDateTimestamp !== undefined"
+      [isTracking]="state.task.workStartDateTimestamp != null"
       [boards]="state.boards"
       [boardId]="state.task.board.id"
       (hover)="onHover$.next($event)"
@@ -22,10 +22,15 @@
           cdkDropList
           (cdkDropListDropped)="onDrop$.next($event)"
         >
-          <ng-container *ngFor="let subtask of state.task.subtasks">
+          <ng-container
+            *ngFor="let subtask of state.task.subtasks; trackBy: trackBySubtask"
+          >
             <bis-subtask-item
               [subtask]="subtask"
               (update)="onUpdatedSubtask$.next($event)"
+              (click)="
+                $event.stopPropagation(); onClickedSubtask$.next(subtask.id)
+              "
               cdkDrag
             ></bis-subtask-item>
           </ng-container>
@@ -37,6 +42,7 @@
           [users]="state.users"
           [selectedUserId]="state.task?.assignUser?.id"
           (selectedUser)="onChangedAssignUser$.next($event)"
+          (click)="$event.stopPropagation()"
         ></ui-assign-change-button>
       </div>
     </ui-task-card>

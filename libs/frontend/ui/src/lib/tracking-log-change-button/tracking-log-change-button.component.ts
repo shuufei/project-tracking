@@ -49,9 +49,11 @@ export class TrackingLogChangeButtonComponent implements OnInit {
   readonly trackingTime$ = this.state
     .select('trackingTimeSec')
     .pipe(map((sec) => convertToTimeFromSec(sec)));
-  readonly plannedTime$ = this.state
-    .select('plannedTimeSec')
-    .pipe(map((sec) => convertToTimeFromSec(sec)));
+  readonly plannedTime$ = this.state.select('plannedTimeSec').pipe(
+    map((sec) => {
+      return convertToTimeFromSec(sec);
+    })
+  );
 
   // Events
   readonly onChangedTrackingTime$ = new Subject<ChangedTimeEvent>();

@@ -3,6 +3,7 @@
     <ui-checkbox
       [checked]="state.done"
       (changedCheck)="onChangedChecked$.next($event)"
+      (click)="$event.stopPropagation()"
     ></ui-checkbox>
 
     <ng-container *ngIf="!state.isEditing; else editing">
@@ -19,6 +20,7 @@
         [text]="state.title"
         (changedValue)="onChangedTitle$.next($event)"
         (keypressEnter)="submitTitle.emit($event)"
+        (click)="$event.stopPropagation()"
       ></ui-text-field>
     </ng-template>
   </div>
@@ -38,7 +40,7 @@
         uiTooltip="トラッキング停止"
         uiTooltipDirection="bottom-right"
         class="inline-block"
-        (click)="clickedPause.emit()"
+        (click)="$event.stopPropagation(); clickedPause.emit()"
       >
         <ui-icon
           class="cursor-pointer ml-2"
@@ -53,7 +55,7 @@
         uiTooltip="トラッキング開始"
         uiTooltipDirection="bottom-right"
         class="inline-block"
-        (click)="clickedPlay.emit()"
+        (click)="$event.stopPropagation(); clickedPlay.emit()"
       >
         <ui-icon
           class="cursor-pointer ml-2"

@@ -9,14 +9,13 @@ import {
   APOLLO_DATA_QUERY,
   IApolloDataQuery,
 } from '@bison/frontend/application';
-import { isTaskGroup, TaskGroup } from '@bison/frontend/domain';
+import { isTaskGroup, Subtask, TaskGroup } from '@bison/frontend/domain';
 import { Board, User } from '@bison/frontend/ui';
 import { RxState } from '@rx-angular/state';
 import { TuiNotificationsService } from '@taiga-ui/core';
 import { gql } from 'apollo-angular';
 import { of, Subject } from 'rxjs';
 import { exhaustMap, filter, map, switchMap, tap } from 'rxjs/operators';
-import { convertToDomainTaskFromApiTask } from '../../../../util/convert-to-domain-task-from-api-task';
 import { TaskFacadeService } from '../../../facade/task-facade/task-facade.service';
 import { TaskGroupFacadeService } from '../../../facade/task-group-facade/task-group-facade.service';
 import { TaskDialogService } from '../task-dialog.service';
@@ -82,6 +81,7 @@ export class TaskDialogTaskGroupContentComponent implements OnInit {
   readonly onDelete$ = new Subject<void>();
   readonly onClickedAddTask$ = new Subject<void>();
   readonly onClickedTask$ = new Subject<TaskGroup['tasks'][number]>();
+  readonly onClickedSubtask$ = new Subject<Subtask>();
 
   constructor(
     private state: RxState<State>,
@@ -373,15 +373,15 @@ export class TaskDialogTaskGroupContentComponent implements OnInit {
     );
     this.state.hold(
       this.onClickedTask$.pipe(
-        switchMap((task) => {
-          return this.apolloDataQuery.queryTask(task.id);
-        }),
-        map((response) => response.data.task),
-        filter((v): v is NonNullable<typeof v> => v != null),
         tap((task) => {
-          this.taskDialogService.pushContent(
-            convertToDomainTaskFromApiTask(task)
-          );
+          this.taskDialogService.pushContent(task);
+        })
+      )
+    );
+    this.state.hold(
+      this.onClickedSubtask$.pipe(
+        tap((subtask) => {
+          this.taskDialogService.pushContent(subtask);
         })
       )
     );

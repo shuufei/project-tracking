@@ -56,7 +56,6 @@ export class SubtaskComponent implements OnInit, AfterViewInit {
   }
   @Input()
   set isEditing(value: boolean) {
-    // TODO: 編集モードとそれ以外の状態とでコンポーネントを分割したい
     this.state.set('isEditing', () => value);
   }
   @Output() changedTitle = new EventEmitter<string>();
@@ -102,12 +101,18 @@ export class SubtaskComponent implements OnInit, AfterViewInit {
     this.state.hold(this.state.select('done'), (done) => {
       this.changedDone.emit(done);
     });
-    this.state.hold(this.state.select('workTimeSec'), (sec) => {
-      this.changedTrackingTimeSec.emit(sec);
-    });
-    this.state.hold(this.state.select('scheduledTimeSec'), (sec) => {
-      this.changedScheduledTimeSec.emit(sec);
-    });
+    this.state.hold(
+      this.state.select('workTimeSec').pipe(filter((v) => v != null)),
+      (sec) => {
+        this.changedTrackingTimeSec.emit(sec);
+      }
+    );
+    this.state.hold(
+      this.state.select('scheduledTimeSec').pipe(filter((v) => v != null)),
+      (sec) => {
+        this.changedScheduledTimeSec.emit(sec);
+      }
+    );
   }
 
   ngAfterViewInit() {

@@ -19,7 +19,7 @@ export const updateScheduledTimeSecState = <
 ): OperatorFunction<number, { updated: T; current: T }> => {
   return pipe(
     filter((sec) => {
-      return sec !== state.get(key)?.scheduledTimeSec;
+      return sec !== (state.get(key)?.scheduledTimeSec ?? 0);
     }),
     withLatestFrom(state.select(key).pipe(nonNullable())),
     map(([sec, currentKeyObj]) => {

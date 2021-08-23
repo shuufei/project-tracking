@@ -11,17 +11,7 @@ export type TaskGroup = Pick<
 > & {
   board: Pick<Board, 'id' | 'name' | 'projectId' | 'description'>;
   assignUser?: User;
-  tasks: Pick<
-    Task,
-    | 'id'
-    | 'title'
-    | 'description'
-    | 'status'
-    | 'workTimeSec'
-    | 'scheduledTimeSec'
-    | 'workStartDateTimestamp'
-    | 'assignUser'
-  >[];
+  tasks: Task[];
 };
 
 export const isTaskGroup = (value: TaskGroup | unknown): value is TaskGroup => {

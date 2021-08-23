@@ -21,6 +21,7 @@ import { TuiNotificationsModule } from '@taiga-ui/core';
 import { TaskFacadeModule } from '../../facade/task-facade/task-facade.module';
 import { TaskGroupFacadeModule } from '../../facade/task-group-facade/task-group-facade.module';
 import { SubtaskCardModule } from '../subtask-card/subtask-card.module';
+import { TaskCardModule } from '../task-card/task-card.module';
 import { TaskDialogAssignChangeButtonModule } from '../task-dialog-assign-change-button/task-dialog-assign-change-button.module';
 import { TaskDialogBoardChangeButtonModule } from '../task-dialog-board-change-button/task-dialog-board-change-button.module';
 import { TaskDialogProjectChangeButtonModule } from '../task-dialog-project-change-button/task-dialog-project-change-button.module';
@@ -66,6 +67,7 @@ import {
     TaskGroupFacadeModule,
     TaskFacadeModule,
     ScheduledTimeSecChangeButtonModule,
+    TaskCardModule,
   ],
   exports: [TaskDialogComponent],
   providers: [

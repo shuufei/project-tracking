@@ -1,5 +1,6 @@
 import { Task as DomainTask } from '@bison/frontend/domain';
 import { Task } from '@bison/shared/schema';
+import { convertToDomainSubtaskFromApiSubtask } from './convert-to-domain-subtask-from-api-subtask';
 
 export const convertToDomainTaskFromApiTask = (task: Task): DomainTask => {
   const domainTask: DomainTask = {
@@ -22,20 +23,7 @@ export const convertToDomainTaskFromApiTask = (task: Task): DomainTask => {
     },
     assignUser: task.assign,
     taskGroup: task.taskGroup,
-    subtasks:
-      task.subtasks?.map((subtask) => {
-        return {
-          id: subtask.id,
-          title: subtask.title,
-          description: subtask.description,
-          isDone: subtask.isDone,
-          scheduledTimeSec: subtask.scheduledTimeSec,
-          workTimeSec: subtask.workTimeSec,
-          workStartDateTimestamp: subtask.workStartDateTimestamp,
-          taskId: task.id,
-          assignUser: subtask.assign,
-        };
-      }) ?? [],
+    subtasks: task.subtasks.map(convertToDomainSubtaskFromApiSubtask),
   };
   return domainTask;
 };
