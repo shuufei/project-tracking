@@ -155,7 +155,7 @@ export class TaskCardComponent implements OnInit {
       if (task == null) return task;
       return {
         ...task,
-        subtaks: update(task.subtasks, subtask, 'id'),
+        subtasks: update(task.subtasks, subtask, 'id'),
       };
     });
 
@@ -327,5 +327,9 @@ export class TaskCardComponent implements OnInit {
       if (subtask == null) return;
       this.clickedSubtask.emit(subtask);
     });
+  }
+
+  trackBySubtask(_: number, value: Subtask) {
+    return value.id;
   }
 }
