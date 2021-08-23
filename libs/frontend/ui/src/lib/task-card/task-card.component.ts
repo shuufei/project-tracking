@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { RxState } from '@rx-angular/state';
 import { Subject } from 'rxjs';
+import { filter } from 'rxjs/operators';
 import { Board } from '../board-select-popup/board-select-popup.component';
 
 type State = {
@@ -83,15 +84,24 @@ export class TaskCardComponent implements OnInit {
   ngOnInit() {
     this.state.connect('workTimeSec', this.onChangedWorkTimeSec$);
     this.state.connect('scheduledTimeSec', this.onChangedScheduledTimeSec$);
-    this.state.hold(this.state.select('workTimeSec'), (sec) => {
-      this.changedWorkTimeSec.emit(sec);
-    });
-    this.state.hold(this.state.select('scheduledTimeSec'), (sec) => {
-      this.changedScheduledTimeSec.emit(sec);
-    });
-    this.state.hold(this.state.select('isHover'), (isHover) => {
-      this.hover.emit(isHover);
-    });
+    this.state.hold(
+      this.state.select('workTimeSec').pipe(filter((v) => v != null)),
+      (sec) => {
+        this.changedWorkTimeSec.emit(sec);
+      }
+    );
+    this.state.hold(
+      this.state.select('scheduledTimeSec').pipe(filter((v) => v != null)),
+      (sec) => {
+        this.changedScheduledTimeSec.emit(sec);
+      }
+    );
+    this.state.hold(
+      this.state.select('isHover').pipe(filter((v) => v != null)),
+      (isHover) => {
+        this.hover.emit(isHover);
+      }
+    );
   }
 
   @HostListener('mouseenter', [])
