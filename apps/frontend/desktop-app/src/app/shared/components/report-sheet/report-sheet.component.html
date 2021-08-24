@@ -1,5 +1,7 @@
-<ui-sheet
-  [triggerEl]="triggerEl"
-  [zindex]="100"
-  [title]="'作業レポート'"
-></ui-sheet>
+<ui-sheet [triggerEl]="triggerEl" [zindex]="100" [title]="'作業レポート'">
+  <bis-task-report
+    [title]="'タスク'"
+    [workTimeSec]="60 * 60 * 2"
+    [scheduledTimeSec]="60 * 60 * 1"
+  ></bis-task-report>
+</ui-sheet>

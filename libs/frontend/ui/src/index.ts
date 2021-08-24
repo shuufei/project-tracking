@@ -72,3 +72,4 @@ export * from './lib/user-icon/user-icon.component';
 export * from './lib/user-icon/user-icon.module';
 export * from './lib/user-select-popup/user-select-popup.component';
 export * from './lib/user-select-popup/user-select-popup.module';
+export * from './lib/utils/convert-time';

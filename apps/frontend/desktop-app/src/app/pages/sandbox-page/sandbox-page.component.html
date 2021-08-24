@@ -58,6 +58,13 @@
   ></bis-project-admin-update-sheet>
 </div>
 
+<div class="m-4">
+  <button ui-stroked-button #showReportSheetButton>レポートを確認</button>
+  <bis-report-sheet
+    [triggerEl]="showReportSheetButton.elementRef.nativeElement"
+  ></bis-report-sheet>
+</div>
+
 <div class="m-4 p-4 bg-primary-light3 w-6/12">
   <bis-task-card [task]="task"></bis-task-card>
 </div>
