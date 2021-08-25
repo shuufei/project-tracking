@@ -1,16 +1,51 @@
 <ui-sheet [triggerEl]="triggerEl" [zindex]="100" [title]="'作業レポート'">
-  <bis-task-report
-    [title]="'タスク'"
-    [workTimeSec]="60 * 60 * 2"
-    [scheduledTimeSec]="60 * 60 * 1"
-  ></bis-task-report>
-
-  <div class="p-4">
-    <bis-task-report-card [task]="task"></bis-task-report-card>
-  </div>
-  <div class="p-4">
-    <bis-task-group-report-card
-      [taskGroup]="taskGroup"
-    ></bis-task-group-report-card>
-  </div>
+  <ng-container *ngIf="state$ | async as state">
+    <ng-container *ngIf="state.board">
+      <div class="flex">
+        <div class="flex-1"></div>
+        <div class="report-contents">
+          <div class="flex justify-center">
+            <h3 class="text-center text-base board-name pb-1">
+              {{ state.board.name }}
+            </h3>
+          </div>
+          <div class="p-2 bg-primary-light3 rounded-m mt-4">
+            <ng-container
+              *ngFor="
+                let taskReport of taskReportList$ | async;
+                first as isFirst
+              "
+            >
+              <ng-container [ngSwitch]="taskReport.type">
+                <ng-container *ngSwitchCase="'task'">
+                  <bis-task-report-card
+                    [task]="taskReport.item"
+                    [ngClass]="[isFirst ? '' : 'mt-2']"
+                  ></bis-task-report-card>
+                </ng-container>
+                <ng-container *ngSwitchCase="'taskGroup'">
+                  <bis-task-group-report-card
+                    [taskGroup]="taskReport.item"
+                    [ngClass]="[isFirst ? '' : 'mt-2']"
+                  ></bis-task-group-report-card>
+                </ng-container>
+              </ng-container>
+            </ng-container>
+          </div>
+        </div>
+        <div class="flex-1 py-6 px-8">
+          <div class="sticky top-16">
+            <div class="flex items-center">
+              <div class="w-5 h-5 rounded-s bg-blue-light1"></div>
+              <span class="text-s2 text-black-light1 ml-2">作業時間</span>
+            </div>
+            <div class="flex mt-2 items-center">
+              <div class="w-5 h-5 rounded-s bg-primary-light2"></div>
+              <span class="text-s2 text-black-light1 ml-2">作業予定時間</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </ng-container>
 </ui-sheet>

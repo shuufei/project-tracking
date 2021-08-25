@@ -32,6 +32,10 @@ module.exports = {
         light3: 'var(--bison-black-light3)',
         light4: 'var(--bison-black-light4)',
       },
+      blue: {
+        default: 'var(--bison-blue-default)',
+        light1: 'var(--bison-blue-light1)',
+      },
       white: 'var(--bison-white)',
     },
     fontFamily: {

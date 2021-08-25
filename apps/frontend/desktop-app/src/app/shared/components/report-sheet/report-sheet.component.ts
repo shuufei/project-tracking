@@ -1,13 +1,34 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  Inject,
   Input,
   OnInit,
 } from '@angular/core';
-import { Task, TaskGroup } from '@bison/frontend/domain';
+import {
+  APOLLO_DATA_QUERY,
+  IApolloDataQuery,
+} from '@bison/frontend/application';
+import { Board, Task, TaskGroup } from '@bison/frontend/domain';
 import { RxState } from '@rx-angular/state';
+import { Observable } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
+import { convertToDomainBoardFromApiBoard } from '../../../util/convert-to-domain-board-from-api-board';
+import { nonNullable } from '../../../util/custom-operators/non-nullable';
+import {
+  BOARD_FIELDS,
+  BOARD_FRAGMENT_NAME,
+} from '../../fragments/board-fragment';
 
-type State = Record<string, never>;
+type State = {
+  boardId: Board['id'];
+  board: Board;
+};
+
+type TaskReportList = (
+  | { item: Task; type: 'task' }
+  | { item: TaskGroup; type: 'taskGroup' }
+)[];
 
 @Component({
   selector: 'bis-report-sheet',
@@ -18,119 +39,80 @@ type State = Record<string, never>;
 })
 export class ReportSheetComponent implements OnInit {
   @Input() triggerEl?: HTMLElement;
+  @Input()
+  set boardId(value: State['boardId']) {
+    this.state.set('boardId', () => value);
+  }
 
-  readonly task: Task = {
-    id: 'task0001',
-    title: 'タスクタイトル0001',
-    description: 'タスク詳細0001\nタスク詳細0001',
-    status: 'INPROGRESS',
-    assignUser: { id: 'user0001', name: 'user name 0001' },
-    board: {
-      id: 'board0001',
-      name: 'board name 0001',
-      description: 'board description',
-      project: {
-        id: 'project0001',
-        name: 'project name',
-      },
-    },
-    taskGroup: {
-      id: 'taskGroup0001',
-      title: 'task group name 0001',
-      description: 'task group description',
-    },
-    workTimeSec: 60 * 60 * 1 + 60 + 30,
-    scheduledTimeSec: 60 * 60 * 2,
-    // workStartDateTimestamp: new Date().valueOf(),
-    subtasksOrder: [],
-    subtasks: [
-      {
-        id: 'subtask0001',
-        title: 'subtask title 0001',
-        description: 'subtask description 0001',
-        isDone: false,
-        scheduledTimeSec: 60 * 60 * 1,
-        workTimeSec: 60 * 60 * 2.75,
-        assignUser: {
-          id: 'user0002',
-          name: 'user name 0002',
-        },
-        taskId: 'task0001',
-      },
-      {
-        id: 'subtask0002',
-        title: 'subtask title 0002',
-        description: 'subtask description 0002',
-        isDone: true,
-        scheduledTimeSec: 60 * 60 * 1,
-        workTimeSec: 60 * 60 * 2.75,
-        assignUser: {
-          id: 'user0002',
-          name: 'user name 0002',
-        },
-        taskId: 'task0001',
-      },
-      {
-        id: 'subtask0003',
-        title: 'subtask title 0003',
-        description: 'subtask description 0003',
-        isDone: true,
-        scheduledTimeSec: 60 * 60 * 1,
-        workTimeSec: 60 * 60 * 2.75,
-        assignUser: {
-          id: 'user0002',
-          name: 'user name 0002',
-        },
-        taskId: 'task0001',
-      },
-      {
-        id: 'subtask0004',
-        title: 'subtask title 0004',
-        description: 'subtask description 0004',
-        isDone: true,
-        scheduledTimeSec: 60 * 60 * 1,
-        workTimeSec: 60 * 60 * 2.75,
-        assignUser: {
-          id: 'user0002',
-          name: 'user name 0002',
-        },
-        taskId: 'task0001',
-      },
-      {
-        id: 'subtask0005',
-        title: 'subtask title 0005',
-        description: 'subtask description 0005',
-        isDone: true,
-        scheduledTimeSec: 60 * 60 * 1,
-        workTimeSec: 60 * 60 * 2.75,
-        assignUser: {
-          id: 'user0002',
-          name: 'user name 0002',
-        },
-        taskId: 'task0001',
-      },
-    ],
-  };
+  readonly state$ = this.state.select();
+  readonly taskReportList$: Observable<TaskReportList> = this.state
+    .select('board')
+    .pipe(
+      map((board) => {
+        const taskReprotList: TaskReportList = board.tasksOrder
+          .map((orderItem) => {
+            const item =
+              orderItem.type === 'Task'
+                ? board.soloTasks.find((v) => v.id === orderItem.taskId)
+                : board.taskGroups.find((v) => v.id === orderItem.taskId);
+            const type: TaskReportList[number]['type'] =
+              orderItem.type === 'Task' ? 'task' : 'taskGroup';
+            return (
+              item && {
+                item,
+                type,
+              }
+            );
+          })
+          .filter((v): v is TaskReportList[number] => v != null);
+        const remainedTaskGroups: TaskReportList = board.taskGroups
+          .filter((taskGroup) => {
+            return !taskReprotList.find((v) => v.item.id === taskGroup.id);
+          })
+          .map((taskGroup) => ({ item: taskGroup, type: 'taskGroup' }));
+        const remainedTasks: TaskReportList = board.soloTasks
+          .filter((task) => {
+            return !taskReprotList.find((v) => v.item.id === task.id);
+          })
+          .map((task) => ({ item: task, type: 'task' }));
+        return [...taskReprotList, ...remainedTaskGroups, ...remainedTasks];
+      })
+    );
 
-  readonly taskGroup: TaskGroup = {
-    id: 'taskGroup0001',
-    title: 'タスクグループ 0001',
-    description: 'タスクグループ詳細¥nタスクグループ詳細',
-    scheduledTimeSec: 60 * 60 * 6.5,
-    status: 'INPROGRESS',
-    tasksOrder: [],
-    tasks: [this.task, this.task],
-    board: {
-      id: 'board0001',
-      name: 'board name 0001',
-      description: 'board description',
-      projectId: 'project0001',
-    },
-  };
-
-  constructor(private state: RxState<State>) {}
+  constructor(
+    private state: RxState<State>,
+    @Inject(APOLLO_DATA_QUERY) private apolloDataQuery: IApolloDataQuery
+  ) {}
 
   ngOnInit(): void {
-    return;
+    this.state.connect(
+      'board',
+      this.state.select('boardId').pipe(
+        switchMap((boardId) => {
+          return this.queryBoard(boardId);
+        })
+      )
+    );
+  }
+
+  private queryBoard(boardId: Board['id']): Observable<Board> {
+    return this.apolloDataQuery
+      .queryBoard(
+        {
+          fields: BOARD_FIELDS,
+          name: BOARD_FRAGMENT_NAME,
+        },
+        boardId,
+        { fetchPolicy: 'cache-first', nextFetchPolicy: 'cache-only' }
+      )
+      .pipe(
+        map((res) => {
+          return res.data.board;
+        }),
+        nonNullable(),
+        map((board) => {
+          return convertToDomainBoardFromApiBoard(board);
+        })
+      );
   }
 }

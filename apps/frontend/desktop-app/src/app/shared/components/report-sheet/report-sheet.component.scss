@@ -1,3 +1,11 @@
 :host {
   display: block;
 }
+
+.board-name {
+  border-bottom: solid 1.5px var(--bison-primary-default);
+}
+
+.report-contents {
+  flex-grow: 2;
+}

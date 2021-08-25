@@ -2,17 +2,11 @@
   display: flex;
 }
 
-$work-time-color: #3fa5e3;
-
 .work-time-bar {
-  background-color: $work-time-color;
+  background-color: var(--bison-blue-light1);
 }
 
 .bar {
   border-top-right-radius: 3px;
   border-bottom-right-radius: 3px;
-}
-
-.work-time-sec {
-  color: #2879ab;
 }

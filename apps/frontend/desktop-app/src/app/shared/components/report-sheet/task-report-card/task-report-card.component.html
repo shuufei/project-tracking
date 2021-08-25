@@ -4,7 +4,7 @@
       [title]="state.task.title"
       [user]="state.task.assignUser"
       [workTimeSec]="state.task.workTimeSec"
-      [scheduledTimeSec]="state.task.scheduledTimeSec"
+      [scheduledTimeSec]="state.task.scheduledTimeSec || 0"
       [status]="state.task.status"
     ></bis-task-report>
 
@@ -21,7 +21,7 @@
                 [title]="subtask.title"
                 [user]="subtask.assignUser"
                 [workTimeSec]="subtask.workTimeSec"
-                [scheduledTimeSec]="subtask.scheduledTimeSec"
+                [scheduledTimeSec]="subtask.scheduledTimeSec || 0"
                 [status]="subtask.isDone ? 'DONE' : 'TODO'"
               ></bis-task-report>
             </ng-container>
