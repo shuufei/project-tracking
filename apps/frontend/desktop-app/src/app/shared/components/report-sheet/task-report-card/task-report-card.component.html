@@ -22,7 +22,7 @@
                 [user]="subtask.assignUser"
                 [workTimeSec]="subtask.workTimeSec"
                 [scheduledTimeSec]="subtask.scheduledTimeSec"
-                [status]="subtask.status"
+                [status]="subtask.isDone ? 'DONE' : 'TODO'"
               ></bis-task-report>
             </ng-container>
           </div>
