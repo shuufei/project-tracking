@@ -1,0 +1,24 @@
+<ng-container *ngIf="state$ | async as state">
+  <ng-container *ngIf="state.taskGroup">
+    <bis-task-report
+      [title]="state.taskGroup.title"
+      [user]="state.taskGroup.assignUser"
+      [workTimeSec]="state.workTimeSec"
+      [scheduledTimeSec]="state.taskGroup.scheduledTimeSec"
+      [status]="state.taskGroup.status"
+    ></bis-task-report>
+
+    <ng-container *ngIf="state.taskGroup.tasks.length > 0">
+      <div class="p-2 bg-primary-light3 rounded-s mt-4">
+        <ng-container
+          *ngFor="let task of state.taskGroup.tasks; first as isFirst"
+        >
+          <bis-task-report-card
+            [task]="task"
+            [ngClass]="[isFirst ? '' : 'mt-1']"
+          ></bis-task-report-card>
+        </ng-container>
+      </div>
+    </ng-container>
+  </ng-container>
+</ng-container>

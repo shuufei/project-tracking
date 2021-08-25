@@ -4,7 +4,7 @@ import {
   Input,
   OnInit,
 } from '@angular/core';
-import { Task } from '@bison/frontend/domain';
+import { Task, TaskGroup } from '@bison/frontend/domain';
 import { RxState } from '@rx-angular/state';
 
 type State = Record<string, never>;
@@ -110,6 +110,22 @@ export class ReportSheetComponent implements OnInit {
         taskId: 'task0001',
       },
     ],
+  };
+
+  readonly taskGroup: TaskGroup = {
+    id: 'taskGroup0001',
+    title: 'タスクグループ 0001',
+    description: 'タスクグループ詳細¥nタスクグループ詳細',
+    scheduledTimeSec: 60 * 60 * 6.5,
+    status: 'INPROGRESS',
+    tasksOrder: [],
+    tasks: [this.task, this.task],
+    board: {
+      id: 'board0001',
+      name: 'board name 0001',
+      description: 'board description',
+      projectId: 'project0001',
+    },
   };
 
   constructor(private state: RxState<State>) {}

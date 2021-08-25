@@ -103,6 +103,8 @@ export class TaskReportComponent implements OnInit, AfterViewInit {
               ? workTimeSec < scheduledTimeSec
                 ? scheduledTimeSec
                 : workTimeSec
+              : maxTimeSec < scheduledTimeSec
+              ? scheduledTimeSec
               : maxTimeSec;
           const ratio = (workTimeSec / max) * 100;
           (this.workTimeBar
@@ -133,6 +135,8 @@ export class TaskReportComponent implements OnInit, AfterViewInit {
               ? workTimeSec < scheduledTimeSec
                 ? scheduledTimeSec
                 : workTimeSec
+              : maxTimeSec < scheduledTimeSec
+              ? scheduledTimeSec
               : maxTimeSec;
           const ratio = (scheduledTimeSec / max) * 100;
           (this.scheduledTimeBar
