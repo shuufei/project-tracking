@@ -7,12 +7,16 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { convertToTimeFromSec, Time, User } from '@bison/frontend/ui';
+import {
+  convertToSecFromTime,
+  convertToTimeFromSec,
+  Time,
+  User,
+} from '@bison/frontend/ui';
 import { Status } from '@bison/shared/domain';
 import { RxState } from '@rx-angular/state';
 import { Subject } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
-import { convertToSecFromTime } from '../../../../../../../../../libs/frontend/ui/src/lib/utils/convert-time';
 
 type State = {
   title: string;
