@@ -1,5 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Project, Subtask, Task, TaskGroup, User } from '@bison/shared/schema';
+import {
+  Board,
+  Project,
+  Subtask,
+  Task,
+  TaskGroup,
+  User,
+} from '@bison/shared/schema';
 import { Apollo, gql } from 'apollo-angular';
 import { IApolloDataQuery } from './apollo-data.query.interface';
 
@@ -118,6 +125,24 @@ export class ApolloDataQuery implements IApolloDataQuery {
       variables: {
         id,
       },
+    }).valueChanges;
+  }
+
+  queryBoard(
+    ...args: Parameters<IApolloDataQuery['queryBoard']>
+  ): ReturnType<IApolloDataQuery['queryBoard']> {
+    const [{ name, fields }, id, options] = args;
+    return this.apollo.watchQuery<{ board?: Board }>({
+      ...options,
+      query: gql`
+        ${fields}
+        query BoardQuery($id: ID!) {
+          board(id: $id) {
+            ...${name}
+          }
+        }
+      `,
+      variables: { id },
     }).valueChanges;
   }
 }

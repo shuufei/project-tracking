@@ -1,6 +1,13 @@
 import { InjectionToken } from '@angular/core';
 import { ApolloQueryResult, WatchQueryFetchPolicy } from '@apollo/client';
-import { Project, Subtask, Task, TaskGroup, User } from '@bison/shared/schema';
+import {
+  Board,
+  Project,
+  Subtask,
+  Task,
+  TaskGroup,
+  User,
+} from '@bison/shared/schema';
 import { Observable } from 'rxjs';
 import { Fragment } from '../../types';
 
@@ -42,6 +49,12 @@ export interface IApolloDataQuery {
     projectId: Project['id'],
     options?: QueryOptions
   ) => Observable<ApolloQueryResult<{ project?: Project }>>;
+
+  queryBoard: (
+    fragment: Fragment,
+    boardId: Board['id'],
+    options?: QueryOptions
+  ) => Observable<ApolloQueryResult<{ board?: Board }>>;
 }
 
 export const APOLLO_DATA_QUERY = new InjectionToken<IApolloDataQuery>(
