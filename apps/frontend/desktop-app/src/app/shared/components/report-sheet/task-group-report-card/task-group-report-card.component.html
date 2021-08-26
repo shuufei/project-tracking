@@ -11,9 +11,7 @@
 
     <ng-container *ngIf="state.taskGroup.tasks.length > 0">
       <div class="p-2 bg-primary-light3 rounded-s mt-4">
-        <ng-container
-          *ngFor="let task of state.taskGroup.tasks; first as isFirst"
-        >
+        <ng-container *ngFor="let task of tasks$ | async; first as isFirst">
           <bis-task-report-card
             [task]="task"
             [ngClass]="[isFirst ? '' : 'mt-1']"
