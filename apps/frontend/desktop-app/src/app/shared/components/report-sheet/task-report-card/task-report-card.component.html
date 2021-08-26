@@ -16,7 +16,7 @@
             >サブタスク</span
           >
           <div class="mt-1">
-            <ng-container *ngFor="let subtask of state.task.subtasks">
+            <ng-container *ngFor="let subtask of subtasks$ | async">
               <bis-task-report
                 class="py-3 px-4"
                 [title]="subtask.title"

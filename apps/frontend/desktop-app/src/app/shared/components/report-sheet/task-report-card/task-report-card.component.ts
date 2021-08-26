@@ -4,9 +4,11 @@ import {
   Input,
   OnInit,
 } from '@angular/core';
-import { Task } from '@bison/frontend/domain';
+import { Subtask, Task } from '@bison/frontend/domain';
 import { RxState } from '@rx-angular/state';
 import { Subject } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { nonNullable } from '../../../../util/custom-operators/non-nullable';
 
 type State = {
   task?: Task;
@@ -31,6 +33,18 @@ export class TaskReportCardComponent implements OnInit {
    * State
    */
   readonly state$ = this.state.select();
+  readonly subtasks$ = this.state.select('task').pipe(
+    nonNullable(),
+    map((task) => {
+      const orderItems = task.subtasksOrder
+        .map((id) => task.subtasks.find((subtask) => subtask.id === id))
+        .filter((v): v is Subtask => v != null);
+      const remainedSubtasks = task.subtasks.filter(
+        (subtask) => !orderItems.find((v) => v.id === subtask.id)
+      );
+      return [...orderItems, ...remainedSubtasks];
+    })
+  );
 
   /**
    * Event
