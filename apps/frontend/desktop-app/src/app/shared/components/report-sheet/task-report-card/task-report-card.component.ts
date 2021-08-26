@@ -25,6 +25,7 @@ export class TaskReportCardComponent implements OnInit {
   set task(value: NonNullable<State['task']>) {
     this.state.set('task', () => value);
   }
+  @Input() maxTimeSec?: number;
 
   /**
    * State

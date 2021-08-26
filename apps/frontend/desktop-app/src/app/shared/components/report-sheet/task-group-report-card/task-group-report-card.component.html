@@ -6,6 +6,7 @@
       [workTimeSec]="state.workTimeSec"
       [scheduledTimeSec]="state.taskGroup.scheduledTimeSec || 0"
       [status]="state.taskGroup.status"
+      [maxTimeSec]="maxTimeSec"
     ></bis-task-report>
 
     <ng-container *ngIf="state.taskGroup.tasks.length > 0">
@@ -16,6 +17,7 @@
           <bis-task-report-card
             [task]="task"
             [ngClass]="[isFirst ? '' : 'mt-1']"
+            [maxTimeSec]="maxTimeSec"
           ></bis-task-report-card>
         </ng-container>
       </div>

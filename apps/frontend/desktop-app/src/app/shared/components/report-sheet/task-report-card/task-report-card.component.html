@@ -6,6 +6,7 @@
       [workTimeSec]="state.task.workTimeSec"
       [scheduledTimeSec]="state.task.scheduledTimeSec || 0"
       [status]="state.task.status"
+      [maxTimeSec]="maxTimeSec"
     ></bis-task-report>
 
     <ng-container *ngIf="state.task.subtasks.length > 0">
@@ -23,6 +24,7 @@
                 [workTimeSec]="subtask.workTimeSec"
                 [scheduledTimeSec]="subtask.scheduledTimeSec || 0"
                 [status]="subtask.isDone ? 'DONE' : 'TODO'"
+                [maxTimeSec]="maxTimeSec"
               ></bis-task-report>
             </ng-container>
           </div>

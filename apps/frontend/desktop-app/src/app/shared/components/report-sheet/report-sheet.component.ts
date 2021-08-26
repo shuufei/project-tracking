@@ -9,7 +9,7 @@ import {
   APOLLO_DATA_QUERY,
   IApolloDataQuery,
 } from '@bison/frontend/application';
-import { Board, Task, TaskGroup } from '@bison/frontend/domain';
+import { Board, Subtask, Task, TaskGroup } from '@bison/frontend/domain';
 import { RxState } from '@rx-angular/state';
 import { Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
@@ -23,6 +23,7 @@ import {
 type State = {
   boardId: Board['id'];
   board: Board;
+  maxTimeSec?: number;
 };
 
 type TaskReportList = (
@@ -93,6 +94,56 @@ export class ReportSheetComponent implements OnInit {
         })
       )
     );
+    this.state.connect('maxTimeSec', this.state.select('board'), (_, board) => {
+      const soloTasksMaxTimeSec = board.soloTasks.reduce((acc, curr) => {
+        const sec = this.getTaskMaxTimeSec(curr);
+        return sec > acc ? sec : acc;
+      }, 0);
+      const taskGroupsMaxTimeSec = board.taskGroups.reduce((acc, curr) => {
+        const sec = this.getTaskGroupMaxTimeSec(curr);
+        return sec > acc ? sec : acc;
+      }, 0);
+      const sec =
+        soloTasksMaxTimeSec > taskGroupsMaxTimeSec
+          ? soloTasksMaxTimeSec
+          : taskGroupsMaxTimeSec;
+      return sec;
+    });
+  }
+
+  private getTaskGroupMaxTimeSec(taskGroup: TaskGroup) {
+    const taskGroupWorkTimeSec = taskGroup.tasks.reduce(
+      (acc, curr) => acc + curr.workTimeSec,
+      0
+    );
+    const taskGroupSec =
+      taskGroupWorkTimeSec > (taskGroup.scheduledTimeSec ?? 0)
+        ? taskGroupWorkTimeSec
+        : taskGroup.scheduledTimeSec ?? 0;
+    const tasksMaxTimeSec = taskGroup.tasks.reduce((acc, curr) => {
+      const taskMaxSec = this.getTaskMaxTimeSec(curr);
+      return taskMaxSec > acc ? taskMaxSec : acc;
+    }, 0);
+    return taskGroupSec > tasksMaxTimeSec ? taskGroupSec : tasksMaxTimeSec;
+  }
+
+  private getTaskMaxTimeSec(task: Task) {
+    const subtaskMaxTimeSec = this.getSubtasksMaxTimeSec(task.subtasks);
+    const sec =
+      (task.scheduledTimeSec ?? 0) > task.workTimeSec
+        ? task.scheduledTimeSec ?? 0
+        : task.workTimeSec;
+    return sec > subtaskMaxTimeSec ? sec : subtaskMaxTimeSec;
+  }
+
+  private getSubtasksMaxTimeSec(subtasks: Subtask[]) {
+    return subtasks.reduce((maxTimeSec, subtask) => {
+      const subtaskSec =
+        (subtask.scheduledTimeSec ?? 0) > subtask.workTimeSec
+          ? subtask.scheduledTimeSec ?? 0
+          : subtask.workTimeSec;
+      return subtaskSec > maxTimeSec ? subtaskSec : maxTimeSec;
+    }, 0);
   }
 
   private queryBoard(boardId: Board['id']): Observable<Board> {

@@ -12,7 +12,7 @@ export const mockTaskRepositoryReturnValues: MockReturnValues<ITaskRepository> =
         status: STATUS.Todo,
         assignUserId: createId(),
         boardId: createId(),
-        workTimeSec: 0,
+        workTimeSec: 60 * 60 * 8,
         subtasksOrder: [],
       },
       {
@@ -48,7 +48,7 @@ export const mockTaskRepositoryReturnValues: MockReturnValues<ITaskRepository> =
         status: STATUS.Todo,
         assignUserId: createId(),
         boardId: createId(),
-        workTimeSec: 0,
+        workTimeSec: 60 * 60 * 3.5,
         subtasksOrder: [],
       },
       {

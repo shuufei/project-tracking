@@ -27,6 +27,8 @@ type State = {
   maxTimeSec: number;
 };
 
+const MAX_TIME_SEC = 60 * 60 * 6;
+
 @Component({
   selector: 'bis-task-report',
   templateUrl: './task-report.component.html',
@@ -56,8 +58,8 @@ export class TaskReportComponent implements OnInit, AfterViewInit {
     this.state.set('status', () => value);
   }
   @Input()
-  set maxTimeSec(value: State['maxTimeSec']) {
-    this.state.set('maxTimeSec', () => value);
+  set maxTimeSec(value: State['maxTimeSec'] | undefined) {
+    this.state.set('maxTimeSec', () => value ?? MAX_TIME_SEC);
   }
   @ViewChild('workTimeBar') workTimeBar?: ElementRef;
   @ViewChild('scheduledTimeBar') scheduledTimeBar?: ElementRef;
@@ -75,7 +77,7 @@ export class TaskReportComponent implements OnInit, AfterViewInit {
       workTime: convertToTimeFromSec(0),
       scheduledTime: convertToTimeFromSec(0),
       status: 'TODO',
-      maxTimeSec: 60 * 60 * 6,
+      maxTimeSec: MAX_TIME_SEC,
     });
   }
 

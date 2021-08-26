@@ -29,6 +29,7 @@ export class TaskGroupReportCardComponent implements OnInit {
     );
     this.state.set('workTimeSec', () => workTimeSec);
   }
+  @Input() maxTimeSec?: number;
 
   /**
    * State
