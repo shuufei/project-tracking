@@ -1,7 +1,7 @@
 import { gql } from 'apollo-angular';
 import { SUBTASK_FIELDS, SUBTASK_FRAGMENT_NAME } from './subtask-fragment';
 
-export const TASK_FRAGMENT_NAME = 'TaskPartsInTaskCard';
+export const TASK_FRAGMENT_NAME = 'TaskParts';
 export const TASK_FIELDS = gql`
   ${SUBTASK_FIELDS}
   fragment ${TASK_FRAGMENT_NAME} on Task {

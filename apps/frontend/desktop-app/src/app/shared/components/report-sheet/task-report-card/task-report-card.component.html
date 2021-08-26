@@ -1,0 +1,49 @@
+<ng-container *ngIf="state$ | async as state">
+  <ng-container *ngIf="state.task">
+    <bis-task-report
+      [title]="state.task.title"
+      [user]="state.task.assignUser"
+      [workTimeSec]="state.task.workTimeSec"
+      [scheduledTimeSec]="state.task.scheduledTimeSec || 0"
+      [status]="state.task.status"
+      [maxTimeSec]="maxTimeSec"
+    ></bis-task-report>
+
+    <ng-container *ngIf="state.task.subtasks.length > 0">
+      <div class="mt-4">
+        <ng-container *ngIf="state.isOpenedSubtasks; else openSubtasksButton">
+          <span class="text-s2 text-black-light2 font-medium block"
+            >サブタスク</span
+          >
+          <div class="mt-1">
+            <ng-container *ngFor="let subtask of subtasks$ | async">
+              <bis-task-report
+                class="py-3 px-4"
+                [title]="subtask.title"
+                [user]="subtask.assignUser"
+                [workTimeSec]="subtask.workTimeSec"
+                [scheduledTimeSec]="subtask.scheduledTimeSec || 0"
+                [status]="subtask.isDone ? 'DONE' : 'TODO'"
+                [maxTimeSec]="maxTimeSec"
+              ></bis-task-report>
+            </ng-container>
+          </div>
+          <button
+            class="text-s2 underline p-2 rounded-s focus:outline-none focus:shadow-outline_primary mt-2"
+            (click)="onClickedCloseSubtasks$.next()"
+          >
+            閉じる
+          </button>
+        </ng-container>
+        <ng-template #openSubtasksButton>
+          <button
+            class="text-s2 underline p-2 rounded-s focus:outline-none focus:shadow-outline_primary"
+            (click)="onClickedOpenSubtasks$.next()"
+          >
+            サブタスクを表示
+          </button>
+        </ng-template>
+      </div>
+    </ng-container>
+  </ng-container>
+</ng-container>

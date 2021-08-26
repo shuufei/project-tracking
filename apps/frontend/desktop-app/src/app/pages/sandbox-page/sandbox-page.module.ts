@@ -7,6 +7,7 @@ import { BoardUpdateSheetModule } from '../../shared/components/board-update-she
 import { ProjectAdminUpdateSheetModule } from '../../shared/components/project-admin-update-sheet/project-admin-update-sheet.module';
 import { ProjectMemberUpdateSheetModule } from '../../shared/components/project-member-update-sheet/project-member-update-sheet.module';
 import { ProjectUpdateSheetModule } from '../../shared/components/project-update-sheet/project-update-sheet.module';
+import { ReportSheetModule } from '../../shared/components/report-sheet/report-sheet.module';
 import { TaskCardModule } from '../../shared/components/task-card/task-card.module';
 import { TaskDialogModule } from '../../shared/components/task-dialog/task-dialog.module';
 import { SandboxPageRoutingModule } from './sandbox-page-routing.module';
@@ -27,6 +28,7 @@ import { SandboxPageComponent } from './sandbox-page.component';
     ProjectMemberUpdateSheetModule,
     ProjectUpdateSheetModule,
     TaskCardModule,
+    ReportSheetModule,
   ],
 })
 export class SandboxPageModule {}

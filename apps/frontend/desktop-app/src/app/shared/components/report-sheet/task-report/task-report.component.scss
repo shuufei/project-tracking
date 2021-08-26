@@ -1,0 +1,12 @@
+:host {
+  display: flex;
+}
+
+.work-time-bar {
+  background-color: var(--bison-blue-light1);
+}
+
+.bar {
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
