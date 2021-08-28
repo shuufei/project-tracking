@@ -5,7 +5,7 @@ import { convertToDomainColorFromApiColor } from './convert-to-domain-color-from
 export const convertToFrontendDomainProjectFromApiProject = (
   project: ApiProject
 ): Project => {
-  const { id, name, description, color, members, admin } = project;
+  const { id, name, description, color, members, admin, boards } = project;
   return {
     id,
     name,
@@ -20,6 +20,12 @@ export const convertToFrontendDomainProjectFromApiProject = (
       id: member.id,
       name: member.name,
       icon: member.icon,
+    })),
+    boards: boards.map((board) => ({
+      id: board.id,
+      name: board.id,
+      description: board.id,
+      projectId: board.project.id,
     })),
   };
 };
