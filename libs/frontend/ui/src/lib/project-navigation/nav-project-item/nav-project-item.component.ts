@@ -16,10 +16,10 @@ import { COLOR } from '@bison/shared/domain';
 })
 export class NavProjectItemComponent {
   @Input() isOpen = false;
-  @Input() isSelected = false;
   @Input() projectName = '';
   @Input() color: Color = COLOR.Gray;
-  @Output() clickedProject = new EventEmitter();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  @Input() routerLinkPath: any;
   @Output() clickedOpenToggle = new EventEmitter();
   @Output() clickedDelete = new EventEmitter();
 }

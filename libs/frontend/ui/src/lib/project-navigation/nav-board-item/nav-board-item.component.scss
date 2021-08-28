@@ -3,18 +3,20 @@
 }
 
 .box {
-  border: 1.5px solid transparent;
-
-  &.selected {
-    border-color: var(--bison-primary-default);
-  }
-
   &:hover {
     background-color: #dfdfdf;
 
     .menu-trigger {
       visibility: visible;
     }
+  }
+}
+
+.link {
+  border: 1.5px solid transparent;
+
+  &.selected {
+    border-color: var(--bison-primary-default);
   }
 }
 

@@ -13,8 +13,9 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NavBoardItemComponent {
-  @Input() isSelected = false;
   @Input() boardName = '';
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  @Input() routerLinkPath: any;
   @Output() clickedEdit = new EventEmitter();
   @Output() clickedDelete = new EventEmitter();
 }

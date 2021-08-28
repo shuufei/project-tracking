@@ -1,3 +1,4 @@
+import { RouterTestingModule } from '@angular/router/testing';
 import { Color } from '@bison/shared/domain';
 import { ProjectNavigationComponent } from './project-navigation.component';
 import { ProjectNavigationModule } from './project-navigation.module';
@@ -15,7 +16,7 @@ const boards = [
 
 export const Default = () => ({
   moduleMetadata: {
-    imports: [ProjectNavigationModule],
+    imports: [ProjectNavigationModule, RouterTestingModule],
   },
   component: ProjectNavigationComponent,
   props: {
@@ -25,36 +26,11 @@ export const Default = () => ({
 
 export const Boards = () => ({
   moduleMetadata: {
-    imports: [ProjectNavigationModule],
+    imports: [ProjectNavigationModule, RouterTestingModule],
   },
   component: ProjectNavigationComponent,
   props: {
     project,
     boards,
-  },
-});
-
-export const Selected = () => ({
-  moduleMetadata: {
-    imports: [ProjectNavigationModule],
-  },
-  template: `
-    <ui-project-navigation
-      [project]="project"
-      [boards]="boards"
-      [selectedProjectId]="selectedProjectId"
-    ></ui-project-navigation>
-    <ui-project-navigation
-      class="mt-4"
-      [project]="project"
-      [boards]="boards"
-      [selectedBoardId]="selectedBoardId"
-    ></ui-project-navigation>
-  `,
-  props: {
-    project,
-    boards,
-    selectedProjectId: project.id,
-    selectedBoardId: boards[0].id,
   },
 });

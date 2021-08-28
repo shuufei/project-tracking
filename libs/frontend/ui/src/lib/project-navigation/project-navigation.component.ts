@@ -14,15 +14,14 @@ import { Color } from '@bison/shared/domain';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectNavigationComponent {
-  @Input() project?: { id: number; name: string; color: Color };
-  @Input() boards: { id: number; name: string }[] = [];
-  @Input() selectedProjectId?: number;
-  @Input() selectedBoardId?: number;
-  @Output() clickedProject = new EventEmitter<number>();
-  @Output() clickedBoard = new EventEmitter<number>();
+  @Input() project?: Project;
+  @Input() boards: Board[] = [];
   @Output() clickedCreateBoard = new EventEmitter();
-  @Output() clickedDeleteProject = new EventEmitter<number>();
-  @Output() clickedEditBoard = new EventEmitter<number>();
-  @Output() clickedDeleteBoard = new EventEmitter<number>();
+  @Output() clickedDeleteProject = new EventEmitter<Project>();
+  @Output() clickedEditBoard = new EventEmitter<Board>();
+  @Output() clickedDeleteBoard = new EventEmitter<Board>();
   isOpen = false;
 }
+
+type Project = { id: string; name: string; color: Color };
+type Board = { id: string; name: string };
