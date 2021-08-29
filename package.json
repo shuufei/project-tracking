@@ -29,7 +29,8 @@
     "workspace-generator": "nx workspace-generator",
     "dep-graph": "nx dep-graph",
     "help": "nx help",
-    "gen:graphql": "graphql-codegen --config codegen.yml"
+    "gen:graphql": "graphql-codegen --config codegen.yml",
+    "db:init": "./construction/dynamodb/table-schema/create-tables.sh && ts-node ./construction/dynamodb/sample-data/import-sample-data.ts"
   },
   "private": true,
   "dependencies": {
