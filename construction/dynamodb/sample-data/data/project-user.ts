@@ -1,6 +1,6 @@
 import { v4 } from 'uuid';
 
-export const userId_HirokazuMotegi = v4();
+export const userId_HirokazuMotegi = 'user0001';
 export const user_HirokazuMotegi = {
   PK: `User-${userId_HirokazuMotegi}`,
   SK: `User-${userId_HirokazuMotegi}`,
@@ -8,7 +8,7 @@ export const user_HirokazuMotegi = {
   'User-idpUserId': `${v4()}`,
 };
 
-export const userId_KentaToshima = v4();
+export const userId_KentaToshima = 'user0002';
 export const user_KentaToshima = {
   PK: `User-${userId_KentaToshima}`,
   SK: `User-${userId_KentaToshima}`,
@@ -16,7 +16,7 @@ export const user_KentaToshima = {
   'User-idpUserId': `${v4()}`,
 };
 
-export const userId_RyoutaYamaura = v4();
+export const userId_RyoutaYamaura = 'user0003';
 export const user_RyoutaYamaura = {
   PK: `User-${userId_RyoutaYamaura}`,
   SK: `User-${userId_RyoutaYamaura}`,
@@ -24,7 +24,7 @@ export const user_RyoutaYamaura = {
   'User-idpUserId': `${v4()}`,
 };
 
-export const userId_KeitaSakai = v4();
+export const userId_KeitaSakai = 'user0004';
 export const user_KeitaSakai = {
   PK: `User-${userId_KeitaSakai}`,
   SK: `User-${userId_KeitaSakai}`,
@@ -32,7 +32,7 @@ export const user_KeitaSakai = {
   'User-idpUserId': `${v4()}`,
 };
 
-export const userId_NaokiOota = v4();
+export const userId_NaokiOota = 'user0005';
 export const user_NaokiOota = {
   PK: `User-${userId_NaokiOota}`,
   SK: `User-${userId_NaokiOota}`,
@@ -40,7 +40,7 @@ export const user_NaokiOota = {
   'User-idpUserId': `${v4()}`,
 };
 
-export const userId_ShuuheiHanashiro = v4();
+export const userId_ShuuheiHanashiro = 'user0006';
 export const user_ShuuheiHanashiro = {
   PK: `User-${userId_ShuuheiHanashiro}`,
   SK: `User-${userId_ShuuheiHanashiro}`,
@@ -48,7 +48,7 @@ export const user_ShuuheiHanashiro = {
   'User-idpUserId': `${v4()}`,
 };
 
-export const projectId_Bison = v4();
+export const projectId_Bison = 'project0001';
 export const project_Bison = {
   PK: `Project-${projectId_Bison}`,
   SK: `Project-${projectId_Bison}`,
@@ -96,4 +96,15 @@ export const projectUserMapping_Bison = [
     PK: project_Bison.PK,
     SK: user_ShuuheiHanashiro.PK,
   },
+];
+
+export const projectUserItems = [
+  user_HirokazuMotegi,
+  user_KentaToshima,
+  user_RyoutaYamaura,
+  user_KeitaSakai,
+  user_NaokiOota,
+  user_ShuuheiHanashiro,
+  project_Bison,
+  ...projectUserMapping_Bison,
 ];
