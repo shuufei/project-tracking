@@ -148,9 +148,6 @@ const importTaskSampleData = async () => {
         status: {
           S: item.status,
         },
-        boardId: {
-          S: item.boardId,
-        },
         workTimeSec: {
           N: String(item.workTimeSec),
         },
@@ -159,7 +156,12 @@ const importTaskSampleData = async () => {
         },
       },
     };
-    const stringAttributes = ['description', 'assignUserId', 'taskGroupId'];
+    const stringAttributes = [
+      'description',
+      'assignUserId',
+      'taskGroupId',
+      'boardId',
+    ];
     const numberAttributes = ['scheduledTimeSec', 'workStartDateTimestamp'];
     const stringSetAttributes = ['subtasksOrder'];
     stringAttributes.forEach((attribute) => {
@@ -249,6 +251,7 @@ const main = async () => {
     console.log('[Info]: import Task');
     await importSubtaskSampleData();
     console.log('[Info]: import Subtask');
+    console.log('[Info]: Completed');
   } catch (error) {
     console.error('[Error]: ', error);
   }
