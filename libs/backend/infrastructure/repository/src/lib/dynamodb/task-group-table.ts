@@ -1,4 +1,5 @@
 import { TaskGroup } from '@bison/shared/domain';
+import { DynamoDB } from 'aws-sdk';
 export const tableName = 'TaskGroup';
 export const boardIdIndexName = 'BoardIdIndex';
 
@@ -31,22 +32,24 @@ export const convertToDomainTaskGroupFromDbTaskGroupItem = (
 
 export const convertToDbTaskGroupItemFromDomainTaskGroup = (
   taskGroup: TaskGroup
-): TaskGroupItem => {
-  return {
+): DynamoDB.AttributeMap => {
+  const item: DynamoDB.AttributeMap = {
     id: { S: taskGroup.id },
     title: { S: taskGroup.title },
-    description:
-      taskGroup.description != null ? { S: taskGroup.description } : undefined,
     status: { S: taskGroup.status },
     boardId: { S: taskGroup.boardId },
-    scheduledTimeSec:
-      taskGroup.scheduledTimeSec != null
-        ? { N: String(taskGroup.scheduledTimeSec) }
-        : undefined,
-    assignUserId:
-      taskGroup.assignUserId != null
-        ? { S: taskGroup.assignUserId }
-        : undefined,
     createdAt: { N: String(new Date().valueOf()) },
   };
+  if (taskGroup.description != null) {
+    item.description = {
+      S: taskGroup.description,
+    };
+  }
+  if (taskGroup.scheduledTimeSec != null) {
+    item.scheduledTimeSec = { N: String(taskGroup.scheduledTimeSec) };
+  }
+  if (taskGroup.assignUserId != null) {
+    item.assignUserId = { S: taskGroup.assignUserId };
+  }
+  return item;
 };
