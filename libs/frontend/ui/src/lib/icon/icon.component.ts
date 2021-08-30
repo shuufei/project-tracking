@@ -29,6 +29,7 @@ export const Icons = [
   'arrow-up',
   'arrow-left',
   'arrow-right',
+  'bar-chart',
   'chevron-down',
   'chevron-up',
   'chevron-left',

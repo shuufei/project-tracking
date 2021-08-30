@@ -24,6 +24,7 @@ export class SandboxPageComponent {
         name: 'user name 0001',
       },
     ],
+    boards: [],
   };
   readonly board: Board = {
     id: 'board0001',

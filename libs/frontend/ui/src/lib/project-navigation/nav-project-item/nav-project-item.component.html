@@ -1,16 +1,20 @@
 <div
-  class="box flex items-center justify-between rounded-s px-3 py-1 cursor-pointer"
-  [class.selected]="isSelected"
-  (click)="clickedProject.emit()"
+  class="box relative flex items-center justify-between rounded-s px-3 py-1 cursor-pointer"
 >
+  <a
+    class="link absolute top-0 left-0 w-full h-full rounded-s"
+    [routerLink]="routerLinkPath"
+    routerLinkActive="selected"
+    [routerLinkActiveOptions]="{ exact: true }"
+  ></a>
   <div class="flex items-center">
     <span class="text-s1 font-medium mr-1">{{ projectName }}</span>
     <ui-color-icon class="color-icon" [color]="color"></ui-color-icon>
   </div>
   <div class="flex items-center">
-    <div class="mr-1" uiTooltip="メニューを開く">
-      <div class="relative">
-        <div #triggerEl class="menu-trigger flex invisible">
+    <div class="relative">
+      <div style="display: flex" uiTooltip="メニューを開く">
+        <div #triggerEl class="menu-trigger flex mr-1 invisible">
           <ui-icon
             class="menu-icon cursor-pointer"
             [icon]="'more-horizontal'"
@@ -19,21 +23,22 @@
             [hoverColor]="'primary'"
           ></ui-icon>
         </div>
-        <ui-popup [triggerEl]="triggerEl" [isCloseWhenPopupAction]="true">
-          <div class="menu-items">
-            <ui-menu-item
-              [itemName]="'削除'"
-              [color]="'warn'"
-              [icon]="'trash-2'"
-              (clickedItem)="clickedDelete.emit()"
-            ></ui-menu-item>
-          </div>
-        </ui-popup>
       </div>
+      <ui-popup [triggerEl]="triggerEl" [isCloseWhenPopupAction]="true">
+        <div class="menu-items">
+          <ui-menu-item
+            [itemName]="'削除'"
+            [color]="'warn'"
+            [icon]="'trash-2'"
+            (clickedItem)="clickedDelete.emit()"
+          ></ui-menu-item>
+        </div>
+      </ui-popup>
     </div>
     <div
+      style="display: flex"
       uiTooltip="{{ isOpen ? 'ボード一覧を閉じる' : 'ボード一覧を開く' }}"
-      (click)="clickedOpenToggle.emit(); $event.stopPropagation()"
+      (click)="clickedOpenToggle.emit()"
     >
       <ui-icon
         class="transform duration-100"

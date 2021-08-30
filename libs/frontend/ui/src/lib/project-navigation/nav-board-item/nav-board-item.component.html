@@ -1,7 +1,11 @@
 <div
-  class="box flex items-center justify-between rounded-s px-3 py-1 cursor-pointer"
-  [class.selected]="isSelected"
+  class="box relative flex items-center justify-between rounded-s px-3 py-1 cursor-pointer"
 >
+  <a
+    class="link absolute top-0 left-0 w-full h-full rounded-s"
+    [routerLink]="routerLinkPath"
+    routerLinkActive="selected"
+  ></a>
   <span class="text-s2 font-medium">{{ boardName }}</span>
   <div class="relative">
     <div #triggerEl class="menu-trigger flex invisible">
@@ -13,6 +17,7 @@
         [hoverColor]="'primary'"
       ></ui-icon>
     </div>
+    <!-- FIXME: 他のproject-navigationの後ろに出る -->
     <ui-popup [triggerEl]="triggerEl" [isCloseWhenPopupAction]="true">
       <div class="menu-items">
         <ui-menu-item

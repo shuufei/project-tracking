@@ -1,4 +1,4 @@
-import { Project as DomainProject, User } from '@bison/shared/domain';
+import { Board, Project as DomainProject, User } from '@bison/shared/domain';
 
 export type Project = Pick<
   DomainProject,
@@ -6,4 +6,5 @@ export type Project = Pick<
 > & {
   admin: Pick<User, 'id' | 'name' | 'icon'>;
   members: Pick<User, 'id' | 'name' | 'icon'>[];
+  boards: Pick<Board, 'id' | 'name' | 'description' | 'projectId'>[];
 };

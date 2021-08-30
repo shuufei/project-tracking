@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { ColorIconModule } from '../color-icon/color-icon.module';
 import { IconModule } from '../icon/icon.module';
 import { MenuItemModule } from '../menu-item/menu-item.module';
@@ -17,6 +18,7 @@ import { ProjectNavigationComponent } from './project-navigation.component';
   ],
   imports: [
     CommonModule,
+    RouterModule,
     ColorIconModule,
     IconModule,
     PopupModule,

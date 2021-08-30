@@ -26,6 +26,7 @@ describe('ProjectUpdateSheetComponent', () => {
         name: 'admin name',
       },
       members: [],
+      boards: [],
     };
     fixture.detectChanges();
   });

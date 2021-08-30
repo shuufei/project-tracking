@@ -1,22 +1,29 @@
 <ui-nav-project-item
   *ngIf="project"
   [isOpen]="isOpen"
-  [isSelected]="project.id === selectedProjectId"
   [projectName]="project.name"
   [color]="project.color"
-  (clickedProject)="clickedProject.emit(project.id)"
+  [routerLinkPath]="['/projects', project.id]"
   (clickedOpenToggle)="isOpen = !isOpen"
-  (clickedDelete)="clickedDeleteProject.emit(project.id)"
+  (clickedDelete)="clickedDeleteProject.emit(project)"
 >
   <div class="ml-2">
     <ui-nav-board-item
       *ngFor="let board of boards"
       class="my-2"
       [boardName]="board.name"
-      [isSelected]="board.id === selectedBoardId"
-      (click)="clickedBoard.emit(board.id)"
-      (clickedEdit)="clickedEditBoard.emit(board.id)"
-      (clickedDelete)="clickedDeleteBoard.emit(board.id)"
+      [routerLinkPath]="[
+        '/projects',
+        project.id,
+        {
+          outlets: {
+            primary: ['boards', board.id],
+            header: ['boards', board.id]
+          }
+        }
+      ]"
+      (clickedEdit)="clickedEditBoard.emit(board)"
+      (clickedDelete)="clickedDeleteBoard.emit(board)"
     ></ui-nav-board-item>
     <span
       class="inline-flex items-center text-s3 text-black-light2 font-medium px-3 py-1 cursor-pointer"
