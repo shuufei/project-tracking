@@ -1,6 +1,6 @@
 import { DynamoDB } from 'aws-sdk';
 
-export class DynamoDbClient {
+export class DynamoDBClient {
   private static client?: DynamoDB;
 
   static getClient() {

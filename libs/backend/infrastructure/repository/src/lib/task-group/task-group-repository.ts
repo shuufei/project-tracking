@@ -1,7 +1,7 @@
 import type { ITaskGroupRepository } from '@bison/backend/domain';
 import { mockTaskGroupRepositoryReturnValues } from '@bison/backend/domain';
 import { DynamoDB } from 'aws-sdk';
-import { DynamoDbClient } from '../dynamodb/dynamodb-client';
+import { DynamoDBClient } from '../dynamodb/dynamodb-client';
 import {
   boardIdIndexName,
   convertToDomainTaskGroupFromDbTaskGroupItem,
@@ -24,7 +24,7 @@ export class TaskGroupRepository implements ITaskGroupRepository {
         },
       },
     };
-    const results = await DynamoDbClient.getClient().query(params).promise();
+    const results = await DynamoDBClient.getClient().query(params).promise();
     const items = (results.Items ?? []) as TaskGroupItem[];
     return {
       taskGroups: items.map((item) =>
@@ -36,7 +36,21 @@ export class TaskGroupRepository implements ITaskGroupRepository {
   async getById(
     ...args: Parameters<ITaskGroupRepository['getById']>
   ): ReturnType<ITaskGroupRepository['getById']> {
-    return mockTaskGroupRepositoryReturnValues.getById;
+    const [id] = args;
+    const params: DynamoDB.GetItemInput = {
+      TableName: tableName,
+      Key: {
+        id: {
+          S: id,
+        },
+      },
+    };
+    const results = await DynamoDBClient.getClient().getItem(params).promise();
+    const item = results.Item;
+    if (item == null) {
+      throw new Error('TaskGroupItem is undefined');
+    }
+    return convertToDomainTaskGroupFromDbTaskGroupItem(item as TaskGroupItem);
   }
 
   async create(
