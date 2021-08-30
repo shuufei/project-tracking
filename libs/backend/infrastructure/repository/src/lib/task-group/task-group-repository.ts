@@ -1,5 +1,4 @@
 import type { ITaskGroupRepository } from '@bison/backend/domain';
-import { mockTaskGroupRepositoryReturnValues } from '@bison/backend/domain';
 import { DynamoDB } from 'aws-sdk';
 import { DynamoDBClient } from '../dynamodb/dynamodb-client';
 import {
@@ -77,6 +76,14 @@ export class TaskGroupRepository implements ITaskGroupRepository {
   async delete(
     ...args: Parameters<ITaskGroupRepository['delete']>
   ): ReturnType<ITaskGroupRepository['delete']> {
-    return mockTaskGroupRepositoryReturnValues.delete;
+    const [id] = args;
+    const params: DynamoDB.Delete = {
+      TableName: tableName,
+      Key: {
+        id: { S: id },
+      },
+    };
+    await DynamoDBClient.getClient().deleteItem(params).promise();
+    return;
   }
 }
