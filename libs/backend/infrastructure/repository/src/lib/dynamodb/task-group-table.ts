@@ -28,3 +28,25 @@ export const convertToDomainTaskGroupFromDbTaskGroupItem = (
     tasksOrder: item.tasksOrder?.SS ?? [],
   };
 };
+
+export const convertToDbTaskGroupItemFromDomainTaskGroup = (
+  taskGroup: TaskGroup
+): TaskGroupItem => {
+  return {
+    id: { S: taskGroup.id },
+    title: { S: taskGroup.title },
+    description:
+      taskGroup.description != null ? { S: taskGroup.description } : undefined,
+    status: { S: taskGroup.status },
+    boardId: { S: taskGroup.boardId },
+    scheduledTimeSec:
+      taskGroup.scheduledTimeSec != null
+        ? { N: String(taskGroup.scheduledTimeSec) }
+        : undefined,
+    assignUserId:
+      taskGroup.assignUserId != null
+        ? { S: taskGroup.assignUserId }
+        : undefined,
+    createdAt: { N: String(new Date().valueOf()) },
+  };
+};

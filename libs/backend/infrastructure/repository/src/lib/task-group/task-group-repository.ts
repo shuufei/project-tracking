@@ -4,6 +4,7 @@ import { DynamoDB } from 'aws-sdk';
 import { DynamoDBClient } from '../dynamodb/dynamodb-client';
 import {
   boardIdIndexName,
+  convertToDbTaskGroupItemFromDomainTaskGroup,
   convertToDomainTaskGroupFromDbTaskGroupItem,
   tableName,
   TaskGroupItem,
@@ -56,7 +57,11 @@ export class TaskGroupRepository implements ITaskGroupRepository {
   async create(
     ...args: Parameters<ITaskGroupRepository['create']>
   ): ReturnType<ITaskGroupRepository['create']> {
-    return mockTaskGroupRepositoryReturnValues.create;
+    const [taskGroup] = args;
+    const item = convertToDbTaskGroupItemFromDomainTaskGroup(taskGroup);
+    const params: DynamoDB.PutItemInput = { TableName: tableName, Item: item };
+    await DynamoDBClient.getClient().putItem(params).promise();
+    return taskGroup;
   }
 
   async update(
