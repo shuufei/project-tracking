@@ -22,7 +22,6 @@ import {
   CAN_ACCESS_PROJECT_SERVICE,
   MockBoardRepository,
   MockProjectRepository,
-  MockTaskGroupRepository,
   MockTaskRepository,
   MockUserRepository,
   PROJECT_REPOSITORY,
@@ -30,6 +29,7 @@ import {
   TASK_REPOSITORY,
   USER_REPOSITORY,
 } from '@bison/backend/domain';
+import { TaskGroupRepository } from '@bison/backend/infrastructure/repository';
 import { Module } from '@nestjs/common';
 import { ParseUserPipeModule } from '../../pipes/parse-user/parse-user.module';
 import { TaskGroupResolver } from './task-group.resolver';
@@ -71,7 +71,7 @@ import { TaskGroupResolver } from './task-group.resolver';
     },
     {
       provide: TASK_GROUP_REPOSITORY,
-      useClass: MockTaskGroupRepository,
+      useClass: TaskGroupRepository,
     },
     {
       provide: CREATE_TASK_GROUP_SERVICE,
