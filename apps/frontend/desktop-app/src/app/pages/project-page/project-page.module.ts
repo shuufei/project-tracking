@@ -28,7 +28,7 @@ import { BoardDetailHeaderComponent } from './components/board-detail-header/boa
 import { BoardDetailComponent } from './components/board-detail/board-detail.component';
 import { ExampleHeaderComponent } from './components/example-header/example-header.component';
 import { ExampleComponent } from './components/example/example.component';
-import { ProjectDetailComponent } from './project-detail/project-detail.component';
+import { ProjectDetailComponent } from './components/project-detail/project-detail.component';
 import { ProjectPageRoutingModule } from './project-page-routing.module';
 import { ProjectPageComponent } from './project-page.component';
 import { ProjectSubComponent } from './project-sub/project-sub.component';
