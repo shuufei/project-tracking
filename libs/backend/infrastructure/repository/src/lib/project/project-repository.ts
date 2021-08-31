@@ -3,6 +3,7 @@ import {
   mockProjectRepositoryReturnValues,
 } from '@bison/backend/domain';
 import { Project, UserWithIdpUserId } from '@bison/shared/domain';
+import { Logger } from '@nestjs/common';
 import { DynamoDB } from 'aws-sdk';
 import { DynamoDBClient } from '../dynamodb/dynamodb-client';
 import {
@@ -83,11 +84,40 @@ export class ProjectRepository implements IProjectRepository {
   async update(
     ...args: Parameters<IProjectRepository['update']>
   ): ReturnType<IProjectRepository['update']> {
-    // TODO: mapping
     const [project] = args;
-    const item = convertToDbProjectItemFromDomainProject(project);
-    const params: DynamoDB.PutItemInput = { TableName: tableName, Item: item };
-    await DynamoDBClient.getClient().putItem(params).promise();
+    const queryProjectsParams: DynamoDB.QueryInput = {
+      TableName: tableName,
+      KeyConditionExpression: 'PK = :projectId',
+      ExpressionAttributeValues: {
+        ':projectId': {
+          S: addProjectIdPrefix(project.id),
+        },
+      },
+    };
+    const queryResult = await DynamoDBClient.getClient()
+      .query(queryProjectsParams)
+      .promise();
+    Logger.log(queryResult);
+    const items = queryResult.Items ?? [];
+    const projectItem = convertToDbProjectItemFromDomainProject(project);
+    const batchParams: DynamoDB.BatchWriteItemInput = {
+      RequestItems: {
+        [tableName]: items.map((item) => {
+          const putRequestItem: DynamoDB.AttributeMap = {
+            ...item,
+            ...projectItem,
+            PK: item.PK,
+            SK: item.SK,
+          };
+          return {
+            PutRequest: {
+              Item: putRequestItem,
+            },
+          };
+        }),
+      },
+    };
+    await DynamoDBClient.getClient().batchWriteItem(batchParams).promise();
     return project;
   }
 
