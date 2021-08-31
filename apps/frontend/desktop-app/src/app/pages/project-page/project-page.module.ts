@@ -26,8 +26,7 @@ import { ProjectPropertyEditFormModule } from '../../shared/components/project-p
 import { TaskDialogModule } from '../../shared/components/task-dialog/task-dialog.module';
 import { BoardDetailHeaderComponent } from './components/board-detail-header/board-detail-header.component';
 import { BoardDetailComponent } from './components/board-detail/board-detail.component';
-import { ExampleHeaderComponent } from './components/example-header/example-header.component';
-import { ExampleComponent } from './components/example/example.component';
+import { ProjectDetailHeaderComponent } from './components/project-detail-header/project-detail-header.component';
 import { ProjectDetailComponent } from './components/project-detail/project-detail.component';
 import { ProjectPageRoutingModule } from './project-page-routing.module';
 import { ProjectPageComponent } from './project-page.component';
@@ -39,10 +38,9 @@ import { ProjectSubComponent } from './project-sub/project-sub.component';
     ProjectDetailComponent,
     BoardDetailComponent,
     BoardDetailHeaderComponent,
-    ExampleHeaderComponent,
-    ExampleComponent,
     ProjectPageComponent,
-    ProjectSubComponent
+    ProjectSubComponent,
+    ProjectDetailHeaderComponent
   ],
   imports: [
     CommonModule,
