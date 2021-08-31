@@ -33,10 +33,12 @@ export class ProjectDetailComponent {
   readonly state$ = this.state.select();
 
   constructor(private state: RxState<State>) {
+    // TODO: 初期値修正
     this.state.set({
-      title: '',
+      title: 'Bison',
       color: COLOR.Gray,
-      description: ''
+      description: `プロジェクト管理アプリケーションの開発。
+ボード管理、スケジュール管理、トラッキングの機能がメインとなる。`
     });
   }
 }
