@@ -6,7 +6,7 @@ import {
   APOLLO_DATA_QUERY
 } from '@bison/frontend/application';
 import {
-  ButtonModule, ColorIconModule, HeaderModule,
+  BoardItemModule, ButtonModule, ColorIconModule, HeaderModule,
   IconModule,
   MenuItemModule,
   MultiUserSelectPopupModule,
@@ -68,6 +68,7 @@ import { ProjectSubComponent } from './project-sub/project-sub.component';
     ProjectDeleteDialogModule,
     BoardDeleteDialogModule,
     ColorIconModule,
+    BoardItemModule
   ],
   exports: [ProjectPageComponent],
   providers: [

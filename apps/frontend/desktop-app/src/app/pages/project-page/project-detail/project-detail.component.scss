@@ -1,3 +1,11 @@
 :host {
   display: block;
 }
+
+$width: 525px;
+
+.detail {
+  justify-content: flex-start;
+  width: $width;
+  margin: 16px 24px 32px 194px;
+}
