@@ -29,6 +29,8 @@ export class DeleteProjectService implements IDeleteProjectService {
     if (!canEditProject) {
       throw new PermissionDeniedError();
     }
-    return await this.projectRepository.delete(projectId);
+    const project = await this.projectRepository.getById(projectId);
+    await this.projectRepository.delete(projectId);
+    return project;
   }
 }

@@ -9,10 +9,8 @@ import {
   GET_PROJECT_BY_ID_AND_USER_SERVICE,
   ListBoardsByProjectIdService,
   ListMembersService,
-  ListProjectsService,
   LIST_BOARDS_BY_PROJECT_ID_SERVICE,
   LIST_MEMBERS_SERVICE,
-  LIST_PROJECTS_SERVICE,
   UpdateMembersService,
   UpdateProjectService,
   UPDATE_MEMBERS_SERVICE,
@@ -49,10 +47,6 @@ import { ProjectResolver } from './project.resolver';
     {
       provide: BOARD_REPOSITORY,
       useClass: MockBoardRepository,
-    },
-    {
-      provide: LIST_PROJECTS_SERVICE,
-      useClass: ListProjectsService,
     },
     {
       provide: LIST_BOARDS_BY_PROJECT_ID_SERVICE,
