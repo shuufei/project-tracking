@@ -72,6 +72,20 @@ const importBoardSampleData = async () => {
         S: item.description,
       };
     }
+    if (item.tasksOrder.length > 0) {
+      request.Item.tasksOrder = {
+        L: item.tasksOrder.map((taskOrderItem) => ({
+          M: {
+            type: {
+              S: taskOrderItem.type,
+            },
+            taskId: {
+              S: taskOrderItem.taskId,
+            },
+          },
+        })),
+      };
+    }
     return request;
   });
   const params: DynamoDB.BatchWriteItemInput = {
