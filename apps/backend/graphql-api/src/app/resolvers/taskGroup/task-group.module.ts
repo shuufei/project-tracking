@@ -20,7 +20,6 @@ import {
   BOARD_REPOSITORY,
   CanAccessProjectService,
   CAN_ACCESS_PROJECT_SERVICE,
-  MockBoardRepository,
   MockTaskRepository,
   MockUserRepository,
   PROJECT_REPOSITORY,
@@ -29,6 +28,7 @@ import {
   USER_REPOSITORY,
 } from '@bison/backend/domain';
 import {
+  BoardRepository,
   ProjectRepository,
   TaskGroupRepository,
 } from '@bison/backend/infrastructure/repository';
@@ -45,7 +45,7 @@ import { TaskGroupResolver } from './task-group.resolver';
     },
     {
       provide: BOARD_REPOSITORY,
-      useClass: MockBoardRepository,
+      useClass: BoardRepository,
     },
     {
       provide: GET_PROJECT_BY_BOARD_ID_SERVICE,

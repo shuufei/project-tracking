@@ -1,7 +1,4 @@
-import {
-  IProjectRepository,
-  mockProjectRepositoryReturnValues,
-} from '@bison/backend/domain';
+import { IProjectRepository } from '@bison/backend/domain';
 import { Project, UserWithIdpUserId } from '@bison/shared/domain';
 import { Logger } from '@nestjs/common';
 import { DynamoDB } from 'aws-sdk';
@@ -133,7 +130,7 @@ export class ProjectRepository implements IProjectRepository {
       },
     };
     await DynamoDBClient.getClient().deleteItem(params).promise();
-    return mockProjectRepositoryReturnValues.delete;
+    return;
   }
 
   async addMembers(

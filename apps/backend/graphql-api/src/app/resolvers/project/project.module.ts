@@ -22,12 +22,14 @@ import {
   CanEditProjectService,
   CAN_ACCESS_PROJECT_SERVICE,
   CAN_EDIT_PROJECT_SERVICE,
-  MockBoardRepository,
   MockUserRepository,
   PROJECT_REPOSITORY,
   USER_REPOSITORY,
 } from '@bison/backend/domain';
-import { ProjectRepository } from '@bison/backend/infrastructure/repository';
+import {
+  BoardRepository,
+  ProjectRepository,
+} from '@bison/backend/infrastructure/repository';
 import { Module } from '@nestjs/common';
 import { ParseUserPipeModule } from '../../pipes/parse-user/parse-user.module';
 import { ProjectResolver } from './project.resolver';
@@ -46,7 +48,7 @@ import { ProjectResolver } from './project.resolver';
     },
     {
       provide: BOARD_REPOSITORY,
-      useClass: MockBoardRepository,
+      useClass: BoardRepository,
     },
     {
       provide: LIST_BOARDS_BY_PROJECT_ID_SERVICE,
