@@ -1,6 +1,9 @@
 import { User } from '@bison/shared/domain';
 import { MockReturnValues } from '@bison/types/testing';
-import { IUserRepositoy, ListUsersResponse } from './user-repository.interface';
+import {
+  IUserRepository,
+  ListUsersResponse,
+} from './user-repository.interface';
 
 const mockGetUserResponse: User = {
   id: 'user0001',
@@ -26,14 +29,14 @@ const mockListUsersResponse: ListUsersResponse = {
   ],
 };
 
-export const mockUserRepositoryReturnValues: MockReturnValues<IUserRepositoy> = {
+export const mockUserRepositoryReturnValues: MockReturnValues<IUserRepository> = {
   getById: mockGetUserResponse,
   getByIdpUserId: mockGetUserResponse,
   listByProjectId: mockListUsersResponse,
   list: mockListUsersResponse,
 };
 
-export class MockUserRepository implements IUserRepositoy {
+export class MockUserRepository implements IUserRepository {
   async getById() {
     return mockUserRepositoryReturnValues.getById;
   }

@@ -1,6 +1,6 @@
 import { Project, User } from '@bison/shared/domain';
 
-export interface IUserRepositoy {
+export interface IUserRepository {
   getByIdpUserId: (idpUserId: string) => Promise<User>;
   getById: (id: User['id']) => Promise<User>;
   listByProjectId: (projectId: Project['id']) => Promise<ListUsersResponse>;
