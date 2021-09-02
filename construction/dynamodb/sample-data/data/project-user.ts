@@ -6,6 +6,7 @@ export const user_HirokazuMotegi = {
   SK: `User-${userId_HirokazuMotegi}`,
   'User-name': '茂木 洋和',
   'User-idpUserId': `${v4()}`,
+  type: 'user',
 };
 
 export const userId_KentaToshima = 'user0002';
@@ -14,6 +15,7 @@ export const user_KentaToshima = {
   SK: `User-${userId_KentaToshima}`,
   'User-name': '戸嶋 健太',
   'User-idpUserId': `${v4()}`,
+  type: 'user',
 };
 
 export const userId_RyoutaYamaura = 'user0003';
@@ -22,6 +24,7 @@ export const user_RyoutaYamaura = {
   SK: `User-${userId_RyoutaYamaura}`,
   'User-name': '山浦 諒太',
   'User-idpUserId': `${v4()}`,
+  type: 'user',
 };
 
 export const userId_KeitaSakai = 'user0004';
@@ -30,6 +33,7 @@ export const user_KeitaSakai = {
   SK: `User-${userId_KeitaSakai}`,
   'User-name': '酒井 渓太',
   'User-idpUserId': `${v4()}`,
+  type: 'user',
 };
 
 export const userId_NaokiOota = 'user0005';
@@ -38,6 +42,7 @@ export const user_NaokiOota = {
   SK: `User-${userId_NaokiOota}`,
   'User-name': '太田 尚樹',
   'User-idpUserId': `${v4()}`,
+  type: 'user',
 };
 
 export const userId_ShuuheiHanashiro = 'user0006';
@@ -46,6 +51,7 @@ export const user_ShuuheiHanashiro = {
   SK: `User-${userId_ShuuheiHanashiro}`,
   'User-name': '花城 周平',
   'User-idpUserId': `${v4()}`,
+  type: 'user',
 };
 
 export const projectId_Bison = 'project0001';
@@ -57,6 +63,7 @@ export const project_Bison = {
     'プロジェクト管理アプリケーションの開発。¥nタスクトラッキング機能をプロジェクト管理のなかに組み込み、作業効率化につなげる。',
   'Project-color': 'Green',
   'Project-adminUserId': userId_ShuuheiHanashiro,
+  type: 'project',
 };
 
 export const projectUserMapping_Bison = [
@@ -65,36 +72,42 @@ export const projectUserMapping_Bison = [
     ...user_HirokazuMotegi,
     PK: project_Bison.PK,
     SK: user_HirokazuMotegi.PK,
+    type: 'project-user',
   },
   {
     ...project_Bison,
     ...user_KentaToshima,
     PK: project_Bison.PK,
     SK: user_KentaToshima.PK,
+    type: 'project-user',
   },
   {
     ...project_Bison,
     ...user_RyoutaYamaura,
     PK: project_Bison.PK,
     SK: user_RyoutaYamaura.PK,
+    type: 'project-user',
   },
   {
     ...project_Bison,
     ...user_KeitaSakai,
     PK: project_Bison.PK,
     SK: user_KeitaSakai.PK,
+    type: 'project-user',
   },
   {
     ...project_Bison,
     ...user_NaokiOota,
     PK: project_Bison.PK,
     SK: user_NaokiOota.PK,
+    type: 'project-user',
   },
   {
     ...project_Bison,
     ...user_ShuuheiHanashiro,
     PK: project_Bison.PK,
     SK: user_ShuuheiHanashiro.PK,
+    type: 'project-user',
   },
 ];
 

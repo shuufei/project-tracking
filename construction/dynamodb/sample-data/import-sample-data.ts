@@ -32,6 +32,7 @@ const importProjectUserSampleData = async () => {
       'User-name',
       'User-icon',
       'User-idpUserId',
+      'type',
     ];
     attributes.forEach((attribute) => {
       if (item[attribute] != null) {
