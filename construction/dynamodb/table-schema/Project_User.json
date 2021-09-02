@@ -7,6 +7,10 @@
     {
       "AttributeName": "SK",
       "AttributeType": "S"
+    },
+    {
+      "AttributeName": "User-idpUserId",
+      "AttributeType": "S"
     }
   ],
   "TableName": "Project_User",
@@ -35,6 +39,22 @@
         {
           "AttributeName": "PK",
           "KeyType": "RANGE"
+        }
+      ],
+      "Projection": {
+        "ProjectionType": "ALL"
+      },
+      "ProvisionedThroughput": {
+        "ReadCapacityUnits": 1,
+        "WriteCapacityUnits": 1
+      }
+    },
+    {
+      "IndexName": "UserIdpUserIdIndex",
+      "KeySchema": [
+        {
+          "AttributeName": "User-idpUserId",
+          "KeyType": "HASH"
         }
       ],
       "Projection": {
