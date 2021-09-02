@@ -4,6 +4,8 @@ import { DynamoDB } from 'aws-sdk';
 
 export const tableName = 'Project_User';
 export const gsi1Name = 'GSI1';
+export const userIdpUserIdIndexName = 'UserIdpUserIdIndex';
+export const typeIndexName = 'TypeIndex';
 
 export type ProjectItem = {
   PK: { S: string };
@@ -97,6 +99,16 @@ export const convertToDomainProjectFromDbProjectUserMappingItem = (
     description: item['Project-description']?.S,
     color: item['Project-color'].S as Project['color'],
     adminUserId: item['Project-adminUserId']?.S,
+  };
+};
+
+export const convertToDomainUserFromDbProjectUserMappingItem = (
+  item: ProjectUserMappingItem
+): User => {
+  return {
+    id: removeUserIdPrefix(item.PK.S),
+    name: item['User-name'].S,
+    icon: item['User-icon']?.S,
   };
 };
 

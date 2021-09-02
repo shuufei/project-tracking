@@ -4,12 +4,11 @@ import {
   LIST_PROJECTS_BY_USER_ID_SERVICE,
   LIST_USERS_SERVICE,
 } from '@bison/backend/application';
+import { PROJECT_REPOSITORY, USER_REPOSITORY } from '@bison/backend/domain';
 import {
-  MockUserRepository,
-  PROJECT_REPOSITORY,
-  USER_REPOSITORY,
-} from '@bison/backend/domain';
-import { ProjectRepository } from '@bison/backend/infrastructure/repository';
+  ProjectRepository,
+  UserRepository,
+} from '@bison/backend/infrastructure/repository';
 import { Module } from '@nestjs/common';
 import { ParseUserPipeModule } from '../../pipes/parse-user/parse-user.module';
 import { UserResolver } from './user.resolver';
@@ -32,7 +31,7 @@ import { UserResolver } from './user.resolver';
     },
     {
       provide: USER_REPOSITORY,
-      useClass: MockUserRepository,
+      useClass: UserRepository,
     },
   ],
 })

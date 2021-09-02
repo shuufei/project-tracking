@@ -22,13 +22,13 @@ import {
   CanEditProjectService,
   CAN_ACCESS_PROJECT_SERVICE,
   CAN_EDIT_PROJECT_SERVICE,
-  MockUserRepository,
   PROJECT_REPOSITORY,
   USER_REPOSITORY,
 } from '@bison/backend/domain';
 import {
   BoardRepository,
   ProjectRepository,
+  UserRepository,
 } from '@bison/backend/infrastructure/repository';
 import { Module } from '@nestjs/common';
 import { ParseUserPipeModule } from '../../pipes/parse-user/parse-user.module';
@@ -40,7 +40,7 @@ import { ProjectResolver } from './project.resolver';
     ProjectResolver,
     {
       provide: USER_REPOSITORY,
-      useClass: MockUserRepository,
+      useClass: UserRepository,
     },
     {
       provide: PROJECT_REPOSITORY,
