@@ -24,7 +24,6 @@ import {
   BOARD_REPOSITORY,
   CanAccessProjectService,
   CAN_ACCESS_PROJECT_SERVICE,
-  MockSubtaskRepository,
   MockUserRepository,
   PROJECT_REPOSITORY,
   SUBTASK_REPOSITORY,
@@ -35,6 +34,7 @@ import {
 import {
   BoardRepository,
   ProjectRepository,
+  SubtaskRepository,
   TaskGroupRepository,
   TaskRepository,
 } from '@bison/backend/infrastructure/repository';
@@ -83,7 +83,7 @@ import { TaskResolver } from './task.resolver';
     },
     {
       provide: SUBTASK_REPOSITORY,
-      useClass: MockSubtaskRepository,
+      useClass: SubtaskRepository,
     },
     {
       provide: TASK_REPOSITORY,

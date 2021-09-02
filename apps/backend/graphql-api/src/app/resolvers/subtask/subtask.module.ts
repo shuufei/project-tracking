@@ -16,7 +16,6 @@ import {
   BOARD_REPOSITORY,
   CanAccessProjectService,
   CAN_ACCESS_PROJECT_SERVICE,
-  MockSubtaskRepository,
   MockUserRepository,
   PROJECT_REPOSITORY,
   SUBTASK_REPOSITORY,
@@ -26,6 +25,7 @@ import {
 import {
   BoardRepository,
   ProjectRepository,
+  SubtaskRepository,
   TaskRepository,
 } from '@bison/backend/infrastructure/repository';
 import { Module } from '@nestjs/common';
@@ -45,7 +45,7 @@ import { SubtaskResolver } from './subtask.resolver';
     },
     {
       provide: SUBTASK_REPOSITORY,
-      useClass: MockSubtaskRepository,
+      useClass: SubtaskRepository,
     },
     {
       provide: BOARD_REPOSITORY,
