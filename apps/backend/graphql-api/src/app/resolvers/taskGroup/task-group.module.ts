@@ -20,16 +20,18 @@ import {
   BOARD_REPOSITORY,
   CanAccessProjectService,
   CAN_ACCESS_PROJECT_SERVICE,
-  MockBoardRepository,
-  MockProjectRepository,
-  MockTaskGroupRepository,
-  MockTaskRepository,
-  MockUserRepository,
   PROJECT_REPOSITORY,
   TASK_GROUP_REPOSITORY,
   TASK_REPOSITORY,
   USER_REPOSITORY,
 } from '@bison/backend/domain';
+import {
+  BoardRepository,
+  ProjectRepository,
+  TaskGroupRepository,
+  TaskRepository,
+  UserRepository,
+} from '@bison/backend/infrastructure/repository';
 import { Module } from '@nestjs/common';
 import { ParseUserPipeModule } from '../../pipes/parse-user/parse-user.module';
 import { TaskGroupResolver } from './task-group.resolver';
@@ -43,7 +45,7 @@ import { TaskGroupResolver } from './task-group.resolver';
     },
     {
       provide: BOARD_REPOSITORY,
-      useClass: MockBoardRepository,
+      useClass: BoardRepository,
     },
     {
       provide: GET_PROJECT_BY_BOARD_ID_SERVICE,
@@ -51,7 +53,7 @@ import { TaskGroupResolver } from './task-group.resolver';
     },
     {
       provide: PROJECT_REPOSITORY,
-      useClass: MockProjectRepository,
+      useClass: ProjectRepository,
     },
     {
       provide: GET_USER_BY_ID_SERVICE,
@@ -59,7 +61,7 @@ import { TaskGroupResolver } from './task-group.resolver';
     },
     {
       provide: USER_REPOSITORY,
-      useClass: MockUserRepository,
+      useClass: UserRepository,
     },
     {
       provide: LIST_TASKS_BY_TASK_GROUP_ID_SERVICE,
@@ -67,11 +69,11 @@ import { TaskGroupResolver } from './task-group.resolver';
     },
     {
       provide: TASK_REPOSITORY,
-      useClass: MockTaskRepository,
+      useClass: TaskRepository,
     },
     {
       provide: TASK_GROUP_REPOSITORY,
-      useClass: MockTaskGroupRepository,
+      useClass: TaskGroupRepository,
     },
     {
       provide: CREATE_TASK_GROUP_SERVICE,
