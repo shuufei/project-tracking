@@ -7,6 +7,10 @@
     {
       "AttributeName": "projectId",
       "AttributeType": "S"
+    },
+    {
+      "AttributeName": "createdAt",
+      "AttributeType": "N"
     }
   ],
   "TableName": "Board",
@@ -27,6 +31,10 @@
         {
           "AttributeName": "projectId",
           "KeyType": "HASH"
+        },
+        {
+          "AttributeName": "createdAt",
+          "KeyType": "RANGE"
         }
       ],
       "Projection": {

@@ -66,6 +66,9 @@ const importBoardSampleData = async () => {
         projectId: {
           S: item.projectId,
         },
+        createdAt: {
+          N: String(item.createdAt),
+        },
       },
     };
     if (item.description != null) {

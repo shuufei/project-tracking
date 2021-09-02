@@ -10,6 +10,7 @@ export const board_Sprint202101 = {
     { taskId: 'taskGroup0001', type: 'TaskGroup' },
     { taskId: 'task0014', type: 'Task' },
   ],
+  createdAt: new Date('2021-01-01T18:00:10Z').valueOf(),
 };
 
 export const boardId_Sprint202105 = 'board0002';
@@ -19,6 +20,7 @@ export const board_Sprint202105 = {
   description: 'スプリント 2021/05',
   projectId: projectId_Bison,
   tasksOrder: [],
+  createdAt: new Date('2021-05-01T18:00:10Z').valueOf(),
 };
 
 export const boardId_Sprint202109 = 'board0003';
@@ -28,6 +30,7 @@ export const board_Sprint202109 = {
   description: 'スプリント 2021/09',
   projectId: projectId_Bison,
   tasksOrder: [],
+  createdAt: new Date('2021-09-01T18:00:10Z').valueOf(),
 };
 
 export const boardItems = [
