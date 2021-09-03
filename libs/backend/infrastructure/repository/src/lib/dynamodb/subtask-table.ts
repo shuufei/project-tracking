@@ -44,7 +44,7 @@ export const convertToDbSubtaskItemFromSubtask = (
     isDone: { BOOL: subtask.isDone },
     taskId: { S: subtask.taskId },
     workTimeSec: { N: String(subtask.workTimeSec) },
-    createdAt: { N: String(new Date().valueOf()) },
+    createdAt: { N: String(subtask.createdAt) },
   };
   if (subtask.description != null) {
     item.description = {

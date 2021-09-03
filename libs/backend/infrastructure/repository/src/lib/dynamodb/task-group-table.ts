@@ -39,7 +39,7 @@ export const convertToDbTaskGroupItemFromDomainTaskGroup = (
     title: { S: taskGroup.title },
     status: { S: taskGroup.status },
     boardId: { S: taskGroup.boardId },
-    createdAt: { N: String(new Date().valueOf()) },
+    createdAt: { N: String(taskGroup.createdAt) },
   };
   if (taskGroup.description != null) {
     item.description = {
