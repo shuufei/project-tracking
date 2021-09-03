@@ -33,6 +33,7 @@ export class SandboxPageComponent {
       'プロジェクト管理サービスの開発。\nプロジェクト管理サービスの開発。',
     projectId: this.project.id,
     tasksOrder: [],
+    createdAt: new Date().valueOf(),
   };
 
   readonly task: Task = {
