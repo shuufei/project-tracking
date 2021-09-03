@@ -9,10 +9,8 @@ import {
   GET_PROJECT_BY_ID_AND_USER_SERVICE,
   ListBoardsByProjectIdService,
   ListMembersService,
-  ListProjectsService,
   LIST_BOARDS_BY_PROJECT_ID_SERVICE,
   LIST_MEMBERS_SERVICE,
-  LIST_PROJECTS_SERVICE,
   UpdateMembersService,
   UpdateProjectService,
   UPDATE_MEMBERS_SERVICE,
@@ -24,12 +22,14 @@ import {
   CanEditProjectService,
   CAN_ACCESS_PROJECT_SERVICE,
   CAN_EDIT_PROJECT_SERVICE,
-  MockBoardRepository,
-  MockProjectRepository,
-  MockUserRepository,
   PROJECT_REPOSITORY,
   USER_REPOSITORY,
 } from '@bison/backend/domain';
+import {
+  BoardRepository,
+  ProjectRepository,
+  UserRepository,
+} from '@bison/backend/infrastructure/repository';
 import { Module } from '@nestjs/common';
 import { ParseUserPipeModule } from '../../pipes/parse-user/parse-user.module';
 import { ProjectResolver } from './project.resolver';
@@ -40,19 +40,15 @@ import { ProjectResolver } from './project.resolver';
     ProjectResolver,
     {
       provide: USER_REPOSITORY,
-      useClass: MockUserRepository,
+      useClass: UserRepository,
     },
     {
       provide: PROJECT_REPOSITORY,
-      useClass: MockProjectRepository,
+      useClass: ProjectRepository,
     },
     {
       provide: BOARD_REPOSITORY,
-      useClass: MockBoardRepository,
-    },
-    {
-      provide: LIST_PROJECTS_SERVICE,
-      useClass: ListProjectsService,
+      useClass: BoardRepository,
     },
     {
       provide: LIST_BOARDS_BY_PROJECT_ID_SERVICE,

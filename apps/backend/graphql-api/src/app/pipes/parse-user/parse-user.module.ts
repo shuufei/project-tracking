@@ -2,7 +2,8 @@ import {
   GetUserByIdpUserIdService,
   GET_USER_BY_IDP_USER_ID_SERVICE,
 } from '@bison/backend/application';
-import { MockUserRepository, USER_REPOSITORY } from '@bison/backend/domain';
+import { USER_REPOSITORY } from '@bison/backend/domain';
+import { UserRepository } from '@bison/backend/infrastructure/repository';
 import { Module } from '@nestjs/common';
 import { ParseUserPipe } from './parse-user.pipe';
 
@@ -13,7 +14,7 @@ const GetUserByIdpUserIdServiceProvider = {
 
 const UserRepositoryProvider = {
   provide: USER_REPOSITORY,
-  useClass: MockUserRepository,
+  useClass: UserRepository,
 };
 
 @Module({
