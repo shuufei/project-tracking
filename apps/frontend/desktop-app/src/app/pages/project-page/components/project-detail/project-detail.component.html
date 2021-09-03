@@ -12,7 +12,7 @@
       <p class="description text-s2 font-medium leading-normal whitespace-pre-line mt-1">
         {{ state.description }}
       </p>
-      <button class="mt-3 text-s2 font-medium leading-normal text-primary-light1">編集</button>
+      <button class="mt-3 text-s2 font-medium leading-normal text-primary-light1" #projectEditButton>編集</button>
       <div class="mt-8">
         <ui-board-item boardName="バックログ"></ui-board-item>
       </div>
@@ -21,7 +21,7 @@
           ボード
         </p>
         <hr class="bg-primary-light3" />
-        <button class="mt-1 px-2 py-1 flex items-center justify-center rounded-s">
+        <button #createBoardButton class="mt-1 px-2 py-1 flex items-center justify-center rounded-s">
           <ui-icon icon="plus" size="s" color="primary"></ui-icon>
           <span class="text-s3 text-black-default ml-1">ボードを追加</span>
         </button>
@@ -32,7 +32,7 @@
         <span class="text-black-default">
           管理者
         </span>
-        <button class="text-primary-light1">変更</button>
+        <button #projectAdminUpdateButton class="text-s2 font-medium leading-normal text-primary-light1">変更</button>
       </p>
       <hr class="bg-primary-light3" />
       <div class="flex items-center mt-2 py-2 px-3">
@@ -53,4 +53,9 @@
       </button>
     </div>
   </div>
+  <bis-project-update-sheet [triggerEl]="projectEditButton" [project]="null">
+  </bis-project-update-sheet>
+  <bis-project-admin-update-sheet [triggerEl]="projectAdminUpdateButton" [project]="null">
+  </bis-project-admin-update-sheet>
+  <bis-board-create-sheet [triggerEl]="createBoardButton" [project]="null"></bis-board-create-sheet>
 </ng-container>
