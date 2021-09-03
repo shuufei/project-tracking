@@ -21,5 +21,6 @@ export const convertToResolvedTaskFromDomainTask = (
     },
     taskGroup:
       task.taskGroupId !== undefined ? { id: task.taskGroupId } : undefined,
+    createdAt: task.createdAt,
   };
 };

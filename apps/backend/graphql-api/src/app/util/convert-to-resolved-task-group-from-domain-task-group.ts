@@ -16,5 +16,6 @@ export const convertToResolvedTaskGroupFromDomainTaskGroup = (
     board: {
       id: taskGroup.boardId,
     },
+    createdAt: taskGroup.createdAt,
   };
 };

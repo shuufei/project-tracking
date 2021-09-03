@@ -9,14 +9,20 @@ import {
 
 export type ResolvedBoard = Pick<
   Board,
-  'id' | 'name' | 'description' | 'tasksOrder'
+  'id' | 'name' | 'description' | 'tasksOrder' | 'createdAt'
 > & {
   project: Pick<Board['project'], 'id'>;
 };
 
 export type ResolvedTaskGroup = Pick<
   TaskGroup,
-  'id' | 'title' | 'description' | 'status' | 'scheduledTimeSec' | 'tasksOrder'
+  | 'id'
+  | 'title'
+  | 'description'
+  | 'status'
+  | 'scheduledTimeSec'
+  | 'tasksOrder'
+  | 'createdAt'
 > & {
   assign?: Pick<User, 'id'>;
   board: Pick<TaskGroup['board'], 'id'>;
@@ -41,6 +47,7 @@ export type ResolvedTask = Pick<
   | 'scheduledTimeSec'
   | 'subtasksOrder'
   | 'workStartDateTimestamp'
+  | 'createdAt'
 > & {
   assign?: Pick<User, 'id'>;
   board: Pick<Task['board'], 'id'>;
@@ -56,6 +63,7 @@ export type ResolvedSubtask = Pick<
   | 'workTimeSec'
   | 'scheduledTimeSec'
   | 'workStartDateTimestamp'
+  | 'createdAt'
 > & {
   assign?: Pick<User, 'id'>;
   task: Pick<Subtask['task'], 'id'>;

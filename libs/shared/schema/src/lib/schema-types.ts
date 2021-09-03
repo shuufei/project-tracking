@@ -213,6 +213,7 @@ export interface Board extends Node {
     soloTasks: Task[];
     taskGroups: TaskGroup[];
     tasksOrder: BoardTasksOrderItem[];
+    createdAt: number;
 }
 
 export interface BoardTasksOrderItem {
@@ -240,6 +241,7 @@ export interface Subtask extends Node {
     workTimeSec: number;
     scheduledTimeSec?: number;
     workStartDateTimestamp?: number;
+    createdAt: number;
 }
 
 export interface Task extends Node {
@@ -256,6 +258,7 @@ export interface Task extends Node {
     scheduledTimeSec?: number;
     workStartDateTimestamp?: number;
     subtasksOrder?: string[];
+    createdAt: number;
 }
 
 export interface TaskGroup extends Node {
@@ -269,4 +272,5 @@ export interface TaskGroup extends Node {
     board: Board;
     scheduledTimeSec?: number;
     tasksOrder: string[];
+    createdAt: number;
 }

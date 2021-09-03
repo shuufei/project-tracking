@@ -44,6 +44,7 @@ type Board implements Node {
   soloTasks: [Task!]!
   taskGroups: [TaskGroup!]!
   tasksOrder: [BoardTasksOrderItem!]!
+  createdAt: Float!
 }
 
 type BoardTasksOrderItem {
@@ -83,6 +84,7 @@ type Subtask implements Node {
   workTimeSec: Int!
   scheduledTimeSec: Int
   workStartDateTimestamp: Float
+  createdAt: Float!
 }
 
 type Task implements Node {
@@ -99,6 +101,7 @@ type Task implements Node {
   scheduledTimeSec: Int
   workStartDateTimestamp: Float
   subtasksOrder: [ID!]
+  createdAt: Float!
 }
 
 type TaskGroup implements Node {
@@ -112,6 +115,7 @@ type TaskGroup implements Node {
   board: Board!
   scheduledTimeSec: Int
   tasksOrder: [ID!]!
+  createdAt: Float!
 }
 
 enum Color {
