@@ -3,6 +3,7 @@ import { createId, Id } from './id';
 import { Status } from './status';
 import { Task } from './task';
 import { User } from './user';
+import { getNow } from './utils/get-now';
 
 export type TaskGroup = {
   id: Id;
@@ -13,7 +14,20 @@ export type TaskGroup = {
   boardId: Board['id'];
   scheduledTimeSec?: number;
   tasksOrder: Task['id'][];
+  craetedAt: number;
 };
+
+export type TaskGroupWithoutCreatedAt = Pick<
+  TaskGroup,
+  | 'id'
+  | 'title'
+  | 'description'
+  | 'assignUserId'
+  | 'boardId'
+  | 'scheduledTimeSec'
+  | 'status'
+  | 'tasksOrder'
+>;
 
 export const createTaskGroup = (
   title: TaskGroup['title'],
@@ -30,4 +44,5 @@ export const createTaskGroup = (
   boardId,
   scheduledTimeSec,
   tasksOrder: [],
+  craetedAt: getNow().valueOf(),
 });

@@ -1,6 +1,7 @@
 import { createId, Id } from './id';
 import { Task } from './task';
 import { User } from './user';
+import { getNow } from './utils/get-now';
 
 export type Subtask = {
   id: Id;
@@ -12,7 +13,21 @@ export type Subtask = {
   scheduledTimeSec?: number;
   workStartDateTimestamp?: number;
   taskId: Id;
+  createdAt: number;
 };
+
+export type SubtaskWithoutCreatedAt = Pick<
+  Subtask,
+  | 'id'
+  | 'title'
+  | 'description'
+  | 'assignUserId'
+  | 'isDone'
+  | 'scheduledTimeSec'
+  | 'taskId'
+  | 'workStartDateTimestamp'
+  | 'workTimeSec'
+>;
 
 export const createSubtask = (
   title: Subtask['title'],
@@ -29,4 +44,5 @@ export const createSubtask = (
   workTimeSec: 0,
   scheduledTimeSec,
   taskId,
+  createdAt: getNow().valueOf(),
 });

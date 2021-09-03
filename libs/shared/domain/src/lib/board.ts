@@ -1,5 +1,6 @@
 import { createId, Id } from './id';
 import { Project } from './project';
+import { getNow } from './utils/get-now';
 
 export type Board = {
   id: Id;
@@ -7,6 +8,7 @@ export type Board = {
   description?: string;
   projectId: Project['id'];
   tasksOrder: BoardTasksOrderItem[];
+  createdAt: number;
 };
 
 export type BoardTasksOrderItem = {
@@ -15,6 +17,11 @@ export type BoardTasksOrderItem = {
 };
 
 export type BoardTaskType = 'TaskGroup' | 'Task';
+
+export type BoardWithoutCreatedAt = Pick<
+  Board,
+  'id' | 'name' | 'description' | 'projectId' | 'tasksOrder'
+>;
 
 export const createBoard = (
   name: Board['name'],
@@ -26,4 +33,5 @@ export const createBoard = (
   description,
   projectId,
   tasksOrder: [],
+  createdAt: getNow().valueOf(),
 });
