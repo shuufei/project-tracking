@@ -1,0 +1,15 @@
+<ng-container *ngIf="state$ | async as state">
+  <div right class="flex items-center justify-end px-6 py-3">
+    <div class="relative">
+      <div #triggerEl class="flex px-3 py-2 mr-1 cursor-pointer">
+        <ui-icon icon="more-horizontal" size="s" color="primary" hoverColor="primary"></ui-icon>
+      </div>
+      <ui-popup [triggerEl]="triggerEl" [isCloseWhenPopupAction]="true">
+        <div class="menu-items">
+          <ui-menu-item itemName="削除" color="warn" icon="trash-2" (clickedItem)="(null)"></ui-menu-item>
+        </div>
+      </ui-popup>
+    </div>
+    <ui-user-icon style="width: 30px; height: 30px" class="flex-shrink-0"></ui-user-icon>
+  </div>
+</ng-container>

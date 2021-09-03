@@ -29,7 +29,8 @@
     "workspace-generator": "nx workspace-generator",
     "dep-graph": "nx dep-graph",
     "help": "nx help",
-    "gen:graphql": "graphql-codegen --config codegen.yml"
+    "gen:graphql": "graphql-codegen --config codegen.yml",
+    "db:init": "./construction/dynamodb/table-schema/create-tables.sh && ts-node ./construction/dynamodb/sample-data/import-sample-data.ts"
   },
   "private": true,
   "dependencies": {
@@ -56,6 +57,7 @@
     "@taiga-ui/kit": "^2.5.0",
     "apollo-angular": "^2.3.0",
     "apollo-server-express": "^2.21.0",
+    "aws-sdk": "^2.978.0",
     "dayjs": "^1.10.4",
     "feather-icons": "^4.28.0",
     "graphql": "^15.5.0",

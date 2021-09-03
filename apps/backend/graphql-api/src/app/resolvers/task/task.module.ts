@@ -24,18 +24,20 @@ import {
   BOARD_REPOSITORY,
   CanAccessProjectService,
   CAN_ACCESS_PROJECT_SERVICE,
-  MockBoardRepository,
-  MockProjectRepository,
-  MockSubtaskRepository,
-  MockTaskGroupRepository,
-  MockTaskRepository,
-  MockUserRepository,
   PROJECT_REPOSITORY,
   SUBTASK_REPOSITORY,
   TASK_GROUP_REPOSITORY,
   TASK_REPOSITORY,
   USER_REPOSITORY,
 } from '@bison/backend/domain';
+import {
+  BoardRepository,
+  ProjectRepository,
+  SubtaskRepository,
+  TaskGroupRepository,
+  TaskRepository,
+  UserRepository,
+} from '@bison/backend/infrastructure/repository';
 import { Module } from '@nestjs/common';
 import { ParseUserPipeModule } from '../../pipes/parse-user/parse-user.module';
 import { TaskResolver } from './task.resolver';
@@ -65,27 +67,27 @@ import { TaskResolver } from './task.resolver';
     },
     {
       provide: BOARD_REPOSITORY,
-      useClass: MockBoardRepository,
+      useClass: BoardRepository,
     },
     {
       provide: PROJECT_REPOSITORY,
-      useClass: MockProjectRepository,
+      useClass: ProjectRepository,
     },
     {
       provide: USER_REPOSITORY,
-      useClass: MockUserRepository,
+      useClass: UserRepository,
     },
     {
       provide: TASK_GROUP_REPOSITORY,
-      useClass: MockTaskGroupRepository,
+      useClass: TaskGroupRepository,
     },
     {
       provide: SUBTASK_REPOSITORY,
-      useClass: MockSubtaskRepository,
+      useClass: SubtaskRepository,
     },
     {
       provide: TASK_REPOSITORY,
-      useClass: MockTaskRepository,
+      useClass: TaskRepository,
     },
     {
       provide: CREATE_TASK_ON_TASK_GROUP_SERVICE,

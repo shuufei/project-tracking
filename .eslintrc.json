@@ -17,6 +17,7 @@
                 "onlyDependOnLibsWithTags": [
                   "scope:backend-application",
                   "scope:backend-domain",
+                  "scope:backend-infrastructure",
                   "scope:shared-domain",
                   "scope:shared-schema",
                   "scope:shared-constants"
