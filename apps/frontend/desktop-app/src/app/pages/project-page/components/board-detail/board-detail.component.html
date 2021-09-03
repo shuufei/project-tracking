@@ -99,14 +99,37 @@
                     <bis-task-card [task]="task"></bis-task-card>
                   </div>
                   <ng-container *ngIf="first">
-                    <button
-                      class="flex items-center justify-center w-full py-2 mt-1"
-                    >
-                      <ui-icon class="mr-1" icon="plus" size="s"></ui-icon>
-                      <span class="text-s4 font-medium leading-normal">
-                        タスクを追加
-                      </span>
-                    </button>
+                    <div class="relative">
+                      <button
+                        #taskGroupAddingTriggerEl
+                        class="flex items-center justify-center w-full py-2 mt-1"
+                      >
+                        <ui-icon class="mr-1" icon="plus" size="s"></ui-icon>
+                        <span class="text-s4 font-medium leading-normal">
+                          タスクを追加
+                        </span>
+                      </button>
+                      <ui-popup
+                        [triggerEl]="taskGroupAddingTriggerEl"
+                        [isCloseWhenPopupAction]="true"
+                      >
+                        <div class="menu-items">
+                          <ui-menu-item
+                            [itemName]="'タスクグループを追加'"
+                            [color]="'primary'"
+                            [icon]="'plus'"
+                            (clickedItem)="(null)"
+                          ></ui-menu-item>
+                          <ui-menu-item
+                            class="mt-2"
+                            [itemName]="'タスクを追加'"
+                            [color]="'primary'"
+                            [icon]="'plus'"
+                            (clickedItem)="(null)"
+                          ></ui-menu-item>
+                        </div>
+                      </ui-popup>
+                    </div>
                   </ng-container>
                 </div>
               </ng-container>
@@ -137,14 +160,37 @@
                 <bis-task-card [task]="task"></bis-task-card>
               </div>
               <ng-container *ngIf="first">
-                <button
-                  class="flex items-center justify-center w-full py-2 mt-1"
-                >
-                  <ui-icon class="mr-1" icon="plus" size="s"></ui-icon>
-                  <span class="text-s4 font-medium leading-normal">
-                    タスクを追加
-                  </span>
-                </button>
+                <div class="relative">
+                  <button
+                    #soloTasksAddingTriggerEl
+                    class="flex items-center justify-center w-full py-2 mt-1"
+                  >
+                    <ui-icon class="mr-1" icon="plus" size="s"></ui-icon>
+                    <span class="text-s4 font-medium leading-normal">
+                      タスクを追加
+                    </span>
+                  </button>
+                  <ui-popup
+                    [triggerEl]="soloTasksAddingTriggerEl"
+                    [isCloseWhenPopupAction]="true"
+                  >
+                    <div class="menu-items">
+                      <ui-menu-item
+                        [itemName]="'タスクグループを追加'"
+                        [color]="'primary'"
+                        [icon]="'plus'"
+                        (clickedItem)="(null)"
+                      ></ui-menu-item>
+                      <ui-menu-item
+                        class="mt-2"
+                        [itemName]="'タスクを追加'"
+                        [color]="'primary'"
+                        [icon]="'plus'"
+                        (clickedItem)="(null)"
+                      ></ui-menu-item>
+                    </div>
+                  </ui-popup>
+                </div>
               </ng-container>
             </div>
           </ng-container>
