@@ -14,7 +14,7 @@ export type TaskGroup = {
   boardId: Board['id'];
   scheduledTimeSec?: number;
   tasksOrder: Task['id'][];
-  craetedAt: number;
+  createdAt: number;
 };
 
 export type TaskGroupWithoutCreatedAt = Pick<
@@ -44,5 +44,5 @@ export const createTaskGroup = (
   boardId,
   scheduledTimeSec,
   tasksOrder: [],
-  craetedAt: getNow().valueOf(),
+  createdAt: getNow().valueOf(),
 });

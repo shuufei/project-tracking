@@ -10,6 +10,7 @@ export const mockListBoardsByProjectIdServiceReturnValues: MockReturnValues<ILis
         description: `board description 0001`,
         projectId: 'project0001',
         tasksOrder: [],
+        createdAt: new Date().valueOf(),
       },
       {
         id: `board0002`,
@@ -17,6 +18,7 @@ export const mockListBoardsByProjectIdServiceReturnValues: MockReturnValues<ILis
         description: `board description 0002`,
         projectId: 'project0002',
         tasksOrder: [],
+        createdAt: new Date().valueOf(),
       },
       {
         id: `board0003`,
@@ -24,6 +26,7 @@ export const mockListBoardsByProjectIdServiceReturnValues: MockReturnValues<ILis
         description: `board description 0003`,
         projectId: 'project0003',
         tasksOrder: [],
+        createdAt: new Date().valueOf(),
       },
     ],
   },

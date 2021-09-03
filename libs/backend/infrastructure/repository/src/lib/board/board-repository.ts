@@ -80,12 +80,17 @@ export class BoardRepository implements IBoardRepository {
     ...args: Parameters<IBoardRepository['update']>
   ): ReturnType<IBoardRepository['update']> {
     const [board] = args;
-    const item = convertToDbBoardItemFromDomainBoard(board);
+    const currentBoard = await this.getById(board.id);
+    const updatedBoard = {
+      ...currentBoard,
+      ...board,
+    };
+    const item = convertToDbBoardItemFromDomainBoard(updatedBoard);
     const params: DynamoDB.PutItemInput = {
       TableName: tableName,
       Item: item,
     };
     await DynamoDBClient.getClient().putItem(params).promise();
-    return board;
+    return updatedBoard;
   }
 }

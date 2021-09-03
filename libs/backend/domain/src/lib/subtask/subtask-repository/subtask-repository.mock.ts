@@ -14,6 +14,7 @@ export const mockSubtaskRepositoryReturnValues: MockReturnValues<ISubtaskReposit
         workTimeSec: 60 * 60 * 2,
         scheduledTimeSec: 60 * 60,
         taskId: createId(),
+        createdAt: new Date().valueOf(),
       },
       {
         id: createId(),
@@ -23,6 +24,7 @@ export const mockSubtaskRepositoryReturnValues: MockReturnValues<ISubtaskReposit
         workTimeSec: 60 * 60 * 2,
         scheduledTimeSec: 60 * 60,
         taskId: createId(),
+        createdAt: new Date().valueOf(),
       },
       {
         id: createId(),
@@ -32,6 +34,7 @@ export const mockSubtaskRepositoryReturnValues: MockReturnValues<ISubtaskReposit
         assignUserId: createId(),
         workTimeSec: 60 * 60 * 2,
         taskId: createId(),
+        createdAt: new Date().valueOf(),
       },
     ],
   },
@@ -44,6 +47,7 @@ export const mockSubtaskRepositoryReturnValues: MockReturnValues<ISubtaskReposit
     workTimeSec: 60 * 60 * 2,
     scheduledTimeSec: 60 * 60,
     taskId: createId(),
+    createdAt: new Date().valueOf(),
   },
   create: {
     id: createId(),
@@ -54,6 +58,7 @@ export const mockSubtaskRepositoryReturnValues: MockReturnValues<ISubtaskReposit
     workTimeSec: 60 * 60 * 2,
     scheduledTimeSec: 60 * 60,
     taskId: createId(),
+    createdAt: new Date().valueOf(),
   },
   update: {
     id: createId(),
@@ -64,6 +69,7 @@ export const mockSubtaskRepositoryReturnValues: MockReturnValues<ISubtaskReposit
     workTimeSec: 60 * 60 * 2,
     scheduledTimeSec: 60 * 60,
     taskId: createId(),
+    createdAt: new Date().valueOf(),
   },
   delete: undefined,
 };

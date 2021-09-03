@@ -27,6 +27,7 @@ export const convertToDomainTaskGroupFromDbTaskGroupItem = (
     scheduledTimeSec: Number(item.scheduledTimeSec?.N),
     assignUserId: item.assignUserId?.S,
     tasksOrder: item.tasksOrder?.SS ?? [],
+    createdAt: Number(item.createdAt.N),
   };
 };
 

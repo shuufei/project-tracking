@@ -17,6 +17,7 @@ export type BoardItem = {
       };
     }[];
   };
+  createdAt: { N: string };
 };
 
 export const convertToDomainBoardFromDbBoardItem = (item: BoardItem): Board => {
@@ -30,6 +31,7 @@ export const convertToDomainBoardFromDbBoardItem = (item: BoardItem): Board => {
         taskId: value.M.taskId.S,
         type: value.M.type.S as BoardTaskType,
       })) ?? [],
+    createdAt: Number(item.createdAt.N),
   };
 };
 
@@ -40,6 +42,7 @@ export const convertToDbBoardItemFromDomainBoard = (
     id: { S: board.id },
     name: { S: board.name },
     projectId: { S: board.projectId },
+    createdAt: { N: String(board.createdAt) },
   };
   if (board.description != null) {
     item.description = {

@@ -35,6 +35,7 @@ export const convertToDomainTaskFromDbTaskItem = (item: TaskItem): Task => {
     workStartDateTimestamp:
       item.workStartDateTimestamp && Number(item.workStartDateTimestamp.N),
     subtasksOrder: item.subtasksOrder?.SS ?? [],
+    createdAt: Number(item.createdAt.N),
   };
 };
 

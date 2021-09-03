@@ -14,6 +14,7 @@ export const mockTaskRepositoryReturnValues: MockReturnValues<ITaskRepository> =
         boardId: createId(),
         workTimeSec: 60 * 60 * 8,
         subtasksOrder: [],
+        createdAt: new Date().valueOf(),
       },
       {
         id: createId(),
@@ -26,6 +27,7 @@ export const mockTaskRepositoryReturnValues: MockReturnValues<ITaskRepository> =
         workTimeSec: 0,
         scheduledTimeSec: 3600,
         subtasksOrder: [createId(), createId()],
+        createdAt: new Date().valueOf(),
       },
       {
         id: createId(),
@@ -36,6 +38,7 @@ export const mockTaskRepositoryReturnValues: MockReturnValues<ITaskRepository> =
         boardId: createId(),
         workTimeSec: 500,
         subtasksOrder: [createId()],
+        createdAt: new Date().valueOf(),
       },
     ],
   },
@@ -50,6 +53,7 @@ export const mockTaskRepositoryReturnValues: MockReturnValues<ITaskRepository> =
         boardId: createId(),
         workTimeSec: 60 * 60 * 3.5,
         subtasksOrder: [],
+        createdAt: new Date().valueOf(),
       },
       {
         id: createId(),
@@ -62,6 +66,7 @@ export const mockTaskRepositoryReturnValues: MockReturnValues<ITaskRepository> =
         workTimeSec: 0,
         scheduledTimeSec: 3600,
         subtasksOrder: [createId(), createId()],
+        createdAt: new Date().valueOf(),
       },
       {
         id: createId(),
@@ -72,6 +77,7 @@ export const mockTaskRepositoryReturnValues: MockReturnValues<ITaskRepository> =
         boardId: createId(),
         workTimeSec: 500,
         subtasksOrder: [createId()],
+        createdAt: new Date().valueOf(),
       },
     ],
   },
@@ -84,6 +90,7 @@ export const mockTaskRepositoryReturnValues: MockReturnValues<ITaskRepository> =
     boardId: createId(),
     workTimeSec: 0,
     subtasksOrder: [],
+    createdAt: new Date().valueOf(),
   },
   create: {
     id: createId(),
@@ -94,6 +101,7 @@ export const mockTaskRepositoryReturnValues: MockReturnValues<ITaskRepository> =
     boardId: createId(),
     workTimeSec: 0,
     subtasksOrder: [],
+    createdAt: new Date().valueOf(),
   },
   update: {
     id: createId(),
@@ -104,6 +112,7 @@ export const mockTaskRepositoryReturnValues: MockReturnValues<ITaskRepository> =
     boardId: createId(),
     workTimeSec: 0,
     subtasksOrder: [],
+    createdAt: new Date().valueOf(),
   },
   delete: undefined,
 };

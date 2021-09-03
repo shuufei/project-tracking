@@ -31,6 +31,7 @@ export const convertToDomainSubtaskFromDbSubtaskItem = (
     workStartDateTimestamp:
       item.workStartDateTimestamp && Number(item.workStartDateTimestamp.N),
     taskId: item.taskId.S,
+    createdAt: Number(item.createdAt.N),
   };
 };
 

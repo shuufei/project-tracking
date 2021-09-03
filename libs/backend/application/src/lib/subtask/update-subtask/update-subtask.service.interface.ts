@@ -1,7 +1,10 @@
-import { Subtask, User } from '@bison/shared/domain';
+import { Subtask, SubtaskWithoutCreatedAt, User } from '@bison/shared/domain';
 
 export interface IUpdateSubtaskService {
-  handle: (subtask: Subtask, requestUser: User) => Promise<Subtask>;
+  handle: (
+    subtask: SubtaskWithoutCreatedAt,
+    requestUser: User
+  ) => Promise<Subtask>;
 }
 
 export const UPDATE_SUBTASK_SERVICE = Symbol('UpdateSubtaskService');
