@@ -32,7 +32,6 @@ import { ProjectDetailHeaderComponent } from './components/project-detail-header
 import { ProjectDetailComponent } from './components/project-detail/project-detail.component';
 import { ProjectPageRoutingModule } from './project-page-routing.module';
 import { ProjectPageComponent } from './project-page.component';
-import { ProjectSubComponent } from './project-sub/project-sub.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +40,6 @@ import { ProjectSubComponent } from './project-sub/project-sub.component';
     BoardDetailComponent,
     BoardDetailHeaderComponent,
     ProjectPageComponent,
-    ProjectSubComponent,
     ProjectDetailHeaderComponent
   ],
   imports: [
