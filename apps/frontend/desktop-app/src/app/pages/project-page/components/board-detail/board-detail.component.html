@@ -6,142 +6,148 @@
     <!-- prettier-ignore -->
     <p
       class="whitespace-pre-wrap text-s3 font-medium leading-normal px-2"
-    >{{ state.description }}</p>
+    >{{ state.board?.description }}</p>
     <section
-      class="flex flex-col flex-grow mt-5 p-3 bg-primary-light3 rounded-s"
+      class="flex flex-col flex-grow mt-5 p-3 pb-7 bg-primary-light3 rounded-s"
       cdkDropListGroup
     >
+      <!-- TODO: 中心からずれてるので修正 -->
       <div class="flex w-full mb-3">
-        <div class="flex w-1/4 px-2">
-          <!-- TODO: +ボタン追加 -->
-          <h2
-            class="board-col-name w-full text-center text-s2 font-medium leading-normal"
-          >
-            TODO
-          </h2>
-        </div>
-        <div class="flex w-1/4 px-2">
-          <h2
-            class="board-col-name w-full text-center text-s2 font-medium leading-normal"
-          >
-            INPROGRESS
-          </h2>
-          <!-- <div
-            class="flex-grow"
-            cdkDropList
-            [cdkDropListData]="inprogress"
-            (cdkDropListDropped)="drop($event)"
-          >
-            <div *ngFor="let item of inprogress" class="drag-item mb-1" cdkDrag>
-              <ui-task-card [title]="item"></ui-task-card>
-            </div>
-          </div> -->
-        </div>
-        <div class="flex w-1/4 px-2">
-          <h2
-            class="board-col-name w-full text-center text-s2 font-medium leading-normal"
-          >
-            CONFIRM
-          </h2>
-          <!-- <div
-            class="flex-grow"
-            cdkDropList
-            [cdkDropListData]="confirm"
-            (cdkDropListDropped)="drop($event)"
-          >
-            <div *ngFor="let item of confirm" class="drag-item mb-1" cdkDrag>
-              <ui-task-card [title]="item"></ui-task-card>
-            </div>
-          </div> -->
-        </div>
-        <div class="flex w-1/4 px-2">
-          <h2
-            class="board-col-name w-full text-center text-s2 font-medium leading-normal"
-          >
-            DONE
-          </h2>
-          <!-- <div
-            class="flex-grow"
-            cdkDropList
-            [cdkDropListData]="done"
-            (cdkDropListDropped)="drop($event)"
-          >
-            <div *ngFor="let item of done" class="drag-item mb-1" cdkDrag>
-              <ui-task-card [title]="item"></ui-task-card>
-            </div>
-          </div> -->
-        </div>
-      </div>
-      <div>
-        <div class="bg-white px-3 pt-2 pb-3 rounded-s">
-          <div class="mb-2">
-            <div class="flex mb-2">
-              <h3
-                class="flex-grow text-black-default text-s2 font-medium leading-normal"
+        <ng-container *ngFor="let status of statuses; first as first">
+          <div class="flex w-1/4 px-2" [class.relative]="first">
+            <ng-container *ngIf="first">
+              <button
+                #boardAddingTriggerEl
+                class="absolute top-0 bottom-0 m-auto cursor-pointer"
               >
-                タイトル
-              </h3>
-              <ui-time-label class="mr-6"></ui-time-label>
+                <ui-icon style="display: inline" icon="plus" size="s"></ui-icon>
+              </button>
+              <ui-popup
+                style="transform: translateY(20px)"
+                [triggerEl]="boardAddingTriggerEl"
+                [isCloseWhenPopupAction]="true"
+              >
+                <div class="menu-items">
+                  <ui-menu-item
+                    [itemName]="'タスクグループを追加'"
+                    [color]="'primary'"
+                    [icon]="'plus'"
+                    (clickedItem)="(null)"
+                  ></ui-menu-item>
+                  <ui-menu-item
+                    class="mt-2"
+                    [itemName]="'タスクを追加'"
+                    [color]="'primary'"
+                    [icon]="'plus'"
+                    (clickedItem)="(null)"
+                  ></ui-menu-item>
+                </div>
+              </ui-popup>
+            </ng-container>
+            <h2
+              class="board-col-name w-full text-center text-s2 font-medium leading-normal"
+            >
+              {{ status }}
+            </h2>
+          </div>
+        </ng-container>
+      </div>
+
+      <ng-container
+        *ngFor="let taskGroup of taskGroups; first as first; trackBy: trackById"
+      >
+        <div [class.mt-2]="!first">
+          <div class="bg-white px-3 pt-2 pb-3 rounded-s">
+            <div class="mb-2">
+              <div class="flex mb-2">
+                <h3
+                  class="flex-grow text-black-default text-s2 font-medium leading-normal"
+                >
+                  {{ taskGroup.title }}
+                </h3>
+                <ui-time-label class="mr-6"></ui-time-label>
+              </div>
+              <div class="flex items-center">
+                <span class="text-black-light2 text-s4 font-medium p-0.5 mr-3">
+                  {{ taskGroup.status }}
+                </span>
+                <ui-user-icon
+                  class="w-5 h-5"
+                  [src]="taskGroup.assignUser?.icon"
+                ></ui-user-icon>
+              </div>
+              <!-- TODO: トラッキングタイマー表示 -->
             </div>
-            <div class="flex items-center">
-              <span class="text-black-light2 text-s4 font-medium p-0.5 mr-3">
-                TODO
-              </span>
-              <ui-user-icon class="w-5 h-5"></ui-user-icon>
+            <div class="flex gap-x-5 bg-primary-light3 p-2 rounded-s">
+              <ng-container
+                *ngFor="
+                  let item of taskGroup.tasks | keyvalue: noOpCompare;
+                  first as first
+                "
+              >
+                <div
+                  class="w-1/4"
+                  cdkDropList
+                  [cdkDropListData]="item.value"
+                  (cdkDropListDropped)="drop($event)"
+                >
+                  <div
+                    *ngFor="let task of item.value"
+                    class="drag-item mb-1"
+                    cdkDrag
+                  >
+                    <bis-task-card [task]="task"></bis-task-card>
+                  </div>
+                  <ng-container *ngIf="first">
+                    <button
+                      class="flex items-center justify-center w-full py-2 mt-1"
+                    >
+                      <ui-icon class="mr-1" icon="plus" size="s"></ui-icon>
+                      <span class="text-s4 font-medium leading-normal">
+                        タスクを追加
+                      </span>
+                    </button>
+                  </ng-container>
+                </div>
+              </ng-container>
             </div>
           </div>
-          <div class="flex gap-x-5 bg-primary-light3 p-2 rounded-s">
+        </div>
+      </ng-container>
+
+      <div class="mt-2">
+        <div class="flex gap-x-5 bg-primary-light3 px-5 rounded-s">
+          <ng-container
+            *ngFor="
+              let item of soloTasks | keyvalue: noOpCompare;
+              first as first
+            "
+          >
             <div
               class="w-1/4"
               cdkDropList
-              [cdkDropListData]="todo"
-              (cdkDropListDropped)="drop($event)"
-            >
-              <div *ngFor="let item of todo" class="drag-item mb-1" cdkDrag>
-                <ui-task-card [title]="item"></ui-task-card>
-              </div>
-              <button class="flex items-center justify-center w-full mt-3">
-                <ui-icon class="mr-1" icon="plus" size="s"></ui-icon>
-                <span class="text-s4 font-medium leading-normal">
-                  タスクを追加
-                </span>
-              </button>
-            </div>
-            <div
-              class="w-1/4"
-              cdkDropList
-              [cdkDropListData]="inprogress"
+              [cdkDropListData]="item.value"
               (cdkDropListDropped)="drop($event)"
             >
               <div
-                *ngFor="let item of inprogress"
+                *ngFor="let task of item.value; trackBy: trackById"
                 class="drag-item mb-1"
                 cdkDrag
               >
-                <ui-task-card [title]="item"></ui-task-card>
+                <bis-task-card [task]="task"></bis-task-card>
               </div>
+              <ng-container *ngIf="first">
+                <button
+                  class="flex items-center justify-center w-full py-2 mt-1"
+                >
+                  <ui-icon class="mr-1" icon="plus" size="s"></ui-icon>
+                  <span class="text-s4 font-medium leading-normal">
+                    タスクを追加
+                  </span>
+                </button>
+              </ng-container>
             </div>
-            <div
-              class="w-1/4"
-              cdkDropList
-              [cdkDropListData]="confirm"
-              (cdkDropListDropped)="drop($event)"
-            >
-              <div *ngFor="let item of confirm" class="drag-item mb-1" cdkDrag>
-                <ui-task-card [title]="item"></ui-task-card>
-              </div>
-            </div>
-            <div
-              class="w-1/4"
-              cdkDropList
-              [cdkDropListData]="done"
-              (cdkDropListDropped)="drop($event)"
-            >
-              <div *ngFor="let item of done" class="drag-item mb-1" cdkDrag>
-                <ui-task-card [title]="item"></ui-task-card>
-              </div>
-            </div>
-          </div>
+          </ng-container>
         </div>
       </div>
     </section>
