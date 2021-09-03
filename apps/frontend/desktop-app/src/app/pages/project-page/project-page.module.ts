@@ -3,10 +3,13 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import {
   ApolloDataQuery,
-  APOLLO_DATA_QUERY
+  APOLLO_DATA_QUERY,
 } from '@bison/frontend/application';
 import {
-  BoardItemModule, ButtonModule, ColorIconModule, HeaderModule,
+  BoardItemModule,
+  ButtonModule,
+  ColorIconModule,
+  HeaderModule,
   IconModule,
   MenuItemModule,
   MultiUserSelectPopupModule,
@@ -14,8 +17,7 @@ import {
   ProjectNavigationModule,
   SheetFooterModule,
   SheetModule,
-  TaskCardModule,
-  UserIconModule
+  UserIconModule,
 } from '@bison/frontend/ui';
 import { TuiNotificationsModule } from '@taiga-ui/core';
 import { BoardCreateSheetModule } from '../../shared/components/board-create-sheet/board-create-sheet.module';
@@ -25,6 +27,7 @@ import { ProjectAdminUpdateSheetModule } from '../../shared/components/project-a
 import { ProjectDeleteDialogModule } from '../../shared/components/project-delete-dialog/project-delete-dialog.module';
 import { ProjectPropertyEditFormModule } from '../../shared/components/project-property-edit-form/project-property-edit-form.module';
 import { ProjectUpdateSheetModule } from '../../shared/components/project-update-sheet/project-update-sheet.module';
+import { TaskCardModule } from '../../shared/components/task-card/task-card.module';
 import { TaskDialogModule } from '../../shared/components/task-dialog/task-dialog.module';
 import { BoardDetailHeaderComponent } from './components/board-detail-header/board-detail-header.component';
 import { BoardDetailComponent } from './components/board-detail/board-detail.component';
@@ -40,7 +43,7 @@ import { ProjectPageComponent } from './project-page.component';
     BoardDetailComponent,
     BoardDetailHeaderComponent,
     ProjectPageComponent,
-    ProjectDetailHeaderComponent
+    ProjectDetailHeaderComponent,
   ],
   imports: [
     CommonModule,
@@ -69,7 +72,7 @@ import { ProjectPageComponent } from './project-page.component';
     ProjectDeleteDialogModule,
     BoardDeleteDialogModule,
     ColorIconModule,
-    BoardItemModule
+    BoardItemModule,
   ],
   exports: [ProjectPageComponent],
   providers: [
@@ -79,4 +82,4 @@ import { ProjectPageComponent } from './project-page.component';
     },
   ],
 })
-export class ProjectPageModule { }
+export class ProjectPageModule {}
