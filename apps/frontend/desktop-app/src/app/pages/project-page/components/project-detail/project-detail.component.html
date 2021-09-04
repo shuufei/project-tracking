@@ -72,6 +72,11 @@
             [project]="state.project"
             [board]="state.actionTargetBoard"
           ></bis-board-update-sheet>
+          <bis-board-delete-dialog
+            [isOpened$]="isOpenedDeleteBoardDialog$.asObservable()"
+            [project]="state.project"
+            [board]="state.actionTargetBoard"
+          ></bis-board-delete-dialog>
         </div>
       </div>
 

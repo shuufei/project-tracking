@@ -42,7 +42,7 @@ export class BoardDeleteDialogComponent implements OnInit {
   set board(value: Board) {
     this.state.set('board', () => value);
   }
-  @Input() isOpen$ = new Subject<boolean>();
+  @Input() isOpened$ = new Subject<boolean>();
   @Output() opened = new EventEmitter<void>();
   @Output() closed = new EventEmitter<void>();
 
@@ -66,7 +66,7 @@ export class BoardDeleteDialogComponent implements OnInit {
     this.state.set({
       isOpen: false,
     });
-    this.state.connect('isOpen', this.isOpen$);
+    this.state.connect('isOpen', this.isOpened$);
     this.state.connect('isOpen', this.onOpenedDialog$, () => true);
     this.state.connect('isOpen', this.onClosedDialog$, () => false);
     this.state.hold(this.isOpenDialog$, (isOpen) => {

@@ -45,7 +45,7 @@ export class ProjectDetailComponent implements OnInit {
     nonNullable()
   );
   readonly isOpenedEditBoardSheet$ = new Subject<boolean>();
-  readonly isOpenedDeleteBoardSheet$ = new Subject<boolean>();
+  readonly isOpenedDeleteBoardDialog$ = new Subject<boolean>();
 
   /**
    * Event
@@ -68,6 +68,14 @@ export class ProjectDetailComponent implements OnInit {
         tap((board) => {
           this.state.set('actionTargetBoard', () => board);
           this.isOpenedEditBoardSheet$.next(true);
+        })
+      )
+    );
+    this.state.hold(
+      this.onClickedDeleteBoard$.pipe(
+        tap((board) => {
+          this.state.set('actionTargetBoard', () => board);
+          this.isOpenedDeleteBoardDialog$.next(true);
         })
       )
     );
