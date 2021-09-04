@@ -30,7 +30,8 @@
     "dep-graph": "nx dep-graph",
     "help": "nx help",
     "gen:graphql": "graphql-codegen --config codegen.yml",
-    "db:init": "./construction/dynamodb/table-schema/create-tables.sh && ts-node ./construction/dynamodb/sample-data/import-sample-data.ts"
+    "db:init": "./construction/dynamodb/table-schema/create-tables.sh && ts-node ./construction/dynamodb/sample-data/import-sample-data.ts",
+    "dynamodb-admin": "DYNAMO_ENDPOINT=http://localhost:8000 dynamodb-admin"
   },
   "private": true,
   "dependencies": {

@@ -5,7 +5,7 @@
   </div>
 
   <div class="flex items-start mb-3">
-    <aside #sideNav style="width: 240px" class="sticky flex-shrink-0 p-6">
+    <aside #sideNav style="width: 240px" class="sticky flex-shrink-0 p-3">
       <ng-container *ngFor="let project of (state$ | async).projects">
         <ui-project-navigation
           [project]="project"

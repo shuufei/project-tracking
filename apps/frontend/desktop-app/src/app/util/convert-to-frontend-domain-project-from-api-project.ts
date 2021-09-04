@@ -26,6 +26,7 @@ export const convertToFrontendDomainProjectFromApiProject = (
       name: board.id,
       description: board.id,
       projectId: board.project.id,
+      createdAt: new Date(board.createdAt),
     })),
   };
 };

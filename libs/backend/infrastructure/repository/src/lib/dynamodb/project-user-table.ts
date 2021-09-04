@@ -106,7 +106,7 @@ export const convertToDomainUserFromDbProjectUserMappingItem = (
   item: ProjectUserMappingItem
 ): User => {
   return {
-    id: removeUserIdPrefix(item.PK.S),
+    id: removeUserIdPrefix(item.SK.S),
     name: item['User-name'].S,
     icon: item['User-icon']?.S,
   };

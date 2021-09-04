@@ -6,5 +6,7 @@ export type Project = Pick<
 > & {
   admin: Pick<User, 'id' | 'name' | 'icon'>;
   members: Pick<User, 'id' | 'name' | 'icon'>[];
-  boards: Pick<Board, 'id' | 'name' | 'description' | 'projectId'>[];
+  boards: (Pick<Board, 'id' | 'name' | 'description' | 'projectId'> & {
+    createdAt: Date;
+  })[];
 };
