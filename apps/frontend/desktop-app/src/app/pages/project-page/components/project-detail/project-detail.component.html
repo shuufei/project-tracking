@@ -63,8 +63,15 @@
               [boardName]="board.name"
               [date]="board.createdAt"
               [ngClass]="[isFirst ? 'mt-3' : 'mt-2']"
+              (clickedEdit)="onClickedEditBoard$.next(board)"
+              (clickedDelete)="onClickedDeleteBoard$.next(board)"
             ></ui-board-item>
           </ng-container>
+          <bis-board-update-sheet
+            [isOpened$]="isOpenedEditBoardSheet$.asObservable()"
+            [project]="state.project"
+            [board]="state.actionTargetBoard"
+          ></bis-board-update-sheet>
         </div>
       </div>
 

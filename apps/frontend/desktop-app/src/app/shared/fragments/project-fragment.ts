@@ -25,6 +25,10 @@ export const PROJECT_FIELDS = gql`
         id
       }
       createdAt
+      tasksOrder {
+        taskId
+        type
+      }
     }
   }
 `;

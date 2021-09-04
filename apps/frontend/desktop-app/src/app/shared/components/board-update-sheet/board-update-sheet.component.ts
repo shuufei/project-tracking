@@ -40,6 +40,7 @@ export class BoardUpdateSheetComponent implements OnInit {
   @Input() set project(value: Project) {
     this.state.set('project', () => value);
   }
+  @Input() isOpened$ = new Subject<boolean>().asObservable();
 
   /**
    * State
@@ -65,6 +66,7 @@ export class BoardUpdateSheetComponent implements OnInit {
 
   ngOnInit(): void {
     this.state.set({ isSheetOpen: false });
+    this.state.connect('isSheetOpen', this.isOpened$);
     this.state.connect(this.onChangedBoardProperty$, (state, event) => {
       if (state.board == null) {
         return state;

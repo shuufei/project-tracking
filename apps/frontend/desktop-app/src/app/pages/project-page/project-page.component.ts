@@ -23,33 +23,17 @@ import {
   takeUntil,
   tap,
 } from 'rxjs/operators';
+import {
+  PROJECT_FIELDS,
+  PROJECT_FRAGMENT_NAME,
+} from '../../shared/fragments/project-fragment';
 import { convertToFrontendDomainProjectFromApiProject } from '../../util/convert-to-frontend-domain-project-from-api-project';
 
 export const VIEWER_FIELDS = gql`
+  ${PROJECT_FIELDS}
   fragment ViewerPartsInProjectPage on User {
     projects {
-      id
-      name
-      description
-      color
-      boards {
-        id
-        name
-        description
-        project {
-          id
-        }
-      }
-      admin {
-        id
-        name
-        icon
-      }
-      members {
-        id
-        name
-        icon
-      }
+      ...${PROJECT_FRAGMENT_NAME}
     }
   }
 `;

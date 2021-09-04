@@ -11,8 +11,8 @@ import {
 } from '@bison/frontend/application';
 import { Project } from '@bison/frontend/domain';
 import { RxState } from '@rx-angular/state';
-import { of } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { of, Subject } from 'rxjs';
+import { map, switchMap, tap } from 'rxjs/operators';
 import {
   PROJECT_FIELDS,
   PROJECT_FRAGMENT_NAME,
@@ -22,6 +22,7 @@ import { nonNullable } from '../../../../util/custom-operators/non-nullable';
 
 type State = {
   project?: Project;
+  actionTargetBoard?: Project['boards'][number];
 };
 
 @Component({
@@ -32,7 +33,9 @@ type State = {
   providers: [RxState],
 })
 export class ProjectDetailComponent implements OnInit {
-  // State
+  /**
+   * State
+   */
   readonly state$ = this.state.select();
   private readonly projectId$ = (
     this.route.parent?.params ?? of({} as Params)
@@ -41,6 +44,14 @@ export class ProjectDetailComponent implements OnInit {
     map((params) => params.projectId as string),
     nonNullable()
   );
+  readonly isOpenedEditBoardSheet$ = new Subject<boolean>();
+  readonly isOpenedDeleteBoardSheet$ = new Subject<boolean>();
+
+  /**
+   * Event
+   */
+  readonly onClickedEditBoard$ = new Subject<Project['boards'][number]>();
+  readonly onClickedDeleteBoard$ = new Subject<Project['boards'][number]>();
 
   constructor(
     private state: RxState<State>,
@@ -52,6 +63,14 @@ export class ProjectDetailComponent implements OnInit {
 
   ngOnInit() {
     this.state.connect('project', this.queryProject$());
+    this.state.hold(
+      this.onClickedEditBoard$.pipe(
+        tap((board) => {
+          this.state.set('actionTargetBoard', () => board);
+          this.isOpenedEditBoardSheet$.next(true);
+        })
+      )
+    );
   }
 
   private queryProject$() {

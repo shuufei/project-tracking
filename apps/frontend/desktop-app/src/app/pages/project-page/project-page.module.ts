@@ -75,6 +75,8 @@ import { ProjectPageComponent } from './project-page.component';
     ColorIconModule,
     BoardItemModule,
     ProjectMemberUpdateSheetModule,
+    BoardUpdateSheetModule,
+    BoardDeleteDialogModule,
   ],
   exports: [ProjectPageComponent],
   providers: [
