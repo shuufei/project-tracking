@@ -32,6 +32,7 @@ export class CreateBoardUsecase implements ICreateBoardUsecase {
               taskId
               type
             }
+            createdAt
           }
         }
       `,

@@ -129,6 +129,7 @@ export class ProjectRepository implements IProjectRepository {
         SK: { S: addProjectIdPrefix(id) },
       },
     };
+    // TODO: projectとuseのの紐付きも削除。または、取得時に存在しないケースを無視するようにする
     await DynamoDBClient.getClient().deleteItem(params).promise();
     return;
   }

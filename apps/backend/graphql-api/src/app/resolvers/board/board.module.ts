@@ -4,13 +4,13 @@ import {
   DeleteBoardService,
   DELETE_BOARD_SERVICE,
   GetBoardByIdAndUserService,
+  GetProjectByBoardIdService,
   GET_BOARD_BY_ID_AND_USER_SERVICE,
   GET_PROJECT_BY_BOARD_ID_SERVICE,
   ListSoloTasksByBoardIdService,
   ListTaskGroupsByBoardIdService,
   LIST_SOLO_TASKS_BY_BOARD_ID_SERVICE,
   LIST_TASK_GROUPS_BY_BOARD_ID_SERVICE,
-  MockGetProjectByBoardIdService,
   UpdateBoardService,
   UPDATE_BOARD_SERVICE,
 } from '@bison/backend/application';
@@ -37,7 +37,7 @@ import { BoardResolver } from './board.resolver';
     BoardResolver,
     {
       provide: GET_PROJECT_BY_BOARD_ID_SERVICE,
-      useClass: MockGetProjectByBoardIdService,
+      useClass: GetProjectByBoardIdService,
     },
     {
       provide: LIST_TASK_GROUPS_BY_BOARD_ID_SERVICE,

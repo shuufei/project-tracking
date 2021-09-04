@@ -49,11 +49,15 @@
           <ng-container *ngIf="state.project.boards.length <= 0">
             <button
               #createBoardButton
-              class="mt-2 px-2 py-1 flex items-center justify-center rounded-s"
+              class="mt-2 px-2 py-1 flex items-center justify-center rounded-s focus:outline-none focus:shadow-outline_primary"
             >
               <ui-icon icon="plus" size="s" color="primary"></ui-icon>
               <span class="text-s3 text-black-default ml-1">ボードを追加</span>
             </button>
+            <bis-board-create-sheet
+              [triggerEl]="createBoardButton"
+              [project]="state.project"
+            ></bis-board-create-sheet>
           </ng-container>
 
           <ng-container
