@@ -2,10 +2,12 @@
   display: block;
 }
 
-$width: 525px;
-
 .detail {
   justify-content: flex-start;
-  width: $width;
-  margin: 16px 24px 32px 194px;
+  min-width: 320px;
+  flex: 2;
+}
+
+.admin-and-member-block {
+  min-width: 240px;
 }
