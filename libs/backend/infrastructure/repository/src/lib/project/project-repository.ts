@@ -122,15 +122,35 @@ export class ProjectRepository implements IProjectRepository {
     ...args: Parameters<IProjectRepository['delete']>
   ): ReturnType<IProjectRepository['delete']> {
     const [id] = args;
-    const params: DynamoDB.Delete = {
-      TableName: tableName,
-      Key: {
-        PK: { S: addProjectIdPrefix(id) },
-        SK: { S: addProjectIdPrefix(id) },
+    const results = await DynamoDBClient.getClient()
+      .query({
+        TableName: tableName,
+        KeyConditionExpression: 'PK = :pk',
+        ExpressionAttributeValues: {
+          ':pk': {
+            S: addProjectIdPrefix(id),
+          },
+        },
+      })
+      .promise();
+    const items = (results.Items ?? []) as ProjectUserItem[];
+    const params: DynamoDB.BatchWriteItemInput = {
+      RequestItems: {
+        [tableName]: items.map((item) => ({
+          DeleteRequest: {
+            Key: {
+              PK: {
+                S: item.PK.S,
+              },
+              SK: {
+                S: item.SK.S,
+              },
+            },
+          },
+        })),
       },
     };
-    // TODO: projectとuseのの紐付きも削除。または、取得時に存在しないケースを無視するようにする
-    await DynamoDBClient.getClient().deleteItem(params).promise();
+    await DynamoDBClient.getClient().batchWriteItem(params).promise();
     return;
   }
 
