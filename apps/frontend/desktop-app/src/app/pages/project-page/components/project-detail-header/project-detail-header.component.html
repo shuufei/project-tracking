@@ -1,36 +1,67 @@
 <ng-container *ngIf="state$ | async as state">
-  <div right class="flex items-center justify-end px-6 py-3">
-    <ng-container *ngIf="state.project">
-      <div class="relative">
-        <div #triggerEl class="flex px-3 py-2 mr-1 cursor-pointer">
-          <ui-icon
-            icon="more-horizontal"
-            size="s"
-            color="primary"
-            hoverColor="primary"
-          ></ui-icon>
-        </div>
-        <ui-popup [triggerEl]="triggerEl" [isCloseWhenPopupAction]="true">
-          <div class="menu-items">
-            <ui-menu-item
-              itemName="削除"
-              color="warn"
-              icon="trash-2"
-              (clickedItem)="isOpenedDeleteProjectDialog$.next(true)"
-            ></ui-menu-item>
-          </div>
-        </ui-popup>
-        <bis-project-delete-dialog
-          [isOpen$]="isOpenedDeleteProjectDialog$.asObservable()"
-          [project]="state.project"
-          (delete)="onDeleteProject$.next()"
-        ></bis-project-delete-dialog>
+  <ui-header>
+    <div left>
+      <div class="text-s4 text-black-light2">
+        <a
+          routerLink="projects"
+          class="cursor-pointer focus:outline-none focus:shadow-outline_primary"
+          >プロジェクト一覧</a
+        >
+        <span> / </span>
+        <span>{{ state.project?.name }}</span>
       </div>
-    </ng-container>
+      <button
+        class="mt-1 py-1 px-2 text-s3 flex items-center focus:outline-none focus:shadow-outline_primary rounded-s"
+        routerLink="/projects"
+      >
+        <ui-icon icon="arrow-left" size="s"></ui-icon>
+        <span class="ml-1">戻る</span>
+      </button>
+    </div>
+    <h1
+      center
+      class="text-center text-s2 py-2 text-black-default font-medium m-0 leading-normal"
+    >
+      <span
+        style="border-bottom-width: 1.5px"
+        class="pb-1 border-solid border-primary-default"
+      >
+        プロジェクト詳細
+      </span>
+    </h1>
+    <div right class="flex items-center justify-end">
+      <ng-container *ngIf="state.project">
+        <div class="relative">
+          <div #triggerEl class="flex px-3 py-2 mr-1 cursor-pointer">
+            <ui-icon
+              icon="more-horizontal"
+              size="s"
+              color="primary"
+              hoverColor="primary"
+            ></ui-icon>
+          </div>
+          <ui-popup [triggerEl]="triggerEl" [isCloseWhenPopupAction]="true">
+            <div class="menu-items">
+              <ui-menu-item
+                itemName="削除"
+                color="warn"
+                icon="trash-2"
+                (clickedItem)="isOpenedDeleteProjectDialog$.next(true)"
+              ></ui-menu-item>
+            </div>
+          </ui-popup>
+          <bis-project-delete-dialog
+            [isOpen$]="isOpenedDeleteProjectDialog$.asObservable()"
+            [project]="state.project"
+            (delete)="onDeleteProject$.next()"
+          ></bis-project-delete-dialog>
+        </div>
+      </ng-container>
 
-    <ui-user-icon
-      style="width: 30px; height: 30px"
-      class="flex-shrink-0"
-    ></ui-user-icon>
-  </div>
+      <ui-user-icon
+        style="width: 30px; height: 30px"
+        class="flex-shrink-0"
+      ></ui-user-icon>
+    </div>
+  </ui-header>
 </ng-container>
