@@ -25,9 +25,25 @@
           編集
         </button>
         <div class="mt-8">
-          <p class="text-s2 text-black-default font-medium leading-8 mr-2">
-            ボード
-          </p>
+          <div class="flex items-center justify-between">
+            <p class="text-s2 text-black-default font-medium leading-8 mr-2">
+              ボード
+            </p>
+            <ng-container *ngIf="state.project.boards.length > 0">
+              <div>
+                <button
+                  #createBoardButton
+                  class="px-2 rounded-s focus:outline-none focus:shadow-outline_primary flex items-center"
+                >
+                  <ui-icon icon="plus" size="s" color="primary"></ui-icon>
+                </button>
+                <bis-board-create-sheet
+                  [triggerEl]="createBoardButton"
+                  [project]="state.project"
+                ></bis-board-create-sheet>
+              </div>
+            </ng-container>
+          </div>
           <hr class="bg-primary-light3" />
 
           <ng-container *ngIf="state.project.boards.length <= 0">
@@ -79,6 +95,7 @@
           <p class="text-s2 font-medium leading-8 flex justify-between px-1">
             <span class="text-black-default"> メンバー </span>
             <button
+              #projectMemberUpdateButton
               class="text-s2 font-medium leading-normal text-primary-light1 focus:outline-none focus:shadow-outline_primary px-1 rounded-s"
             >
               編集
@@ -87,7 +104,7 @@
           <hr class="bg-primary-light3" />
           <div>
             <ng-container *ngFor="let member of state.project.members">
-              <div class="flex items-center mt-2 py-2 px-3">
+              <div class="flex items-center mt-2 py-1 px-3">
                 <ui-user-icon class="w-8" [src]="member.icon"></ui-user-icon>
                 <span class="text-s1 text-black-default font-medium ml-2">
                   {{ member.name }}
@@ -98,16 +115,19 @@
         </div>
       </div>
     </div>
-    <bis-project-update-sheet [triggerEl]="projectEditButton" [project]="null">
+    <bis-project-update-sheet
+      [triggerEl]="projectEditButton"
+      [project]="state.project"
+    >
     </bis-project-update-sheet>
     <bis-project-admin-update-sheet
       [triggerEl]="projectAdminUpdateButton"
-      [project]="null"
+      [project]="state.project"
     >
     </bis-project-admin-update-sheet>
-    <bis-board-create-sheet
-      [triggerEl]="createBoardButton"
-      [project]="null"
-    ></bis-board-create-sheet>
+    <bis-project-member-update-sheet
+      [triggerEl]="projectMemberUpdateButton"
+      [project]="state.project"
+    ></bis-project-member-update-sheet>
   </ng-container>
 </ng-container>

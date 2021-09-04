@@ -14,7 +14,7 @@ const headers = new HttpHeaders(
     : {
         [COGNITO_AUTHENTICATION_PROVIDER]:
         // eslint-disable-next-line max-len
-          'cognito-idp.region.amazonaws.com/user_pool_id,cognito-idp.region.amazonaws.com/user_pool_id:CognitoSignIn:cc648ea7-57fa-423d-ba7d-f34c4acebc84',
+          'cognito-idp.region.amazonaws.com/user_pool_id,cognito-idp.region.amazonaws.com/user_pool_id:CognitoSignIn:a9d6d7e8-b64d-489a-9c72-4b40246b350f',
       }
 );
 export function createApollo(httpLink: HttpLink): ApolloClientOptions<unknown> {

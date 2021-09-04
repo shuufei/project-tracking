@@ -15,10 +15,10 @@ import { Project } from '@bison/frontend/domain';
 import { User } from '@bison/shared/domain';
 import { UpdateProjectInput } from '@bison/shared/schema';
 import { RxState } from '@rx-angular/state';
-import { TuiNotificationsService } from '@taiga-ui/core';
+import { TuiNotification, TuiNotificationsService } from '@taiga-ui/core';
 import { gql } from 'apollo-angular';
 import { Observable, of, Subject } from 'rxjs';
-import { exhaustMap, map, switchMap } from 'rxjs/operators';
+import { catchError, exhaustMap, map, switchMap } from 'rxjs/operators';
 import { convertToApiColorFromDomainColor } from '../../../util/convert-to-api-color-from-domain-color';
 
 const USER_FIELDS = gql`
@@ -117,6 +117,15 @@ export class ProjectAdminUpdateSheetComponent implements OnInit {
           return this.notificationsService.show(
             'プロジェクトの管理者を変更しました',
             { hasCloseButton: true }
+          );
+        }),
+        catchError((error) => {
+          console.error(error);
+          this.isOpenedSheet$.next(false);
+          // FIXME: statusをerrorにしたいが、errorにすると表示がバグってる
+          return this.notificationsService.show(
+            'プロジェクト管理者の更新に失敗しました',
+            { hasCloseButton: true, status: TuiNotification.Warning }
           );
         })
       )

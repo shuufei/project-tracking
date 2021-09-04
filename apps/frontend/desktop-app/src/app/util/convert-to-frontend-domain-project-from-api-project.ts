@@ -23,7 +23,7 @@ export const convertToFrontendDomainProjectFromApiProject = (
     })),
     boards: boards.map((board) => ({
       id: board.id,
-      name: board.id,
+      name: board.name,
       description: board.id,
       projectId: board.project.id,
       createdAt: new Date(board.createdAt),

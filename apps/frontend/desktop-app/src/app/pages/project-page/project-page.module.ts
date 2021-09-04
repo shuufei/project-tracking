@@ -25,6 +25,7 @@ import { BoardDeleteDialogModule } from '../../shared/components/board-delete-di
 import { BoardUpdateSheetModule } from '../../shared/components/board-update-sheet/board-update-sheet.module';
 import { ProjectAdminUpdateSheetModule } from '../../shared/components/project-admin-update-sheet/project-admin-update-sheet.module';
 import { ProjectDeleteDialogModule } from '../../shared/components/project-delete-dialog/project-delete-dialog.module';
+import { ProjectMemberUpdateSheetModule } from '../../shared/components/project-member-update-sheet/project-member-update-sheet.module';
 import { ProjectPropertyEditFormModule } from '../../shared/components/project-property-edit-form/project-property-edit-form.module';
 import { ProjectUpdateSheetModule } from '../../shared/components/project-update-sheet/project-update-sheet.module';
 import { TaskCardModule } from '../../shared/components/task-card/task-card.module';
@@ -73,6 +74,7 @@ import { ProjectPageComponent } from './project-page.component';
     BoardDeleteDialogModule,
     ColorIconModule,
     BoardItemModule,
+    ProjectMemberUpdateSheetModule,
   ],
   exports: [ProjectPageComponent],
   providers: [
