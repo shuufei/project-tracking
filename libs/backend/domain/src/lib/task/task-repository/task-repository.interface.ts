@@ -1,4 +1,9 @@
-import { Board, Task, TaskGroup } from '@bison/shared/domain';
+import {
+  Board,
+  Task,
+  TaskGroup,
+  TaskWithoutCreatedAt,
+} from '@bison/shared/domain';
 
 export interface ITaskRepository {
   listByTaskGroupId: (
@@ -13,7 +18,7 @@ export interface ITaskRepository {
 
   delete: (id: Task['id']) => Promise<void>;
 
-  update: (task: Task) => Promise<Task>;
+  update: (task: TaskWithoutCreatedAt) => Promise<Task>;
 }
 
 export const TASK_REPOSITORY = Symbol('TaskRepository');

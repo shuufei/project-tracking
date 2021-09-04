@@ -104,12 +104,17 @@ export class TaskRepository implements ITaskRepository {
     ...args: Parameters<ITaskRepository['update']>
   ): ReturnType<ITaskRepository['update']> {
     const [task] = args;
-    const item = convertToDbTaskItemFromDomainTask(task);
+    const currentTask = await this.getById(task.id);
+    const updatedTask = {
+      ...currentTask,
+      ...task,
+    };
+    const item = convertToDbTaskItemFromDomainTask(updatedTask);
     const params: DynamoDB.PutItemInput = {
       TableName: tableName,
       Item: item,
     };
     await DynamoDBClient.getClient().putItem(params).promise();
-    return task;
+    return updatedTask;
   }
 }

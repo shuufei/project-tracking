@@ -67,10 +67,15 @@ export class TaskGroupRepository implements ITaskGroupRepository {
     ...args: Parameters<ITaskGroupRepository['update']>
   ): ReturnType<ITaskGroupRepository['update']> {
     const [taskGroup] = args;
-    const item = convertToDbTaskGroupItemFromDomainTaskGroup(taskGroup);
+    const currentTaskGroup = await this.getById(taskGroup.id);
+    const updatedTaskGroup = {
+      ...currentTaskGroup,
+      ...taskGroup,
+    };
+    const item = convertToDbTaskGroupItemFromDomainTaskGroup(updatedTaskGroup);
     const params: DynamoDB.PutItemInput = { TableName: tableName, Item: item };
     await DynamoDBClient.getClient().putItem(params).promise();
-    return taskGroup;
+    return updatedTaskGroup;
   }
 
   async delete(

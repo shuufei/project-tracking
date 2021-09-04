@@ -27,6 +27,7 @@ export const convertToDomainTaskGroupFromDbTaskGroupItem = (
     scheduledTimeSec: Number(item.scheduledTimeSec?.N),
     assignUserId: item.assignUserId?.S,
     tasksOrder: item.tasksOrder?.SS ?? [],
+    createdAt: Number(item.createdAt.N),
   };
 };
 
@@ -38,7 +39,7 @@ export const convertToDbTaskGroupItemFromDomainTaskGroup = (
     title: { S: taskGroup.title },
     status: { S: taskGroup.status },
     boardId: { S: taskGroup.boardId },
-    createdAt: { N: String(new Date().valueOf()) },
+    createdAt: { N: String(taskGroup.createdAt) },
   };
   if (taskGroup.description != null) {
     item.description = {

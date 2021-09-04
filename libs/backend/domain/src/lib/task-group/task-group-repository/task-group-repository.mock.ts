@@ -13,6 +13,7 @@ export const mockTaskGroupRepositoryReturnValues: MockReturnValues<ITaskGroupRep
         assignUserId: createId(),
         boardId: createId(),
         tasksOrder: [],
+        createdAt: new Date().valueOf(),
       },
       {
         id: createId(),
@@ -22,6 +23,7 @@ export const mockTaskGroupRepositoryReturnValues: MockReturnValues<ITaskGroupRep
         assignUserId: createId(),
         boardId: createId(),
         tasksOrder: [],
+        createdAt: new Date().valueOf(),
       },
       {
         id: createId(),
@@ -31,6 +33,7 @@ export const mockTaskGroupRepositoryReturnValues: MockReturnValues<ITaskGroupRep
         assignUserId: createId(),
         boardId: createId(),
         tasksOrder: [],
+        createdAt: new Date().valueOf(),
       },
     ],
   },
@@ -42,6 +45,7 @@ export const mockTaskGroupRepositoryReturnValues: MockReturnValues<ITaskGroupRep
     assignUserId: createId(),
     boardId: createId(),
     tasksOrder: [],
+    createdAt: new Date().valueOf(),
   },
   create: {
     id: createId(),
@@ -51,6 +55,7 @@ export const mockTaskGroupRepositoryReturnValues: MockReturnValues<ITaskGroupRep
     assignUserId: createId(),
     boardId: createId(),
     tasksOrder: [],
+    createdAt: new Date().valueOf(),
   },
   update: {
     id: createId(),
@@ -60,6 +65,7 @@ export const mockTaskGroupRepositoryReturnValues: MockReturnValues<ITaskGroupRep
     assignUserId: createId(),
     boardId: createId(),
     tasksOrder: [],
+    createdAt: new Date().valueOf(),
   },
   delete: undefined,
 };

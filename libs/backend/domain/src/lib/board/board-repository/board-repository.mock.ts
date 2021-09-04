@@ -24,6 +24,7 @@ export const mockBoardRepositoryReturnValues: MockReturnValues<IBoardRepository>
             type: 'Task',
           },
         ],
+        createdAt: new Date().valueOf(),
       },
       {
         id: 'board0002',
@@ -44,6 +45,7 @@ export const mockBoardRepositoryReturnValues: MockReturnValues<IBoardRepository>
             type: 'Task',
           },
         ],
+        createdAt: new Date().valueOf(),
       },
       {
         id: 'board0003',
@@ -63,6 +65,7 @@ export const mockBoardRepositoryReturnValues: MockReturnValues<IBoardRepository>
             type: 'Task',
           },
         ],
+        createdAt: new Date().valueOf(),
       },
     ],
   },
@@ -85,6 +88,7 @@ export const mockBoardRepositoryReturnValues: MockReturnValues<IBoardRepository>
         type: 'Task',
       },
     ],
+    createdAt: new Date().valueOf(),
   },
   create: {
     id: 'board0001',
@@ -105,6 +109,7 @@ export const mockBoardRepositoryReturnValues: MockReturnValues<IBoardRepository>
         type: 'Task',
       },
     ],
+    createdAt: new Date().valueOf(),
   },
   delete: undefined,
   update: {
@@ -126,6 +131,7 @@ export const mockBoardRepositoryReturnValues: MockReturnValues<IBoardRepository>
         type: 'Task',
       },
     ],
+    createdAt: new Date().valueOf(),
   },
 };
 

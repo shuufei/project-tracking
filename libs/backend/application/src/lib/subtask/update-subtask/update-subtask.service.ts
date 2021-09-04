@@ -37,7 +37,7 @@ export class UpdateSubtaskService implements IUpdateSubtaskService {
     if (!canAccessProject) {
       throw new PermissionDeniedError();
     }
-    await this.subtaskRepository.update(subtask);
-    return subtask;
+    const updatedSubtask = await this.subtaskRepository.update(subtask);
+    return updatedSubtask;
   }
 }

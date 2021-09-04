@@ -8,6 +8,7 @@ export const mockGetBoardByIdAndUserServiceReturnValues: MockReturnValues<IGetBo
     description: `board description 0001`,
     projectId: 'project0001',
     tasksOrder: [],
+    createdAt: new Date().valueOf(),
   },
 };
 

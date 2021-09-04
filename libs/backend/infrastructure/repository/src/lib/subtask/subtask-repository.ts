@@ -66,13 +66,18 @@ export class SubtaskRepository implements ISubtaskRepository {
     ...args: Parameters<ISubtaskRepository['update']>
   ): ReturnType<ISubtaskRepository['update']> {
     const [subtask] = args;
-    const item = convertToDbSubtaskItemFromSubtask(subtask);
+    const currentSubtask = await this.getById(subtask.id);
+    const updatedSubtask = {
+      ...currentSubtask,
+      ...subtask,
+    };
+    const item = convertToDbSubtaskItemFromSubtask(updatedSubtask);
     const params: DynamoDB.PutItemInput = {
       TableName: tableName,
       Item: item,
     };
     await DynamoDBClient.getClient().putItem(params).promise();
-    return subtask;
+    return updatedSubtask;
   }
 
   async delete(

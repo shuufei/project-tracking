@@ -31,6 +31,7 @@ export const convertToDomainSubtaskFromDbSubtaskItem = (
     workStartDateTimestamp:
       item.workStartDateTimestamp && Number(item.workStartDateTimestamp.N),
     taskId: item.taskId.S,
+    createdAt: Number(item.createdAt.N),
   };
 };
 
@@ -43,7 +44,7 @@ export const convertToDbSubtaskItemFromSubtask = (
     isDone: { BOOL: subtask.isDone },
     taskId: { S: subtask.taskId },
     workTimeSec: { N: String(subtask.workTimeSec) },
-    createdAt: { N: String(new Date().valueOf()) },
+    createdAt: { N: String(subtask.createdAt) },
   };
   if (subtask.description != null) {
     item.description = {

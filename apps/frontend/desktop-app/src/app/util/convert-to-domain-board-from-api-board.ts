@@ -16,5 +16,6 @@ export const convertToDomainBoardFromApiBoard = (board: ApiBoard): Board => {
       taskId: v.taskId,
       type: convertToDomainTaskTypeFromApiTaskType(v.type),
     })),
+    createdAt: board.createdAt,
   };
 };

@@ -19,5 +19,6 @@ export const convertToResolvedSubtaskFromDomainSubtask = (
     task: {
       id: subtask.taskId,
     },
+    createdAt: subtask.createdAt,
   };
 };

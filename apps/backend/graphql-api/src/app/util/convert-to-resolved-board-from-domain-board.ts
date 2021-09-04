@@ -16,5 +16,6 @@ export const convertToResolvedBoardFromDomainBoard = (
     project: {
       id: board.projectId,
     },
+    createdAt: board.createdAt,
   };
 };

@@ -34,7 +34,7 @@ export class UpdateTaskGroupService implements IUpdateTaskGroupService {
     if (!canAccessProject) {
       throw new PermissionDeniedError();
     }
-    await this.taskGroupRepository.update(taskGroup);
-    return taskGroup;
+    const updatedTaskGroup = await this.taskGroupRepository.update(taskGroup);
+    return updatedTaskGroup;
   }
 }
