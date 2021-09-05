@@ -1,6 +1,6 @@
 <ng-container *ngIf="state$ | async as state">
   <div class="flex items-center">
-    <span class="w-full break-words">{{ state.project?.name }}</span>
+    <span class="break-all">{{ state.project?.name }}</span>
     <ui-color-icon
       [color]="state.project?.color"
       class="w-3 ml-2"
