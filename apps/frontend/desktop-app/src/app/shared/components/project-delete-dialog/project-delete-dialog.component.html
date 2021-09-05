@@ -30,13 +30,19 @@
 
           <div class="mt-4">
             <div class="flex items-center">
-              <span class="text-l1 font-medium">{{ state.project?.name }}</span>
+              <span
+                class="text-l1 font-medium w-full break-words text-black-default"
+                >{{ state.project?.name }}</span
+              >
               <ui-color-icon
                 [color]="state.project?.color"
-                class="ml-2"
+                class="ml-2 flex-shrink-0"
               ></ui-color-icon>
             </div>
-            <p class="text-s1 mt-3">{{ state.project?.description }}</p>
+            <pre
+              class="text-s1 mt-3 w-full break-words whitespace-pre-line leading-6 text-black-light1"
+              >{{ state.project?.description }}</pre
+            >
           </div>
         </div>
 

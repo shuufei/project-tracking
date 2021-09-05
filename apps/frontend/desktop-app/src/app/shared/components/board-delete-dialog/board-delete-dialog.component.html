@@ -28,7 +28,10 @@
 
           <div class="mt-4">
             <div class="flex items-center">
-              <span class="text-s2 font-medium">{{ state.project?.name }}</span>
+              <span
+                class="text-s2 font-medium w-full break-words leading-4 text-black-default"
+                >{{ state.project?.name }}</span
+              >
               <ui-color-icon
                 [color]="state.project?.color"
                 class="ml-1"
@@ -36,8 +39,14 @@
             </div>
 
             <div class="mt-2">
-              <p class="text-l1 font-medium">{{ state.board?.name }}</p>
-              <pre class="text-s1 mt-2">{{ state.board?.description }}</pre>
+              <p
+                class="text-l1 font-medium w-full break-words leading-7 text-black-default"
+              >
+                {{ state.board?.name }}
+              </p>
+              <pre class="text-s1 mt-2 leading-6 text-black-light1">{{
+                state.board?.description
+              }}</pre>
             </div>
           </div>
         </div>
