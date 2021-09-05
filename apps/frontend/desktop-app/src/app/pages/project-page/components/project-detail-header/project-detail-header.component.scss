@@ -5,3 +5,9 @@
 .menu-items {
   min-width: 216px;
 }
+
+.project-name {
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

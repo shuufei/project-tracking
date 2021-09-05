@@ -6,7 +6,9 @@
 
   <div class="flex items-start mb-3">
     <aside #sideNav style="width: 240px" class="sticky flex-shrink-0 p-3">
-      <ng-container *ngFor="let project of (state$ | async).projects">
+      <ng-container
+        *ngFor="let project of (state$ | async).projects; first as isFirst"
+      >
         <ui-project-navigation
           [project]="project"
           [boards]="project.boards"
@@ -23,6 +25,7 @@
               board: $event
             })
           "
+          [ngClass]="[isFirst ? '' : 'mt-4']"
         ></ui-project-navigation>
       </ng-container>
     </aside>

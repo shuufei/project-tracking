@@ -1,14 +1,14 @@
 <ng-container *ngIf="state$ | async as state">
   <ui-header>
     <div left>
-      <div class="text-s4 text-black-light2">
+      <div class="text-s4 text-black-light2 flex items-center flex-nowrap">
         <a
           routerLink="projects"
           class="cursor-pointer focus:outline-none focus:shadow-outline_primary"
           >プロジェクト一覧</a
         >
-        <span> / </span>
-        <span>{{ state.project?.name }}</span>
+        <span class="mx-1"> / </span>
+        <span class="project-name">{{ state.project?.name }}</span>
       </div>
       <button
         class="mt-1 py-1 px-2 text-s3 flex items-center focus:outline-none focus:shadow-outline_primary rounded-s"

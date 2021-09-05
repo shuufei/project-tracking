@@ -23,3 +23,9 @@
 .menu-items {
   min-width: 180px;
 }
+
+.board-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

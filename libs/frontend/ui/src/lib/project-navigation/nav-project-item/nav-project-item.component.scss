@@ -32,3 +32,10 @@
 .menu-items {
   min-width: 180px;
 }
+
+.project-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 130px;
+}
