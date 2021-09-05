@@ -8,12 +8,14 @@ import { environment } from '../environments/environment';
 
 // TODO: environmen.productionでurlを変更する
 const uri = 'http://localhost:3333/graphql';
+const idpUserId = '382b9cc9-cbac-4e0d-8759-5d0232b125e4';
 const headers = new HttpHeaders(
   environment.production
     ? {}
     : {
         [COGNITO_AUTHENTICATION_PROVIDER]:
-          'cognito-idp.region.amazonaws.com/user_pool_id,cognito-idp.region.amazonaws.com/user_pool_id:CognitoSignIn:testUser0001',
+        // eslint-disable-next-line max-len
+        `cognito-idp.region.amazonaws.com/user_pool_id,cognito-idp.region.amazonaws.com/user_pool_id:CognitoSignIn:${idpUserId}`,
       }
 );
 export function createApollo(httpLink: HttpLink): ApolloClientOptions<unknown> {

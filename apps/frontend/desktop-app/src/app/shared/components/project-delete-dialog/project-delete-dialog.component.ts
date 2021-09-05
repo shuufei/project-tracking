@@ -17,7 +17,7 @@ import { RxState } from '@rx-angular/state';
 import { TuiNotificationsService } from '@taiga-ui/core';
 import { gql } from 'apollo-angular';
 import { of, Subject } from 'rxjs';
-import { exhaustMap, switchMap } from 'rxjs/operators';
+import { exhaustMap, tap } from 'rxjs/operators';
 
 const PROJECT_FIELDS = gql`
   fragment ProjectPartsInProjectDeleteDialog on Project {
@@ -46,6 +46,7 @@ export class ProjectDeleteDialogComponent implements OnInit {
   @Input() isOpen$ = new Subject<boolean>();
   @Output() opened = new EventEmitter<void>();
   @Output() closed = new EventEmitter<void>();
+  @Output() delete = new EventEmitter<void>();
 
   readonly state$ = this.state.select();
   readonly isOpenDialog$ = this.state.select('isOpen');
@@ -97,11 +98,16 @@ export class ProjectDeleteDialogComponent implements OnInit {
         fields: PROJECT_FIELDS,
       })
       .pipe(
-        switchMap(() => {
+        tap(() => {
           this.state.set('isOpen', () => false);
-          return this.notificationsService.show('プロジェクトを削除しました', {
-            hasCloseButton: true,
-          });
+          this.notificationsService
+            .show('プロジェクトを削除しました', {
+              hasCloseButton: true,
+            })
+            .subscribe();
+        }),
+        tap(() => {
+          this.delete.emit();
         })
       );
   }

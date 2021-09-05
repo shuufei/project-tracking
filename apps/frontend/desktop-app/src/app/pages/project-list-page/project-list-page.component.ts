@@ -13,36 +13,20 @@ import { RxState } from '@rx-angular/state';
 import { gql } from 'apollo-angular';
 import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
+import {
+  PROJECT_FIELDS,
+  PROJECT_FRAGMENT_NAME,
+} from '../../shared/fragments/project-fragment';
 import { convertToFrontendDomainProjectFromApiProject } from '../../util/convert-to-frontend-domain-project-from-api-project';
 import { ME_FIELDS } from './components/project-create-sheet/project-create-sheet.component';
 
 export const VIEWER_FIELDS = gql`
   ${ME_FIELDS}
+  ${PROJECT_FIELDS}
   fragment ViewerPartsInProjectListPage on User {
     ...MePartsInProjectCreateSheet
     projects {
-      id
-      name
-      description
-      color
-      boards {
-        id
-        name
-        description
-        project {
-          id
-        }
-      }
-      admin {
-        id
-        name
-        icon
-      }
-      members {
-        id
-        name
-        icon
-      }
+      ...${PROJECT_FRAGMENT_NAME}
     }
   }
 `;

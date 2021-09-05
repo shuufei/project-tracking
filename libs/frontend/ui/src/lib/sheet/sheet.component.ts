@@ -57,13 +57,12 @@ export class SheetComponent implements OnInit {
   constructor(private readonly state: RxState<State>) {}
 
   ngOnInit(): void {
-    if (this.triggerEl == null) {
-      return;
+    if (this.triggerEl != null) {
+      this.state.connect(
+        'isOpen',
+        fromEvent(this.triggerEl, 'click').pipe(mapTo(true))
+      );
     }
-    this.state.connect(
-      'isOpen',
-      fromEvent(this.triggerEl, 'click').pipe(mapTo(true))
-    );
     this.state.connect('isOpen', this.onClickOverlay$.pipe(mapTo(false)));
     this.state.connect('isOpen', this.onClickCloseButton$.pipe(mapTo(false)));
     this.state.connect('isOpen', this.isOpen$);

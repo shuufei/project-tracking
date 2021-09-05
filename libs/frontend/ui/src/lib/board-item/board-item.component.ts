@@ -3,6 +3,7 @@ import {
   Component,
   EventEmitter,
   Input,
+  Output,
 } from '@angular/core';
 
 @Component({
@@ -14,6 +15,6 @@ import {
 export class BoardItemComponent {
   @Input() boardName = '';
   @Input() date?: Date;
-  @Input() clickedEdit = new EventEmitter();
-  @Input() clickedDelete = new EventEmitter();
+  @Output() clickedEdit = new EventEmitter();
+  @Output() clickedDelete = new EventEmitter();
 }

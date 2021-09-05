@@ -1,6 +1,7 @@
 import { Project } from '@bison/frontend/domain';
 import { Project as ApiProject } from '@bison/shared/schema';
 import { convertToDomainColorFromApiColor } from './convert-to-domain-color-from-api-color';
+import { convertToDomainTaskTypeFromApiTaskType } from './convert-to-domain-task-type-from-api-task-type';
 
 export const convertToFrontendDomainProjectFromApiProject = (
   project: ApiProject
@@ -23,9 +24,14 @@ export const convertToFrontendDomainProjectFromApiProject = (
     })),
     boards: boards.map((board) => ({
       id: board.id,
-      name: board.id,
-      description: board.id,
+      name: board.name,
+      description: board.description,
       projectId: board.project.id,
+      createdAt: new Date(board.createdAt),
+      tasksOrder: board.tasksOrder.map((orderItem) => ({
+        taskId: orderItem.taskId,
+        type: convertToDomainTaskTypeFromApiTaskType(orderItem.type),
+      })),
     })),
   };
 };

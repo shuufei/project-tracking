@@ -20,7 +20,7 @@ export class ProjectNavigationComponent {
   @Output() clickedDeleteProject = new EventEmitter<Project>();
   @Output() clickedEditBoard = new EventEmitter<Board>();
   @Output() clickedDeleteBoard = new EventEmitter<Board>();
-  isOpen = false;
+  isOpen = true;
 }
 
 type Project = { id: string; name: string; color: Color };

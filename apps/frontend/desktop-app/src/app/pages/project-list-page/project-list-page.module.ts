@@ -5,11 +5,14 @@ import {
   APOLLO_DATA_QUERY,
   CreateProjectUsecase,
   CREATE_PROJECT_USECASE,
+  UpdateProjectMembersUsecase,
+  UPDATE_PROJECT_MEMBERS_USECASE,
 } from '@bison/frontend/application';
 import {
   ButtonModule,
   HeaderModule,
   IconModule,
+  MultiUserSelectPopupModule,
   ProjectCardModule,
   SheetFooterModule,
   SheetModule,
@@ -37,6 +40,7 @@ import { ProjectListPageComponent } from './project-list-page.component';
     UserSelectPopupModule,
     ProjectPropertyEditFormModule,
     ProjectDeleteDialogModule,
+    MultiUserSelectPopupModule,
   ],
   exports: [ProjectListPageComponent],
   providers: [
@@ -47,6 +51,10 @@ import { ProjectListPageComponent } from './project-list-page.component';
     {
       provide: APOLLO_DATA_QUERY,
       useClass: ApolloDataQuery,
+    },
+    {
+      provide: UPDATE_PROJECT_MEMBERS_USECASE,
+      useClass: UpdateProjectMembersUsecase,
     },
   ],
 })

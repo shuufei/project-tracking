@@ -15,6 +15,7 @@ import {
   isProjectItem,
   isProjectUserItem,
   isUserItem,
+  projectAdminUserIdIndexName,
   ProjectItem,
   ProjectUserItem,
   tableName,
@@ -49,7 +50,7 @@ export class ProjectRepository implements IProjectRepository {
     ...args: Parameters<IProjectRepository['listByUserId']>
   ): ReturnType<IProjectRepository['listByUserId']> {
     const [userId] = args;
-    const params: DynamoDB.QueryInput = {
+    const listByUserIdParams: DynamoDB.QueryInput = {
       TableName: tableName,
       IndexName: gsi1Name,
       KeyConditionExpression: 'SK = :sk',
@@ -59,12 +60,48 @@ export class ProjectRepository implements IProjectRepository {
         },
       },
     };
-    const result = await DynamoDBClient.getClient().query(params).promise();
-    const items = (result.Items ?? []) as ProjectUserItem[];
-    return {
-      projects: items
+    const listByAdminUserIdParams: DynamoDB.QueryInput = {
+      TableName: tableName,
+      IndexName: projectAdminUserIdIndexName,
+      KeyConditionExpression:
+        '#adminUserId = :adminUserId and begins_with(SK, :sk)',
+      ExpressionAttributeNames: {
+        '#adminUserId': 'Project-adminUserId',
+      },
+      ExpressionAttributeValues: {
+        ':adminUserId': {
+          S: userId,
+        },
+        ':sk': {
+          S: 'Project-',
+        },
+      },
+    };
+    const listByUserIdResult = await DynamoDBClient.getClient()
+      .query(listByUserIdParams)
+      .promise();
+    const listByUserIdItems = (listByUserIdResult.Items ??
+      []) as ProjectUserItem[];
+    const listByAdminUserIdResult = await DynamoDBClient.getClient()
+      .query(listByAdminUserIdParams)
+      .promise();
+    const listByAdminUserIdItems = (listByAdminUserIdResult.Items ??
+      []) as ProjectItem[];
+    const projects = [
+      ...listByUserIdItems
         .filter(isProjectUserItem)
         .map(convertToDomainProjectFromDbProjectUserMappingItem),
+      ...listByAdminUserIdItems
+        .filter(isProjectItem)
+        .map(convertToDomainProjectFromDbProjectItem),
+    ];
+    const projectIds = Array.from(
+      new Set(projects.map((project) => project.id))
+    );
+    return {
+      projects: projectIds
+        .map((id) => projects.find((v) => v.id == id))
+        .filter((v): v is NonNullable<typeof v> => v != null),
     };
   }
 
@@ -122,14 +159,35 @@ export class ProjectRepository implements IProjectRepository {
     ...args: Parameters<IProjectRepository['delete']>
   ): ReturnType<IProjectRepository['delete']> {
     const [id] = args;
-    const params: DynamoDB.Delete = {
-      TableName: tableName,
-      Key: {
-        PK: { S: addProjectIdPrefix(id) },
-        SK: { S: addProjectIdPrefix(id) },
+    const results = await DynamoDBClient.getClient()
+      .query({
+        TableName: tableName,
+        KeyConditionExpression: 'PK = :pk',
+        ExpressionAttributeValues: {
+          ':pk': {
+            S: addProjectIdPrefix(id),
+          },
+        },
+      })
+      .promise();
+    const items = (results.Items ?? []) as ProjectUserItem[];
+    const params: DynamoDB.BatchWriteItemInput = {
+      RequestItems: {
+        [tableName]: items.map((item) => ({
+          DeleteRequest: {
+            Key: {
+              PK: {
+                S: item.PK.S,
+              },
+              SK: {
+                S: item.SK.S,
+              },
+            },
+          },
+        })),
       },
     };
-    await DynamoDBClient.getClient().deleteItem(params).promise();
+    await DynamoDBClient.getClient().batchWriteItem(params).promise();
     return;
   }
 

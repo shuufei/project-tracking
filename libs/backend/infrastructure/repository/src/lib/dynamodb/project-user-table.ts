@@ -7,6 +7,8 @@ export const gsi1Name = 'GSI1';
 export const userIdpUserIdIndexName = 'UserIdpUserIdIndex';
 export const typeIndexName = 'TypeIndex';
 
+export const projectAdminUserIdIndexName = 'ProjectAdminUserIdIndex';
+
 export type ProjectItem = {
   PK: { S: string };
   SK: { S: string };
@@ -106,7 +108,7 @@ export const convertToDomainUserFromDbProjectUserMappingItem = (
   item: ProjectUserMappingItem
 ): User => {
   return {
-    id: removeUserIdPrefix(item.PK.S),
+    id: removeUserIdPrefix(item.SK.S),
     name: item['User-name'].S,
     icon: item['User-icon']?.S,
   };
@@ -120,6 +122,7 @@ export const convertToDbProjectItemFromDomainProject = (
     SK: { S: addProjectIdPrefix(project.id) },
     'Project-name': { S: project.name },
     'Project-color': { S: project.color },
+    type: { S: 'project' },
   };
   if (project.description != null) {
     item['Project-description'] = {

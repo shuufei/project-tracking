@@ -3,11 +3,11 @@ import {
   Component,
   Inject,
   Input,
-  OnInit,
+  OnInit
 } from '@angular/core';
 import {
   IUpdateBoardUsecase,
-  UPDATE_BOARD_USECASE,
+  UPDATE_BOARD_USECASE
 } from '@bison/frontend/application';
 import { Project } from '@bison/frontend/domain';
 import { Board } from '@bison/shared/domain';
@@ -40,6 +40,7 @@ export class BoardUpdateSheetComponent implements OnInit {
   @Input() set project(value: Project) {
     this.state.set('project', () => value);
   }
+  @Input() isOpened$ = new Subject<boolean>().asObservable();
 
   /**
    * State
@@ -65,6 +66,7 @@ export class BoardUpdateSheetComponent implements OnInit {
 
   ngOnInit(): void {
     this.state.set({ isSheetOpen: false });
+    this.state.connect('isSheetOpen', this.isOpened$);
     this.state.connect(this.onChangedBoardProperty$, (state, event) => {
       if (state.board == null) {
         return state;
@@ -107,7 +109,7 @@ export class BoardUpdateSheetComponent implements OnInit {
     return this.updateBoardUsecase.execute(input).pipe(
       switchMap(() => {
         this.state.set('isSheetOpen', () => false);
-        return this.notificationsService.show('ボードが更新されました', {
+        return this.notificationsService.show('ボード情報を更新しました', {
           hasCloseButton: true,
         });
       })

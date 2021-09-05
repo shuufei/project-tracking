@@ -11,9 +11,15 @@ import {
   CREATE_PROJECT_USECASE,
   IApolloDataQuery,
   ICreateProjectUsecase,
+  IUpdateProjectMembersUsecase,
+  UPDATE_PROJECT_MEMBERS_USECASE,
 } from '@bison/frontend/application';
 import { Color, User } from '@bison/shared/domain';
-import { CreateProjectInput, User as ApiUser } from '@bison/shared/schema';
+import {
+  CreateProjectInput,
+  UpdateProjectMembersInput,
+  User as ApiUser,
+} from '@bison/shared/schema';
 import { RxState } from '@rx-angular/state';
 import { TuiNotification, TuiNotificationsService } from '@taiga-ui/core';
 import { gql } from 'apollo-angular';
@@ -21,6 +27,7 @@ import { Observable, Subject } from 'rxjs';
 import { exhaustMap, filter, map, switchMap } from 'rxjs/operators';
 import { ChangedPropertyEvent } from '../../../../shared/components/project-property-edit-form/project-property-edit-form.component';
 import { convertToApiColorFromDomainColor } from '../../../../util/convert-to-api-color-from-domain-color';
+import { nonNullable } from '../../../../util/custom-operators/non-nullable';
 
 export const ME_FIELDS = gql`
   fragment MePartsInProjectCreateSheet on User {
@@ -102,7 +109,9 @@ export class ProjectCreateSheetComponent implements OnInit {
     @Inject(CREATE_PROJECT_USECASE)
     private readonly createProjectUsecase: ICreateProjectUsecase,
     @Inject(APOLLO_DATA_QUERY)
-    private readonly apolloDataQuery: IApolloDataQuery
+    private readonly apolloDataQuery: IApolloDataQuery,
+    @Inject(UPDATE_PROJECT_MEMBERS_USECASE)
+    private readonly updateProjectMembersUsecase: IUpdateProjectMembersUsecase
   ) {}
 
   ngOnInit(): void {
@@ -146,7 +155,7 @@ export class ProjectCreateSheetComponent implements OnInit {
     return this.apolloDataQuery
       .queryViewer(
         { name: 'MePartsInProjectCreateSheet', fields: ME_FIELDS },
-        { fetchPolicy: 'cache-only' }
+        { fetchPolicy: 'cache-first' }
       )
       .pipe(
         filter((response): response is ApolloQueryResult<{
@@ -201,6 +210,19 @@ export class ProjectCreateSheetComponent implements OnInit {
         fields: PROJECT_FIELDS,
       })
       .pipe(
+        map((result) => result.data?.createProject),
+        nonNullable(),
+        switchMap((project) => {
+          const input: UpdateProjectMembersInput = {
+            projectId: project.id,
+            addUserIds: state.members.map((v) => v.id),
+            removeUserIds: [],
+          };
+          return this.updateProjectMembersUsecase.execute(input, {
+            name: 'ProjectPartsOnProjectCreateSheet',
+            fields: PROJECT_FIELDS,
+          });
+        }),
         switchMap(() => {
           this.state.set('isSheetOpen', () => false);
           return this.notificationsService.show(
