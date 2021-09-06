@@ -1,3 +1,10 @@
 :host {
   display: block;
 }
+
+.board-name {
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
