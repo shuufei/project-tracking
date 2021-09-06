@@ -23,7 +23,7 @@
           (cdkDropListDropped)="onDrop$.next($event)"
         >
           <ng-container
-            *ngFor="let subtask of state.task.subtasks; trackBy: trackBySubtask"
+            *ngFor="let subtask of subtasks$ | async; trackBy: trackBySubtask"
           >
             <bis-subtask-item
               [subtask]="subtask"

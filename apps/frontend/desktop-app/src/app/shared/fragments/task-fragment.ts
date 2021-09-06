@@ -35,5 +35,6 @@ export const TASK_FIELDS = gql`
     subtasks {
       ...${SUBTASK_FRAGMENT_NAME}
     }
+    createdAt
   }
 `;

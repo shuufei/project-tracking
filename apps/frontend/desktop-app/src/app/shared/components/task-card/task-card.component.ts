@@ -17,12 +17,15 @@ import { Board, User } from '@bison/frontend/ui';
 import { RxState, update } from '@rx-angular/state';
 import { TuiNotificationsService } from '@taiga-ui/core';
 import { gql } from 'apollo-angular';
-import { of, Subject } from 'rxjs';
+import { BehaviorSubject, of, Subject } from 'rxjs';
 import { exhaustMap, filter, map, switchMap, tap } from 'rxjs/operators';
+import { convertToDomainTaskFromApiTask } from '../../../util/convert-to-domain-task-from-api-task';
+import { nonNullable } from '../../../util/custom-operators/non-nullable';
 import { updateScheduledTimeSecState } from '../../../util/custom-operators/state-updators/update-scheduled-time-sec-state';
 import { updateWorkTimeSecState } from '../../../util/custom-operators/state-updators/update-work-time-sec-state';
 import { SubtaskFacadeService } from '../../facade/subtask-facade/subtask-facade.service';
 import { TaskFacadeService } from '../../facade/task-facade/task-facade.service';
+import { TASK_FIELDS, TASK_FRAGMENT_NAME } from '../../fragments/task-fragment';
 
 const USER_FIELDS = gql`
   fragment UserPartsInTaskCard on User {
@@ -58,8 +61,8 @@ type State = {
 })
 export class TaskCardComponent implements OnInit {
   @Input()
-  set task(value: Task) {
-    this.state.set('task', () => value);
+  set taskId(value: Task['id']) {
+    this.taskId$.next(value);
   }
   @Output() clickedSubtask = new EventEmitter<Subtask>();
 
@@ -67,6 +70,22 @@ export class TaskCardComponent implements OnInit {
    * State
    */
   readonly state$ = this.state.select();
+  readonly taskId$ = new BehaviorSubject<Task['id'] | undefined>(undefined);
+  readonly subtasks$ = this.state.select('task').pipe(
+    nonNullable(),
+    map((task) => {
+      // TODO: sort処理を共通化
+      const subtasks = task.subtasksOrder
+        .map((subtaskId) =>
+          task.subtasks.find((subtask) => subtask.id === subtaskId)
+        )
+        .filter((v): v is NonNullable<typeof v> => v != null);
+      const remainedSubtasks = task.subtasks
+        .filter((subtask) => subtasks.find((v) => v.id === subtask.id) == null)
+        .sort((v1, v2) => v1.createdAt - v2.createdAt);
+      return [...subtasks, ...remainedSubtasks];
+    })
+  );
 
   /**
    * Event
@@ -100,6 +119,24 @@ export class TaskCardComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.state.connect(
+      'task',
+      this.taskId$.pipe(
+        nonNullable(),
+        switchMap((taskId) => {
+          return this.apolloDataQuery.queryTask(
+            { fields: TASK_FIELDS, name: TASK_FRAGMENT_NAME },
+            taskId,
+            { fetchPolicy: 'cache-first', nextFetchPolicy: 'cache-first' }
+          );
+        }),
+        map((result) => result.data?.task),
+        nonNullable(),
+        map((task) => {
+          return convertToDomainTaskFromApiTask(task);
+        })
+      )
+    );
     this.state.connect('isHovered', this.onHover$.asObservable());
     this.state.connect(
       'users',
@@ -167,6 +204,10 @@ export class TaskCardComponent implements OnInit {
         exhaustMap((id) => {
           const task = this.state.get('task');
           if (task == null) return of(undefined);
+          this.state.set('task', (state) => {
+            const user = state.users.find((v) => v.id === id);
+            return { ...task, assignUser: user };
+          });
           return this.taskFacadeService.updateAssignUser(id, task);
         })
       )
@@ -246,29 +287,29 @@ export class TaskCardComponent implements OnInit {
           if (task == null) {
             return [];
           }
-          const subtasks = [...(task?.subtasks ?? [])];
+          const subtasksOrder = [...(task?.subtasksOrder ?? [])];
           moveItemInArray(
-            subtasks,
+            subtasksOrder,
             dropEvent.previousIndex,
             dropEvent.currentIndex
           );
-          return subtasks;
+          return subtasksOrder;
         }),
-        tap((subtasks) => {
+        tap((subtasksOrder) => {
           const task = this.state.get('task');
           if (task == null) {
             return task;
           }
-          const subtasksOrder = subtasks.map((v) => v.id);
+          console.log('---- update local state: ', subtasksOrder);
           this.state.set('task', () => {
-            return { ...task, subtasks, subtasksOrder };
+            return { ...task, subtasksOrder };
           });
         }),
-        exhaustMap((subtasks) => {
+        exhaustMap((subtasksOrder) => {
           const task = this.state.get('task');
           if (task == null) return of(undefined);
           return this.taskFacadeService.updateSubtasksOrder(
-            subtasks.map((v) => v.id),
+            subtasksOrder,
             task
           );
         })
@@ -296,6 +337,15 @@ export class TaskCardComponent implements OnInit {
         exhaustMap((boardId) => {
           const task = this.state.get('task');
           if (task == null) return of(undefined);
+          this.state.set('task', (state) => {
+            const board = state.boards.find((v) => v.id === boardId);
+            return board != null
+              ? {
+                  ...task,
+                  board: { ...task.board, id: board.id, name: board.name },
+                }
+              : task;
+          });
           return this.taskFacadeService.updateBoard(boardId, task);
         })
       )

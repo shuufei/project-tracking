@@ -18,5 +18,6 @@ export const SUBTASK_FIELDS = gql`
       name
       icon
     }
+    createdAt
   }
 `;

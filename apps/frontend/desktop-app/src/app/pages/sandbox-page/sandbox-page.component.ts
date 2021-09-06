@@ -1,6 +1,16 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Project, Task } from '@bison/frontend/domain';
 import { Board, COLOR } from '@bison/shared/domain';
+import {
+  Board as ApiBoard,
+  Project as ApiProject,
+  Status,
+  Subtask as ApiSubtask,
+  Task as ApiTask,
+  TaskGroup as ApiTaskGroup,
+  User as ApiUser
+} from '@bison/shared/schema';
+import { convertToDomainTaskFromApiTask } from '../../util/convert-to-domain-task-from-api-task';
 
 @Component({
   selector: 'bis-sandbox-page',
@@ -36,96 +46,79 @@ export class SandboxPageComponent {
     createdAt: new Date().valueOf(),
   };
 
-  readonly task: Task = {
-    id: 'task0001',
-    title: 'タスクタイトル0001',
-    description: 'タスク詳細0001\nタスク詳細0001',
-    status: 'INPROGRESS',
-    assignUser: { id: 'user0001', name: 'user name 0001' },
+  readonly task: Task = convertToDomainTaskFromApiTask({
+    id: 'task0010',
+    title: 'ボード詳細画面',
+    description: 'ボード詳細画面の実装',
+    status: Status.INPROGRESS,
+    workTimeSec: 12600,
+    scheduledTimeSec: 18000,
+    subtasksOrder: [],
     board: {
       id: 'board0001',
-      name: 'board name 0001',
-      description: 'board description',
+      name: 'Sprint202101aaaaaaaaaaaaSprint202101aaaaaaaaaaaa',
+      description: 'スプリント 2021/01\nhoge',
       project: {
         id: 'project0001',
-        name: 'project name',
-      },
-    },
+        name: 'Bison',
+      } as ApiProject,
+    } as ApiBoard,
+    assign: {
+      id: 'user0005',
+      name: '太田 尚樹',
+      icon: undefined,
+    } as ApiUser,
     taskGroup: {
-      id: 'taskGroup0001',
-      title: 'task group name 0001',
-      description: 'task group description',
-    },
-    workTimeSec: 60 * 60 * 1 + 60 + 30,
-    scheduledTimeSec: 60 * 60 * 2,
-    // workStartDateTimestamp: new Date().valueOf(),
-    subtasksOrder: [],
+      id: 'taskGroup0002',
+      title: 'UI実装',
+      description: 'AngularによるUI実装',
+    } as ApiTaskGroup,
     subtasks: [
       {
         id: 'subtask0001',
-        title: 'subtask title 0001',
-        description: 'subtask description 0001',
-        isDone: false,
-        scheduledTimeSec: 60 * 60 * 1,
-        workTimeSec: 0,
-        assignUser: {
-          id: 'user0002',
-          name: 'user name 0002',
-        },
-        taskId: 'task0001',
-      },
+        title: 'コンポーネント実装',
+        description: 'ボード詳細画面で利用するコンポーネントの実装',
+        isDone: true,
+        workTimeSec: 3600,
+        scheduledTimeSec: 9000,
+        task: {
+          id: 'task0010',
+        } as ApiTask,
+        assign: {
+          id: 'user0005',
+          name: '太田 尚樹',
+          icon: undefined,
+        } as ApiUser,
+      } as ApiSubtask,
       {
         id: 'subtask0002',
-        title: 'subtask title 0002',
-        description: 'subtask description 0002',
+        title: 'Usecase実装',
+        description: 'ボード詳細画面で利用するUsecaseの実装',
         isDone: true,
-        scheduledTimeSec: 60 * 60 * 1,
-        workTimeSec: 0,
-        assignUser: {
-          id: 'user0002',
-          name: 'user name 0002',
-        },
-        taskId: 'task0001',
-      },
+        workTimeSec: 7200,
+        scheduledTimeSec: 7200,
+        task: {
+          id: 'task0010',
+        } as ApiTask,
+        assign: {
+          id: 'user0005',
+          name: '太田 尚樹',
+          icon: undefined,
+        } as ApiUser,
+      } as ApiSubtask,
       {
         id: 'subtask0003',
-        title: 'subtask title 0003',
-        description: 'subtask description 0003',
-        isDone: true,
-        scheduledTimeSec: 60 * 60 * 1,
+        title: 'ページコンポーネント実装',
+        description: 'ページコンポーネント実装',
+        isDone: false,
         workTimeSec: 0,
-        assignUser: {
-          id: 'user0002',
-          name: 'user name 0002',
-        },
-        taskId: 'task0001',
-      },
-      {
-        id: 'subtask0004',
-        title: 'subtask title 0004',
-        description: 'subtask description 0004',
-        isDone: true,
-        scheduledTimeSec: 60 * 60 * 1,
-        workTimeSec: 0,
-        assignUser: {
-          id: 'user0002',
-          name: 'user name 0002',
-        },
-        taskId: 'task0001',
-      },
-      {
-        id: 'subtask0005',
-        title: 'subtask title 0005',
-        description: 'subtask description 0005',
-        isDone: true,
-        scheduledTimeSec: 60 * 60 * 1,
-        workTimeSec: 0,
-        assignUser: {
-          id: 'user0002',
-          name: 'user name 0002',
-        },
-        taskId: 'task0001',
-      },
+        task: {
+          id: 'task0010',
+        } as ApiTask,
+        assign: undefined,
+      } as ApiSubtask,
     ],
-  };
+    project: {} as ApiProject,
+    createdAt: new Date().valueOf()
+  } as ApiTask);
 }
