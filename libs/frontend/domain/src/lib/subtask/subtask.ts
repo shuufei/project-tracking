@@ -10,6 +10,7 @@ export type Subtask = Pick<
   | 'workTimeSec'
   | 'workStartDateTimestamp'
   | 'taskId'
+  | 'createdAt'
 > & {
   assignUser?: User;
 };
