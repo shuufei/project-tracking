@@ -274,6 +274,10 @@ export class TaskDialogTaskContentComponent implements OnInit {
         exhaustMap((id) => {
           const task = this.state.get('task');
           if (task == null) return of(undefined);
+          this.state.set('task', (state) => {
+            const user = state.users.find((v) => v.id === id);
+            return { ...task, assignUser: user };
+          });
           return this.taskFacadeService.updateAssignUser(id, task);
         })
       )
@@ -309,6 +313,15 @@ export class TaskDialogTaskContentComponent implements OnInit {
         exhaustMap((boardId) => {
           const task = this.state.get('task');
           if (task == null) return of(undefined);
+          this.state.set('task', (state) => {
+            const board = state.boards.find((v) => v.id === boardId);
+            return board != null
+              ? {
+                  ...task,
+                  board: { ...task.board, id: board.id, name: board.name },
+                }
+              : task;
+          });
           return this.taskFacadeService.updateBoard(boardId, task);
         })
       )
