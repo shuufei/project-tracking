@@ -201,13 +201,9 @@ export class TaskCardComponent implements OnInit {
         filter((id) => {
           return id !== this.state.get('task')?.assignUser?.id;
         }),
-        exhaustMap((id) => {
+        switchMap((id) => {
           const task = this.state.get('task');
           if (task == null) return of(undefined);
-          this.state.set('task', (state) => {
-            const user = state.users.find((v) => v.id === id);
-            return { ...task, assignUser: user };
-          });
           return this.taskFacadeService.updateAssignUser(id, task);
         })
       )
