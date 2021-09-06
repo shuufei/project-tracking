@@ -138,7 +138,7 @@ const importTaskGroupSampleData = async () => {
     });
     stringSetAttributes.forEach((attribute) => {
       if ((item[attribute]?.length ?? 0) > 0) {
-        request.Item[attribute] = { SS: item[attribute] };
+        request.Item[attribute] = { L: item[attribute].map((v) => ({ S: v })) };
       }
     });
     return request;
@@ -194,7 +194,7 @@ const importTaskSampleData = async () => {
     });
     stringSetAttributes.forEach((attribute) => {
       if ((item[attribute]?.length ?? 0) > 0) {
-        request.Item[attribute] = { SS: item[attribute] };
+        request.Item[attribute] = { L: item[attribute].map((v) => ({ S: v })) };
       }
     });
     return request;
