@@ -155,10 +155,7 @@ export class TaskDialogTaskGroupContentComponent implements OnInit {
     this.state.connect(
       'users',
       this.apolloDataQuery
-        .queryUsers(
-          { fields: USER_FIELDS, name: 'UserPartsInTaskGroupDialog' },
-          { fetchPolicy: 'cache-first' }
-        )
+        .queryUsers({ fields: USER_FIELDS, name: 'UserPartsInTaskGroupDialog' })
         .pipe(
           map((response) => {
             if (response.data?.users == null) {

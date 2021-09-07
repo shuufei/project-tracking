@@ -196,10 +196,7 @@ export class TaskDialogTaskContentComponent implements OnInit {
     this.state.connect(
       'users',
       this.apolloDataQuery
-        .queryUsers(
-          { name: 'UserPartsInTaskDialog', fields: USER_FIELDS },
-          { fetchPolicy: 'cache-only' }
-        )
+        .queryUsers({ name: 'UserPartsInTaskDialog', fields: USER_FIELDS })
         .pipe(
           map((response) => {
             if (response.data?.users == null) {

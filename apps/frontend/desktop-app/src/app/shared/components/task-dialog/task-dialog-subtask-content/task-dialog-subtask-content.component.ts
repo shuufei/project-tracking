@@ -123,10 +123,7 @@ export class TaskDialogSubtaskContentComponent implements OnInit {
     this.state.connect(
       'users',
       this.apolloDataQuery
-        .queryUsers(
-          { name: 'UserPartsInSubtaskDialog', fields: USER_FIELDS },
-          { fetchPolicy: 'cache-only' }
-        )
+        .queryUsers({ name: 'UserPartsInSubtaskDialog', fields: USER_FIELDS })
         .pipe(
           map((response) => {
             if (response.data?.users == null) {
