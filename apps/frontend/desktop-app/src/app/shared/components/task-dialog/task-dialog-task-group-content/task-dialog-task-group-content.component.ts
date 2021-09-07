@@ -134,10 +134,7 @@ export class TaskDialogTaskGroupContentComponent implements OnInit {
               fields: PROJECT_FIELDS,
               name: 'ProjectPartsInTaskGroupDialog',
             },
-            projectId,
-            {
-              fetchPolicy: 'cache-first',
-            }
+            projectId
           );
         }),
         map((v) => v.data.project),

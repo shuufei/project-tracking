@@ -99,7 +99,7 @@
                 >
                   <div [ngClass]="[isFirst ? '' : 'mt-1']" cdkDrag>
                     <bis-task-card
-                      [task]="task"
+                      [taskId]="task.id"
                       (click)="onClickedTask$.next(task)"
                       (clickedSubtask)="onClickedSubtask$.next($event)"
                     ></bis-task-card>
