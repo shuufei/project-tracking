@@ -8,7 +8,7 @@ import { environment } from '../environments/environment';
 
 // TODO: environmen.productionでurlを変更する
 const uri = 'http://localhost:3333/graphql';
-const idpUserId = '382b9cc9-cbac-4e0d-8759-5d0232b125e4';
+const idpUserId = '271ce6ff-8468-4560-b659-6dedc20241d4';
 const headers = new HttpHeaders(
   environment.production
     ? {}
@@ -35,6 +35,12 @@ export function createApollo(httpLink: HttpLink): ApolloClientOptions<unknown> {
         },
       },
     }),
+    defaultOptions: {
+      watchQuery: {
+        fetchPolicy: 'cache-first',
+        nextFetchPolicy: 'cache-first',
+      },
+    },
   };
 }
 
