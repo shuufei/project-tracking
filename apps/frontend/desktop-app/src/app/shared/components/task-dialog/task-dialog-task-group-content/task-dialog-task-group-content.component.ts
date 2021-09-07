@@ -9,15 +9,21 @@ import {
   APOLLO_DATA_QUERY,
   IApolloDataQuery,
 } from '@bison/frontend/application';
-import { isTaskGroup, Subtask, TaskGroup } from '@bison/frontend/domain';
+import { Subtask, TaskGroup } from '@bison/frontend/domain';
 import { Board, User } from '@bison/frontend/ui';
 import { RxState } from '@rx-angular/state';
 import { TuiNotificationsService } from '@taiga-ui/core';
 import { gql } from 'apollo-angular';
 import { of, Subject } from 'rxjs';
 import { exhaustMap, filter, map, switchMap, tap } from 'rxjs/operators';
+import { convertToDomainTaskGroupFromApiTaskGroup } from '../../../../util/convert-to-domain-task-group-from-api-task-group';
+import { nonNullable } from '../../../../util/custom-operators/non-nullable';
 import { TaskFacadeService } from '../../../facade/task-facade/task-facade.service';
 import { TaskGroupFacadeService } from '../../../facade/task-group-facade/task-group-facade.service';
+import {
+  TASK_GROUP_FIELDS,
+  TASK_GROUP_FRAGMENT_NAME,
+} from '../../../fragments/task-group-fragment';
 import { TaskDialogService } from '../task-dialog.service';
 
 const PROJECT_FIELDS = gql`
@@ -103,7 +109,18 @@ export class TaskDialogTaskGroupContentComponent implements OnInit {
     this.state.connect(
       'taskGroup',
       this.taskDialogService.currentContent$.pipe(
-        filter((v): v is TaskGroup => isTaskGroup(v))
+        filter((v) => v.type === 'TaskGroup'),
+        switchMap((content) => {
+          return this.apolloDataQuery.queryTaskGroup(
+            { fields: TASK_GROUP_FIELDS, name: TASK_GROUP_FRAGMENT_NAME },
+            content.id
+          );
+        }),
+        map((response) => response.data?.taskGroup),
+        nonNullable(),
+        map((taskGroup) => {
+          return convertToDomainTaskGroupFromApiTaskGroup(taskGroup);
+        })
       )
     );
     this.state.connect(
@@ -374,14 +391,17 @@ export class TaskDialogTaskGroupContentComponent implements OnInit {
     this.state.hold(
       this.onClickedTask$.pipe(
         tap((task) => {
-          this.taskDialogService.pushContent(task);
+          this.taskDialogService.pushContent({ id: task.id, type: 'Task' });
         })
       )
     );
     this.state.hold(
       this.onClickedSubtask$.pipe(
         tap((subtask) => {
-          this.taskDialogService.pushContent(subtask);
+          this.taskDialogService.pushContent({
+            id: subtask.id,
+            type: 'Subtask',
+          });
         })
       )
     );

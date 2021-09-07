@@ -5,15 +5,15 @@
   (closed)="onClosedDialog$.next()"
 >
   <ng-container [ngSwitch]="currentContentType$ | async">
-    <ng-container *ngSwitchCase="'task'">
+    <ng-container *ngSwitchCase="'Task'">
       <bis-task-dialog-task-content></bis-task-dialog-task-content>
     </ng-container>
 
-    <ng-container *ngSwitchCase="'subtask'">
+    <ng-container *ngSwitchCase="'Subtask'">
       <bis-task-dialog-subtask-content></bis-task-dialog-subtask-content>
     </ng-container>
 
-    <ng-container *ngSwitchCase="'taskGroup'">
+    <ng-container *ngSwitchCase="'TaskGroup'">
       <bis-task-dialog-task-group-content></bis-task-dialog-task-group-content>
     </ng-container>
   </ng-container>

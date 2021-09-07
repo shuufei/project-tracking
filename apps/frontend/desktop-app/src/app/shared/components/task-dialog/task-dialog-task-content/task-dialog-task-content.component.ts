@@ -9,7 +9,7 @@ import {
   APOLLO_DATA_QUERY,
   IApolloDataQuery,
 } from '@bison/frontend/application';
-import { isTask, Task } from '@bison/frontend/domain';
+import { Task } from '@bison/frontend/domain';
 import { Board, User } from '@bison/frontend/ui';
 import { RxState } from '@rx-angular/state';
 import { TuiNotificationsService } from '@taiga-ui/core';
@@ -24,14 +24,15 @@ import {
   switchMap,
   tap,
 } from 'rxjs/operators';
-import { convertToDomainTaskGroupFromApiTaskGroup } from '../../../../util/convert-to-domain-task-group-from-api-task-group';
+import { convertToDomainTaskFromApiTask } from '../../../../util/convert-to-domain-task-from-api-task';
+import { nonNullable } from '../../../../util/custom-operators/non-nullable';
 import { updateScheduledTimeSecState } from '../../../../util/custom-operators/state-updators/update-scheduled-time-sec-state';
 import { SubtaskFacadeService } from '../../../facade/subtask-facade/subtask-facade.service';
 import { TaskFacadeService } from '../../../facade/task-facade/task-facade.service';
 import {
-  TASK_GROUP_FIELDS,
-  TASK_GROUP_FRAGMENT_NAME,
-} from '../../../fragments/task-group-fragment';
+  TASK_FIELDS,
+  TASK_FRAGMENT_NAME,
+} from '../../../fragments/task-fragment';
 import { TaskDialogService } from '../task-dialog.service';
 
 const USER_FIELDS = gql`
@@ -120,8 +121,19 @@ export class TaskDialogTaskContentComponent implements OnInit {
     this.state.connect(
       'task',
       this.taskDialogService.currentContent$.pipe(
-        filter((latestContent): latestContent is Task => {
-          return isTask(latestContent);
+        filter((latestContent) => {
+          return latestContent.type === 'Task';
+        }),
+        switchMap((latestContent) => {
+          return this.apolloDataQuery.queryTask(
+            { fields: TASK_FIELDS, name: TASK_FRAGMENT_NAME },
+            latestContent.id
+          );
+        }),
+        map((response) => response.data?.task),
+        nonNullable(),
+        map((task) => {
+          return convertToDomainTaskFromApiTask(task);
         })
       )
     );
@@ -457,29 +469,21 @@ export class TaskDialogTaskContentComponent implements OnInit {
     );
     this.state.hold(
       this.onClickedTaskGroup$.pipe(
-        switchMap(() => {
+        map(() => {
           const task = this.state.get('task');
-          if (task == null || task?.taskGroup == null) return of(undefined);
-          return this.apolloDataQuery.queryTaskGroup(
-            { fields: TASK_GROUP_FIELDS, name: TASK_GROUP_FRAGMENT_NAME },
-            task.taskGroup.id,
-            { nextFetchPolicy: 'cache-only' }
-          );
+          return task?.taskGroup;
         }),
-        map((v) => {
-          return v?.data.taskGroup;
-        }),
-        filter((v): v is NonNullable<typeof v> => v != null),
-        map((taskGroup) => {
-          return convertToDomainTaskGroupFromApiTaskGroup(taskGroup);
-        })
+        nonNullable()
       ),
       (taskGroup) => {
-        this.taskDialogService.pushContent(taskGroup);
+        this.taskDialogService.pushContent({
+          id: taskGroup.id,
+          type: 'TaskGroup',
+        });
       }
     );
     this.state.hold(this.onClickedSubtask$, (subtask) => {
-      this.taskDialogService.pushContent(subtask);
+      this.taskDialogService.pushContent({ id: subtask.id, type: 'Subtask' });
     });
     this.state.hold(
       this.onDelete$.pipe(

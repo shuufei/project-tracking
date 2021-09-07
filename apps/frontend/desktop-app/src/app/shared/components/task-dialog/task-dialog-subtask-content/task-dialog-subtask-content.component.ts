@@ -8,7 +8,7 @@ import {
   APOLLO_DATA_QUERY,
   IApolloDataQuery,
 } from '@bison/frontend/application';
-import { isSubtask, Subtask, Task } from '@bison/frontend/domain';
+import { Subtask, Task } from '@bison/frontend/domain';
 import { User } from '@bison/frontend/ui';
 import { RxState } from '@rx-angular/state';
 import { TuiNotificationsService } from '@taiga-ui/core';
@@ -22,11 +22,17 @@ import {
   switchMap,
   tap,
 } from 'rxjs/operators';
+import { convertToDomainSubtaskFromApiSubtask } from '../../../../util/convert-to-domain-subtask-from-api-subtask';
 import { convertToDomainTaskFromApiTask } from '../../../../util/convert-to-domain-task-from-api-task';
+import { nonNullable } from '../../../../util/custom-operators/non-nullable';
 import { updateScheduledTimeSecState } from '../../../../util/custom-operators/state-updators/update-scheduled-time-sec-state';
 import { updateStateOnPause } from '../../../../util/custom-operators/state-updators/update-state-on-pause';
 import { updateWorkTimeSecState } from '../../../../util/custom-operators/state-updators/update-work-time-sec-state';
 import { SubtaskFacadeService } from '../../../facade/subtask-facade/subtask-facade.service';
+import {
+  SUBTASK_FIELDS,
+  SUBTASK_FRAGMENT_NAME,
+} from '../../../fragments/subtask-fragment';
 import {
   TASK_FIELDS,
   TASK_FRAGMENT_NAME,
@@ -100,8 +106,17 @@ export class TaskDialogSubtaskContentComponent implements OnInit {
     this.state.connect(
       'subtask',
       this.taskDialogService.currentContent$.pipe(
-        filter((v): v is Subtask => {
-          return isSubtask(v);
+        filter((v) => v.type === 'Subtask'),
+        switchMap((content) => {
+          return this.apolloDataQuery.querySubtask(
+            { fields: SUBTASK_FIELDS, name: SUBTASK_FRAGMENT_NAME },
+            content.id
+          );
+        }),
+        map((response) => response.data.subtask),
+        nonNullable(),
+        map((subtask) => {
+          return convertToDomainSubtaskFromApiSubtask(subtask);
         })
       )
     );
@@ -138,11 +153,7 @@ export class TaskDialogSubtaskContentComponent implements OnInit {
               fields: TASK_FIELDS,
               name: TASK_FRAGMENT_NAME,
             },
-            subtask.taskId,
-            {
-              fetchPolicy: 'cache-and-network',
-              nextFetchPolicy: 'cache-only',
-            }
+            subtask.taskId
           );
         }),
         map((response) => {
@@ -221,7 +232,7 @@ export class TaskDialogSubtaskContentComponent implements OnInit {
       if (task == null) {
         return;
       }
-      this.taskDialogService.pushContent(task);
+      this.taskDialogService.pushContent({ id: task.id, type: 'Task' });
     });
 
     /**
