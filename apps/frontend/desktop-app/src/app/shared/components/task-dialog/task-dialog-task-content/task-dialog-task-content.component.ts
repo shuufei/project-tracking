@@ -440,7 +440,9 @@ export class TaskDialogTaskContentComponent implements OnInit {
           if (task == null) {
             return [];
           }
-          const subtasksOrder = [...(task?.subtasksOrder ?? [])];
+          const subtasksOrder = [...(task?.subtasksOrder ?? [])].filter((id) =>
+            task.subtasks.map((v) => v.id).includes(id)
+          );
           moveItemInArray(
             subtasksOrder,
             dropEvent.previousIndex,

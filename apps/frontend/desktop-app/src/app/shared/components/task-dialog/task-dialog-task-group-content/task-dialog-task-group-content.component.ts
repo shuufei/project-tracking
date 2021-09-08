@@ -287,7 +287,9 @@ export class TaskDialogTaskGroupContentComponent implements OnInit {
           if (taskGroup == null) {
             return [];
           }
-          const tasksOrder = [...(taskGroup.tasksOrder ?? [])];
+          const tasksOrder = [...(taskGroup.tasksOrder ?? [])].filter((id) =>
+            taskGroup.tasks.map((v) => v.id).includes(id)
+          );
           moveItemInArray(
             tasksOrder,
             dropEvent.previousIndex,
