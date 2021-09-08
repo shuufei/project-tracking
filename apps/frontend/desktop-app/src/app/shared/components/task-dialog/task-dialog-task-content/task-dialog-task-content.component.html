@@ -106,9 +106,9 @@
                 >
                   <div cdkDrag>
                     <bis-subtask-card
-                      [subtask]="subtask"
-                      [ngClass]="[isFirst ? '' : 'mt-1']"
+                      [subtaskId]="subtask.id"
                       [isTitleEditable]="!subtask.title"
+                      [ngClass]="[isFirst ? '' : 'mt-1']"
                       (click)="onClickedSubtask$.next(subtask)"
                     ></bis-subtask-card>
                   </div>
