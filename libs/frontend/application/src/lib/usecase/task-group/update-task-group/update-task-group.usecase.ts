@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
-import { TaskGroup } from '@bison/shared/schema';
 import { Apollo, gql } from 'apollo-angular';
-import { IUpdateTaskGroupUsecase } from './update-task-group.usecase.interface';
+import {
+  IUpdateTaskGroupUsecase,
+  UpdateTaskGroupResponse,
+} from './update-task-group.usecase.interface';
 
 @Injectable()
 export class UpdateTaskGroupUsecase implements IUpdateTaskGroupUsecase {
@@ -11,7 +13,24 @@ export class UpdateTaskGroupUsecase implements IUpdateTaskGroupUsecase {
     ...args: Parameters<IUpdateTaskGroupUsecase['execute']>
   ): ReturnType<IUpdateTaskGroupUsecase['execute']> {
     const [input] = args;
-    return this.apollo.mutate<{ updateTaskGroup: TaskGroup }>({
+    const updatedTaskGroup: UpdateTaskGroupResponse = {
+      __typename: 'TaskGroup',
+      id: input.id,
+      title: input.title,
+      description: input.description,
+      status: input.status,
+      scheduledTimeSec: input.scheduledTimeSec,
+      tasksOrder: input.tasksOrder,
+      assign:
+        input.assignUserId != null
+          ? { id: input.assignUserId, __typename: 'User' }
+          : undefined,
+      board: {
+        id: input.boardId,
+        __typename: 'Board',
+      },
+    };
+    return this.apollo.mutate<{ updateTaskGroup: UpdateTaskGroupResponse }>({
       mutation: gql`
         mutation UpdateTaskGroup($input: UpdateTaskGroupInput!) {
           updateTaskGroup(input: $input) {
@@ -21,19 +40,19 @@ export class UpdateTaskGroupUsecase implements IUpdateTaskGroupUsecase {
             status
             assign {
               id
-              name
-              icon
-            }
-            board {
-              id
-              name
             }
             scheduledTimeSec
+            board {
+              id
+            }
             tasksOrder
           }
         }
       `,
       variables: { input },
+      optimisticResponse: {
+        updateTaskGroup: updatedTaskGroup,
+      },
     });
   }
 }

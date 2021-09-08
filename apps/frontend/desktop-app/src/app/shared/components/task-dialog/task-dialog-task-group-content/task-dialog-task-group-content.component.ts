@@ -18,6 +18,7 @@ import { of, Subject } from 'rxjs';
 import { exhaustMap, filter, map, switchMap, tap } from 'rxjs/operators';
 import { convertToDomainTaskGroupFromApiTaskGroup } from '../../../../util/convert-to-domain-task-group-from-api-task-group';
 import { nonNullable } from '../../../../util/custom-operators/non-nullable';
+import { sortTasks } from '../../../../util/custom-operators/sort-tasks';
 import { TaskFacadeService } from '../../../facade/task-facade/task-facade.service';
 import { TaskGroupFacadeService } from '../../../facade/task-group-facade/task-group-facade.service';
 import {
@@ -68,6 +69,9 @@ export class TaskDialogTaskGroupContentComponent implements OnInit {
    */
   readonly state$ = this.state.select();
   readonly existsDialogPrevContent$ = this.taskDialogService.existsPrevContent$;
+  readonly tasks$ = this.state
+    .select('taskGroup')
+    .pipe(nonNullable(), sortTasks());
 
   /**
    * Event
@@ -283,33 +287,20 @@ export class TaskDialogTaskGroupContentComponent implements OnInit {
           if (taskGroup == null) {
             return [];
           }
-          const tasks = [...(taskGroup?.tasks ?? [])];
+          const tasksOrder = [...(taskGroup.tasksOrder ?? [])];
           moveItemInArray(
-            tasks,
+            tasksOrder,
             dropEvent.previousIndex,
             dropEvent.currentIndex
           );
-          return tasks;
+          return tasksOrder;
         }),
-        tap((tasks) => {
-          const taskGroup = this.state.get('taskGroup');
-          if (taskGroup == null) {
-            return taskGroup;
-          }
-          const tasksOrder = tasks.map((v) => v.id);
-          this.state.set('taskGroup', () => {
-            return { ...taskGroup, tasks, tasksOrder };
-          });
-        }),
-        exhaustMap((tasks) => {
+        switchMap((tasksOrder) => {
           const taskGroup = this.state.get('taskGroup');
           if (taskGroup == null) {
             return of(undefined);
           }
-          return this.taskGroupFacade.updateTasksOrder(
-            tasks.map((v) => v.id),
-            taskGroup
-          );
+          return this.taskGroupFacade.updateTasksOrder(tasksOrder, taskGroup);
         })
       )
     );

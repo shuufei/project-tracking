@@ -30,8 +30,8 @@ export type UpdateTaskResponse = Pick<
   | 'workStartDateTimestamp'
   | 'subtasksOrder'
 > & {
-  __typename: string;
-  assign?: Partial<User> & { __typename: string };
-  board: Partial<Board> & { __typename: string };
-  taskGroup: Partial<TaskGroup> & { __typename: string };
+  __typename: 'Task';
+  assign?: Partial<User> & { __typename: 'User' };
+  board: Partial<Board> & { __typename: 'Board' };
+  taskGroup: Partial<TaskGroup> & { __typename: 'TaskGroup' };
 };
