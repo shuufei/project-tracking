@@ -21,6 +21,7 @@ import { BehaviorSubject, of, Subject } from 'rxjs';
 import { exhaustMap, filter, map, switchMap, tap } from 'rxjs/operators';
 import { convertToDomainTaskFromApiTask } from '../../../util/convert-to-domain-task-from-api-task';
 import { nonNullable } from '../../../util/custom-operators/non-nullable';
+import { sortSubtasks } from '../../../util/custom-operators/sort-subtasks';
 import { updateScheduledTimeSecState } from '../../../util/custom-operators/state-updators/update-scheduled-time-sec-state';
 import { updateWorkTimeSecState } from '../../../util/custom-operators/state-updators/update-work-time-sec-state';
 import { SubtaskFacadeService } from '../../facade/subtask-facade/subtask-facade.service';
@@ -71,21 +72,9 @@ export class TaskCardComponent implements OnInit {
    */
   readonly state$ = this.state.select();
   readonly taskId$ = new BehaviorSubject<Task['id'] | undefined>(undefined);
-  readonly subtasks$ = this.state.select('task').pipe(
-    nonNullable(),
-    map((task) => {
-      // TODO: sort処理を共通化
-      const subtasks = task.subtasksOrder
-        .map((subtaskId) =>
-          task.subtasks.find((subtask) => subtask.id === subtaskId)
-        )
-        .filter((v): v is NonNullable<typeof v> => v != null);
-      const remainedSubtasks = task.subtasks
-        .filter((subtask) => subtasks.find((v) => v.id === subtask.id) == null)
-        .sort((v1, v2) => v1.createdAt - v2.createdAt);
-      return [...subtasks, ...remainedSubtasks];
-    })
-  );
+  readonly subtasks$ = this.state
+    .select('task')
+    .pipe(nonNullable(), sortSubtasks());
 
   /**
    * Event
@@ -291,17 +280,7 @@ export class TaskCardComponent implements OnInit {
           );
           return subtasksOrder;
         }),
-        tap((subtasksOrder) => {
-          const task = this.state.get('task');
-          if (task == null) {
-            return task;
-          }
-          console.log('---- update local state: ', subtasksOrder);
-          this.state.set('task', () => {
-            return { ...task, subtasksOrder };
-          });
-        }),
-        exhaustMap((subtasksOrder) => {
+        switchMap((subtasksOrder) => {
           const task = this.state.get('task');
           if (task == null) return of(undefined);
           return this.taskFacadeService.updateSubtasksOrder(

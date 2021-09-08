@@ -93,29 +93,39 @@
         <div class="mt-8">
           <span class="text-s2 text-black-light1 block">サブタスク</span>
           <div class="mt-2">
-            <ng-container
-              *ngIf="state.task.subtasks.length > 0; else nonSubtasks"
-            >
-              <div
-                class="p-2 rounded-s bg-primary-light3 subtasks-box"
-                cdkDropList
-                (cdkDropListDropped)="onDrop$.next($event)"
-              >
-                <ng-container
-                  *ngFor="let subtask of state.task.subtasks; first as isFirst"
+            <ng-container *ngIf="subtasks$ | async as subtasks">
+              <ng-container *ngIf="subtasks.length > 0; else nonSubtasks">
+                <div
+                  class="p-2 rounded-s bg-primary-light3 subtasks-box"
+                  cdkDropList
+                  (cdkDropListDropped)="onDrop$.next($event)"
                 >
-                  <div cdkDrag>
-                    <bis-subtask-card
-                      [subtaskId]="subtask.id"
-                      [isTitleEditable]="!subtask.title"
-                      [ngClass]="[isFirst ? '' : 'mt-1']"
-                      (click)="onClickedSubtask$.next(subtask)"
-                    ></bis-subtask-card>
-                  </div>
-                </ng-container>
-
+                  <ng-container
+                    *ngFor="let subtask of subtasks; first as isFirst"
+                  >
+                    <div cdkDrag>
+                      <bis-subtask-card
+                        [subtaskId]="subtask.id"
+                        [isTitleEditable]="!subtask.title"
+                        [ngClass]="[isFirst ? '' : 'mt-1']"
+                        (click)="onClickedSubtask$.next(subtask)"
+                      ></bis-subtask-card>
+                    </div>
+                  </ng-container>
+                  <button
+                    class="mt-1 px-2 py-1 focus:outline-none focus:shadow-outline_primary flex items-center justify-center rounded-s w-full"
+                    (click)="onClickedAddSubtask$.next()"
+                  >
+                    <ui-icon icon="plus" size="s" color="primary"></ui-icon>
+                    <span class="text-s3 text-black-default ml-1"
+                      >サブタスクを追加</span
+                    >
+                  </button>
+                </div>
+              </ng-container>
+              <ng-template #nonSubtasks>
                 <button
-                  class="mt-1 px-2 py-1 focus:outline-none focus:shadow-outline_primary flex items-center justify-center rounded-s w-full"
+                  class="p-2 focus:outline-none focus:shadow-outline_primary flex items-center justify-start rounded-s"
                   (click)="onClickedAddSubtask$.next()"
                 >
                   <ui-icon icon="plus" size="s" color="primary"></ui-icon>
@@ -123,19 +133,8 @@
                     >サブタスクを追加</span
                   >
                 </button>
-              </div>
+              </ng-template>
             </ng-container>
-            <ng-template #nonSubtasks>
-              <button
-                class="p-2 focus:outline-none focus:shadow-outline_primary flex items-center justify-start rounded-s"
-                (click)="onClickedAddSubtask$.next()"
-              >
-                <ui-icon icon="plus" size="s" color="primary"></ui-icon>
-                <span class="text-s3 text-black-default ml-1"
-                  >サブタスクを追加</span
-                >
-              </button>
-            </ng-template>
           </div>
         </div>
       </ng-container>

@@ -26,6 +26,7 @@ import {
 } from 'rxjs/operators';
 import { convertToDomainTaskFromApiTask } from '../../../../util/convert-to-domain-task-from-api-task';
 import { nonNullable } from '../../../../util/custom-operators/non-nullable';
+import { sortSubtasks } from '../../../../util/custom-operators/sort-subtasks';
 import { updateScheduledTimeSecState } from '../../../../util/custom-operators/state-updators/update-scheduled-time-sec-state';
 import { SubtaskFacadeService } from '../../../facade/subtask-facade/subtask-facade.service';
 import { TaskFacadeService } from '../../../facade/task-facade/task-facade.service';
@@ -77,6 +78,9 @@ export class TaskDialogTaskContentComponent implements OnInit {
    */
   readonly state$ = this.state.select();
   readonly existsDialogPrevContent$ = this.taskDialogService.existsPrevContent$;
+  readonly subtasks$ = this.state
+    .select('task')
+    .pipe(nonNullable(), sortSubtasks());
 
   /**
    * Event
@@ -436,29 +440,19 @@ export class TaskDialogTaskContentComponent implements OnInit {
           if (task == null) {
             return [];
           }
-          const subtasks = [...(task?.subtasks ?? [])];
+          const subtasksOrder = [...(task?.subtasksOrder ?? [])];
           moveItemInArray(
-            subtasks,
+            subtasksOrder,
             dropEvent.previousIndex,
             dropEvent.currentIndex
           );
-          return subtasks;
+          return subtasksOrder;
         }),
-        tap((subtasks) => {
-          const task = this.state.get('task');
-          if (task == null) {
-            return task;
-          }
-          const subtasksOrder = subtasks.map((v) => v.id);
-          this.state.set('task', () => {
-            return { ...task, subtasks, subtasksOrder };
-          });
-        }),
-        exhaustMap((subtasks) => {
+        switchMap((subtasksOrder) => {
           const task = this.state.get('task');
           if (task == null) return of(undefined);
           return this.taskFacadeService.updateSubtasksOrder(
-            subtasks.map((v) => v.id),
+            subtasksOrder,
             task
           );
         })
