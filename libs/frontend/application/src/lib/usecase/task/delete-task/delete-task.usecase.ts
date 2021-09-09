@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Reference, StoreObject } from '@apollo/client';
-import { Board, Task } from '@bison/shared/schema';
+import { Board, Task, TaskGroup } from '@bison/shared/schema';
 import { Apollo, gql } from 'apollo-angular';
 import { IDeleteTaskUsecase } from './delete-task.usecase.interface';
 
@@ -32,11 +32,39 @@ export class DeleteTaskUsecase implements IDeleteTaskUsecase {
               board {
                 id
               }
+              taskGroup {
+                id
+              }
             }
           `,
         });
         if (task == null) {
           return;
+        }
+        if (task.taskGroup) {
+          const taskGroup = cache.readFragment<TaskGroup & StoreObject>({
+            id: `TaskGroup:${task.taskGroup.id}`,
+            fragment: gql`
+              fragment TaskGroup on TaskGroup {
+                id
+                tasks {
+                  id
+                }
+              }
+            `,
+          });
+          if (taskGroup != null) {
+            cache.modify({
+              id: cache.identify(taskGroup),
+              fields: {
+                tasks(taskRefs: Reference[], { readField }) {
+                  return taskRefs.filter(
+                    (ref) => readField('id', ref) !== input.id
+                  );
+                },
+              },
+            });
+          }
         }
         const board = cache.readFragment<Board & StoreObject>({
           id: `Board:${task.board.id}`,
@@ -49,19 +77,18 @@ export class DeleteTaskUsecase implements IDeleteTaskUsecase {
             }
           `,
         });
-        if (board == null) {
-          return;
-        }
-        cache.modify({
-          id: cache.identify(board),
-          fields: {
-            tasks(taskRefs: Reference[], { readField }) {
-              return taskRefs.filter(
-                (ref) => readField('id', ref) !== input.id
-              );
+        if (board != null) {
+          cache.modify({
+            id: cache.identify(board),
+            fields: {
+              tasks(taskRefs: Reference[], { readField }) {
+                return taskRefs.filter(
+                  (ref) => readField('id', ref) !== input.id
+                );
+              },
             },
-          },
-        });
+          });
+        }
       },
     });
   }
