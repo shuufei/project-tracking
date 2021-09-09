@@ -32,7 +32,7 @@ export class CreateSubtaskUsecase implements ICreateSubtaskUsecase {
         const task = cache.readFragment<Task & StoreObject>({
           id: `Task:${input.taskId}`,
           fragment: gql`
-            fragment Subtask on Subtask {
+            fragment Task on Task {
               id
               subtasks {
                 id
@@ -50,7 +50,7 @@ export class CreateSubtaskUsecase implements ICreateSubtaskUsecase {
               const newSubtaskRef = cache.writeFragment({
                 data: newSubtask,
                 fragment: gql`
-                  fragment NewSubtask on Subtask {
+                  fragment NewTask on Task {
                     id
                   }
                 `,
