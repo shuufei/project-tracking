@@ -26,8 +26,7 @@
   <button ui-stroked-button #boardUpdateButton>ボードを編集</button>
   <bis-board-update-sheet
     [triggerEl]="boardUpdateButton.elementRef.nativeElement"
-    [project]="project"
-    [board]="board"
+    [boardId]="board.id"
   ></bis-board-update-sheet>
 </div>
 
