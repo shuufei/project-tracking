@@ -69,13 +69,11 @@ export class ProjectDetailHeaderComponent implements OnInit {
           { fetchPolicy: 'cache-only' }
         );
       }),
-      map((result) => {
-        return (
-          result.data.project &&
-          convertToFrontendDomainProjectFromApiProject(result.data.project)
-        );
-      }),
-      nonNullable()
+      map((response) => response?.data?.project),
+      nonNullable(),
+      map((project) => {
+        return convertToFrontendDomainProjectFromApiProject(project);
+      })
     );
   }
 }

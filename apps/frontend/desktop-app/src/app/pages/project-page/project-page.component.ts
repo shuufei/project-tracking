@@ -28,6 +28,7 @@ import {
   PROJECT_FRAGMENT_NAME,
 } from '../../shared/fragments/project-fragment';
 import { convertToFrontendDomainProjectFromApiProject } from '../../util/convert-to-frontend-domain-project-from-api-project';
+import { nonNullable } from '../../util/custom-operators/non-nullable';
 
 export const VIEWER_FIELDS = gql`
   ${PROJECT_FIELDS}
@@ -157,10 +158,11 @@ export class ProjectPageComponent
           fields: VIEWER_FIELDS,
         })
         .pipe(
-          map((response) => {
-            const { viewer } = response.data;
+          map((response) => response?.data?.viewer),
+          nonNullable(),
+          map((viewer) => {
             return (
-              viewer?.projects.map(
+              viewer.projects.map(
                 convertToFrontendDomainProjectFromApiProject
               ) ?? []
             );

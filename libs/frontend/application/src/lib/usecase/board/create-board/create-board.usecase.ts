@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Reference, StoreObject } from '@apollo/client';
-import { Board, Project } from '@bison/shared/schema';
+import { Project } from '@bison/shared/schema';
 import { Apollo, gql } from 'apollo-angular';
-import { ICreateBoardUsecase } from './create-board.usecase.interface';
+import {
+  CreateBoardResponse,
+  ICreateBoardUsecase,
+} from './create-board.usecase.interface';
 
 @Injectable()
 export class CreateBoardUsecase implements ICreateBoardUsecase {
@@ -12,7 +15,17 @@ export class CreateBoardUsecase implements ICreateBoardUsecase {
     ...args: Parameters<ICreateBoardUsecase['execute']>
   ): ReturnType<ICreateBoardUsecase['execute']> {
     const [input] = args;
-    return this.apollo.mutate<{ createBoard: Board }>({
+    const createdBoard: CreateBoardResponse = {
+      id: 'tmp-id',
+      name: input.name,
+      description: input.description,
+      __typename: 'Board',
+      project: {
+        id: input.projectId,
+        __typename: 'Project',
+      },
+    };
+    return this.apollo.mutate<{ createBoard: CreateBoardResponse }>({
       mutation: gql`
         mutation CreateBoard($input: CreateBoardInput!) {
           createBoard(input: $input) {
@@ -38,6 +51,9 @@ export class CreateBoardUsecase implements ICreateBoardUsecase {
       `,
       variables: {
         input,
+      },
+      optimisticResponse: {
+        createBoard: createdBoard,
       },
       update(cache, response) {
         if (response.data?.createBoard == null) {
