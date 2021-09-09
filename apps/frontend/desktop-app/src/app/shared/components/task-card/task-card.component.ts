@@ -18,7 +18,14 @@ import { RxState, update } from '@rx-angular/state';
 import { TuiNotificationsService } from '@taiga-ui/core';
 import { gql } from 'apollo-angular';
 import { BehaviorSubject, of, Subject } from 'rxjs';
-import { exhaustMap, filter, map, switchMap, tap } from 'rxjs/operators';
+import {
+  exhaustMap,
+  filter,
+  map,
+  switchMap,
+  tap,
+  withLatestFrom,
+} from 'rxjs/operators';
 import { convertToDomainTaskFromApiTask } from '../../../util/convert-to-domain-task-from-api-task';
 import { nonNullable } from '../../../util/custom-operators/non-nullable';
 import { sortSubtasks } from '../../../util/custom-operators/sort-subtasks';
@@ -267,14 +274,15 @@ export class TaskCardComponent implements OnInit {
     );
     this.state.hold(
       this.onDrop$.pipe(
-        map((dropEvent) => {
+        withLatestFrom(this.subtasks$),
+        map(([dropEvent, sortedSubtasks]) => {
           const task = this.state.get('task');
           if (task == null) {
             return [];
           }
-          const subtasksOrder = [...(task?.subtasksOrder ?? [])].filter((id) =>
-            task.subtasks.map((v) => v.id).includes(id)
-          );
+          const subtasksOrder = [
+            ...(sortedSubtasks.map((v) => v.id) ?? []),
+          ].filter((id) => task.subtasks.map((v) => v.id).includes(id));
           moveItemInArray(
             subtasksOrder,
             dropEvent.previousIndex,

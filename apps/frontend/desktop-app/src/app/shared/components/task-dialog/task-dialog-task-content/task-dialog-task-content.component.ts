@@ -23,6 +23,7 @@ import {
   startWith,
   switchMap,
   tap,
+  withLatestFrom,
 } from 'rxjs/operators';
 import { convertToDomainTaskFromApiTask } from '../../../../util/convert-to-domain-task-from-api-task';
 import { nonNullable } from '../../../../util/custom-operators/non-nullable';
@@ -137,6 +138,7 @@ export class TaskDialogTaskContentComponent implements OnInit {
         map((response) => response.data?.task),
         nonNullable(),
         map((task) => {
+          console.log('--- local state change: ', task);
           return convertToDomainTaskFromApiTask(task);
         })
       )
@@ -435,14 +437,15 @@ export class TaskDialogTaskContentComponent implements OnInit {
     );
     this.state.hold(
       this.onDrop$.pipe(
-        map((dropEvent) => {
+        withLatestFrom(this.subtasks$),
+        map(([dropEvent, sortedSubtasks]) => {
           const task = this.state.get('task');
           if (task == null) {
             return [];
           }
-          const subtasksOrder = [...(task?.subtasksOrder ?? [])].filter((id) =>
-            task.subtasks.map((v) => v.id).includes(id)
-          );
+          const subtasksOrder = [
+            ...(sortedSubtasks.map((v) => v.id) ?? []),
+          ].filter((id) => task.subtasks.map((v) => v.id).includes(id));
           moveItemInArray(
             subtasksOrder,
             dropEvent.previousIndex,

@@ -15,7 +15,14 @@ import { RxState } from '@rx-angular/state';
 import { TuiNotificationsService } from '@taiga-ui/core';
 import { gql } from 'apollo-angular';
 import { of, Subject } from 'rxjs';
-import { exhaustMap, filter, map, switchMap, tap } from 'rxjs/operators';
+import {
+  exhaustMap,
+  filter,
+  map,
+  switchMap,
+  tap,
+  withLatestFrom,
+} from 'rxjs/operators';
 import { convertToDomainTaskGroupFromApiTaskGroup } from '../../../../util/convert-to-domain-task-group-from-api-task-group';
 import { nonNullable } from '../../../../util/custom-operators/non-nullable';
 import { sortTasks } from '../../../../util/custom-operators/sort-tasks';
@@ -282,14 +289,15 @@ export class TaskDialogTaskGroupContentComponent implements OnInit {
     );
     this.state.hold(
       this.onDrop$.pipe(
-        map((dropEvent) => {
+        withLatestFrom(this.tasks$),
+        map(([dropEvent, sortedTasks]) => {
           const taskGroup = this.state.get('taskGroup');
           if (taskGroup == null) {
             return [];
           }
-          const tasksOrder = [...(taskGroup.tasksOrder ?? [])].filter((id) =>
-            taskGroup.tasks.map((v) => v.id).includes(id)
-          );
+          const tasksOrder = [
+            ...(sortedTasks.map((v) => v.id) ?? []),
+          ].filter((id) => taskGroup.tasks.map((v) => v.id).includes(id));
           moveItemInArray(
             tasksOrder,
             dropEvent.previousIndex,
