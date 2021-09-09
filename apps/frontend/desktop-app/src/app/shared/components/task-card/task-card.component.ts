@@ -98,6 +98,7 @@ export class TaskCardComponent implements OnInit {
   readonly onAddSubtask$ = new Subject<void>();
   readonly onUpdatedSubtask$ = new Subject<Subtask>();
   readonly onClickedSubtask$ = new Subject<Subtask['id']>();
+  readonly onchangedTitle$ = new Subject<Task['title']>();
 
   constructor(
     private state: RxState<State>,
@@ -362,6 +363,15 @@ export class TaskCardComponent implements OnInit {
       if (subtask == null) return;
       this.clickedSubtask.emit(subtask);
     });
+    this.state.hold(
+      this.onchangedTitle$.pipe(
+        switchMap((title) => {
+          const task = this.state.get('task');
+          if (task == null) return of(undefined);
+          return this.taskFacadeService.updateTitle(title, task);
+        })
+      )
+    );
   }
 
   trackBySubtask(_: number, value: Subtask) {

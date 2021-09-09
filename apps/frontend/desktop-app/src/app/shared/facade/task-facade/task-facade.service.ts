@@ -104,6 +104,14 @@ export class TaskFacadeService {
       );
   }
 
+  updateTitle(title: Task['title'], currentTask: Task) {
+    const input = this.generateUpdateInputBase(currentTask);
+    return this.updateTaskUsecase.execute({
+      ...input,
+      title,
+    });
+  }
+
   updateTitleAndDescription(
     title: Task['title'],
     description: Task['description'],

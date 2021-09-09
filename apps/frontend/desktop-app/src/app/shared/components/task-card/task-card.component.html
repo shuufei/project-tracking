@@ -7,6 +7,7 @@
       [isTracking]="state.task.workStartDateTimestamp != null"
       [boards]="state.boards"
       [boardId]="state.task.board.id"
+      [isEditableTitle]="!state.task.title"
       (hover)="onHover$.next($event)"
       (clickedPlay)="onClickedPlay$.next()"
       (clickedPause)="onClickedPause$.next()"
@@ -15,6 +16,7 @@
       (delete)="onDelete$.next()"
       (selectBoard)="onSelectedBoard$.next($event)"
       (addSubtask)="onAddSubtask$.next()"
+      (changedTitle)="onchangedTitle$.next($event)"
     >
       <ng-container *ngIf="state.task.subtasks.length > 0">
         <div
