@@ -221,10 +221,7 @@ export class ProjectCreateSheetComponent implements OnInit {
             addUserIds: state.members.map((v) => v.id),
             removeUserIds: [],
           };
-          return this.updateProjectMembersUsecase.execute(input, {
-            name: 'ProjectPartsOnProjectCreateSheet',
-            fields: PROJECT_FIELDS,
-          });
+          return this.updateProjectMembersUsecase.execute(input);
         })
       )
     );

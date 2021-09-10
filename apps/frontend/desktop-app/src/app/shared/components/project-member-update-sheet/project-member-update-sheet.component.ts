@@ -155,21 +155,16 @@ export class ProjectMemberUpdateSheetComponent implements OnInit {
       addUserIds: addedMemberIds,
       removeUserIds: removedMemberIds,
     };
-    return this.updateProjectMembersUsecase
-      .execute(input, {
-        name: 'ProjectPartsInProjectMemberUpdateSheet',
-        fields: PROJECT_FIELDS,
+    return this.updateProjectMembersUsecase.execute(input).pipe(
+      switchMap(() => {
+        this.state.set('isSheetOpen', () => false);
+        return this.notificationsService.show(
+          'プロジェクトのメンバーが更新されました',
+          {
+            hasCloseButton: true,
+          }
+        );
       })
-      .pipe(
-        switchMap(() => {
-          this.state.set('isSheetOpen', () => false);
-          return this.notificationsService.show(
-            'プロジェクトのメンバーが更新されました',
-            {
-              hasCloseButton: true,
-            }
-          );
-        })
-      );
+    );
   }
 }
