@@ -1,16 +1,24 @@
 import { InjectionToken } from '@angular/core';
 import { FetchResult } from '@apollo/client';
-import { Project, UpdateProjectInput } from '@bison/shared/schema';
+import { Project, UpdateProjectInput, User } from '@bison/shared/schema';
 import { Observable } from 'rxjs';
-import { Fragment } from '../../../types';
 
 export interface IUpdateProjectUsecase {
   execute: (
-    input: UpdateProjectInput,
-    fragment: Fragment
-  ) => Observable<FetchResult<{ updateProject: Project }>>;
+    input: UpdateProjectInput
+  ) => Observable<FetchResult<{ updateProject: UpdateProjectResponse }>>;
 }
 
 export const UPDATE_PROJECT_USECASE = new InjectionToken<IUpdateProjectUsecase>(
   'UpdateProjectUsecase'
 );
+
+export type UpdateProjectResponse = Pick<
+  Project,
+  'id' | 'name' | 'description' | 'color'
+> & {
+  __typename: 'Project';
+  admin: Pick<User, 'id'> & {
+    __typename: 'User';
+  };
+};

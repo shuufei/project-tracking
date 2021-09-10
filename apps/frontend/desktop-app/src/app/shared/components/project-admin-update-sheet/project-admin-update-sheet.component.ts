@@ -17,8 +17,8 @@ import { UpdateProjectInput } from '@bison/shared/schema';
 import { RxState } from '@rx-angular/state';
 import { TuiNotification, TuiNotificationsService } from '@taiga-ui/core';
 import { gql } from 'apollo-angular';
-import { Observable, of, Subject } from 'rxjs';
-import { catchError, exhaustMap, map, switchMap } from 'rxjs/operators';
+import { merge, Observable, of, Subject } from 'rxjs';
+import { catchError, exhaustMap, map } from 'rxjs/operators';
 import { convertToApiColorFromDomainColor } from '../../../util/convert-to-api-color-from-domain-color';
 
 const USER_FIELDS = gql`
@@ -107,16 +107,13 @@ export class ProjectAdminUpdateSheetComponent implements OnInit {
             color: convertToApiColorFromDomainColor(project.color),
             adminUserId: project.admin.id,
           };
-          return this.updateProjectUsecase.execute(input, {
-            name: 'ProjectPartsInProjectAdminUpdateSheet',
-            fields: PROJECT_PARTS,
-          });
-        }),
-        switchMap(() => {
           this.isOpenedSheet$.next(false);
-          return this.notificationsService.show(
-            'プロジェクトの管理者を変更しました',
-            { hasCloseButton: true }
+          return merge(
+            this.updateProjectUsecase.execute(input),
+            this.notificationsService.show(
+              'プロジェクトの管理者を変更しました',
+              { hasCloseButton: true }
+            )
           );
         }),
         catchError((error) => {
