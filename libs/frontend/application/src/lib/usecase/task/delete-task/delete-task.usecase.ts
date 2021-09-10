@@ -2,7 +2,10 @@ import { Injectable } from '@angular/core';
 import { Reference, StoreObject } from '@apollo/client';
 import { Board, Task, TaskGroup } from '@bison/shared/schema';
 import { Apollo, gql } from 'apollo-angular';
-import { IDeleteTaskUsecase } from './delete-task.usecase.interface';
+import {
+  DeleteTaskResponse,
+  IDeleteTaskUsecase,
+} from './delete-task.usecase.interface';
 
 @Injectable()
 export class DeleteTaskUsecase implements IDeleteTaskUsecase {
@@ -12,7 +15,11 @@ export class DeleteTaskUsecase implements IDeleteTaskUsecase {
     ...args: Parameters<IDeleteTaskUsecase['execute']>
   ): ReturnType<IDeleteTaskUsecase['execute']> {
     const [input] = args;
-    return this.apollo.mutate<{ deleteTask: Task }>({
+    const deletedTask: DeleteTaskResponse = {
+      id: input.id,
+      __typename: 'Task',
+    };
+    return this.apollo.mutate<{ deleteTask: DeleteTaskResponse }>({
       mutation: gql`
         mutation DeleteTask($input: DeleteTaskInput!) {
           deleteTask(input: $input) {
@@ -22,6 +29,9 @@ export class DeleteTaskUsecase implements IDeleteTaskUsecase {
       `,
       variables: {
         input,
+      },
+      optimisticResponse: {
+        deleteTask: deletedTask,
       },
       update(cache) {
         const task = cache.readFragment<Task & StoreObject>({

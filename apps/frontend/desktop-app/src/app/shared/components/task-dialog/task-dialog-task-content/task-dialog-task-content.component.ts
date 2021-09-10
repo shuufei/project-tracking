@@ -14,7 +14,7 @@ import { Board, User } from '@bison/frontend/ui';
 import { RxState } from '@rx-angular/state';
 import { TuiNotificationsService } from '@taiga-ui/core';
 import { gql } from 'apollo-angular';
-import { of, Subject } from 'rxjs';
+import { merge, of, Subject } from 'rxjs';
 import {
   exhaustMap,
   filter,
@@ -474,13 +474,13 @@ export class TaskDialogTaskContentComponent implements OnInit {
         exhaustMap(() => {
           const taskId = this.state.get('task')?.id;
           if (taskId == null) return of(undefined);
-          return this.taskFacadeService.delete(taskId);
-        }),
-        switchMap(() => {
           this.taskDialogService.close();
-          return this.notificationsService.show('タスクを削除しました', {
-            hasCloseButton: true,
-          });
+          return merge(
+            this.taskFacadeService.delete(taskId),
+            this.notificationsService.show('タスクを削除しました', {
+              hasCloseButton: true,
+            })
+          );
         })
       )
     );
