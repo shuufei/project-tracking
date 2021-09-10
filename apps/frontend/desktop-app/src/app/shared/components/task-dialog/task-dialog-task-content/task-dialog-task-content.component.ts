@@ -138,7 +138,6 @@ export class TaskDialogTaskContentComponent implements OnInit {
         map((response) => response.data?.task),
         nonNullable(),
         map((task) => {
-          console.log('--- local state change: ', task);
           return convertToDomainTaskFromApiTask(task);
         })
       )
@@ -236,17 +235,6 @@ export class TaskDialogTaskContentComponent implements OnInit {
             return of(undefined);
           }
           return this.subtaskFacadeService.create('', task.id);
-        }),
-        filter((v): v is NonNullable<typeof v> => v != null),
-        tap((subtask) => {
-          this.state.set('task', ({ task }) => {
-            if (task == null) return task;
-            return {
-              ...task,
-              subtasks: [...task.subtasks, subtask],
-              subtasksOrder: [...task.subtasksOrder, subtask.id],
-            };
-          });
         })
       )
     );

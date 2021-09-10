@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Reference, StoreObject } from '@apollo/client';
-import { Subtask, Task } from '@bison/shared/schema';
+import { Task } from '@bison/shared/schema';
 import { Apollo, gql } from 'apollo-angular';
-import { ICreateSubtaskUsecase } from './create-subtask.usecase.interface';
+import {
+  CreateSubtaskResponse,
+  ICreateSubtaskUsecase,
+} from './create-subtask.usecase.interface';
 
 @Injectable()
 export class CreateSubtaskUsecase implements ICreateSubtaskUsecase {
@@ -11,18 +14,47 @@ export class CreateSubtaskUsecase implements ICreateSubtaskUsecase {
   execute(
     ...args: Parameters<ICreateSubtaskUsecase['execute']>
   ): ReturnType<ICreateSubtaskUsecase['execute']> {
-    const [input, { fields, name }] = args;
-    return this.apollo.mutate<{ createSubtask: Subtask }>({
+    const [input] = args;
+    const createdSubtask: CreateSubtaskResponse = {
+      id: 'tmp-id',
+      title: input.title,
+      description: input.description,
+      scheduledTimeSec: input.scheduledTimeSec,
+      assign:
+        input.assignUserId != null
+          ? {
+              id: input.assignUserId,
+              __typename: 'User',
+            }
+          : undefined,
+      task: {
+        id: input.taskId,
+        __typename: 'Task',
+      },
+      __typename: 'Subtask',
+    };
+    return this.apollo.mutate<{ createSubtask: CreateSubtaskResponse }>({
       mutation: gql`
-        ${fields}
         mutation CreateSubtask($input: CreateSubtaskInput!) {
           createSubtask(input: $input) {
-            ...${name}
+            id
+            title
+            description
+            assign {
+              id
+            }
+            task {
+              id
+            }
+            scheduledTimeSec
           }
         }
       `,
       variables: {
         input,
+      },
+      optimisticResponse: {
+        createSubtask: createdSubtask,
       },
       update(cache, response) {
         if (response.data?.createSubtask == null) {

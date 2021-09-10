@@ -23,7 +23,6 @@ import {
   filter,
   map,
   switchMap,
-  tap,
   withLatestFrom,
 } from 'rxjs/operators';
 import { convertToDomainTaskFromApiTask } from '../../../util/convert-to-domain-task-from-api-task';
@@ -342,17 +341,6 @@ export class TaskCardComponent implements OnInit {
           const task = this.state.get('task');
           if (task == null) return of(undefined);
           return this.subtaskFacadeService.create('', task.id);
-        }),
-        filter((v): v is NonNullable<typeof v> => v != null),
-        tap((subtask) => {
-          this.state.set('task', ({ task }) => {
-            if (task == null) return task;
-            return {
-              ...task,
-              subtasks: [...task.subtasks, subtask],
-              subtasksOrder: [...task.subtasksOrder, subtask.id],
-            };
-          });
         })
       )
     );
