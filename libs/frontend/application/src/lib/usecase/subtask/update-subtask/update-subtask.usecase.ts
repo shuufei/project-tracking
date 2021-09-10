@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Subtask } from '@bison/shared/schema';
 import { Apollo, gql } from 'apollo-angular';
-import { IUpdateSubtaskUsecase } from './update-subtask.usecase.interface';
+import {
+  IUpdateSubtaskUsecase,
+  UpdateSubtaskResponse,
+} from './update-subtask.usecase.interface';
 
 @Injectable()
 export class UpdateSubtaskUsecase implements IUpdateSubtaskUsecase {
@@ -11,7 +13,25 @@ export class UpdateSubtaskUsecase implements IUpdateSubtaskUsecase {
     ...args: Parameters<IUpdateSubtaskUsecase['execute']>
   ): ReturnType<IUpdateSubtaskUsecase['execute']> {
     const [input] = args;
-    return this.apollo.mutate<{ updateSubtask: Subtask }>({
+    const updatedSubtask: UpdateSubtaskResponse = {
+      id: input.id,
+      title: input.title,
+      description: input.description,
+      isDone: input.isDone,
+      workTimeSec: input.workTimeSec,
+      scheduledTimeSec: input.scheduledTimeSec,
+      workStartDateTimestamp: input.workStartDateTimestamp,
+      assign:
+        input.assignUserId != null
+          ? { id: input.assignUserId, __typename: 'User' }
+          : undefined,
+      task: {
+        id: input.taskId,
+        __typename: 'Task',
+      },
+      __typename: 'Subtask',
+    };
+    return this.apollo.mutate<{ updateSubtask: UpdateSubtaskResponse }>({
       mutation: gql`
         mutation UpdateSubtask($input: UpdateSubtaskInput!) {
           updateSubtask(input: $input) {
@@ -32,6 +52,9 @@ export class UpdateSubtaskUsecase implements IUpdateSubtaskUsecase {
       `,
       variables: {
         input,
+      },
+      optimisticResponse: {
+        updateSubtask: updatedSubtask,
       },
     });
   }
