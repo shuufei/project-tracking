@@ -2,7 +2,10 @@ import { Injectable } from '@angular/core';
 import { Reference, StoreObject } from '@apollo/client';
 import { Board, Project } from '@bison/shared/schema';
 import { Apollo, gql } from 'apollo-angular';
-import { IDeleteBoardUsecase } from './delete-board.usecase.interface';
+import {
+  DeleteBoardResponse,
+  IDeleteBoardUsecase,
+} from './delete-board.usecase.interface';
 
 @Injectable()
 export class DeleteBoardUsecase implements IDeleteBoardUsecase {
@@ -12,7 +15,7 @@ export class DeleteBoardUsecase implements IDeleteBoardUsecase {
     ...args: Parameters<IDeleteBoardUsecase['execute']>
   ): ReturnType<IDeleteBoardUsecase['execute']> {
     const [input] = args;
-    return this.apollo.mutate<{ deleteBoard: Board }>({
+    return this.apollo.mutate<{ deleteBoard: DeleteBoardResponse }>({
       mutation: gql`
         mutation DeleteBoard($input: DeleteBoardInput!) {
           deleteBoard(input: $input) {
@@ -22,6 +25,12 @@ export class DeleteBoardUsecase implements IDeleteBoardUsecase {
       `,
       variables: {
         input,
+      },
+      optimisticResponse: {
+        deleteBoard: {
+          id: input.id,
+          __typename: 'Board',
+        },
       },
       update(cache) {
         const board = cache.readFragment<Board & StoreObject>({

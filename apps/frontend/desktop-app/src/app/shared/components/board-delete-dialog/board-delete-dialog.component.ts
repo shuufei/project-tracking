@@ -16,8 +16,8 @@ import { Board } from '@bison/shared/domain';
 import { DeleteBoardInput } from '@bison/shared/schema';
 import { RxState } from '@rx-angular/state';
 import { TuiNotificationsService } from '@taiga-ui/core';
-import { Subject } from 'rxjs';
-import { exhaustMap, switchMap } from 'rxjs/operators';
+import { merge, Subject } from 'rxjs';
+import { exhaustMap } from 'rxjs/operators';
 
 type State = {
   project?: Project;
@@ -89,12 +89,11 @@ export class BoardDeleteDialogComponent implements OnInit {
     const input: DeleteBoardInput = {
       id: state.board.id,
     };
-    return this.deleteBoardUsecase.execute(input).pipe(
-      switchMap(() => {
-        this.state.set('isOpen', () => false);
-        return this.notificationsService.show('ボードを削除しました', {
-          hasCloseButton: true,
-        });
+    this.state.set('isOpen', () => false);
+    return merge(
+      this.deleteBoardUsecase.execute(input),
+      this.notificationsService.show('ボードを削除しました', {
+        hasCloseButton: true,
       })
     );
   }
