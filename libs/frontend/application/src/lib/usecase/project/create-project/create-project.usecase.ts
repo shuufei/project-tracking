@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Project, User } from '@bison/shared/schema';
+import { User } from '@bison/shared/schema';
 import { Apollo, gql } from 'apollo-angular';
-import { ICreateProjectUsecase } from './create-project.usecase.interface';
+import {
+  CreateProjectResponse,
+  ICreateProjectUsecase,
+} from './create-project.usecase.interface';
 
 @Injectable()
 export class CreateProjectUsecase implements ICreateProjectUsecase {
@@ -9,18 +12,37 @@ export class CreateProjectUsecase implements ICreateProjectUsecase {
   execute(
     ...args: Parameters<ICreateProjectUsecase['execute']>
   ): ReturnType<ICreateProjectUsecase['execute']> {
-    const [input, { name, fields }] = args;
-    return this.apollo.mutate<{ createProject: Project }>({
+    const [input] = args;
+    const createdProject: CreateProjectResponse = {
+      id: 'tmp-id',
+      name: input.name,
+      description: input.description,
+      color: input.color,
+      admin: {
+        id: input.adminUserId,
+        __typename: 'User',
+      },
+      __typename: 'Project',
+    };
+    return this.apollo.mutate<{ createProject: CreateProjectResponse }>({
       mutation: gql`
-        ${fields}
         mutation CreateProject($input: CreateProjectInput!) {
           createProject(input: $input) {
-            ...${name}
+            id
+            name
+            description
+            color
+            admin {
+              id
+            }
           }
         }
       `,
       variables: {
         input,
+      },
+      optimisticResponse: {
+        createProject: createdProject,
       },
       update(cache, response) {
         const query = gql`
