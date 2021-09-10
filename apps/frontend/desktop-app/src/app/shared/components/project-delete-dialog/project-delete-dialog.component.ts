@@ -15,15 +15,8 @@ import { Project } from '@bison/frontend/domain';
 import { DeleteProjectInput } from '@bison/shared/schema';
 import { RxState } from '@rx-angular/state';
 import { TuiNotificationsService } from '@taiga-ui/core';
-import { gql } from 'apollo-angular';
-import { of, Subject } from 'rxjs';
-import { exhaustMap, tap } from 'rxjs/operators';
-
-const PROJECT_FIELDS = gql`
-  fragment ProjectPartsInProjectDeleteDialog on Project {
-    id
-  }
-`;
+import { merge, of, Subject } from 'rxjs';
+import { exhaustMap } from 'rxjs/operators';
 
 type State = {
   project: Project;
@@ -92,23 +85,13 @@ export class ProjectDeleteDialogComponent implements OnInit {
     const input: DeleteProjectInput = {
       id: project.id,
     };
-    return this.deleteProjectUsecase
-      .execute(input, {
-        name: 'ProjectPartsInProjectDeleteDialog',
-        fields: PROJECT_FIELDS,
+    this.state.set('isOpen', () => false);
+    this.delete.emit();
+    return merge(
+      this.deleteProjectUsecase.execute(input),
+      this.notificationsService.show('プロジェクトを削除しました', {
+        hasCloseButton: true,
       })
-      .pipe(
-        tap(() => {
-          this.state.set('isOpen', () => false);
-          this.notificationsService
-            .show('プロジェクトを削除しました', {
-              hasCloseButton: true,
-            })
-            .subscribe();
-        }),
-        tap(() => {
-          this.delete.emit();
-        })
-      );
+    );
   }
 }
