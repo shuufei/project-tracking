@@ -18,7 +18,9 @@ export class CreateBoardUsecase implements ICreateBoardUsecase {
     const createdBoard: CreateBoardResponse = {
       id: 'tmp-id',
       name: input.name,
-      description: input.description,
+      description: input.description ?? null,
+      tasksOrder: [],
+      createdAt: new Date().valueOf(),
       __typename: 'Board',
       project: {
         id: input.projectId,
