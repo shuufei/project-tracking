@@ -13,12 +13,13 @@ export const CREATE_PROJECT_USECASE = new InjectionToken<ICreateProjectUsecase>(
   'CreateProjectUsecase'
 );
 
-export type CreateProjectResponse = Pick<
-  Project,
-  'id' | 'name' | 'description' | 'color'
-> & {
+export type CreateProjectResponse = Pick<Project, 'id' | 'name' | 'color'> & {
+  // TODO: 再帰的に、optionalの項目をnullableにする型を定義する
+  description: Project['description'] | null;
   __typename: 'Project';
   admin: Pick<User, 'id'> & {
     __typename: 'User';
   };
+  members: never[];
+  boards: never[];
 };

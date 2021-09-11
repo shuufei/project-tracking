@@ -16,12 +16,14 @@ export class CreateProjectUsecase implements ICreateProjectUsecase {
     const createdProject: CreateProjectResponse = {
       id: 'tmp-id',
       name: input.name,
-      description: input.description,
+      description: input.description ?? null,
       color: input.color,
       admin: {
         id: input.adminUserId,
         __typename: 'User',
       },
+      members: [],
+      boards: [],
       __typename: 'Project',
     };
     return this.apollo.mutate<{ createProject: CreateProjectResponse }>({
@@ -34,6 +36,26 @@ export class CreateProjectUsecase implements ICreateProjectUsecase {
             color
             admin {
               id
+              name
+              icon
+            }
+            members {
+              id
+              name
+              icon
+            }
+            boards {
+              id
+              name
+              description
+              project {
+                id
+              }
+              createdAt
+              tasksOrder {
+                taskId
+                type
+              }
             }
           }
         }
@@ -45,6 +67,10 @@ export class CreateProjectUsecase implements ICreateProjectUsecase {
         createProject: createdProject,
       },
       update(cache, response) {
+        const newProject = response.data?.createProject;
+        if (newProject == null) {
+          return;
+        }
         const query = gql`
           query Viewer {
             viewer {
