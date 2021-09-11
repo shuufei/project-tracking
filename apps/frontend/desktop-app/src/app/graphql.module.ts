@@ -4,11 +4,12 @@ import { ApolloClientOptions, InMemoryCache } from '@apollo/client/core';
 import { COGNITO_AUTHENTICATION_PROVIDER } from '@bison/shared/constants';
 import { APOLLO_OPTIONS } from 'apollo-angular';
 import { HttpLink } from 'apollo-angular/http';
+import { idpUserId_ShuuheiHanashiro } from '../../../../../construction/dynamodb/sample-data/data/project-user';
 import { environment } from '../environments/environment';
 
 // TODO: environmen.productionでurlを変更する
 const uri = 'http://localhost:3333/graphql';
-const idpUserId = '271ce6ff-8468-4560-b659-6dedc20241d4';
+const idpUserId = idpUserId_ShuuheiHanashiro;
 const headers = new HttpHeaders(
   environment.production
     ? {}
