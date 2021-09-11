@@ -7,7 +7,7 @@ import {
   IUpdateTaskUsecase,
   UPDATE_TASK_USECASE,
 } from '@bison/frontend/application';
-import { Task as DomainTask, Task } from '@bison/frontend/domain';
+import { Task } from '@bison/frontend/domain';
 import { Board } from '@bison/frontend/ui';
 import {
   CreateTaskOnTaskGroupInput,
@@ -16,10 +16,8 @@ import {
   User,
 } from '@bison/shared/schema';
 import { gql } from 'apollo-angular';
-import { Observable, of } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
+import { of } from 'rxjs';
 import { convertToApiStatusFromDomainStatus } from '../../../util/convert-to-api-status-from-domain-status';
-import { convertToDomainTaskFromApiTask } from '../../../util/convert-to-domain-task-from-api-task';
 
 const TASK_FIELDS = gql`
   fragment TaskPartsForCreateTaskOnTaskGroup on Task {
@@ -82,7 +80,7 @@ export class TaskFacadeService {
     assignUserId: User['id'] | undefined,
     taskGroupId: TaskGroup['id'],
     scheduledTimeSec: TaskGroup['scheduledTimeSec']
-  ): Observable<DomainTask> {
+  ) {
     const input: CreateTaskOnTaskGroupInput = {
       title,
       description,
@@ -90,18 +88,10 @@ export class TaskFacadeService {
       taskGroupId,
       scheduledTimeSec,
     };
-    return this.createTaskOnTaskGroupUsecase
-      .excute(input, {
-        fields: TASK_FIELDS,
-        name: 'TaskPartsForCreateTaskOnTaskGroup',
-      })
-      .pipe(
-        map((response) => response.data?.createTaskOnTaskGroup),
-        filter((v): v is NonNullable<typeof v> => v != null),
-        map((task) => {
-          return convertToDomainTaskFromApiTask(task);
-        })
-      );
+    return this.createTaskOnTaskGroupUsecase.excute(input, {
+      fields: TASK_FIELDS,
+      name: 'TaskPartsForCreateTaskOnTaskGroup',
+    });
   }
 
   updateTitle(title: Task['title'], currentTask: Task) {

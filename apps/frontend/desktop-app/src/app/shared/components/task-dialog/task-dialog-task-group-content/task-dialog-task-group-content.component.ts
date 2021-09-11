@@ -328,17 +328,6 @@ export class TaskDialogTaskGroupContentComponent implements OnInit {
             taskGroup.id,
             undefined
           );
-        }),
-        filter((v): v is NonNullable<typeof v> => v != null),
-        tap((task) => {
-          this.state.set('taskGroup', ({ taskGroup }) => {
-            if (taskGroup == null) return taskGroup;
-            return {
-              ...taskGroup,
-              tasks: [...taskGroup.tasks, task],
-              tasksOrder: [...taskGroup.tasksOrder, task.id],
-            };
-          });
         })
       )
     );

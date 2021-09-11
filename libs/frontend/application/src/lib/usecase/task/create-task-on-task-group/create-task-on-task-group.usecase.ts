@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Reference, StoreObject } from '@apollo/client';
-import { Task, TaskGroup } from '@bison/shared/schema';
+import { Status, TaskGroup } from '@bison/shared/schema';
 import { Apollo, gql } from 'apollo-angular';
-import { ICreateTaskOnTaskGroupUsecase } from './create-task-on-task-group.usecase.interface';
+import {
+  CreateTaskOnTaskGroupResponse,
+  ICreateTaskOnTaskGroupUsecase,
+} from './create-task-on-task-group.usecase.interface';
 
 @Injectable()
 export class CreateTaskOnTaskGroupUsecase
@@ -12,18 +15,62 @@ export class CreateTaskOnTaskGroupUsecase
   excute(
     ...args: Parameters<ICreateTaskOnTaskGroupUsecase['excute']>
   ): ReturnType<ICreateTaskOnTaskGroupUsecase['excute']> {
-    const [input, { fields, name }] = args;
-    return this.apollo.mutate<{ createTaskOnTaskGroup: Task }>({
+    const [input] = args;
+    const createdTask: CreateTaskOnTaskGroupResponse = {
+      id: 'tmp-id',
+      title: input.title,
+      description: input.description,
+      scheduledTimeSec: input.scheduledTimeSec,
+      status: Status.TODO,
+      subtasks: [],
+      workTimeSec: 0,
+      subtasksOrder: [],
+      createdAt: new Date().valueOf(),
+      assign:
+        input.assignUserId != null
+          ? {
+              id: input.assignUserId,
+              __typename: 'User',
+            }
+          : undefined,
+      taskGroup: {
+        id: input.taskGroupId,
+        __typename: 'TaskGroup',
+      },
+      __typename: 'Task',
+    };
+    return this.apollo.mutate<{
+      createTaskOnTaskGroup: CreateTaskOnTaskGroupResponse;
+    }>({
       mutation: gql`
-        ${fields}
         mutation CreateTaskOnTaskGroup($input: CreateTaskOnTaskGroupInput!) {
           createTaskOnTaskGroup(input: $input) {
-            ...${name}
+            id
+            title
+            description
+            status
+            subtasks {
+              id
+            }
+            assign {
+              id
+            }
+            taskGroup {
+              id
+            }
+            workTimeSec
+            scheduledTimeSec
+            workStartDateTimestamp
+            subtasksOrder
+            createdAt
           }
         }
       `,
       variables: {
         input,
+      },
+      optimisticResponse: {
+        createTaskOnTaskGroup: createdTask,
       },
       update(cache, response) {
         if (response.data?.createTaskOnTaskGroup == null) {
