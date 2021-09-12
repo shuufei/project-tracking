@@ -163,8 +163,9 @@ export class ProjectCreateSheetComponent implements OnInit {
         }> => {
           return response.data.viewer != null;
         }),
-        map((response) => {
-          const { viewer } = response.data;
+        map((response) => response.data?.viewer),
+        nonNullable(),
+        map((viewer) => {
           return {
             id: viewer.id,
             name: viewer.name,
@@ -216,12 +217,13 @@ export class ProjectCreateSheetComponent implements OnInit {
         map((result) => result.data?.createProject),
         nonNullable(),
         switchMap((project) => {
+          const memberIds = state.members.map((v) => v.id);
           const input: UpdateProjectMembersInput = {
             projectId: project.id,
-            addUserIds: state.members.map((v) => v.id),
+            addUserIds: memberIds,
             removeUserIds: [],
           };
-          return this.updateProjectMembersUsecase.execute(input);
+          return this.updateProjectMembersUsecase.execute(input, memberIds);
         })
       )
     );

@@ -17,8 +17,8 @@ import { UpdateProjectMembersInput } from '@bison/shared/schema';
 import { RxState } from '@rx-angular/state';
 import { TuiNotificationsService } from '@taiga-ui/core';
 import { gql } from 'apollo-angular';
-import { combineLatest, Observable, Subject } from 'rxjs';
-import { exhaustMap, map, switchMap } from 'rxjs/operators';
+import { combineLatest, merge, Observable, Subject } from 'rxjs';
+import { exhaustMap, map } from 'rxjs/operators';
 
 const USER_FIELDS = gql`
   fragment UserPartsInProjectMemberUpdateSheet on User {
@@ -155,15 +155,11 @@ export class ProjectMemberUpdateSheetComponent implements OnInit {
       addUserIds: addedMemberIds,
       removeUserIds: removedMemberIds,
     };
-    return this.updateProjectMembersUsecase.execute(input).pipe(
-      switchMap(() => {
-        this.state.set('isSheetOpen', () => false);
-        return this.notificationsService.show(
-          'プロジェクトのメンバーが更新されました',
-          {
-            hasCloseButton: true,
-          }
-        );
+    this.state.set('isSheetOpen', () => false);
+    return merge(
+      this.updateProjectMembersUsecase.execute(input, memberIds),
+      this.notificationsService.show('プロジェクトのメンバーが更新されました', {
+        hasCloseButton: true,
       })
     );
   }

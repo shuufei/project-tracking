@@ -5,7 +5,8 @@ import { Observable } from 'rxjs';
 
 export interface IUpdateProjectMembersUsecase {
   execute: (
-    input: UpdateProjectMembersInput
+    input: UpdateProjectMembersInput,
+    updatedMemberIds: User['id'][]
   ) => Observable<
     FetchResult<{ updateProjectMembers: UpdateProjectMembersResponse }>
   >;

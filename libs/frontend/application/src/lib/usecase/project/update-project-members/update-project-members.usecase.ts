@@ -13,7 +13,15 @@ export class UpdateProjectMembersUsecase
   execute(
     ...args: Parameters<IUpdateProjectMembersUsecase['execute']>
   ): ReturnType<IUpdateProjectMembersUsecase['execute']> {
-    const [input] = args;
+    const [input, memberIds] = args;
+    const updatedProject: UpdateProjectMembersResponse = {
+      id: input.projectId,
+      members: memberIds.map((id) => ({
+        id,
+        __typename: 'User',
+      })),
+      __typename: 'Project',
+    };
     return this.apollo.mutate<{
       updateProjectMembers: UpdateProjectMembersResponse;
     }>({
@@ -29,6 +37,9 @@ export class UpdateProjectMembersUsecase
       `,
       variables: {
         input,
+      },
+      optimisticResponse: {
+        updateProjectMembers: updatedProject,
       },
     });
   }
