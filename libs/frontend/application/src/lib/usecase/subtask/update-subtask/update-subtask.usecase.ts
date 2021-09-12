@@ -16,15 +16,15 @@ export class UpdateSubtaskUsecase implements IUpdateSubtaskUsecase {
     const updatedSubtask: UpdateSubtaskResponse = {
       id: input.id,
       title: input.title,
-      description: input.description,
+      description: input.description ?? null,
       isDone: input.isDone,
       workTimeSec: input.workTimeSec,
-      scheduledTimeSec: input.scheduledTimeSec,
-      workStartDateTimestamp: input.workStartDateTimestamp,
+      scheduledTimeSec: input.scheduledTimeSec ?? null,
+      workStartDateTimestamp: input.workStartDateTimestamp ?? null,
       assign:
         input.assignUserId != null
           ? { id: input.assignUserId, __typename: 'User' }
-          : undefined,
+          : null,
       task: {
         id: input.taskId,
         __typename: 'Task',
