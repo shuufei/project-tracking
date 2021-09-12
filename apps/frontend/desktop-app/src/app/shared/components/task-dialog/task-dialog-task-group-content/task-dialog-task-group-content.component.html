@@ -141,7 +141,7 @@
           <bis-task-dialog-assign-change-button
             class="w-full"
             [users]="state.users"
-            [selectedUserId]="state.taskGroup.assignUser?.id"
+            [selectedUserId]="state.taskGroup.assignUser?.id || undefined"
             (selectedUser)="onChangedAssignUser$.next($event)"
           ></bis-task-dialog-assign-change-button>
           <bis-task-dialog-project-change-button

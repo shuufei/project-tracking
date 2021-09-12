@@ -42,7 +42,7 @@
       <div class="flex justify-between mt-1">
         <ui-assign-change-button
           [users]="state.users"
-          [selectedUserId]="state.task?.assignUser?.id"
+          [selectedUserId]="state.task?.assignUser?.id || undefined"
           (selectedUser)="onChangedAssignUser$.next($event)"
           (click)="$event.stopPropagation()"
         ></ui-assign-change-button>

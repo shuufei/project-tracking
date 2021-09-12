@@ -30,7 +30,7 @@
       class="relative"
       [triggerEl]="trigger"
       [users]="state.users"
-      [selectedUserId]="state.selectedUserId"
+      [selectedUserId]="state.selectedUserId || undefined"
       (selectUser)="onChangedSelectedUserId$.next($event)"
     ></ui-user-select-popup>
   </div>

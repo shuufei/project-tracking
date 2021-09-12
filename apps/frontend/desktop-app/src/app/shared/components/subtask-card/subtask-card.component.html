@@ -52,7 +52,7 @@
     <div class="py-1 px-3 mt-1">
       <ui-assign-change-button
         [users]="state.users"
-        [selectedUserId]="state.subtask?.assignUser?.id"
+        [selectedUserId]="state.subtask?.assignUser?.id || undefined"
         (selectedUser)="onChangedAssignUser$.next($event)"
         (click)="$event.stopPropagation()"
       ></ui-assign-change-button>

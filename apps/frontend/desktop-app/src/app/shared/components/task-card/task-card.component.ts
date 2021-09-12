@@ -122,8 +122,7 @@ export class TaskCardComponent implements OnInit {
         switchMap((taskId) => {
           return this.apolloDataQuery.queryTask(
             { fields: TASK_FIELDS, name: TASK_FRAGMENT_NAME },
-            taskId,
-            { fetchPolicy: 'cache-first', nextFetchPolicy: 'cache-first' }
+            taskId
           );
         }),
         map((result) => result.data?.task),
