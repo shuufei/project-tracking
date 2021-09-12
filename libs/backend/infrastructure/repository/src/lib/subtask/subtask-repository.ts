@@ -69,7 +69,15 @@ export class SubtaskRepository implements ISubtaskRepository {
     const currentSubtask = await this.getById(subtask.id);
     const updatedSubtask = {
       ...currentSubtask,
-      ...subtask,
+      id: subtask.id,
+      title: subtask.title,
+      description: subtask.description,
+      isDone: subtask.isDone,
+      assignUserId: subtask.assignUserId,
+      workTimeSec: subtask.workTimeSec,
+      scheduledTimeSec: subtask.scheduledTimeSec,
+      workStartDateTimestamp: subtask.workStartDateTimestamp,
+      taskId: subtask.taskId,
     };
     const item = convertToDbSubtaskItemFromSubtask(updatedSubtask);
     const params: DynamoDB.PutItemInput = {
