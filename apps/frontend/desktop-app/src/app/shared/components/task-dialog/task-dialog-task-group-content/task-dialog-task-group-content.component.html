@@ -93,7 +93,13 @@
                   cdkDropList
                   (cdkDropListDropped)="onDrop$.next($event)"
                 >
-                  <ng-container *ngFor="let task of tasks; first as isFirst">
+                  <ng-container
+                    *ngFor="
+                      let task of tasks;
+                      first as isFirst;
+                      trackBy: trackById
+                    "
+                  >
                     <div [ngClass]="[isFirst ? '' : 'mt-1']" cdkDrag>
                       <bis-task-card
                         [taskId]="task.id"

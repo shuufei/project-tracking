@@ -11,6 +11,7 @@ import {
 } from '@bison/frontend/application';
 import { Task } from '@bison/frontend/domain';
 import { Board, User } from '@bison/frontend/ui';
+import { Id } from '@bison/shared/domain';
 import { RxState } from '@rx-angular/state';
 import { TuiNotificationsService } from '@taiga-ui/core';
 import { gql } from 'apollo-angular';
@@ -487,5 +488,9 @@ export class TaskDialogTaskContentComponent implements OnInit {
     this.state.hold(this.onClickedBackButton$, () => {
       this.taskDialogService.back();
     });
+  }
+
+  trackById(_: number, item: { id: Id }) {
+    return item.id;
   }
 }

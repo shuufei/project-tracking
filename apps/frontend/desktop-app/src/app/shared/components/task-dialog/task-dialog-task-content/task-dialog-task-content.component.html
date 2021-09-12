@@ -101,7 +101,11 @@
                   (cdkDropListDropped)="onDrop$.next($event)"
                 >
                   <ng-container
-                    *ngFor="let subtask of subtasks; first as isFirst"
+                    *ngFor="
+                      let subtask of subtasks;
+                      first as isFirst;
+                      trackBy: trackById
+                    "
                   >
                     <div cdkDrag>
                       <bis-subtask-card
