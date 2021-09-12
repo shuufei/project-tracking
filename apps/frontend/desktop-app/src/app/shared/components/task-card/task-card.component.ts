@@ -142,11 +142,9 @@ export class TaskCardComponent implements OnInit {
           name: 'UserPartsInTaskCard',
         })
         .pipe(
-          map((response) => {
-            if (response.data?.users == null) {
-              return [];
-            }
-            const { users } = response.data;
+          map((response) => response.data?.users),
+          nonNullable(),
+          map((users) => {
             return users.map((user) => {
               return {
                 id: user.id,
@@ -172,9 +170,11 @@ export class TaskCardComponent implements OnInit {
             { fetchPolicy: 'cache-only' }
           );
         }),
-        map((response) => {
+        map((response) => response.data?.project?.boards),
+        nonNullable(),
+        map((boards) => {
           return (
-            response.data.project?.boards.map((board) => {
+            boards.map((board) => {
               return {
                 id: board.id,
                 name: board.name,
