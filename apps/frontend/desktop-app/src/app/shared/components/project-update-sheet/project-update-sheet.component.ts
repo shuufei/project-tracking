@@ -13,20 +13,10 @@ import { Project } from '@bison/frontend/domain';
 import { UpdateProjectInput } from '@bison/shared/schema';
 import { RxState } from '@rx-angular/state';
 import { TuiNotificationsService } from '@taiga-ui/core';
-import { gql } from 'apollo-angular';
 import { merge, Subject } from 'rxjs';
 import { exhaustMap } from 'rxjs/operators';
 import { convertToApiColorFromDomainColor } from '../../../util/convert-to-api-color-from-domain-color';
 import { ChangedPropertyEvent } from '../project-property-edit-form/project-property-edit-form.component';
-
-export const PROJECT_PARTS = gql`
-  fragment ProjectParts on Project {
-    id
-    name
-    description
-    color
-  }
-`;
 
 type State = {
   project: Project;
