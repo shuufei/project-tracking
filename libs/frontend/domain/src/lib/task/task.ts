@@ -20,7 +20,7 @@ export type Task = Pick<
   | 'createdAt'
 > & {
   board: Pick<Board, 'id'> & {
-    project: Pick<Project, 'id'>;
+    project: Pick<Project, 'id' | 'name'>;
   };
   assignUser?: User;
   taskGroup?: Pick<TaskGroup, 'id' | 'title'>;

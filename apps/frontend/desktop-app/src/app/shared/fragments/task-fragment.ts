@@ -17,6 +17,7 @@ export const TASK_FIELDS = gql`
       id
       project {
         id
+        name
       }
     }
     assign {

@@ -137,7 +137,7 @@ export class TaskDialogTaskGroupContentComponent implements OnInit {
     this.state.connect(
       'boards',
       this.state.select('taskGroup').pipe(
-        map((v) => v?.board.projectId),
+        map((v) => v?.board.project.id),
         filter((v): v is NonNullable<typeof v> => v != null),
         switchMap((projectId) => {
           return this.apolloDataQuery.queryProject(
@@ -327,7 +327,7 @@ export class TaskDialogTaskGroupContentComponent implements OnInit {
             undefined,
             taskGroup.id,
             undefined,
-            taskGroup.board.projectId,
+            taskGroup.board.project.id,
             taskGroup.board.id
           );
         })

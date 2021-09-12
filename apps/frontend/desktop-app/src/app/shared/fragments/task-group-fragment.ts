@@ -22,6 +22,7 @@ export const TASK_GROUP_FIELDS = gql`
       name
       project {
         id
+        name
       }
     }
     tasks {

@@ -17,6 +17,7 @@ export const convertToDomainTaskFromApiTask = (task: Task): DomainTask => {
       id: task.board.id,
       project: {
         id: task.board.project.id,
+        name: task.board.project.name,
       },
     },
     assignUser: task.assign,
