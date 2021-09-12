@@ -11,6 +11,11 @@ import {
 export class CreateSubtaskUsecase implements ICreateSubtaskUsecase {
   constructor(private apollo: Apollo) {}
 
+  /**
+   * FIXME:
+   * createSubtaskのリクエストが完了後、id: tmp-idでSubtask Queryが実行されてしまう。
+   * アプリケーションの動作上は問題ないが、APIとしてはエラーになる。(tmp-idのsubtaskは存在しないため)
+   */
   execute(
     ...args: Parameters<ICreateSubtaskUsecase['execute']>
   ): ReturnType<ICreateSubtaskUsecase['execute']> {
@@ -18,15 +23,19 @@ export class CreateSubtaskUsecase implements ICreateSubtaskUsecase {
     const createdSubtask: CreateSubtaskResponse = {
       id: 'tmp-id',
       title: input.title,
-      description: input.description,
-      scheduledTimeSec: input.scheduledTimeSec,
+      description: input.description ?? null,
+      isDone: false,
+      workTimeSec: 0,
+      scheduledTimeSec: input.scheduledTimeSec ?? null,
+      workStartDateTimestamp: null,
+      createdAt: new Date().valueOf(),
       assign:
         input.assignUserId != null
           ? {
               id: input.assignUserId,
               __typename: 'User',
             }
-          : undefined,
+          : null,
       task: {
         id: input.taskId,
         __typename: 'Task',
@@ -40,13 +49,17 @@ export class CreateSubtaskUsecase implements ICreateSubtaskUsecase {
             id
             title
             description
+            isDone
+            workTimeSec
+            scheduledTimeSec
+            workStartDateTimestamp
             assign {
               id
             }
             task {
               id
             }
-            scheduledTimeSec
+            createdAt
           }
         }
       `,
@@ -82,20 +95,18 @@ export class CreateSubtaskUsecase implements ICreateSubtaskUsecase {
               const newSubtaskRef = cache.writeFragment({
                 data: newSubtask,
                 fragment: gql`
-                  fragment NewTask on Task {
+                  fragment NewSubtask on Subtask {
                     id
                   }
                 `,
               });
-              if (
-                subtaskRefs.some(
-                  (ref) => readField('id', ref) === newSubtask.id
-                )
-              ) {
-                return subtaskRefs;
-              } else {
-                return [...subtaskRefs, newSubtaskRef];
-              }
+              const included = subtaskRefs.some(
+                (ref) => readField('id', ref) === newSubtask.id
+              );
+              const updatedSubtaskRefs = included
+                ? subtaskRefs
+                : [...subtaskRefs, newSubtaskRef];
+              return updatedSubtaskRefs;
             },
           },
         });

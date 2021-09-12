@@ -15,9 +15,12 @@ export const CREATE_SUBTASK_USECASE = new InjectionToken<ICreateSubtaskUsecase>(
 
 export type CreateSubtaskResponse = Pick<
   Subtask,
-  'id' | 'title' | 'description' | 'scheduledTimeSec'
+  'id' | 'title' | 'isDone' | 'workTimeSec' | 'createdAt'
 > & {
-  assign?: Pick<User, 'id'> & { __typename: 'User' };
+  description: NonNullable<Subtask['description']> | null;
+  scheduledTimeSec: NonNullable<Subtask['scheduledTimeSec']> | null;
+  workStartDateTimestamp: NonNullable<Subtask['workStartDateTimestamp']> | null;
+  assign: (Pick<User, 'id'> & { __typename: 'User' }) | null;
   task: Pick<Task, 'id'> & { __typename: 'Task' };
   __typename: 'Subtask';
 };
