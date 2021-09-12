@@ -104,7 +104,9 @@ export class SubtaskCardComponent implements OnInit {
         }),
         map((response) => response.data.subtask),
         nonNullable(),
-        map((subtask) => convertToDomainSubtaskFromApiSubtask(subtask))
+        map((subtask) => {
+          return convertToDomainSubtaskFromApiSubtask(subtask);
+        })
       )
     );
     this.state.connect(
@@ -159,9 +161,9 @@ export class SubtaskCardComponent implements OnInit {
 
     this.state.hold(
       this.onChangedAssignUser$.pipe(
-        filter(
-          (userId) => userId !== this.state.get('subtask')?.assignUser?.id
-        ),
+        filter((userId) => {
+          return userId !== this.state.get('subtask')?.assignUser?.id;
+        }),
         exhaustMap((userId) => {
           const subtask = this.state.get('subtask');
           if (subtask == null) return of(undefined);
