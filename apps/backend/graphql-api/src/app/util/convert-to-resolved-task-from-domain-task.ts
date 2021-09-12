@@ -14,13 +14,11 @@ export const convertToResolvedTaskFromDomainTask = (
     scheduledTimeSec: task.scheduledTimeSec,
     subtasksOrder: task.subtasksOrder,
     workStartDateTimestamp: task.workStartDateTimestamp,
-    assign:
-      task.assignUserId !== undefined ? { id: task.assignUserId } : undefined,
+    assign: task.assignUserId != null ? { id: task.assignUserId } : undefined,
     board: {
       id: task.boardId,
     },
-    taskGroup:
-      task.taskGroupId !== undefined ? { id: task.taskGroupId } : undefined,
+    taskGroup: task.taskGroupId != null ? { id: task.taskGroupId } : undefined,
     createdAt: task.createdAt,
   };
 };

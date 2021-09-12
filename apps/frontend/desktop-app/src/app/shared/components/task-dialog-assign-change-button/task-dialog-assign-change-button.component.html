@@ -12,7 +12,7 @@
           [color]="'primary-light1'"
         ></ui-icon>
         <ng-container
-          *ngIf="state.selectedUserId === undefined; else existSelectedUser"
+          *ngIf="state.selectedUserId == null; else existSelectedUser"
         >
           <span class="ml-3 text-s2 text-primary-light1 font-medium"
             >作業者</span

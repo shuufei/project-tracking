@@ -6,7 +6,7 @@
       [uiTooltipDirection]="'top-left'"
     >
       <ng-container
-        *ngIf="state.selectedUserId === undefined; else existSelectedUser"
+        *ngIf="state.selectedUserId == null; else existSelectedUser"
       >
         <button
           class="focus:outline-none w-5 h-5 flex items-center justify-center"

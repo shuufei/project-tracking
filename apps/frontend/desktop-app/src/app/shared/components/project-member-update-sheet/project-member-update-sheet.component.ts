@@ -145,10 +145,10 @@ export class ProjectMemberUpdateSheetComponent implements OnInit {
 
   private updateProjectMembers(project: Project, memberIds: User['id'][]) {
     const addedMemberIds = memberIds.filter(
-      (memberId) => project.members.find((v) => v.id === memberId) === undefined
+      (memberId) => project.members.find((v) => v.id === memberId) == null
     );
     const removedMemberIds = project.members
-      .filter((member) => memberIds.find((id) => id === member.id) == undefined)
+      .filter((member) => memberIds.find((id) => id === member.id) == null)
       .map((v) => v.id);
     const input: UpdateProjectMembersInput = {
       projectId: project.id,

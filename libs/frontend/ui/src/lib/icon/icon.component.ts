@@ -18,7 +18,7 @@ export class IconComponent {
   }
 
   get hoverColorClass() {
-    return this.hoverColor !== undefined ? `hover-${this.hoverColor}` : '';
+    return this.hoverColor != null ? `hover-${this.hoverColor}` : '';
   }
 }
 
