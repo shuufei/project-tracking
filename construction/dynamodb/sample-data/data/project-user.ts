@@ -64,7 +64,7 @@ export const project_Bison = {
   SK: `Project-${projectId_Bison}`,
   'Project-name': 'Bison',
   'Project-description':
-    'プロジェクト管理アプリケーションの開発。¥nタスクトラッキング機能をプロジェクト管理のなかに組み込み、作業効率化につなげる。',
+    'プロジェクト管理アプリケーションの開発。\nタスクトラッキング機能をプロジェクト管理のなかに組み込み、作業効率化につなげる。',
   'Project-color': 'Green',
   'Project-adminUserId': userId_ShuuheiHanashiro,
   type: 'project',

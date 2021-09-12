@@ -12,6 +12,11 @@ export class CreateTaskOnTaskGroupUsecase
   implements ICreateTaskOnTaskGroupUsecase {
   constructor(private apollo: Apollo) {}
 
+  /**
+   * FIXME:
+   * createTaskOnTaskGroupのリクエストが完了後、id: tmp-idでTask Queryが実行されてしまう。
+   * アプリケーションの動作上は問題ないが、APIとしてはエラーになる。(tmp-idのsubtaskは存在しないため)
+   */
   excute(
     ...args: Parameters<ICreateTaskOnTaskGroupUsecase['excute']>
   ): ReturnType<ICreateTaskOnTaskGroupUsecase['excute']> {
