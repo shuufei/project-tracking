@@ -15,11 +15,8 @@ export const TASK_FIELDS = gql`
     subtasksOrder
     board {
       id
-      name
-      description
       project {
         id
-        name
       }
     }
     assign {
@@ -30,7 +27,6 @@ export const TASK_FIELDS = gql`
     taskGroup {
       id
       title
-      description
     }
     subtasks {
       ...${SUBTASK_FRAGMENT_NAME}

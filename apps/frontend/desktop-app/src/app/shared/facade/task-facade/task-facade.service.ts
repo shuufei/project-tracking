@@ -11,59 +11,13 @@ import { Task } from '@bison/frontend/domain';
 import { Board } from '@bison/frontend/ui';
 import {
   CreateTaskOnTaskGroupInput,
+  Project,
   TaskGroup,
   UpdateTaskInput,
   User,
 } from '@bison/shared/schema';
-import { gql } from 'apollo-angular';
 import { of } from 'rxjs';
 import { convertToApiStatusFromDomainStatus } from '../../../util/convert-to-api-status-from-domain-status';
-
-const TASK_FIELDS = gql`
-  fragment TaskPartsForCreateTaskOnTaskGroup on Task {
-    id
-    title
-    description
-    status
-    workTimeSec
-    scheduledTimeSec
-    subtasksOrder
-    workStartDateTimestamp
-    board {
-      id
-      name
-      description
-      project {
-        id
-        name
-      }
-    }
-    assign {
-      id
-      name
-      icon
-    }
-    taskGroup {
-      id
-      title
-      description
-    }
-    subtasks {
-      id
-      title
-      description
-      isDone
-      scheduledTimeSec
-      workTimeSec
-      workStartDateTimestamp
-      assign {
-        id
-        name
-        icon
-      }
-    }
-  }
-`;
 
 @Injectable()
 export class TaskFacadeService {
@@ -79,7 +33,9 @@ export class TaskFacadeService {
     description: Task['description'],
     assignUserId: User['id'] | undefined,
     taskGroupId: TaskGroup['id'],
-    scheduledTimeSec: TaskGroup['scheduledTimeSec']
+    scheduledTimeSec: TaskGroup['scheduledTimeSec'],
+    projectId: Project['id'],
+    boardId: Board['id']
   ) {
     const input: CreateTaskOnTaskGroupInput = {
       title,
@@ -88,10 +44,7 @@ export class TaskFacadeService {
       taskGroupId,
       scheduledTimeSec,
     };
-    return this.createTaskOnTaskGroupUsecase.excute(input, {
-      fields: TASK_FIELDS,
-      name: 'TaskPartsForCreateTaskOnTaskGroup',
-    });
+    return this.createTaskOnTaskGroupUsecase.excute(input, projectId, boardId);
   }
 
   updateTitle(title: Task['title'], currentTask: Task) {

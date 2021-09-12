@@ -15,15 +15,15 @@ export const convertToDomainTaskFromApiTask = (task: Task): DomainTask => {
     workStartDateTimestamp: task.workStartDateTimestamp,
     board: {
       id: task.board.id,
-      name: task.board.name,
-      description: task.board.description,
       project: {
         id: task.board.project.id,
-        name: task.board.project.name,
       },
     },
     assignUser: task.assign,
-    taskGroup: task.taskGroup,
+    taskGroup:
+      task.taskGroup != null
+        ? { id: task.taskGroup.id, title: task.taskGroup.title }
+        : undefined,
     subtasks: task.subtasks.map(convertToDomainSubtaskFromApiSubtask),
     createdAt: task.createdAt,
   };

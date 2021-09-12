@@ -15,15 +15,16 @@ export class CreateTaskOnTaskGroupUsecase
   excute(
     ...args: Parameters<ICreateTaskOnTaskGroupUsecase['excute']>
   ): ReturnType<ICreateTaskOnTaskGroupUsecase['excute']> {
-    const [input] = args;
+    const [input, projectId, boardId] = args;
     const createdTask: CreateTaskOnTaskGroupResponse = {
       id: 'tmp-id',
       title: input.title,
-      description: input.description,
-      scheduledTimeSec: input.scheduledTimeSec,
+      description: input.description ?? null,
       status: Status.TODO,
       subtasks: [],
       workTimeSec: 0,
+      scheduledTimeSec: input.scheduledTimeSec ?? null,
+      workStartDateTimestamp: null,
       subtasksOrder: [],
       createdAt: new Date().valueOf(),
       assign:
@@ -32,10 +33,18 @@ export class CreateTaskOnTaskGroupUsecase
               id: input.assignUserId,
               __typename: 'User',
             }
-          : undefined,
+          : null,
       taskGroup: {
         id: input.taskGroupId,
         __typename: 'TaskGroup',
+      },
+      board: {
+        id: boardId,
+        __typename: 'Board',
+        project: {
+          id: projectId,
+          __typename: 'Project',
+        },
       },
       __typename: 'Task',
     };
@@ -49,6 +58,16 @@ export class CreateTaskOnTaskGroupUsecase
             title
             description
             status
+            workTimeSec
+            scheduledTimeSec
+            workStartDateTimestamp
+            subtasksOrder
+            board {
+              id
+              project {
+                id
+              }
+            }
             subtasks {
               id
             }
@@ -58,10 +77,6 @@ export class CreateTaskOnTaskGroupUsecase
             taskGroup {
               id
             }
-            workTimeSec
-            scheduledTimeSec
-            workStartDateTimestamp
-            subtasksOrder
             createdAt
           }
         }
@@ -103,11 +118,13 @@ export class CreateTaskOnTaskGroupUsecase
                   }
                 `,
               });
-              if (taskRefs.some((ref) => readField('id', ref) === newTask.id)) {
-                return taskRefs;
-              } else {
-                return [...taskRefs, newTaskRef];
-              }
+              const included = taskRefs.some(
+                (ref) => readField('id', ref) === newTask.id
+              );
+              const updatedTaskRefs = included
+                ? taskRefs
+                : [...taskRefs, newTaskRef];
+              return updatedTaskRefs;
             },
           },
         });

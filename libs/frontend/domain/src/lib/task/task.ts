@@ -19,11 +19,11 @@ export type Task = Pick<
   | 'workStartDateTimestamp'
   | 'createdAt'
 > & {
-  board: Pick<Board, 'id' | 'name' | 'description'> & {
-    project: Pick<Project, 'id' | 'name'>;
+  board: Pick<Board, 'id'> & {
+    project: Pick<Project, 'id'>;
   };
   assignUser?: User;
-  taskGroup?: Pick<TaskGroup, 'id' | 'title' | 'description'>;
+  taskGroup?: Pick<TaskGroup, 'id' | 'title'>;
   subtasks: Subtask[];
 };
 

@@ -326,7 +326,9 @@ export class TaskDialogTaskGroupContentComponent implements OnInit {
             '',
             undefined,
             taskGroup.id,
-            undefined
+            undefined,
+            taskGroup.board.projectId,
+            taskGroup.board.id
           );
         })
       )
