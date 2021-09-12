@@ -13,9 +13,7 @@ export const convertToResolvedSubtaskFromDomainSubtask = (
     scheduledTimeSec: subtask.scheduledTimeSec,
     workStartDateTimestamp: subtask.workStartDateTimestamp,
     assign:
-      subtask.assignUserId !== undefined
-        ? { id: subtask.assignUserId }
-        : undefined,
+      subtask.assignUserId != null ? { id: subtask.assignUserId } : undefined,
     task: {
       id: subtask.taskId,
     },

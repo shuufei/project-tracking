@@ -89,11 +89,10 @@ export class ProjectDetailComponent implements OnInit {
           projectId
         );
       }),
-      map((result) => {
-        return (
-          result.data.project &&
-          convertToFrontendDomainProjectFromApiProject(result.data.project)
-        );
+      map((response) => response?.data?.project),
+      nonNullable(),
+      map((project) => {
+        return convertToFrontendDomainProjectFromApiProject(project);
       }),
       nonNullable()
     );

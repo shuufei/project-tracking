@@ -23,7 +23,7 @@ import {
 import { RxState } from '@rx-angular/state';
 import { TuiNotification, TuiNotificationsService } from '@taiga-ui/core';
 import { gql } from 'apollo-angular';
-import { Observable, Subject } from 'rxjs';
+import { merge, Observable, Subject } from 'rxjs';
 import { exhaustMap, filter, map, switchMap } from 'rxjs/operators';
 import { ChangedPropertyEvent } from '../../../../shared/components/project-property-edit-form/project-property-edit-form.component';
 import { convertToApiColorFromDomainColor } from '../../../../util/convert-to-api-color-from-domain-color';
@@ -163,8 +163,9 @@ export class ProjectCreateSheetComponent implements OnInit {
         }> => {
           return response.data.viewer != null;
         }),
-        map((response) => {
-          const { viewer } = response.data;
+        map((response) => response.data?.viewer),
+        nonNullable(),
+        map((viewer) => {
           return {
             id: viewer.id,
             name: viewer.name,
@@ -204,37 +205,27 @@ export class ProjectCreateSheetComponent implements OnInit {
       color: convertToApiColorFromDomainColor(state.color),
       adminUserId: state.me?.id,
     };
-    return this.createProjectUsecase
-      .execute(input, {
-        name: 'ProjectPartsOnProjectCreateSheet',
-        fields: PROJECT_FIELDS,
-      })
-      .pipe(
+    this.state.set('isSheetOpen', () => false);
+    return merge(
+      this.notificationsService.show('プロジェクトが作成されました', {
+        // SuccessとErrorを指定すると、背景色の要素が一番手前に来て、通知内容が隠れてしまう
+        // taiga-uiのバグ?
+        status: TuiNotification.Info,
+        hasCloseButton: true,
+      }),
+      this.createProjectUsecase.execute(input).pipe(
         map((result) => result.data?.createProject),
         nonNullable(),
         switchMap((project) => {
+          const memberIds = state.members.map((v) => v.id);
           const input: UpdateProjectMembersInput = {
             projectId: project.id,
-            addUserIds: state.members.map((v) => v.id),
+            addUserIds: memberIds,
             removeUserIds: [],
           };
-          return this.updateProjectMembersUsecase.execute(input, {
-            name: 'ProjectPartsOnProjectCreateSheet',
-            fields: PROJECT_FIELDS,
-          });
-        }),
-        switchMap(() => {
-          this.state.set('isSheetOpen', () => false);
-          return this.notificationsService.show(
-            'プロジェクトが作成されました',
-            {
-              // SuccessとErrorを指定すると、背景色の要素が一番手前に来て、通知内容が隠れてしまう
-              // taiga-uiのバグ?
-              status: TuiNotification.Info,
-              hasCloseButton: true,
-            }
-          );
+          return this.updateProjectMembersUsecase.execute(input, memberIds);
         })
-      );
+      )
+    );
   }
 }

@@ -1,5 +1,6 @@
 import {
   Board,
+  Project,
   TaskGroup as DomainTaskGroup,
   User,
 } from '@bison/shared/domain';
@@ -9,7 +10,9 @@ export type TaskGroup = Pick<
   DomainTaskGroup,
   'id' | 'title' | 'description' | 'scheduledTimeSec' | 'status' | 'tasksOrder'
 > & {
-  board: Pick<Board, 'id' | 'name' | 'projectId' | 'description'>;
+  board: Pick<Board, 'id' | 'name' | 'description'> & {
+    project: Pick<Project, 'id' | 'name'>;
+  };
   assignUser?: User;
   tasks: Task[];
 };

@@ -9,12 +9,13 @@ import {
   APOLLO_DATA_QUERY,
   IApolloDataQuery,
 } from '@bison/frontend/application';
-import { isTask, Task } from '@bison/frontend/domain';
+import { Task } from '@bison/frontend/domain';
 import { Board, User } from '@bison/frontend/ui';
+import { Id } from '@bison/shared/domain';
 import { RxState } from '@rx-angular/state';
 import { TuiNotificationsService } from '@taiga-ui/core';
 import { gql } from 'apollo-angular';
-import { of, Subject } from 'rxjs';
+import { merge, of, Subject } from 'rxjs';
 import {
   exhaustMap,
   filter,
@@ -23,15 +24,18 @@ import {
   startWith,
   switchMap,
   tap,
+  withLatestFrom,
 } from 'rxjs/operators';
-import { convertToDomainTaskGroupFromApiTaskGroup } from '../../../../util/convert-to-domain-task-group-from-api-task-group';
+import { convertToDomainTaskFromApiTask } from '../../../../util/convert-to-domain-task-from-api-task';
+import { nonNullable } from '../../../../util/custom-operators/non-nullable';
+import { sortSubtasks } from '../../../../util/custom-operators/sort-subtasks';
 import { updateScheduledTimeSecState } from '../../../../util/custom-operators/state-updators/update-scheduled-time-sec-state';
 import { SubtaskFacadeService } from '../../../facade/subtask-facade/subtask-facade.service';
 import { TaskFacadeService } from '../../../facade/task-facade/task-facade.service';
 import {
-  TASK_GROUP_FIELDS,
-  TASK_GROUP_FRAGMENT_NAME,
-} from '../../../fragments/task-group-fragment';
+  TASK_FIELDS,
+  TASK_FRAGMENT_NAME,
+} from '../../../fragments/task-fragment';
 import { TaskDialogService } from '../task-dialog.service';
 
 const USER_FIELDS = gql`
@@ -76,6 +80,9 @@ export class TaskDialogTaskContentComponent implements OnInit {
    */
   readonly state$ = this.state.select();
   readonly existsDialogPrevContent$ = this.taskDialogService.existsPrevContent$;
+  readonly subtasks$ = this.state
+    .select('task')
+    .pipe(nonNullable(), sortSubtasks());
 
   /**
    * Event
@@ -120,8 +127,19 @@ export class TaskDialogTaskContentComponent implements OnInit {
     this.state.connect(
       'task',
       this.taskDialogService.currentContent$.pipe(
-        filter((latestContent): latestContent is Task => {
-          return isTask(latestContent);
+        filter((latestContent) => {
+          return latestContent.type === 'Task';
+        }),
+        switchMap((latestContent) => {
+          return this.apolloDataQuery.queryTask(
+            { fields: TASK_FIELDS, name: TASK_FRAGMENT_NAME },
+            latestContent.id
+          );
+        }),
+        map((response) => response.data?.task),
+        nonNullable(),
+        map((task) => {
+          return convertToDomainTaskFromApiTask(task);
         })
       )
     );
@@ -184,10 +202,7 @@ export class TaskDialogTaskContentComponent implements OnInit {
     this.state.connect(
       'users',
       this.apolloDataQuery
-        .queryUsers(
-          { name: 'UserPartsInTaskDialog', fields: USER_FIELDS },
-          { fetchPolicy: 'cache-only' }
-        )
+        .queryUsers({ name: 'UserPartsInTaskDialog', fields: USER_FIELDS })
         .pipe(
           map((response) => {
             if (response.data?.users == null) {
@@ -221,17 +236,6 @@ export class TaskDialogTaskContentComponent implements OnInit {
             return of(undefined);
           }
           return this.subtaskFacadeService.create('', task.id);
-        }),
-        filter((v): v is NonNullable<typeof v> => v != null),
-        tap((subtask) => {
-          this.state.set('task', ({ task }) => {
-            if (task == null) return task;
-            return {
-              ...task,
-              subtasks: [...task.subtasks, subtask],
-              subtasksOrder: [...task.subtasksOrder, subtask.id],
-            };
-          });
         })
       )
     );
@@ -274,6 +278,10 @@ export class TaskDialogTaskContentComponent implements OnInit {
         exhaustMap((id) => {
           const task = this.state.get('task');
           if (task == null) return of(undefined);
+          this.state.set('task', (state) => {
+            const user = state.users.find((v) => v.id === id);
+            return { ...task, assignUser: user };
+          });
           return this.taskFacadeService.updateAssignUser(id, task);
         })
       )
@@ -309,6 +317,15 @@ export class TaskDialogTaskContentComponent implements OnInit {
         exhaustMap((boardId) => {
           const task = this.state.get('task');
           if (task == null) return of(undefined);
+          this.state.set('task', (state) => {
+            const board = state.boards.find((v) => v.id === boardId);
+            return board != null
+              ? {
+                  ...task,
+                  board: { ...task.board, id: board.id, name: board.name },
+                }
+              : task;
+          });
           return this.taskFacadeService.updateBoard(boardId, task);
         })
       )
@@ -409,34 +426,27 @@ export class TaskDialogTaskContentComponent implements OnInit {
     );
     this.state.hold(
       this.onDrop$.pipe(
-        map((dropEvent) => {
+        withLatestFrom(this.subtasks$),
+        map(([dropEvent, sortedSubtasks]) => {
           const task = this.state.get('task');
           if (task == null) {
             return [];
           }
-          const subtasks = [...(task?.subtasks ?? [])];
+          const subtasksOrder = [
+            ...(sortedSubtasks.map((v) => v.id) ?? []),
+          ].filter((id) => task.subtasks.map((v) => v.id).includes(id));
           moveItemInArray(
-            subtasks,
+            subtasksOrder,
             dropEvent.previousIndex,
             dropEvent.currentIndex
           );
-          return subtasks;
+          return subtasksOrder;
         }),
-        tap((subtasks) => {
-          const task = this.state.get('task');
-          if (task == null) {
-            return task;
-          }
-          const subtasksOrder = subtasks.map((v) => v.id);
-          this.state.set('task', () => {
-            return { ...task, subtasks, subtasksOrder };
-          });
-        }),
-        exhaustMap((subtasks) => {
+        switchMap((subtasksOrder) => {
           const task = this.state.get('task');
           if (task == null) return of(undefined);
           return this.taskFacadeService.updateSubtasksOrder(
-            subtasks.map((v) => v.id),
+            subtasksOrder,
             task
           );
         })
@@ -444,47 +454,43 @@ export class TaskDialogTaskContentComponent implements OnInit {
     );
     this.state.hold(
       this.onClickedTaskGroup$.pipe(
-        switchMap(() => {
+        map(() => {
           const task = this.state.get('task');
-          if (task == null || task?.taskGroup == null) return of(undefined);
-          return this.apolloDataQuery.queryTaskGroup(
-            { fields: TASK_GROUP_FIELDS, name: TASK_GROUP_FRAGMENT_NAME },
-            task.taskGroup.id,
-            { nextFetchPolicy: 'cache-only' }
-          );
+          return task?.taskGroup;
         }),
-        map((v) => {
-          return v?.data.taskGroup;
-        }),
-        filter((v): v is NonNullable<typeof v> => v != null),
-        map((taskGroup) => {
-          return convertToDomainTaskGroupFromApiTaskGroup(taskGroup);
-        })
+        nonNullable()
       ),
       (taskGroup) => {
-        this.taskDialogService.pushContent(taskGroup);
+        this.taskDialogService.pushContent({
+          id: taskGroup.id,
+          type: 'TaskGroup',
+        });
       }
     );
     this.state.hold(this.onClickedSubtask$, (subtask) => {
-      this.taskDialogService.pushContent(subtask);
+      this.taskDialogService.pushContent({ id: subtask.id, type: 'Subtask' });
     });
     this.state.hold(
       this.onDelete$.pipe(
         exhaustMap(() => {
           const taskId = this.state.get('task')?.id;
           if (taskId == null) return of(undefined);
-          return this.taskFacadeService.delete(taskId);
-        }),
-        switchMap(() => {
           this.taskDialogService.close();
-          return this.notificationsService.show('タスクを削除しました', {
-            hasCloseButton: true,
-          });
+          return merge(
+            this.taskFacadeService.delete(taskId),
+            this.notificationsService.show('タスクを削除しました', {
+              hasCloseButton: true,
+            })
+          );
         })
       )
     );
     this.state.hold(this.onClickedBackButton$, () => {
       this.taskDialogService.back();
     });
+  }
+
+  trackById(_: number, item: { id: Id }) {
+    return item.id;
   }
 }

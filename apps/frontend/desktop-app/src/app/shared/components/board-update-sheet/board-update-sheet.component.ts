@@ -3,25 +3,32 @@ import {
   Component,
   Inject,
   Input,
-  OnInit
+  OnInit,
 } from '@angular/core';
 import {
+  APOLLO_DATA_QUERY,
+  IApolloDataQuery,
   IUpdateBoardUsecase,
-  UPDATE_BOARD_USECASE
+  UPDATE_BOARD_USECASE,
 } from '@bison/frontend/application';
-import { Project } from '@bison/frontend/domain';
 import { Board } from '@bison/shared/domain';
 import { UpdateBoardInput } from '@bison/shared/schema';
 import { RxState } from '@rx-angular/state';
 import { TuiNotificationsService } from '@taiga-ui/core';
-import { Subject } from 'rxjs';
-import { exhaustMap, switchMap } from 'rxjs/operators';
+import { merge, Subject } from 'rxjs';
+import { exhaustMap, map, switchMap } from 'rxjs/operators';
 import { convertToApiTaskTypeFromDomainTaskType } from '../../../util/convert-to-api-task-type-from-domain-task-type';
+import { convertToDomainBoardFromApiBoard } from '../../../util/convert-to-domain-board-from-api-board';
+import { nonNullable } from '../../../util/custom-operators/non-nullable';
+import {
+  BOARD_FIELDS,
+  BOARD_FRAGMENT_NAME,
+} from '../../fragments/board-fragment';
 import { ChangedPropertyEvent } from '../board-property-edit-form/board-property-edit-form.component';
 
 type State = {
+  boardId?: Board['id'];
   board?: Board;
-  project?: Project;
   isSheetOpen: boolean;
 };
 
@@ -34,11 +41,8 @@ type State = {
 })
 export class BoardUpdateSheetComponent implements OnInit {
   @Input() triggerEl?: HTMLElement;
-  @Input() set board(value: Board) {
-    this.state.set('board', () => value);
-  }
-  @Input() set project(value: Project) {
-    this.state.set('project', () => value);
+  @Input() set boardId(value: Board['id']) {
+    this.state.set('boardId', () => value);
   }
   @Input() isOpened$ = new Subject<boolean>().asObservable();
 
@@ -61,11 +65,31 @@ export class BoardUpdateSheetComponent implements OnInit {
     @Inject(TuiNotificationsService)
     private readonly notificationsService: TuiNotificationsService,
     @Inject(UPDATE_BOARD_USECASE)
-    private updateBoardUsecase: IUpdateBoardUsecase
-  ) {}
+    private updateBoardUsecase: IUpdateBoardUsecase,
+    @Inject(APOLLO_DATA_QUERY)
+    private apolloDataQuery: IApolloDataQuery
+  ) {
+    this.state.set({ isSheetOpen: false });
+  }
 
   ngOnInit(): void {
-    this.state.set({ isSheetOpen: false });
+    this.state.connect(
+      'board',
+      this.state.select('boardId').pipe(
+        nonNullable(),
+        switchMap((id) => {
+          return this.apolloDataQuery.queryBoard(
+            { fields: BOARD_FIELDS, name: BOARD_FRAGMENT_NAME },
+            id
+          );
+        }),
+        map((response) => response?.data?.board),
+        nonNullable(),
+        map((board) => {
+          return convertToDomainBoardFromApiBoard(board);
+        })
+      )
+    );
     this.state.connect('isSheetOpen', this.isOpened$);
     this.state.connect(this.onChangedBoardProperty$, (state, event) => {
       if (state.board == null) {
@@ -90,9 +114,6 @@ export class BoardUpdateSheetComponent implements OnInit {
   }
 
   private mutateUpateBoard$(state: State) {
-    if (state.project == null) {
-      throw new Error('project is undefifned');
-    }
     if (state.board == null) {
       throw new Error('board is undefined');
     }
@@ -106,12 +127,11 @@ export class BoardUpdateSheetComponent implements OnInit {
         type: convertToApiTaskTypeFromDomainTaskType(v.type),
       })),
     };
-    return this.updateBoardUsecase.execute(input).pipe(
-      switchMap(() => {
-        this.state.set('isSheetOpen', () => false);
-        return this.notificationsService.show('ボード情報を更新しました', {
-          hasCloseButton: true,
-        });
+    this.state.set('isSheetOpen', () => false);
+    return merge(
+      this.updateBoardUsecase.execute(input),
+      this.notificationsService.show('ボード情報を更新しました', {
+        hasCloseButton: true,
       })
     );
   }

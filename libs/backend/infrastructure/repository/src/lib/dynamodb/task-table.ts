@@ -18,7 +18,7 @@ export type TaskItem = {
   scheduledTimeSec?: { N: string };
   workStartDateTimestamp?: { N: string };
   createdAt: { N: string };
-  subtasksOrder?: { SS: string[] };
+  subtasksOrder?: { L: { S: string }[] };
 };
 
 export const convertToDomainTaskFromDbTaskItem = (item: TaskItem): Task => {
@@ -34,7 +34,7 @@ export const convertToDomainTaskFromDbTaskItem = (item: TaskItem): Task => {
     scheduledTimeSec: item.scheduledTimeSec && Number(item.scheduledTimeSec.N),
     workStartDateTimestamp:
       item.workStartDateTimestamp && Number(item.workStartDateTimestamp.N),
-    subtasksOrder: item.subtasksOrder?.SS ?? [],
+    subtasksOrder: item.subtasksOrder?.L.map((v) => v.S) ?? [],
     createdAt: Number(item.createdAt.N),
   };
 };
@@ -68,7 +68,7 @@ export const convertToDbTaskItemFromDomainTask = (
     item.taskGroupId = { S: task.taskGroupId };
   }
   if (task.subtasksOrder.length > 0) {
-    item.subtasksOrder = { SS: task.subtasksOrder };
+    item.subtasksOrder = { L: task.subtasksOrder.map((v) => ({ S: v })) };
   }
   return item;
 };

@@ -21,10 +21,17 @@ import {
   map,
   pairwise,
   startWith,
+  switchMap,
   tap,
 } from 'rxjs/operators';
+import { convertToDomainSubtaskFromApiSubtask } from '../../../util/convert-to-domain-subtask-from-api-subtask';
+import { nonNullable } from '../../../util/custom-operators/non-nullable';
 import { updateStateOnPause } from '../../../util/custom-operators/state-updators/update-state-on-pause';
 import { SubtaskFacadeService } from '../../facade/subtask-facade/subtask-facade.service';
+import {
+  SUBTASK_FIELDS,
+  SUBTASK_FRAGMENT_NAME,
+} from '../../fragments/subtask-fragment';
 
 const USER_FIELDS = gql`
   fragment UserPartsInSubtaskCard on User {
@@ -35,6 +42,7 @@ const USER_FIELDS = gql`
 `;
 
 type State = {
+  subtaskId?: Subtask['id'];
   subtask?: Subtask;
   users: User[];
   isOpenedDeletePopup: boolean;
@@ -50,8 +58,8 @@ type State = {
 })
 export class SubtaskCardComponent implements OnInit {
   @Input()
-  set subtask(value: State['subtask']) {
-    this.state.set('subtask', () => value);
+  set subtaskId(value: Subtask['id']) {
+    this.state.set('subtaskId', () => value);
   }
   @Input() set isTitleEditable(value: State['isEditableTitle']) {
     this.state.set('isEditableTitle', () => value);
@@ -84,6 +92,23 @@ export class SubtaskCardComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.state.connect(
+      'subtask',
+      this.state.select('subtaskId').pipe(
+        nonNullable(),
+        switchMap((subtaskId) => {
+          return this.apolloDataQuery.querySubtask(
+            { fields: SUBTASK_FIELDS, name: SUBTASK_FRAGMENT_NAME },
+            subtaskId
+          );
+        }),
+        map((response) => response.data.subtask),
+        nonNullable(),
+        map((subtask) => {
+          return convertToDomainSubtaskFromApiSubtask(subtask);
+        })
+      )
+    );
     this.state.connect(
       'subtask',
       this.onChangedWorkTimeSec$,
@@ -136,9 +161,9 @@ export class SubtaskCardComponent implements OnInit {
 
     this.state.hold(
       this.onChangedAssignUser$.pipe(
-        filter(
-          (userId) => userId !== this.state.get('subtask')?.assignUser?.id
-        ),
+        filter((userId) => {
+          return userId !== this.state.get('subtask')?.assignUser?.id;
+        }),
         exhaustMap((userId) => {
           const subtask = this.state.get('subtask');
           if (subtask == null) return of(undefined);

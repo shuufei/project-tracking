@@ -75,8 +75,7 @@
           </ng-container>
           <bis-board-update-sheet
             [isOpened$]="isOpenedEditBoardSheet$.asObservable()"
-            [project]="state.project"
-            [board]="state.actionTargetBoard"
+            [boardId]="state.actionTargetBoard?.id"
           ></bis-board-update-sheet>
           <bis-board-delete-dialog
             [isOpened$]="isOpenedDeleteBoardDialog$.asObservable()"

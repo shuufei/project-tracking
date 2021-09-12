@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Board } from '@bison/shared/schema';
 import { Apollo, gql } from 'apollo-angular';
-import { IUpdateBoardUsecase } from './update-board.usecase.interface';
+import {
+  IUpdateBoardUsecase,
+  UpdateBoardResponse,
+} from './update-board.usecase.interface';
 
 @Injectable()
 export class UpdateBoardUsecase implements IUpdateBoardUsecase {
@@ -11,7 +13,18 @@ export class UpdateBoardUsecase implements IUpdateBoardUsecase {
     ...args: Parameters<IUpdateBoardUsecase['execute']>
   ): ReturnType<IUpdateBoardUsecase['execute']> {
     const [input] = args;
-    return this.apollo.mutate<{ upateBoard: Board }>({
+    const updatedBoard: UpdateBoardResponse = {
+      id: input.id,
+      name: input.name,
+      description: input.description,
+      tasksOrder: input.tasksOrder,
+      __typename: 'Board',
+      project: {
+        id: input.projectId,
+        __typename: 'Project',
+      },
+    };
+    return this.apollo.mutate<{ updateBoard: UpdateBoardResponse }>({
       mutation: gql`
         mutation UpdateBoard($input: UpdateBoardInput!) {
           updateBoard(input: $input) {
@@ -33,6 +46,9 @@ export class UpdateBoardUsecase implements IUpdateBoardUsecase {
       `,
       variables: {
         input,
+      },
+      optimisticResponse: {
+        updateBoard: updatedBoard,
       },
     });
   }

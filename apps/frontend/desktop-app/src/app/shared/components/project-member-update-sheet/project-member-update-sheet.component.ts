@@ -17,8 +17,8 @@ import { UpdateProjectMembersInput } from '@bison/shared/schema';
 import { RxState } from '@rx-angular/state';
 import { TuiNotificationsService } from '@taiga-ui/core';
 import { gql } from 'apollo-angular';
-import { combineLatest, Observable, Subject } from 'rxjs';
-import { exhaustMap, map, switchMap } from 'rxjs/operators';
+import { combineLatest, merge, Observable, Subject } from 'rxjs';
+import { exhaustMap, map } from 'rxjs/operators';
 
 const USER_FIELDS = gql`
   fragment UserPartsInProjectMemberUpdateSheet on User {
@@ -145,31 +145,22 @@ export class ProjectMemberUpdateSheetComponent implements OnInit {
 
   private updateProjectMembers(project: Project, memberIds: User['id'][]) {
     const addedMemberIds = memberIds.filter(
-      (memberId) => project.members.find((v) => v.id === memberId) === undefined
+      (memberId) => project.members.find((v) => v.id === memberId) == null
     );
     const removedMemberIds = project.members
-      .filter((member) => memberIds.find((id) => id === member.id) == undefined)
+      .filter((member) => memberIds.find((id) => id === member.id) == null)
       .map((v) => v.id);
     const input: UpdateProjectMembersInput = {
       projectId: project.id,
       addUserIds: addedMemberIds,
       removeUserIds: removedMemberIds,
     };
-    return this.updateProjectMembersUsecase
-      .execute(input, {
-        name: 'ProjectPartsInProjectMemberUpdateSheet',
-        fields: PROJECT_FIELDS,
+    this.state.set('isSheetOpen', () => false);
+    return merge(
+      this.updateProjectMembersUsecase.execute(input, memberIds),
+      this.notificationsService.show('プロジェクトのメンバーが更新されました', {
+        hasCloseButton: true,
       })
-      .pipe(
-        switchMap(() => {
-          this.state.set('isSheetOpen', () => false);
-          return this.notificationsService.show(
-            'プロジェクトのメンバーが更新されました',
-            {
-              hasCloseButton: true,
-            }
-          );
-        })
-      );
+    );
   }
 }

@@ -2,7 +2,10 @@ import { Injectable } from '@angular/core';
 import { Reference, StoreObject } from '@apollo/client';
 import { Subtask, Task } from '@bison/shared/schema';
 import { Apollo, gql } from 'apollo-angular';
-import { IDeleteSubtaskUsecase } from './delete-subtask.usecase.interface';
+import {
+  DeleteSubtaskResponse,
+  IDeleteSubtaskUsecase,
+} from './delete-subtask.usecase.interface';
 
 @Injectable()
 export class DeleteSubtaskUsecase implements IDeleteSubtaskUsecase {
@@ -12,7 +15,7 @@ export class DeleteSubtaskUsecase implements IDeleteSubtaskUsecase {
     ...args: Parameters<IDeleteSubtaskUsecase['execute']>
   ): ReturnType<IDeleteSubtaskUsecase['execute']> {
     const [input] = args;
-    return this.apollo.mutate<{ deleteSubtask: Subtask }>({
+    return this.apollo.mutate<{ deleteSubtask: DeleteSubtaskResponse }>({
       mutation: gql`
         mutation DeleteSubtask($input: DeleteSubtaskInput!) {
           deleteSubtask(input: $input) {
@@ -22,6 +25,12 @@ export class DeleteSubtaskUsecase implements IDeleteSubtaskUsecase {
       `,
       variables: {
         input,
+      },
+      optimisticResponse: {
+        deleteSubtask: {
+          id: input.id,
+          __typename: 'Subtask',
+        },
       },
       update(cache) {
         const subtask = cache.readFragment<Subtask & StoreObject>({

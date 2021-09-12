@@ -18,6 +18,7 @@ import {
   PROJECT_FRAGMENT_NAME,
 } from '../../shared/fragments/project-fragment';
 import { convertToFrontendDomainProjectFromApiProject } from '../../util/convert-to-frontend-domain-project-from-api-project';
+import { nonNullable } from '../../util/custom-operators/non-nullable';
 import { ME_FIELDS } from './components/project-create-sheet/project-create-sheet.component';
 
 export const VIEWER_FIELDS = gql`
@@ -100,19 +101,19 @@ export class ProjectListPageComponent implements OnInit {
   }
 
   private setupEventHandler() {
-    // Application ServiceレイヤのQueryを利用する
     this.state.connect(
       'projects',
       this.apolloDataQuery
-        .queryViewer(
-          { name: 'ViewerPartsInProjectListPage', fields: VIEWER_FIELDS },
-          { nextFetchPolicy: 'cache-only' }
-        )
+        .queryViewer({
+          name: 'ViewerPartsInProjectListPage',
+          fields: VIEWER_FIELDS,
+        })
         .pipe(
-          map((response) => {
-            const { viewer } = response.data;
+          map((response) => response?.data?.viewer),
+          nonNullable(),
+          map((viewer) => {
             return (
-              viewer?.projects.map(
+              viewer.projects.map(
                 convertToFrontendDomainProjectFromApiProject
               ) ?? []
             );

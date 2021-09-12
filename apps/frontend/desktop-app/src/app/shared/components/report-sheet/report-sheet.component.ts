@@ -153,13 +153,10 @@ export class ReportSheetComponent implements OnInit {
           fields: BOARD_FIELDS,
           name: BOARD_FRAGMENT_NAME,
         },
-        boardId,
-        { fetchPolicy: 'cache-first', nextFetchPolicy: 'cache-only' }
+        boardId
       )
       .pipe(
-        map((res) => {
-          return res.data.board;
-        }),
+        map((res) => res?.data?.board),
         nonNullable(),
         map((board) => {
           return convertToDomainBoardFromApiBoard(board);

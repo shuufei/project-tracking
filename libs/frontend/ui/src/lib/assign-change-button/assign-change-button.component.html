@@ -6,7 +6,7 @@
       [uiTooltipDirection]="'top-left'"
     >
       <ng-container
-        *ngIf="state.selectedUserId === undefined; else existSelectedUser"
+        *ngIf="state.selectedUserId == null; else existSelectedUser"
       >
         <button
           class="focus:outline-none w-5 h-5 flex items-center justify-center"
@@ -30,7 +30,7 @@
       class="relative"
       [triggerEl]="trigger"
       [users]="state.users"
-      [selectedUserId]="state.selectedUserId"
+      [selectedUserId]="state.selectedUserId || undefined"
       (selectUser)="onChangedSelectedUserId$.next($event)"
     ></ui-user-select-popup>
   </div>

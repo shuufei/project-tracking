@@ -70,7 +70,14 @@ export class TaskGroupRepository implements ITaskGroupRepository {
     const currentTaskGroup = await this.getById(taskGroup.id);
     const updatedTaskGroup = {
       ...currentTaskGroup,
-      ...taskGroup,
+      id: taskGroup.id,
+      title: taskGroup.title,
+      description: taskGroup.description,
+      status: taskGroup.status,
+      assignUserId: taskGroup.assignUserId,
+      boardId: taskGroup.boardId,
+      scheduledTimeSec: taskGroup.scheduledTimeSec,
+      tasksOrder: taskGroup.tasksOrder,
     };
     const item = convertToDbTaskGroupItemFromDomainTaskGroup(updatedTaskGroup);
     const params: DynamoDB.PutItemInput = { TableName: tableName, Item: item };

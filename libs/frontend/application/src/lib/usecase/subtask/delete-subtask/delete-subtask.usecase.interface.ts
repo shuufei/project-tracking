@@ -6,9 +6,13 @@ import { Observable } from 'rxjs';
 export interface IDeleteSubtaskUsecase {
   execute: (
     input: DeleteSubtaskInput
-  ) => Observable<FetchResult<{ deleteSubtask: Subtask }>>;
+  ) => Observable<FetchResult<{ deleteSubtask: DeleteSubtaskResponse }>>;
 }
 
 export const DELETE_SUBTASK_USECASE = new InjectionToken<IDeleteSubtaskUsecase>(
   'DeleteSubtaskUsecase'
 );
+
+export type DeleteSubtaskResponse = Pick<Subtask, 'id'> & {
+  __typename: 'Subtask';
+};

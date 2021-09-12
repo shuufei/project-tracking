@@ -2,13 +2,15 @@ import { HttpHeaders } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { ApolloClientOptions, InMemoryCache } from '@apollo/client/core';
 import { COGNITO_AUTHENTICATION_PROVIDER } from '@bison/shared/constants';
+import { Id } from '@bison/shared/domain';
 import { APOLLO_OPTIONS } from 'apollo-angular';
 import { HttpLink } from 'apollo-angular/http';
+import { idpUserId_ShuuheiHanashiro } from '../../../../../construction/dynamodb/sample-data/data/project-user';
 import { environment } from '../environments/environment';
 
 // TODO: environmen.productionでurlを変更する
 const uri = 'http://localhost:3333/graphql';
-const idpUserId = '382b9cc9-cbac-4e0d-8759-5d0232b125e4';
+const idpUserId = idpUserId_ShuuheiHanashiro;
 const headers = new HttpHeaders(
   environment.production
     ? {}
@@ -31,10 +33,66 @@ export function createApollo(httpLink: HttpLink): ApolloClientOptions<unknown> {
             viewer: {
               merge: true,
             },
+            project: {
+              merge: true,
+              read(_, { args, toReference }) {
+                const id = (args as { id: Id }).id;
+                return toReference({
+                  __typename: 'Project',
+                  id,
+                });
+              },
+            },
+            board: {
+              merge: true,
+              read(_, { args, toReference }) {
+                const id = (args as { id: Id }).id;
+                return toReference({
+                  __typename: 'Board',
+                  id,
+                });
+              },
+            },
+            taskGroup: {
+              merge: true,
+              read(_, { args, toReference }) {
+                const id = (args as { id: Id }).id;
+                return toReference({
+                  __typename: 'TaskGroup',
+                  id,
+                });
+              },
+            },
+            task: {
+              merge: true,
+              read(_, { args, toReference }) {
+                const id = (args as { id: Id }).id;
+                return toReference({
+                  __typename: 'Task',
+                  id,
+                });
+              },
+            },
+            subtask: {
+              merge: true,
+              read(_, { args, toReference }) {
+                const id = (args as { id: Id }).id;
+                return toReference({
+                  __typename: 'Subtask',
+                  id,
+                });
+              },
+            },
           },
         },
       },
     }),
+    defaultOptions: {
+      watchQuery: {
+        fetchPolicy: 'cache-first',
+        nextFetchPolicy: 'cache-first',
+      },
+    },
   };
 }
 

@@ -14,8 +14,8 @@ import { Board } from '@bison/shared/domain';
 import { CreateBoardInput } from '@bison/shared/schema';
 import { RxState } from '@rx-angular/state';
 import { TuiNotificationsService } from '@taiga-ui/core';
-import { Subject } from 'rxjs';
-import { exhaustMap, switchMap } from 'rxjs/operators';
+import { merge, Subject } from 'rxjs';
+import { exhaustMap } from 'rxjs/operators';
 import { ChangedPropertyEvent } from '../board-property-edit-form/board-property-edit-form.component';
 
 type State = {
@@ -96,12 +96,11 @@ export class BoardCreateSheetComponent implements OnInit {
       description: state.boardDescription,
       projectId: state.project.id,
     };
-    return this.createBoardUsecase.execute(input).pipe(
-      switchMap(() => {
-        this.state.set('isSheetOpen', () => false);
-        return this.notificationsServicce.show('ボードが作成されました', {
-          hasCloseButton: true,
-        });
+    this.state.set('isSheetOpen', () => false);
+    return merge(
+      this.createBoardUsecase.execute(input),
+      this.notificationsServicce.show('ボードが作成されました', {
+        hasCloseButton: true,
       })
     );
   }

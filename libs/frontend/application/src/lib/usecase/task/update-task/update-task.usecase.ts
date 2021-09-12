@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Task } from '@bison/shared/schema';
 import { Apollo, gql } from 'apollo-angular';
-import { IUpdateTaskUsecase } from './update-task.usecase.interface';
+import {
+  IUpdateTaskUsecase,
+  UpdateTaskResponse,
+} from './update-task.usecase.interface';
 
 @Injectable()
 export class UpdateTaskUsecase implements IUpdateTaskUsecase {
@@ -10,38 +12,61 @@ export class UpdateTaskUsecase implements IUpdateTaskUsecase {
     ...args: Parameters<IUpdateTaskUsecase['execute']>
   ): ReturnType<IUpdateTaskUsecase['execute']> {
     const [input] = args;
-    return this.apollo.mutate<{ updateTask: Task }>({
+    const updatedTask: UpdateTaskResponse = {
+      id: input.id,
+      title: input.title,
+      description: input.description,
+      status: input.status,
+      assign:
+        input.assignUserId != null
+          ? {
+              id: input.assignUserId,
+              __typename: 'User',
+            }
+          : undefined,
+      workTimeSec: input.workTimeSec,
+      scheduledTimeSec: input.scheduledTimeSec,
+      workStartDateTimestamp: input.workStartDateTimestamp,
+      subtasksOrder: input.subtasksOrder,
+      board: {
+        id: input.boardId,
+        __typename: 'Board',
+      },
+      taskGroup: {
+        id: input.taskGroupId,
+        __typename: 'TaskGroup',
+      },
+      __typename: 'Task',
+    };
+    return this.apollo.mutate<{ updateTask: UpdateTaskResponse }>({
       mutation: gql`
         mutation UpdateTask($input: UpdateTaskInput!) {
           updateTask(input: $input) {
             id
             title
-            title
             description
             status
-            subtasks {
-              id
-            }
             assign {
               id
-              name
-              icon
             }
+            workTimeSec
+            scheduledTimeSec
+            workStartDateTimestamp
+            subtasksOrder
             board {
               id
             }
             taskGroup {
               id
             }
-            workTimeSec
-            scheduledTimeSec
-            subtasksOrder
-            workStartDateTimestamp
           }
         }
       `,
       variables: {
         input,
+      },
+      optimisticResponse: {
+        updateTask: updatedTask,
       },
     });
   }

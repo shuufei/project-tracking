@@ -12,7 +12,7 @@ export type TaskGroupItem = {
   scheduledTimeSec?: { N: string };
   assignUserId?: { S: string };
   createdAt: { N: string };
-  tasksOrder?: { SS: string[] };
+  tasksOrder?: { L: { S: string }[] };
 };
 
 export const convertToDomainTaskGroupFromDbTaskGroupItem = (
@@ -26,7 +26,7 @@ export const convertToDomainTaskGroupFromDbTaskGroupItem = (
     boardId: item.boardId.S,
     scheduledTimeSec: Number(item.scheduledTimeSec?.N),
     assignUserId: item.assignUserId?.S,
-    tasksOrder: item.tasksOrder?.SS ?? [],
+    tasksOrder: item.tasksOrder?.L.map((v) => v.S) ?? [],
     createdAt: Number(item.createdAt.N),
   };
 };
@@ -51,6 +51,9 @@ export const convertToDbTaskGroupItemFromDomainTaskGroup = (
   }
   if (taskGroup.assignUserId != null) {
     item.assignUserId = { S: taskGroup.assignUserId };
+  }
+  if (taskGroup.tasksOrder.length > 0) {
+    item.tasksOrder = { L: taskGroup.tasksOrder.map((v) => ({ S: v })) };
   }
   return item;
 };

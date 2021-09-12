@@ -86,27 +86,42 @@
         <div class="mt-8">
           <span class="text-s2 text-black-light1 block">タスク</span>
           <div class="mt-2">
-            <ng-container
-              *ngIf="state.taskGroup.tasks.length > 0; else nonSubtasks"
-            >
-              <div
-                class="p-2 rounded-s bg-primary-light3"
-                cdkDropList
-                (cdkDropListDropped)="onDrop$.next($event)"
-              >
-                <ng-container
-                  *ngFor="let task of state.taskGroup.tasks; first as isFirst"
+            <ng-container *ngIf="tasks$ | async as tasks">
+              <ng-container *ngIf="tasks.length > 0; else nonTasks">
+                <div
+                  class="p-2 rounded-s bg-primary-light3"
+                  cdkDropList
+                  (cdkDropListDropped)="onDrop$.next($event)"
                 >
-                  <div [ngClass]="[isFirst ? '' : 'mt-1']" cdkDrag>
-                    <bis-task-card
-                      [task]="task"
-                      (click)="onClickedTask$.next(task)"
-                      (clickedSubtask)="onClickedSubtask$.next($event)"
-                    ></bis-task-card>
-                  </div>
-                </ng-container>
+                  <ng-container
+                    *ngFor="
+                      let task of tasks;
+                      first as isFirst;
+                      trackBy: trackById
+                    "
+                  >
+                    <div [ngClass]="[isFirst ? '' : 'mt-1']" cdkDrag>
+                      <bis-task-card
+                        [taskId]="task.id"
+                        (click)="onClickedTask$.next(task)"
+                        (clickedSubtask)="onClickedSubtask$.next($event)"
+                      ></bis-task-card>
+                    </div>
+                  </ng-container>
+                  <button
+                    class="mt-1 px-2 py-1 focus:outline-none focus:shadow-outline_primary flex items-center justify-center rounded-s w-full"
+                    (click)="onClickedAddTask$.next()"
+                  >
+                    <ui-icon icon="plus" size="s" color="primary"></ui-icon>
+                    <span class="text-s3 text-black-default ml-1"
+                      >タスクを追加</span
+                    >
+                  </button>
+                </div>
+              </ng-container>
+              <ng-template #nonTasks>
                 <button
-                  class="mt-1 px-2 py-1 focus:outline-none focus:shadow-outline_primary flex items-center justify-center rounded-s w-full"
+                  class="p-2 focus:outline-none focus:shadow-outline_primary flex items-center justify-start rounded-s"
                   (click)="onClickedAddTask$.next()"
                 >
                   <ui-icon icon="plus" size="s" color="primary"></ui-icon>
@@ -114,19 +129,8 @@
                     >タスクを追加</span
                   >
                 </button>
-              </div>
+              </ng-template>
             </ng-container>
-            <ng-template #nonSubtasks>
-              <button
-                class="p-2 focus:outline-none focus:shadow-outline_primary flex items-center justify-start rounded-s"
-                (click)="onClickedAddTask$.next()"
-              >
-                <ui-icon icon="plus" size="s" color="primary"></ui-icon>
-                <span class="text-s3 text-black-default ml-1"
-                  >タスクを追加</span
-                >
-              </button>
-            </ng-template>
           </div>
         </div>
       </ng-container>
@@ -143,7 +147,7 @@
           <bis-task-dialog-assign-change-button
             class="w-full"
             [users]="state.users"
-            [selectedUserId]="state.taskGroup.assignUser?.id"
+            [selectedUserId]="state.taskGroup.assignUser?.id || undefined"
             (selectedUser)="onChangedAssignUser$.next($event)"
           ></bis-task-dialog-assign-change-button>
           <bis-task-dialog-project-change-button

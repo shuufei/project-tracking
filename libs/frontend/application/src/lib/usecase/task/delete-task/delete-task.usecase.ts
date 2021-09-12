@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Reference, StoreObject } from '@apollo/client';
-import { Board, Task } from '@bison/shared/schema';
+import { Board, Task, TaskGroup } from '@bison/shared/schema';
 import { Apollo, gql } from 'apollo-angular';
-import { IDeleteTaskUsecase } from './delete-task.usecase.interface';
+import {
+  DeleteTaskResponse,
+  IDeleteTaskUsecase,
+} from './delete-task.usecase.interface';
 
 @Injectable()
 export class DeleteTaskUsecase implements IDeleteTaskUsecase {
@@ -12,7 +15,11 @@ export class DeleteTaskUsecase implements IDeleteTaskUsecase {
     ...args: Parameters<IDeleteTaskUsecase['execute']>
   ): ReturnType<IDeleteTaskUsecase['execute']> {
     const [input] = args;
-    return this.apollo.mutate<{ deleteTask: Task }>({
+    const deletedTask: DeleteTaskResponse = {
+      id: input.id,
+      __typename: 'Task',
+    };
+    return this.apollo.mutate<{ deleteTask: DeleteTaskResponse }>({
       mutation: gql`
         mutation DeleteTask($input: DeleteTaskInput!) {
           deleteTask(input: $input) {
@@ -23,6 +30,9 @@ export class DeleteTaskUsecase implements IDeleteTaskUsecase {
       variables: {
         input,
       },
+      optimisticResponse: {
+        deleteTask: deletedTask,
+      },
       update(cache) {
         const task = cache.readFragment<Task & StoreObject>({
           id: `Task:${input.id}`,
@@ -32,11 +42,39 @@ export class DeleteTaskUsecase implements IDeleteTaskUsecase {
               board {
                 id
               }
+              taskGroup {
+                id
+              }
             }
           `,
         });
         if (task == null) {
           return;
+        }
+        if (task.taskGroup) {
+          const taskGroup = cache.readFragment<TaskGroup & StoreObject>({
+            id: `TaskGroup:${task.taskGroup.id}`,
+            fragment: gql`
+              fragment TaskGroup on TaskGroup {
+                id
+                tasks {
+                  id
+                }
+              }
+            `,
+          });
+          if (taskGroup != null) {
+            cache.modify({
+              id: cache.identify(taskGroup),
+              fields: {
+                tasks(taskRefs: Reference[], { readField }) {
+                  return taskRefs.filter(
+                    (ref) => readField('id', ref) !== input.id
+                  );
+                },
+              },
+            });
+          }
         }
         const board = cache.readFragment<Board & StoreObject>({
           id: `Board:${task.board.id}`,
@@ -49,19 +87,18 @@ export class DeleteTaskUsecase implements IDeleteTaskUsecase {
             }
           `,
         });
-        if (board == null) {
-          return;
-        }
-        cache.modify({
-          id: cache.identify(board),
-          fields: {
-            tasks(taskRefs: Reference[], { readField }) {
-              return taskRefs.filter(
-                (ref) => readField('id', ref) !== input.id
-              );
+        if (board != null) {
+          cache.modify({
+            id: cache.identify(board),
+            fields: {
+              tasks(taskRefs: Reference[], { readField }) {
+                return taskRefs.filter(
+                  (ref) => readField('id', ref) !== input.id
+                );
+              },
             },
-          },
-        });
+          });
+        }
       },
     });
   }

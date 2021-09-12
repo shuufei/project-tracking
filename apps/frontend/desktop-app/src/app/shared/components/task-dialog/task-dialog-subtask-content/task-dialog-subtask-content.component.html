@@ -12,7 +12,7 @@
         [trackingTimeSec]="state.subtask?.workTimeSec || 0"
         [scheduledTimeSec]="state.subtask?.scheduledTimeSec || 0"
         [isTracking]="state.subtask?.workStartDateTimestamp ? true : false"
-        [shouldShowClockIcon]="!(existsDialogPrevContent$ | async)"
+        [shouldShowClockIcon]="(existsDialogPrevContent$ | async) === false"
         (clickedPlay)="onClickedPlay$.next()"
         (clickedPause)="onClickedPause$.next()"
         (changedTrackingTimeSec)="onChangedWorkTimeSec$.next($event)"

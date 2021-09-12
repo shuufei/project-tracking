@@ -17,12 +17,22 @@ import { Board, User } from '@bison/frontend/ui';
 import { RxState, update } from '@rx-angular/state';
 import { TuiNotificationsService } from '@taiga-ui/core';
 import { gql } from 'apollo-angular';
-import { of, Subject } from 'rxjs';
-import { exhaustMap, filter, map, switchMap, tap } from 'rxjs/operators';
+import { BehaviorSubject, merge, of, Subject } from 'rxjs';
+import {
+  exhaustMap,
+  filter,
+  map,
+  switchMap,
+  withLatestFrom,
+} from 'rxjs/operators';
+import { convertToDomainTaskFromApiTask } from '../../../util/convert-to-domain-task-from-api-task';
+import { nonNullable } from '../../../util/custom-operators/non-nullable';
+import { sortSubtasks } from '../../../util/custom-operators/sort-subtasks';
 import { updateScheduledTimeSecState } from '../../../util/custom-operators/state-updators/update-scheduled-time-sec-state';
 import { updateWorkTimeSecState } from '../../../util/custom-operators/state-updators/update-work-time-sec-state';
 import { SubtaskFacadeService } from '../../facade/subtask-facade/subtask-facade.service';
 import { TaskFacadeService } from '../../facade/task-facade/task-facade.service';
+import { TASK_FIELDS, TASK_FRAGMENT_NAME } from '../../fragments/task-fragment';
 
 const USER_FIELDS = gql`
   fragment UserPartsInTaskCard on User {
@@ -58,8 +68,8 @@ type State = {
 })
 export class TaskCardComponent implements OnInit {
   @Input()
-  set task(value: Task) {
-    this.state.set('task', () => value);
+  set taskId(value: Task['id']) {
+    this.taskId$.next(value);
   }
   @Output() clickedSubtask = new EventEmitter<Subtask>();
 
@@ -67,6 +77,10 @@ export class TaskCardComponent implements OnInit {
    * State
    */
   readonly state$ = this.state.select();
+  readonly taskId$ = new BehaviorSubject<Task['id'] | undefined>(undefined);
+  readonly subtasks$ = this.state
+    .select('task')
+    .pipe(nonNullable(), sortSubtasks());
 
   /**
    * Event
@@ -83,6 +97,7 @@ export class TaskCardComponent implements OnInit {
   readonly onAddSubtask$ = new Subject<void>();
   readonly onUpdatedSubtask$ = new Subject<Subtask>();
   readonly onClickedSubtask$ = new Subject<Subtask['id']>();
+  readonly onchangedTitle$ = new Subject<Task['title']>();
 
   constructor(
     private state: RxState<State>,
@@ -100,6 +115,23 @@ export class TaskCardComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.state.connect(
+      'task',
+      this.taskId$.pipe(
+        nonNullable(),
+        switchMap((taskId) => {
+          return this.apolloDataQuery.queryTask(
+            { fields: TASK_FIELDS, name: TASK_FRAGMENT_NAME },
+            taskId
+          );
+        }),
+        map((result) => result.data?.task),
+        nonNullable(),
+        map((task) => {
+          return convertToDomainTaskFromApiTask(task);
+        })
+      )
+    );
     this.state.connect('isHovered', this.onHover$.asObservable());
     this.state.connect(
       'users',
@@ -109,11 +141,9 @@ export class TaskCardComponent implements OnInit {
           name: 'UserPartsInTaskCard',
         })
         .pipe(
-          map((response) => {
-            if (response.data?.users == null) {
-              return [];
-            }
-            const { users } = response.data;
+          map((response) => response.data?.users),
+          nonNullable(),
+          map((users) => {
             return users.map((user) => {
               return {
                 id: user.id,
@@ -139,9 +169,11 @@ export class TaskCardComponent implements OnInit {
             { fetchPolicy: 'cache-only' }
           );
         }),
-        map((response) => {
+        map((response) => response.data?.project?.boards),
+        nonNullable(),
+        map((boards) => {
           return (
-            response.data.project?.boards.map((board) => {
+            boards.map((board) => {
               return {
                 id: board.id,
                 name: board.name,
@@ -164,7 +196,7 @@ export class TaskCardComponent implements OnInit {
         filter((id) => {
           return id !== this.state.get('task')?.assignUser?.id;
         }),
-        exhaustMap((id) => {
+        switchMap((id) => {
           const task = this.state.get('task');
           if (task == null) return of(undefined);
           return this.taskFacadeService.updateAssignUser(id, task);
@@ -241,34 +273,27 @@ export class TaskCardComponent implements OnInit {
     );
     this.state.hold(
       this.onDrop$.pipe(
-        map((dropEvent) => {
+        withLatestFrom(this.subtasks$),
+        map(([dropEvent, sortedSubtasks]) => {
           const task = this.state.get('task');
           if (task == null) {
             return [];
           }
-          const subtasks = [...(task?.subtasks ?? [])];
+          const subtasksOrder = [
+            ...(sortedSubtasks.map((v) => v.id) ?? []),
+          ].filter((id) => task.subtasks.map((v) => v.id).includes(id));
           moveItemInArray(
-            subtasks,
+            subtasksOrder,
             dropEvent.previousIndex,
             dropEvent.currentIndex
           );
-          return subtasks;
+          return subtasksOrder;
         }),
-        tap((subtasks) => {
-          const task = this.state.get('task');
-          if (task == null) {
-            return task;
-          }
-          const subtasksOrder = subtasks.map((v) => v.id);
-          this.state.set('task', () => {
-            return { ...task, subtasks, subtasksOrder };
-          });
-        }),
-        exhaustMap((subtasks) => {
+        switchMap((subtasksOrder) => {
           const task = this.state.get('task');
           if (task == null) return of(undefined);
           return this.taskFacadeService.updateSubtasksOrder(
-            subtasks.map((v) => v.id),
+            subtasksOrder,
             task
           );
         })
@@ -279,12 +304,12 @@ export class TaskCardComponent implements OnInit {
         exhaustMap(() => {
           const taskId = this.state.get('task')?.id;
           if (taskId == null) return of(undefined);
-          return this.taskFacadeService.delete(taskId);
-        }),
-        switchMap(() => {
-          return this.notificationsService.show('タスクを削除しました', {
-            hasCloseButton: true,
-          });
+          return merge(
+            this.taskFacadeService.delete(taskId),
+            this.notificationsService.show('タスクを削除しました', {
+              hasCloseButton: true,
+            })
+          );
         })
       )
     );
@@ -296,6 +321,15 @@ export class TaskCardComponent implements OnInit {
         exhaustMap((boardId) => {
           const task = this.state.get('task');
           if (task == null) return of(undefined);
+          this.state.set('task', (state) => {
+            const board = state.boards.find((v) => v.id === boardId);
+            return board != null
+              ? {
+                  ...task,
+                  board: { ...task.board, id: board.id, name: board.name },
+                }
+              : task;
+          });
           return this.taskFacadeService.updateBoard(boardId, task);
         })
       )
@@ -306,17 +340,6 @@ export class TaskCardComponent implements OnInit {
           const task = this.state.get('task');
           if (task == null) return of(undefined);
           return this.subtaskFacadeService.create('', task.id);
-        }),
-        filter((v): v is NonNullable<typeof v> => v != null),
-        tap((subtask) => {
-          this.state.set('task', ({ task }) => {
-            if (task == null) return task;
-            return {
-              ...task,
-              subtasks: [...task.subtasks, subtask],
-              subtasksOrder: [...task.subtasksOrder, subtask.id],
-            };
-          });
         })
       )
     );
@@ -327,6 +350,15 @@ export class TaskCardComponent implements OnInit {
       if (subtask == null) return;
       this.clickedSubtask.emit(subtask);
     });
+    this.state.hold(
+      this.onchangedTitle$.pipe(
+        switchMap((title) => {
+          const task = this.state.get('task');
+          if (task == null) return of(undefined);
+          return this.taskFacadeService.updateTitle(title, task);
+        })
+      )
+    );
   }
 
   trackBySubtask(_: number, value: Subtask) {

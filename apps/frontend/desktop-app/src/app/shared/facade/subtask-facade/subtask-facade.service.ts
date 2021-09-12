@@ -16,29 +16,6 @@ import {
   UpdateSubtaskInput,
   User,
 } from '@bison/shared/schema';
-import { gql } from 'apollo-angular';
-import { Observable } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
-import { convertToDomainSubtaskFromApiSubtask } from '../../../util/convert-to-domain-subtask-from-api-subtask';
-
-const SUBTASK_FIELDS = gql`
-  fragment SubtaskPartsForCreateSubtask on Subtask {
-    id
-    title
-    description
-    isDone
-    task {
-      id
-    }
-    scheduledTimeSec
-    workTimeSec
-    assign {
-      id
-      name
-      icon
-    }
-  }
-`;
 
 @Injectable()
 export class SubtaskFacadeService {
@@ -52,26 +29,12 @@ export class SubtaskFacadeService {
     private deleteSubtaskUsecase: IDeleteSubtaskUsecase
   ) {}
 
-  create(
-    title: Subtask['title'],
-    taskId: Subtask['taskId']
-  ): Observable<Subtask> {
+  create(title: Subtask['title'], taskId: Subtask['taskId']) {
     const input: CreateSubtaskInput = {
       title,
       taskId: taskId,
     };
-    return this.createSubtaskUsecase
-      .execute(input, {
-        fields: SUBTASK_FIELDS,
-        name: 'SubtaskPartsForCreateSubtask',
-      })
-      .pipe(
-        map((response) => response.data?.createSubtask),
-        filter((v): v is NonNullable<typeof v> => v != null),
-        map((subtask) => {
-          return convertToDomainSubtaskFromApiSubtask(subtask);
-        })
-      );
+    return this.createSubtaskUsecase.execute(input);
   }
 
   updateAssignUser(userId: User['id'] | undefined, currentSubtask: Subtask) {

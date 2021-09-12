@@ -98,7 +98,7 @@ export class TaskGroupResolver {
   async assign(
     @Parent() taskGroup: ResolvedTaskGroup
   ): Promise<ResolvedUser | undefined> {
-    if (taskGroup.assign === undefined) {
+    if (taskGroup.assign == null) {
       return undefined;
     }
     const user = await this.getUserByIdService.handle(taskGroup.assign.id);

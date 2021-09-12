@@ -1,4 +1,5 @@
 import { ITaskRepository } from '@bison/backend/domain';
+import { Task } from '@bison/shared/domain';
 import { DynamoDB } from 'aws-sdk';
 import { DynamoDBClient } from '../dynamodb/dynamodb-client';
 import { boardIdIndexName } from '../dynamodb/task-group-table';
@@ -105,9 +106,19 @@ export class TaskRepository implements ITaskRepository {
   ): ReturnType<ITaskRepository['update']> {
     const [task] = args;
     const currentTask = await this.getById(task.id);
-    const updatedTask = {
+    const updatedTask: Task = {
       ...currentTask,
-      ...task,
+      id: task.id,
+      title: task.title,
+      description: task.description,
+      status: task.status,
+      assignUserId: task.assignUserId,
+      boardId: task.boardId,
+      taskGroupId: task.taskGroupId,
+      workTimeSec: task.workTimeSec,
+      scheduledTimeSec: task.scheduledTimeSec,
+      workStartDateTimestamp: task.workStartDateTimestamp,
+      subtasksOrder: task.subtasksOrder,
     };
     const item = convertToDbTaskItemFromDomainTask(updatedTask);
     const params: DynamoDB.PutItemInput = {

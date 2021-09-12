@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Reference, StoreObject } from '@apollo/client';
-import { Project, User } from '@bison/shared/schema';
+import { User } from '@bison/shared/schema';
 import { Apollo, gql } from 'apollo-angular';
-import { IDeleteProjectUsecase } from './delete-project.usecase.interface';
+import {
+  DeleteProjectResponse,
+  IDeleteProjectUsecase,
+} from './delete-project.usecase.interface';
 
 @Injectable()
 export class DeleteProjectUsecase implements IDeleteProjectUsecase {
@@ -11,18 +14,23 @@ export class DeleteProjectUsecase implements IDeleteProjectUsecase {
   execute(
     ...args: Parameters<IDeleteProjectUsecase['execute']>
   ): ReturnType<IDeleteProjectUsecase['execute']> {
-    const [input, { name, fields }] = args;
-    return this.apollo.mutate<{ deleteProject: Project }>({
+    const [input] = args;
+    return this.apollo.mutate<{ deleteProject: DeleteProjectResponse }>({
       mutation: gql`
-        ${fields}
         mutation DeleteProject($input: DeleteProjectInput!) {
           deleteProject(input: $input) {
-            ...${name}
+            id
           }
         }
       `,
       variables: {
         input,
+      },
+      optimisticResponse: {
+        deleteProject: {
+          id: input.id,
+          __typename: 'Project',
+        },
       },
       update(cache) {
         const query = gql`

@@ -7,6 +7,7 @@
       [isTracking]="state.task.workStartDateTimestamp != null"
       [boards]="state.boards"
       [boardId]="state.task.board.id"
+      [isEditableTitle]="!state.task.title"
       (hover)="onHover$.next($event)"
       (clickedPlay)="onClickedPlay$.next()"
       (clickedPause)="onClickedPause$.next()"
@@ -15,6 +16,7 @@
       (delete)="onDelete$.next()"
       (selectBoard)="onSelectedBoard$.next($event)"
       (addSubtask)="onAddSubtask$.next()"
+      (changedTitle)="onchangedTitle$.next($event)"
     >
       <ng-container *ngIf="state.task.subtasks.length > 0">
         <div
@@ -23,7 +25,7 @@
           (cdkDropListDropped)="onDrop$.next($event)"
         >
           <ng-container
-            *ngFor="let subtask of state.task.subtasks; trackBy: trackBySubtask"
+            *ngFor="let subtask of subtasks$ | async; trackBy: trackBySubtask"
           >
             <bis-subtask-item
               [subtask]="subtask"
@@ -40,7 +42,7 @@
       <div class="flex justify-between mt-1">
         <ui-assign-change-button
           [users]="state.users"
-          [selectedUserId]="state.task?.assignUser?.id"
+          [selectedUserId]="state.task?.assignUser?.id || undefined"
           (selectedUser)="onChangedAssignUser$.next($event)"
           (click)="$event.stopPropagation()"
         ></ui-assign-change-button>

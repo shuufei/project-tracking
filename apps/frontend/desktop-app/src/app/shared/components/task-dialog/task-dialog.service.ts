@@ -5,7 +5,7 @@ import { filter, map } from 'rxjs/operators';
 
 export type TaskDialogServiceState = {
   isOpened: boolean;
-  contentHistory: (Task | Subtask | TaskGroup)[];
+  contentHistory: DialogContent[];
 };
 
 @Injectable()
@@ -25,6 +25,7 @@ export class TaskDialogService {
       return v != null;
     })
   );
+  readonly currentContentType$ = this.currentContent$.pipe(map((v) => v.type));
 
   constructor(
     @Inject(TASK_DIALOG_SERVICE_STATE)
@@ -69,3 +70,10 @@ export class TaskDialogService {
 export const TASK_DIALOG_SERVICE_STATE = new InjectionToken<
   RxState<TaskDialogServiceState>
 >('TaskDialogServiceState');
+
+export type ContentType = 'TaskGroup' | 'Task' | 'Subtask';
+
+export type DialogContent = {
+  id: TaskGroup['id'] | Task['id'] | Subtask['id'];
+  type: ContentType;
+};

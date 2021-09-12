@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { RxState } from '@rx-angular/state';
 import { combineLatest, Subject } from 'rxjs';
-import { filter, map, pairwise } from 'rxjs/operators';
+import { filter, map, pairwise, startWith } from 'rxjs/operators';
 import type { User } from '../user-select-popup/user-select-popup.component';
 
 type State = {
@@ -54,6 +54,7 @@ export class AssignChangeButtonComponent implements OnInit {
     this.state.connect('selectedUserId', this.onChangedSelectedUserId$);
     this.state.hold(
       this.state.$.pipe(
+        startWith(this.state.get()),
         map((v) => v.selectedUserId),
         pairwise(),
         filter(([prev, current]) => prev !== current)

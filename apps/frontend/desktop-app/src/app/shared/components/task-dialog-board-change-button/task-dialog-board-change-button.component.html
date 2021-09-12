@@ -9,7 +9,7 @@
         <ui-icon icon="columns" size="s" color="primary-light1"></ui-icon>
         <div class="ml-3 text-s2 font-medium">
           <ng-container *ngIf="state.selectedBoardId; else notSelected">
-            <span class="text-primary-default">{{
+            <span class="text-primary-default board-name">{{
               (selectedBoard$ | async)?.name
             }}</span>
           </ng-container>

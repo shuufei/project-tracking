@@ -13,20 +13,10 @@ import { Project } from '@bison/frontend/domain';
 import { UpdateProjectInput } from '@bison/shared/schema';
 import { RxState } from '@rx-angular/state';
 import { TuiNotificationsService } from '@taiga-ui/core';
-import { gql } from 'apollo-angular';
-import { Subject } from 'rxjs';
-import { exhaustMap, switchMap } from 'rxjs/operators';
+import { merge, Subject } from 'rxjs';
+import { exhaustMap } from 'rxjs/operators';
 import { convertToApiColorFromDomainColor } from '../../../util/convert-to-api-color-from-domain-color';
 import { ChangedPropertyEvent } from '../project-property-edit-form/project-property-edit-form.component';
-
-export const PROJECT_PARTS = gql`
-  fragment ProjectParts on Project {
-    id
-    name
-    description
-    color
-  }
-`;
 
 type State = {
   project: Project;
@@ -107,18 +97,12 @@ export class ProjectUpdateSheetComponent implements OnInit {
       color: convertToApiColorFromDomainColor(state.project.color),
       adminUserId: state.project.admin.id,
     };
-    return this.updateProjectUsecase
-      .execute(input, {
-        name: 'ProjectParts',
-        fields: PROJECT_PARTS,
+    this.state.set('isSheetOpen', () => false);
+    return merge(
+      this.updateProjectUsecase.execute(input),
+      this.notificationService.show('プロジェクトが更新されました', {
+        hasCloseButton: true,
       })
-      .pipe(
-        switchMap(() => {
-          this.state.set('isSheetOpen', () => false);
-          return this.notificationService.show('プロジェクトが更新されました', {
-            hasCloseButton: true,
-          });
-        })
-      );
+    );
   }
 }

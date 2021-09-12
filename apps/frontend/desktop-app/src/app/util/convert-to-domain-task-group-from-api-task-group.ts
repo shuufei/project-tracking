@@ -17,7 +17,10 @@ export const convertToDomainTaskGroupFromApiTaskGroup = (
     board: {
       id: taskGroup.board.id,
       name: taskGroup.board.name,
-      projectId: taskGroup.board.project.id,
+      project: {
+        id: taskGroup.board.project.id,
+        name: taskGroup.board.project.name,
+      },
     },
     tasks: taskGroup.tasks.map(convertToDomainTaskFromApiTask),
   };

@@ -48,12 +48,13 @@ export class TaskDialogAssignChangeButtonComponent implements OnInit {
    */
   readonly onChangedSelectedUserId$ = new Subject<State['selectedUserId']>();
 
-  constructor(private state: RxState<State>) {}
-
-  ngOnInit(): void {
+  constructor(private state: RxState<State>) {
     this.state.set({
       users: [],
     });
+  }
+
+  ngOnInit(): void {
     this.state.connect('selectedUserId', this.onChangedSelectedUserId$);
     this.state.hold(
       this.state.$.pipe(map((v) => v.selectedUserId)),

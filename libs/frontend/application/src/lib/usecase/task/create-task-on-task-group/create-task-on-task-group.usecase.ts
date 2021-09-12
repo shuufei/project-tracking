@@ -1,29 +1,96 @@
 import { Injectable } from '@angular/core';
 import { Reference, StoreObject } from '@apollo/client';
-import { Task, TaskGroup } from '@bison/shared/schema';
+import { Status, TaskGroup } from '@bison/shared/schema';
 import { Apollo, gql } from 'apollo-angular';
-import { ICreateTaskOnTaskGroupUsecase } from './create-task-on-task-group.usecase.interface';
+import {
+  CreateTaskOnTaskGroupResponse,
+  ICreateTaskOnTaskGroupUsecase,
+} from './create-task-on-task-group.usecase.interface';
 
 @Injectable()
 export class CreateTaskOnTaskGroupUsecase
   implements ICreateTaskOnTaskGroupUsecase {
   constructor(private apollo: Apollo) {}
 
+  /**
+   * FIXME:
+   * createTaskOnTaskGroupのリクエストが完了後、id: tmp-idでTask Queryが実行されてしまう。
+   * アプリケーションの動作上は問題ないが、APIとしてはエラーになる。(tmp-idのsubtaskは存在しないため)
+   */
   excute(
     ...args: Parameters<ICreateTaskOnTaskGroupUsecase['excute']>
   ): ReturnType<ICreateTaskOnTaskGroupUsecase['excute']> {
-    const [input, { fields, name }] = args;
-    return this.apollo.mutate<{ createTaskOnTaskGroup: Task }>({
+    const [input, projectId, boardId] = args;
+    const createdTask: CreateTaskOnTaskGroupResponse = {
+      id: 'tmp-id',
+      title: input.title,
+      description: input.description ?? null,
+      status: Status.TODO,
+      subtasks: [],
+      workTimeSec: 0,
+      scheduledTimeSec: input.scheduledTimeSec ?? null,
+      workStartDateTimestamp: null,
+      subtasksOrder: [],
+      createdAt: new Date().valueOf(),
+      assign:
+        input.assignUserId != null
+          ? {
+              id: input.assignUserId,
+              __typename: 'User',
+            }
+          : null,
+      taskGroup: {
+        id: input.taskGroupId,
+        __typename: 'TaskGroup',
+      },
+      board: {
+        id: boardId,
+        __typename: 'Board',
+        project: {
+          id: projectId,
+          __typename: 'Project',
+        },
+      },
+      __typename: 'Task',
+    };
+    return this.apollo.mutate<{
+      createTaskOnTaskGroup: CreateTaskOnTaskGroupResponse;
+    }>({
       mutation: gql`
-        ${fields}
         mutation CreateTaskOnTaskGroup($input: CreateTaskOnTaskGroupInput!) {
           createTaskOnTaskGroup(input: $input) {
-            ...${name}
+            id
+            title
+            description
+            status
+            workTimeSec
+            scheduledTimeSec
+            workStartDateTimestamp
+            subtasksOrder
+            board {
+              id
+              project {
+                id
+              }
+            }
+            subtasks {
+              id
+            }
+            assign {
+              id
+            }
+            taskGroup {
+              id
+            }
+            createdAt
           }
         }
       `,
       variables: {
         input,
+      },
+      optimisticResponse: {
+        createTaskOnTaskGroup: createdTask,
       },
       update(cache, response) {
         if (response.data?.createTaskOnTaskGroup == null) {
@@ -56,11 +123,13 @@ export class CreateTaskOnTaskGroupUsecase
                   }
                 `,
               });
-              if (taskRefs.some((ref) => readField('id', ref) === newTask.id)) {
-                return taskRefs;
-              } else {
-                return [...taskRefs, newTaskRef];
-              }
+              const included = taskRefs.some(
+                (ref) => readField('id', ref) === newTask.id
+              );
+              const updatedTaskRefs = included
+                ? taskRefs
+                : [...taskRefs, newTaskRef];
+              return updatedTaskRefs;
             },
           },
         });

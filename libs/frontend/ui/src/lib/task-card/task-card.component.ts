@@ -20,6 +20,7 @@ type State = {
   isHover: boolean;
   boards: Board[];
   selectedBoardId: Board['id'];
+  isEditableTitle: boolean;
 };
 
 @Component({
@@ -54,6 +55,10 @@ export class TaskCardComponent implements OnInit {
   set boards(value: Board[]) {
     this.state.set('boards', () => value);
   }
+  @Input()
+  set isEditableTitle(value: State['isEditableTitle']) {
+    this.state.set('isEditableTitle', () => value);
+  }
   @Output() hover = new EventEmitter<boolean>();
   @Output() changedWorkTimeSec = new EventEmitter<number>();
   @Output() changedScheduledTimeSec = new EventEmitter<number>();
@@ -63,6 +68,7 @@ export class TaskCardComponent implements OnInit {
   @Output() selectBoard = new EventEmitter<Board['id']>();
   @Output() addSubtask = new EventEmitter<void>();
   @Output() clickedEdit = new EventEmitter<void>();
+  @Output() changedTitle = new EventEmitter<string>();
 
   // State
   readonly state$ = this.state.select();
@@ -78,6 +84,7 @@ export class TaskCardComponent implements OnInit {
       title: '',
       isTracking: false,
       boards: [],
+      isEditableTitle: false,
     });
   }
 

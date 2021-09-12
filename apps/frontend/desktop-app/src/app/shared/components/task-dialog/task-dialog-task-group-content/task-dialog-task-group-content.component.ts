@@ -9,15 +9,30 @@ import {
   APOLLO_DATA_QUERY,
   IApolloDataQuery,
 } from '@bison/frontend/application';
-import { isTaskGroup, Subtask, TaskGroup } from '@bison/frontend/domain';
+import { Subtask, TaskGroup } from '@bison/frontend/domain';
 import { Board, User } from '@bison/frontend/ui';
+import { Id } from '@bison/shared/domain';
 import { RxState } from '@rx-angular/state';
 import { TuiNotificationsService } from '@taiga-ui/core';
 import { gql } from 'apollo-angular';
-import { of, Subject } from 'rxjs';
-import { exhaustMap, filter, map, switchMap, tap } from 'rxjs/operators';
+import { merge, of, Subject } from 'rxjs';
+import {
+  exhaustMap,
+  filter,
+  map,
+  switchMap,
+  tap,
+  withLatestFrom,
+} from 'rxjs/operators';
+import { convertToDomainTaskGroupFromApiTaskGroup } from '../../../../util/convert-to-domain-task-group-from-api-task-group';
+import { nonNullable } from '../../../../util/custom-operators/non-nullable';
+import { sortTasks } from '../../../../util/custom-operators/sort-tasks';
 import { TaskFacadeService } from '../../../facade/task-facade/task-facade.service';
 import { TaskGroupFacadeService } from '../../../facade/task-group-facade/task-group-facade.service';
+import {
+  TASK_GROUP_FIELDS,
+  TASK_GROUP_FRAGMENT_NAME,
+} from '../../../fragments/task-group-fragment';
 import { TaskDialogService } from '../task-dialog.service';
 
 const PROJECT_FIELDS = gql`
@@ -62,6 +77,9 @@ export class TaskDialogTaskGroupContentComponent implements OnInit {
    */
   readonly state$ = this.state.select();
   readonly existsDialogPrevContent$ = this.taskDialogService.existsPrevContent$;
+  readonly tasks$ = this.state
+    .select('taskGroup')
+    .pipe(nonNullable(), sortTasks());
 
   /**
    * Event
@@ -103,13 +121,24 @@ export class TaskDialogTaskGroupContentComponent implements OnInit {
     this.state.connect(
       'taskGroup',
       this.taskDialogService.currentContent$.pipe(
-        filter((v): v is TaskGroup => isTaskGroup(v))
+        filter((v) => v.type === 'TaskGroup'),
+        switchMap((content) => {
+          return this.apolloDataQuery.queryTaskGroup(
+            { fields: TASK_GROUP_FIELDS, name: TASK_GROUP_FRAGMENT_NAME },
+            content.id
+          );
+        }),
+        map((response) => response.data?.taskGroup),
+        nonNullable(),
+        map((taskGroup) => {
+          return convertToDomainTaskGroupFromApiTaskGroup(taskGroup);
+        })
       )
     );
     this.state.connect(
       'boards',
       this.state.select('taskGroup').pipe(
-        map((v) => v?.board.projectId),
+        map((v) => v?.board.project.id),
         filter((v): v is NonNullable<typeof v> => v != null),
         switchMap((projectId) => {
           return this.apolloDataQuery.queryProject(
@@ -117,10 +146,7 @@ export class TaskDialogTaskGroupContentComponent implements OnInit {
               fields: PROJECT_FIELDS,
               name: 'ProjectPartsInTaskGroupDialog',
             },
-            projectId,
-            {
-              fetchPolicy: 'cache-first',
-            }
+            projectId
           );
         }),
         map((v) => v.data.project),
@@ -138,10 +164,7 @@ export class TaskDialogTaskGroupContentComponent implements OnInit {
     this.state.connect(
       'users',
       this.apolloDataQuery
-        .queryUsers(
-          { fields: USER_FIELDS, name: 'UserPartsInTaskGroupDialog' },
-          { fetchPolicy: 'cache-first' }
-        )
+        .queryUsers({ fields: USER_FIELDS, name: 'UserPartsInTaskGroupDialog' })
         .pipe(
           map((response) => {
             if (response.data?.users == null) {
@@ -267,38 +290,28 @@ export class TaskDialogTaskGroupContentComponent implements OnInit {
     );
     this.state.hold(
       this.onDrop$.pipe(
-        map((dropEvent) => {
+        withLatestFrom(this.tasks$),
+        map(([dropEvent, sortedTasks]) => {
           const taskGroup = this.state.get('taskGroup');
           if (taskGroup == null) {
             return [];
           }
-          const tasks = [...(taskGroup?.tasks ?? [])];
+          const tasksOrder = [
+            ...(sortedTasks.map((v) => v.id) ?? []),
+          ].filter((id) => taskGroup.tasks.map((v) => v.id).includes(id));
           moveItemInArray(
-            tasks,
+            tasksOrder,
             dropEvent.previousIndex,
             dropEvent.currentIndex
           );
-          return tasks;
+          return tasksOrder;
         }),
-        tap((tasks) => {
-          const taskGroup = this.state.get('taskGroup');
-          if (taskGroup == null) {
-            return taskGroup;
-          }
-          const tasksOrder = tasks.map((v) => v.id);
-          this.state.set('taskGroup', () => {
-            return { ...taskGroup, tasks, tasksOrder };
-          });
-        }),
-        exhaustMap((tasks) => {
+        switchMap((tasksOrder) => {
           const taskGroup = this.state.get('taskGroup');
           if (taskGroup == null) {
             return of(undefined);
           }
-          return this.taskGroupFacade.updateTasksOrder(
-            tasks.map((v) => v.id),
-            taskGroup
-          );
+          return this.taskGroupFacade.updateTasksOrder(tasksOrder, taskGroup);
         })
       )
     );
@@ -314,19 +327,10 @@ export class TaskDialogTaskGroupContentComponent implements OnInit {
             '',
             undefined,
             taskGroup.id,
-            undefined
+            undefined,
+            taskGroup.board.project.id,
+            taskGroup.board.id
           );
-        }),
-        filter((v): v is NonNullable<typeof v> => v != null),
-        tap((task) => {
-          this.state.set('taskGroup', ({ taskGroup }) => {
-            if (taskGroup == null) return taskGroup;
-            return {
-              ...taskGroup,
-              tasks: [...taskGroup.tasks, task],
-              tasksOrder: [...taskGroup.tasksOrder, task.id],
-            };
-          });
         })
       )
     );
@@ -335,15 +339,12 @@ export class TaskDialogTaskGroupContentComponent implements OnInit {
         exhaustMap(() => {
           const taskGroupId = this.state.get('taskGroup')?.id;
           if (taskGroupId == null) return of(undefined);
-          return this.taskGroupFacade.delete(taskGroupId);
-        }),
-        tap(() => {
           this.taskDialogService.close();
-        }),
-        switchMap(() => {
-          return this.notificationsService.show(
-            'タスクグループを削除しました',
-            { hasCloseButton: true }
+          return merge(
+            this.taskGroupFacade.delete(taskGroupId),
+            this.notificationsService.show('タスクグループを削除しました', {
+              hasCloseButton: true,
+            })
           );
         })
       )
@@ -374,16 +375,23 @@ export class TaskDialogTaskGroupContentComponent implements OnInit {
     this.state.hold(
       this.onClickedTask$.pipe(
         tap((task) => {
-          this.taskDialogService.pushContent(task);
+          this.taskDialogService.pushContent({ id: task.id, type: 'Task' });
         })
       )
     );
     this.state.hold(
       this.onClickedSubtask$.pipe(
         tap((subtask) => {
-          this.taskDialogService.pushContent(subtask);
+          this.taskDialogService.pushContent({
+            id: subtask.id,
+            type: 'Subtask',
+          });
         })
       )
     );
+  }
+
+  trackById(_: number, item: { id: Id }) {
+    return item.id;
   }
 }

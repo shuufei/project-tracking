@@ -17,12 +17,13 @@ export type Task = Pick<
   | 'scheduledTimeSec'
   | 'subtasksOrder'
   | 'workStartDateTimestamp'
+  | 'createdAt'
 > & {
-  board: Pick<Board, 'id' | 'name' | 'description'> & {
+  board: Pick<Board, 'id'> & {
     project: Pick<Project, 'id' | 'name'>;
   };
   assignUser?: User;
-  taskGroup?: Pick<TaskGroup, 'id' | 'title' | 'description'>;
+  taskGroup?: Pick<TaskGroup, 'id' | 'title'>;
   subtasks: Subtask[];
 };
 

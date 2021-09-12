@@ -7,6 +7,7 @@ import type {
 import {
   BOARD_REPOSITORY,
   CAN_ACCESS_PROJECT_SERVICE,
+  TASK_GROUP_REPOSITORY,
   TASK_REPOSITORY,
 } from '@bison/backend/domain';
 import { createTask } from '@bison/shared/domain';
@@ -20,7 +21,7 @@ export class CreateTaskOnTaskGroupService
     @Inject(TASK_REPOSITORY) private readonly taskRepository: ITaskRepository,
     @Inject(CAN_ACCESS_PROJECT_SERVICE)
     private readonly canAccessProjectService: ICanAccessProjectService,
-    @Inject(BOARD_REPOSITORY)
+    @Inject(TASK_GROUP_REPOSITORY)
     private readonly taskGroupRepository: ITaskGroupRepository,
     @Inject(BOARD_REPOSITORY) private readonly boardRepository: IBoardRepository
   ) {}
