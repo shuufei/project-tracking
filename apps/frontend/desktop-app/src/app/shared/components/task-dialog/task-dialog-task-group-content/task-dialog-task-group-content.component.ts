@@ -20,6 +20,7 @@ import {
   exhaustMap,
   filter,
   map,
+  mergeMap,
   switchMap,
   tap,
   withLatestFrom,
@@ -223,16 +224,7 @@ export class TaskDialogTaskGroupContentComponent implements OnInit {
         filter((status) => {
           return status !== this.state.get('taskGroup')?.status;
         }),
-        tap((status) => {
-          this.state.set('taskGroup', ({ taskGroup }) => {
-            if (taskGroup == null) return taskGroup;
-            return {
-              ...taskGroup,
-              status,
-            };
-          });
-        }),
-        exhaustMap((status) => {
+        switchMap((status) => {
           const taskGroup = this.state.get('taskGroup');
           if (taskGroup == null) return of(undefined);
           return this.taskGroupFacade.updateStatus(status, taskGroup);
@@ -244,7 +236,7 @@ export class TaskDialogTaskGroupContentComponent implements OnInit {
         filter((id) => {
           return id !== this.state.get('taskGroup')?.assignUser?.id;
         }),
-        exhaustMap((id) => {
+        switchMap((id) => {
           const taskGroup = this.state.get('taskGroup');
           if (taskGroup == null) return of(undefined);
           return this.taskGroupFacade.updateAssignUser(id, taskGroup);
@@ -256,7 +248,7 @@ export class TaskDialogTaskGroupContentComponent implements OnInit {
         filter((boardId) => {
           return boardId !== this.state.get('taskGroup')?.board.id;
         }),
-        exhaustMap((boardId) => {
+        switchMap((boardId) => {
           const taskGroup = this.state.get('taskGroup');
           if (taskGroup == null) return of(undefined);
           return this.taskGroupFacade.updateBoard(boardId, taskGroup);
@@ -265,18 +257,7 @@ export class TaskDialogTaskGroupContentComponent implements OnInit {
     );
     this.state.hold(
       this.onClickedUpdateTitleAndDescButton$.pipe(
-        tap(() => {
-          this.state.set('taskGroup', (state) => {
-            if (state.editState == null || state.taskGroup == null)
-              return state.taskGroup;
-            return {
-              ...state.taskGroup,
-              title: state.editState.title,
-              description: state.editState.description,
-            };
-          });
-        }),
-        exhaustMap(() => {
+        switchMap(() => {
           const taskGroup = this.state.get('taskGroup');
           const editState = this.state.get('editState');
           if (taskGroup == null || editState == null) return of(undefined);
@@ -317,7 +298,7 @@ export class TaskDialogTaskGroupContentComponent implements OnInit {
     );
     this.state.hold(
       this.onClickedAddTask$.pipe(
-        exhaustMap(() => {
+        mergeMap(() => {
           const taskGroup = this.state.get('taskGroup');
           if (taskGroup == null) {
             return of(undefined);
@@ -354,18 +335,7 @@ export class TaskDialogTaskGroupContentComponent implements OnInit {
         filter((sec) => {
           return sec !== (this.state.get('taskGroup')?.scheduledTimeSec ?? 0);
         }),
-        tap((sec) => {
-          this.state.set('taskGroup', (state) => {
-            const taskGroup = state.taskGroup;
-            return taskGroup == null
-              ? taskGroup
-              : {
-                  ...taskGroup,
-                  scheduledTimeSec: sec,
-                };
-          });
-        }),
-        exhaustMap((sec) => {
+        switchMap((sec) => {
           const taskGroup = this.state.get('taskGroup');
           if (taskGroup == null) return of(undefined);
           return this.taskGroupFacade.updateScheduledTimeSec(sec, taskGroup);

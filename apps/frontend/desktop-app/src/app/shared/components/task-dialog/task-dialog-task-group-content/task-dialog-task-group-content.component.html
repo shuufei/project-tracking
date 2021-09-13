@@ -1,115 +1,134 @@
 <ng-container *ngIf="state$ | async as state">
-  <bis-task-dialog-template (clickedCloseButton)="onClickedCloseButton$.next()">
-    <div head class="w-full flex justify-between items-center">
-      <ng-container *ngIf="existsDialogPrevContent$ | async">
-        <button ui-button color="primary" (click)="onClickedBackButton$.next()">
-          <ui-icon icon="chevron-left" size="s" color="white"></ui-icon>
-          <span class="ml-1 text-s3">戻る</span>
-        </button>
-      </ng-container>
-      <div class="flex-1 flex justify-between w-full items-center">
-        <ui-icon
-          icon="clock"
-          size="s"
-          color="primary-light2"
-          [ngClass]="[
-            (existsDialogPrevContent$ | async) ? 'visibility-hidden' : ''
-          ]"
-        ></ui-icon>
-        <ui-scheduled-time-sec-change-button
-          [workTimeSec]="state.taskGroup?.workTimeSec || 0"
-          [scheduledTimeSec]="state.taskGroup?.scheduledTimeSec || 0"
-          (changedScheduledTimeSec)="onChangedScheduledTimeSec$.next($event)"
-        ></ui-scheduled-time-sec-change-button>
-      </div>
-    </div>
-
-    <div main>
-      <ng-container *ngIf="state.taskGroup">
-        <ng-container *ngIf="!state.isEditableTitleAndDesc; else editMode">
-          <h2 class="text-l1 text-black-default leading-normal">
-            {{ state.taskGroup.title }}
-          </h2>
-          <pre class="mt-2 text-black-default leading-normal text-s2">{{
-            state.taskGroup.description
-          }}</pre>
+  <ng-container *ngIf="state.taskGroup">
+    <bis-task-dialog-template
+      (clickedCloseButton)="onClickedCloseButton$.next()"
+    >
+      <div head class="w-full flex justify-between items-center">
+        <ng-container *ngIf="existsDialogPrevContent$ | async">
           <button
-            ui-fill-button
-            color="primary-light3"
-            class="mt-4"
-            (click)="onClickedEditTitleAndDescButton$.next()"
+            ui-button
+            color="primary"
+            (click)="onClickedBackButton$.next()"
           >
-            編集
+            <ui-icon icon="chevron-left" size="s" color="white"></ui-icon>
+            <span class="ml-1 text-s3">戻る</span>
           </button>
         </ng-container>
-        <ng-template #editMode>
-          <div class="mt-2">
-            <label for="" class="text-s2 text-black-light2 font-medium block"
-              >タスクグループ名</label
-            >
-            <ui-text-field
-              placeholder="タスクグループ名を入力してください"
-              [text]="state.editState?.title"
-              class="task-group-title mt-2"
-              (changedValue)="onChangedTitle$.next($event)"
-            ></ui-text-field>
-          </div>
-          <div class="mt-4">
-            <label for="" class="text-s2 text-black-light2 font-medium block"
-              >説明</label
-            >
-            <ui-textarea
-              placeholder="タスクグループの説明を入力してください"
-              [text]="state.editState?.description"
-              class="task-group-description leading-normal mt-2"
-              (changedValue)="onChangedDescription$.next($event)"
-            ></ui-textarea>
-          </div>
-          <div class="flex items-center justify-end mt-4">
-            <button
-              ui-fill-button
-              (click)="onClickedEditTitleAndDescCancelButton$.next()"
-            >
-              キャンセル
-            </button>
-            <button
-              ui-fill-button
-              color="primary"
-              class="ml-4"
-              (click)="onClickedUpdateTitleAndDescButton$.next()"
-            >
-              更新
-            </button>
-          </div>
-        </ng-template>
+        <div class="flex-1 flex justify-between w-full items-center">
+          <ui-icon
+            icon="clock"
+            size="s"
+            color="primary-light2"
+            [ngClass]="[
+              (existsDialogPrevContent$ | async) ? 'visibility-hidden' : ''
+            ]"
+          ></ui-icon>
+          <ui-scheduled-time-sec-change-button
+            [workTimeSec]="state.taskGroup?.workTimeSec || 0"
+            [scheduledTimeSec]="state.taskGroup?.scheduledTimeSec || 0"
+            (changedScheduledTimeSec)="onChangedScheduledTimeSec$.next($event)"
+          ></ui-scheduled-time-sec-change-button>
+        </div>
+      </div>
 
-        <div class="mt-8">
-          <span class="text-s2 text-black-light1 block">タスク</span>
-          <div class="mt-2">
-            <ng-container *ngIf="tasks$ | async as tasks">
-              <ng-container *ngIf="tasks.length > 0; else nonTasks">
-                <div
-                  class="p-2 rounded-s bg-primary-light3"
-                  cdkDropList
-                  (cdkDropListDropped)="onDrop$.next($event)"
-                >
-                  <ng-container
-                    *ngFor="
-                      let task of tasks;
-                      first as isFirst;
-                      trackBy: trackById
-                    "
+      <div main>
+        <ng-container *ngIf="state.taskGroup">
+          <ng-container *ngIf="!state.isEditableTitleAndDesc; else editMode">
+            <h2 class="text-l1 text-black-default leading-normal">
+              {{ state.taskGroup.title }}
+            </h2>
+            <pre class="mt-2 text-black-default leading-normal text-s2">{{
+              state.taskGroup.description
+            }}</pre>
+            <button
+              ui-fill-button
+              color="primary-light3"
+              class="mt-4"
+              (click)="onClickedEditTitleAndDescButton$.next()"
+            >
+              編集
+            </button>
+          </ng-container>
+          <ng-template #editMode>
+            <div class="mt-2">
+              <label for="" class="text-s2 text-black-light2 font-medium block"
+                >タスクグループ名</label
+              >
+              <ui-text-field
+                placeholder="タスクグループ名を入力してください"
+                [text]="state.editState?.title"
+                class="task-group-title mt-2"
+                (changedValue)="onChangedTitle$.next($event)"
+              ></ui-text-field>
+            </div>
+            <div class="mt-4">
+              <label for="" class="text-s2 text-black-light2 font-medium block"
+                >説明</label
+              >
+              <ui-textarea
+                placeholder="タスクグループの説明を入力してください"
+                [text]="state.editState?.description"
+                class="task-group-description leading-normal mt-2"
+                (changedValue)="onChangedDescription$.next($event)"
+              ></ui-textarea>
+            </div>
+            <div class="flex items-center justify-end mt-4">
+              <button
+                ui-fill-button
+                (click)="onClickedEditTitleAndDescCancelButton$.next()"
+              >
+                キャンセル
+              </button>
+              <button
+                ui-fill-button
+                color="primary"
+                class="ml-4"
+                (click)="onClickedUpdateTitleAndDescButton$.next()"
+              >
+                更新
+              </button>
+            </div>
+          </ng-template>
+
+          <div class="mt-8">
+            <span class="text-s2 text-black-light1 block">タスク</span>
+            <div class="mt-2">
+              <ng-container *ngIf="tasks$ | async as tasks">
+                <ng-container *ngIf="tasks.length > 0; else nonTasks">
+                  <div
+                    class="p-2 rounded-s bg-primary-light3"
+                    cdkDropList
+                    (cdkDropListDropped)="onDrop$.next($event)"
                   >
-                    <div [ngClass]="[isFirst ? '' : 'mt-1']" cdkDrag>
-                      <bis-task-card
-                        [taskId]="task.id"
-                        (click)="onClickedTask$.next(task)"
-                        (clickedSubtask)="onClickedSubtask$.next($event)"
-                      ></bis-task-card>
-                    </div>
-                  </ng-container>
+                    <ng-container
+                      *ngFor="
+                        let task of tasks;
+                        first as isFirst;
+                        trackBy: trackById
+                      "
+                    >
+                      <div [ngClass]="[isFirst ? '' : 'mt-1']" cdkDrag>
+                        <bis-task-card
+                          [taskId]="task.id"
+                          (click)="onClickedTask$.next(task)"
+                          (clickedSubtask)="onClickedSubtask$.next($event)"
+                        ></bis-task-card>
+                      </div>
+                    </ng-container>
+                    <button
+                      class="mt-1 px-2 py-1 focus:outline-none focus:shadow-outline_primary flex items-center justify-center rounded-s w-full"
+                      (click)="onClickedAddTask$.next()"
+                    >
+                      <ui-icon icon="plus" size="s" color="primary"></ui-icon>
+                      <span class="text-s3 text-black-default ml-1"
+                        >タスクを追加</span
+                      >
+                    </button>
+                  </div>
+                </ng-container>
+                <ng-template #nonTasks>
                   <button
-                    class="mt-1 px-2 py-1 focus:outline-none focus:shadow-outline_primary flex items-center justify-center rounded-s w-full"
+                    class="p-2 focus:outline-none focus:shadow-outline_primary flex items-center justify-start rounded-s"
                     (click)="onClickedAddTask$.next()"
                   >
                     <ui-icon icon="plus" size="s" color="primary"></ui-icon>
@@ -117,65 +136,54 @@
                       >タスクを追加</span
                     >
                   </button>
-                </div>
+                </ng-template>
               </ng-container>
-              <ng-template #nonTasks>
-                <button
-                  class="p-2 focus:outline-none focus:shadow-outline_primary flex items-center justify-start rounded-s"
-                  (click)="onClickedAddTask$.next()"
-                >
-                  <ui-icon icon="plus" size="s" color="primary"></ui-icon>
-                  <span class="text-s3 text-black-default ml-1"
-                    >タスクを追加</span
-                  >
-                </button>
-              </ng-template>
-            </ng-container>
+            </div>
           </div>
-        </div>
-      </ng-container>
-    </div>
+        </ng-container>
+      </div>
 
-    <div side-panel>
-      <ng-container *ngIf="state.taskGroup">
-        <bis-task-dialog-status-change-button
-          class="w-full"
-          [status]="state.taskGroup.status"
-          (changedStatus)="onChangedStatus$.next($event)"
-        ></bis-task-dialog-status-change-button>
-        <div class="mt-4">
-          <bis-task-dialog-assign-change-button
+      <div side-panel>
+        <ng-container *ngIf="state.taskGroup">
+          <bis-task-dialog-status-change-button
             class="w-full"
-            [users]="state.users"
-            [selectedUserId]="state.taskGroup.assignUser?.id || undefined"
-            (selectedUser)="onChangedAssignUser$.next($event)"
-          ></bis-task-dialog-assign-change-button>
-          <bis-task-dialog-project-change-button
-            class="w-full mt-3"
-            [project]="state.taskGroup.board.project"
-          ></bis-task-dialog-project-change-button>
-          <bis-task-dialog-board-change-button
-            class="w-full mt-3"
-            [boards]="state.boards"
-            [selectedBoardId]="state.taskGroup.board.id"
-            (selectedBoard)="onChangedBoard$.next($event)"
-          ></bis-task-dialog-board-change-button>
-        </div>
+            [status]="state.taskGroup.status"
+            (changedStatus)="onChangedStatus$.next($event)"
+          ></bis-task-dialog-status-change-button>
+          <div class="mt-4">
+            <bis-task-dialog-assign-change-button
+              class="w-full"
+              [users]="state.users"
+              [selectedUserId]="state.taskGroup.assignUser?.id || undefined"
+              (selectedUser)="onChangedAssignUser$.next($event)"
+            ></bis-task-dialog-assign-change-button>
+            <bis-task-dialog-project-change-button
+              class="w-full mt-3"
+              [project]="state.taskGroup.board.project"
+            ></bis-task-dialog-project-change-button>
+            <bis-task-dialog-board-change-button
+              class="w-full mt-3"
+              [boards]="state.boards"
+              [selectedBoardId]="state.taskGroup.board.id"
+              (selectedBoard)="onChangedBoard$.next($event)"
+            ></bis-task-dialog-board-change-button>
+          </div>
 
-        <div class="mt-6 relative">
-          <button
-            class="focus:outline-none text-s2 text-warn-default font-medium flex items-center w-full px-2"
-            #deleteButton
-          >
-            <ui-icon size="s" icon="trash-2" color="warn"></ui-icon>
-            <span class="ml-3">削除</span>
-          </button>
-          <ui-delete-confirm-popup
-            [triggerEl]="deleteButton"
-            (delete)="onDelete$.next()"
-          ></ui-delete-confirm-popup>
-        </div>
-      </ng-container>
-    </div>
-  </bis-task-dialog-template>
+          <div class="mt-6 relative">
+            <button
+              class="focus:outline-none text-s2 text-warn-default font-medium flex items-center w-full px-2"
+              #deleteButton
+            >
+              <ui-icon size="s" icon="trash-2" color="warn"></ui-icon>
+              <span class="ml-3">削除</span>
+            </button>
+            <ui-delete-confirm-popup
+              [triggerEl]="deleteButton"
+              (delete)="onDelete$.next()"
+            ></ui-delete-confirm-popup>
+          </div>
+        </ng-container>
+      </div>
+    </bis-task-dialog-template>
+  </ng-container>
 </ng-container>
