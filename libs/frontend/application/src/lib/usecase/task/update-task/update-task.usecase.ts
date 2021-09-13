@@ -15,7 +15,7 @@ export class UpdateTaskUsecase implements IUpdateTaskUsecase {
     const updatedTask: UpdateTaskResponse = {
       id: input.id,
       title: input.title,
-      description: input.description,
+      description: input.description ?? null,
       status: input.status,
       assign:
         input.assignUserId != null
@@ -23,10 +23,10 @@ export class UpdateTaskUsecase implements IUpdateTaskUsecase {
               id: input.assignUserId,
               __typename: 'User',
             }
-          : undefined,
+          : null,
       workTimeSec: input.workTimeSec,
-      scheduledTimeSec: input.scheduledTimeSec,
-      workStartDateTimestamp: input.workStartDateTimestamp,
+      scheduledTimeSec: input.scheduledTimeSec ?? null,
+      workStartDateTimestamp: input.workStartDateTimestamp ?? null,
       subtasksOrder: input.subtasksOrder,
       board: {
         id: input.boardId,
