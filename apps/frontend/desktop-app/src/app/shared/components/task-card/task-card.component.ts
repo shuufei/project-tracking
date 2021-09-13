@@ -26,10 +26,10 @@ import {
   withLatestFrom,
 } from 'rxjs/operators';
 import { convertToDomainTaskFromApiTask } from '../../../util/convert-to-domain-task-from-api-task';
+import { mapToUpdatedScheduledTimeSecState } from '../../../util/custom-operators/map-to-updated-scheduled-time-sec-state';
+import { mapToUpdatedWorkTimeSecState } from '../../../util/custom-operators/map-to-updated-work-time-sec-state';
 import { nonNullable } from '../../../util/custom-operators/non-nullable';
 import { sortSubtasks } from '../../../util/custom-operators/sort-subtasks';
-import { updateScheduledTimeSecState } from '../../../util/custom-operators/state-updators/update-scheduled-time-sec-state';
-import { updateWorkTimeSecState } from '../../../util/custom-operators/state-updators/update-work-time-sec-state';
 import { SubtaskFacadeService } from '../../facade/subtask-facade/subtask-facade.service';
 import { TaskFacadeService } from '../../facade/task-facade/task-facade.service';
 import { TASK_FIELDS, TASK_FRAGMENT_NAME } from '../../fragments/task-fragment';
@@ -205,17 +205,8 @@ export class TaskCardComponent implements OnInit {
     );
     this.state.hold(
       this.onClickedPlay$.pipe(
-        exhaustMap(() => {
+        switchMap(() => {
           const now = new Date();
-          this.state.set('task', (state) => {
-            const task = state.task;
-            return task == null
-              ? task
-              : {
-                  ...task,
-                  workStartDateTimestamp: now.valueOf(),
-                };
-          });
           const task = this.state.get('task');
           if (task == null) return of(undefined);
           return this.taskFacadeService.startTracking(now, task);
@@ -224,34 +215,18 @@ export class TaskCardComponent implements OnInit {
     );
     this.state.hold(
       this.onClickedPause$.pipe(
-        exhaustMap(() => {
+        switchMap(() => {
           const task = this.state.get('task');
           if (task == null) return of(undefined);
-          const start = task.workStartDateTimestamp;
-          const currentWorkTimeSec = task.workTimeSec;
-          if (start == null || currentWorkTimeSec == null) return of(undefined);
           const now = new Date();
-          const diffTimeMilliSec = now.valueOf() - start;
-          const updatedWorkTimeSec =
-            currentWorkTimeSec + Math.ceil(diffTimeMilliSec / 1000);
-          this.state.set('task', (state) => {
-            const task = state.task;
-            return task == null
-              ? task
-              : {
-                  ...task,
-                  workTimeSec: updatedWorkTimeSec,
-                  workStartDateTimestamp: undefined,
-                };
-          });
           return this.taskFacadeService.stopTracking(now, task);
         })
       )
     );
     this.state.hold(
       this.onChangedWorkTimeSec$.pipe(
-        updateWorkTimeSecState(this.state, 'task'),
-        exhaustMap(({ updated, current }) => {
+        mapToUpdatedWorkTimeSecState(this.state, 'task'),
+        switchMap(({ updated, current }) => {
           return this.taskFacadeService.updateWorkTimeSec(
             updated.workTimeSec,
             updated.workStartDateTimestamp,
@@ -262,8 +237,8 @@ export class TaskCardComponent implements OnInit {
     );
     this.state.hold(
       this.onChangedScheduledTimeSec$.pipe(
-        updateScheduledTimeSecState(this.state, 'task'),
-        exhaustMap(({ updated, current }) => {
+        mapToUpdatedScheduledTimeSecState(this.state, 'task'),
+        switchMap(({ updated, current }) => {
           return this.taskFacadeService.updateScheduledTimeSec(
             updated.scheduledTimeSec,
             current
@@ -301,7 +276,7 @@ export class TaskCardComponent implements OnInit {
     );
     this.state.hold(
       this.onDelete$.pipe(
-        exhaustMap(() => {
+        switchMap(() => {
           const taskId = this.state.get('task')?.id;
           if (taskId == null) return of(undefined);
           return merge(
@@ -318,18 +293,9 @@ export class TaskCardComponent implements OnInit {
         filter((boardId) => {
           return boardId !== this.state.get('task')?.board.id;
         }),
-        exhaustMap((boardId) => {
+        switchMap((boardId) => {
           const task = this.state.get('task');
           if (task == null) return of(undefined);
-          this.state.set('task', (state) => {
-            const board = state.boards.find((v) => v.id === boardId);
-            return board != null
-              ? {
-                  ...task,
-                  board: { ...task.board, id: board.id, name: board.name },
-                }
-              : task;
-          });
           return this.taskFacadeService.updateBoard(boardId, task);
         })
       )
