@@ -2,23 +2,36 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
+  Inject,
   Input,
   OnInit,
   Output,
 } from '@angular/core';
+import {
+  APOLLO_DATA_QUERY,
+  IApolloDataQuery,
+} from '@bison/frontend/application';
 import { Subtask } from '@bison/frontend/domain';
 import { RxState } from '@rx-angular/state';
-import { MonoTypeOperatorFunction, pipe, Subject } from 'rxjs';
-import { exhaustMap, tap, withLatestFrom } from 'rxjs/operators';
+import { of, Subject } from 'rxjs';
+import {
+  distinctUntilChanged,
+  filter,
+  map,
+  switchMap,
+  withLatestFrom,
+} from 'rxjs/operators';
+import { convertToDomainSubtaskFromApiSubtask } from '../../../../util/convert-to-domain-subtask-from-api-subtask';
+import { mapToUpdatedWorkTimeSecState } from '../../../../util/custom-operators/map-to-updated-work-time-sec-state';
 import { nonNullable } from '../../../../util/custom-operators/non-nullable';
-import { updateScheduledTimeSecState } from '../../../../util/custom-operators/state-updators/update-scheduled-time-sec-state';
-import { updateStateOnPause } from '../../../../util/custom-operators/state-updators/update-state-on-pause';
-import { updateStateOnPlay } from '../../../../util/custom-operators/state-updators/update-state-on-play';
-import { updateSubtaskIsDoneState } from '../../../../util/custom-operators/state-updators/update-subtask-is-done-state';
-import { updateWorkTimeSecState } from '../../../../util/custom-operators/state-updators/update-work-time-sec-state';
 import { SubtaskFacadeService } from '../../../facade/subtask-facade/subtask-facade.service';
+import {
+  SUBTASK_FIELDS,
+  SUBTASK_FRAGMENT_NAME,
+} from '../../../fragments/subtask-fragment';
 
 type State = {
+  subtaskId?: Subtask['id'];
   subtask?: Subtask;
 };
 
@@ -31,8 +44,8 @@ type State = {
 })
 export class SubtaskItemComponent implements OnInit {
   @Input()
-  set subtask(value: NonNullable<State['subtask']>) {
-    this.state.set('subtask', () => value);
+  set subtaskId(value: NonNullable<State['subtaskId']>) {
+    this.state.set('subtaskId', () => value);
   }
   @Output() update = new EventEmitter<Subtask>();
 
@@ -55,42 +68,55 @@ export class SubtaskItemComponent implements OnInit {
 
   constructor(
     private state: RxState<State>,
-    private subtaskFacade: SubtaskFacadeService
+    private subtaskFacade: SubtaskFacadeService,
+    @Inject(APOLLO_DATA_QUERY) private apolloDataQuery: IApolloDataQuery
   ) {
     this.state.set({});
   }
 
   ngOnInit(): void {
+    this.state.connect(
+      'subtask',
+      this.state.select('subtaskId').pipe(
+        nonNullable(),
+        switchMap((subtaskId) => {
+          return this.apolloDataQuery.querySubtask(
+            { fields: SUBTASK_FIELDS, name: SUBTASK_FRAGMENT_NAME },
+            subtaskId
+          );
+        }),
+        map((response) => response.data.subtask),
+        nonNullable(),
+        map((subtask) => {
+          return convertToDomainSubtaskFromApiSubtask(subtask);
+        })
+      )
+    );
     this.state.hold(
       this.onSubmitTitle$.pipe(
         withLatestFrom(this.state.select('subtask').pipe(nonNullable())),
-        tap(([title, subtask]) => {
-          const updatedSubtask = {
-            ...subtask,
-            title,
-          };
-          this.state.set('subtask', () => updatedSubtask);
-          this.update.emit(updatedSubtask);
-        }),
-        exhaustMap(([title, subtask]) => {
+        switchMap(([title, subtask]) => {
           return this.subtaskFacade.updateTitle(title, subtask);
         })
       )
     );
     this.state.hold(
       this.onChangedIsDone$.pipe(
-        updateSubtaskIsDoneState(this.state),
-        this.emitUpdateEvent(),
-        exhaustMap(({ updated, current }) => {
-          return this.subtaskFacade.updateIsDoone(updated.isDone, current);
+        distinctUntilChanged(),
+        filter((isDone) => {
+          return isDone !== this.state.get('subtask')?.isDone;
+        }),
+        switchMap((isDone) => {
+          const subtask = this.state.get('subtask');
+          if (subtask == null) return of(undefined);
+          return this.subtaskFacade.updateIsDoone(isDone, subtask);
         })
       )
     );
     this.state.hold(
       this.onChangedWorkTimeSec$.pipe(
-        updateWorkTimeSecState(this.state, 'subtask'),
-        this.emitUpdateEvent(),
-        exhaustMap(({ updated, current }) => {
+        mapToUpdatedWorkTimeSecState(this.state, 'subtask'),
+        switchMap(({ updated, current }) => {
           return this.subtaskFacade.updateWorkTimeSec(
             updated.workTimeSec,
             updated.workStartDateTimestamp,
@@ -101,47 +127,35 @@ export class SubtaskItemComponent implements OnInit {
     );
     this.state.hold(
       this.onChangedScheduledTimeSec$.pipe(
-        updateScheduledTimeSecState(this.state, 'subtask'),
-        this.emitUpdateEvent(),
-        exhaustMap(({ updated, current }) => {
-          return this.subtaskFacade.updateScheduledTimeSec(
-            updated.scheduledTimeSec,
-            current
-          );
+        filter((sec) => {
+          return sec !== this.state.get('subtask')?.scheduledTimeSec;
+        }),
+        switchMap((sec) => {
+          const subtask = this.state.get('subtask');
+          if (subtask == null) return of(undefined);
+          return this.subtaskFacade.updateScheduledTimeSec(sec, subtask);
         })
       )
     );
     this.state.hold(
       this.onClickedPlay$.pipe(
-        updateStateOnPlay(this.state, 'subtask'),
-        this.emitUpdateEvent(),
-        exhaustMap(({ updated, current }) => {
-          return this.subtaskFacade.startTracking(
-            new Date(updated.workStartDateTimestamp ?? new Date()),
-            current
-          );
+        switchMap(() => {
+          const subtask = this.state.get('subtask');
+          if (subtask == null) return of(undefined);
+          const now = new Date();
+          return this.subtaskFacade.startTracking(now, subtask);
         })
       )
     );
     this.state.hold(
       this.onClickedPause$.pipe(
-        updateStateOnPause(this.state, 'subtask'),
-        this.emitUpdateEvent(),
-        exhaustMap(({ updated }) => {
-          return this.subtaskFacade.stopTracking(updated);
+        switchMap(() => {
+          const subtask = this.state.get('subtask');
+          if (subtask == null) return of(undefined);
+          const now = new Date();
+          return this.subtaskFacade.stopTracking(now, subtask);
         })
       )
-    );
-  }
-
-  private emitUpdateEvent(): MonoTypeOperatorFunction<{
-    updated: Subtask;
-    current: Subtask;
-  }> {
-    return pipe(
-      tap(({ updated }) => {
-        this.update.emit(updated);
-      })
     );
   }
 }

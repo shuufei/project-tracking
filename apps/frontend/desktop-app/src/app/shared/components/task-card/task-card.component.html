@@ -28,8 +28,7 @@
             *ngFor="let subtask of subtasks$ | async; trackBy: trackBySubtask"
           >
             <bis-subtask-item
-              [subtask]="subtask"
-              (update)="onUpdatedSubtask$.next($event)"
+              [subtaskId]="subtask.id"
               (click)="
                 $event.stopPropagation(); onClickedSubtask$.next(subtask.id)
               "

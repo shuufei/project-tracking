@@ -14,7 +14,7 @@ import {
 } from '@bison/frontend/application';
 import { Subtask, Task } from '@bison/frontend/domain';
 import { Board, User } from '@bison/frontend/ui';
-import { RxState, update } from '@rx-angular/state';
+import { RxState } from '@rx-angular/state';
 import { TuiNotificationsService } from '@taiga-ui/core';
 import { gql } from 'apollo-angular';
 import { BehaviorSubject, merge, of, Subject } from 'rxjs';
@@ -95,7 +95,6 @@ export class TaskCardComponent implements OnInit {
   readonly onSelectedBoard$ = new Subject<Board['id']>();
   readonly onDrop$ = new Subject<CdkDragDrop<Task['subtasks']>>();
   readonly onAddSubtask$ = new Subject<void>();
-  readonly onUpdatedSubtask$ = new Subject<Subtask>();
   readonly onClickedSubtask$ = new Subject<Subtask['id']>();
   readonly onchangedTitle$ = new Subject<Task['title']>();
 
@@ -183,13 +182,6 @@ export class TaskCardComponent implements OnInit {
         })
       )
     );
-    this.state.connect('task', this.onUpdatedSubtask$, ({ task }, subtask) => {
-      if (task == null) return task;
-      return {
-        ...task,
-        subtasks: update(task.subtasks, subtask, 'id'),
-      };
-    });
 
     this.state.hold(
       this.onChangedAssignUser$.pipe(
