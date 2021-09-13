@@ -20,14 +20,11 @@ import {
   filter,
   map,
   switchMap,
-  tap,
 } from 'rxjs/operators';
 import { convertToDomainSubtaskFromApiSubtask } from '../../../../util/convert-to-domain-subtask-from-api-subtask';
 import { convertToDomainTaskFromApiTask } from '../../../../util/convert-to-domain-task-from-api-task';
+import { mapToUpdatedWorkTimeSecState } from '../../../../util/custom-operators/map-to-updated-work-time-sec-state';
 import { nonNullable } from '../../../../util/custom-operators/non-nullable';
-import { updateScheduledTimeSecState } from '../../../../util/custom-operators/state-updators/update-scheduled-time-sec-state';
-import { updateStateOnPause } from '../../../../util/custom-operators/state-updators/update-state-on-pause';
-import { updateWorkTimeSecState } from '../../../../util/custom-operators/state-updators/update-work-time-sec-state';
 import { SubtaskFacadeService } from '../../../facade/subtask-facade/subtask-facade.service';
 import {
   SUBTASK_FIELDS,
@@ -203,13 +200,6 @@ export class TaskDialogSubtaskContentComponent implements OnInit {
           const subtask = this.state.get('subtask');
           const editState = this.state.get('editState');
           if (subtask == null || editState == null) return of(undefined);
-          this.state.set('subtask', () => {
-            return {
-              ...subtask,
-              title: editState.title,
-              description: editState.description,
-            };
-          });
           return this.subtaskFacade.updateTitleAndDescription(
             editState.title,
             editState.description,
@@ -232,15 +222,12 @@ export class TaskDialogSubtaskContentComponent implements OnInit {
       this.taskDialogService.pushContent({ id: task.id, type: 'Task' });
     });
 
-    /**
-     * subtask-card.componentの実装とほぼ同じなので共通化したい
-     */
     this.state.hold(
       this.onChangedAssignUser$.pipe(
         filter((id) => {
           return id !== this.state.get('subtask')?.assignUser?.id;
         }),
-        exhaustMap((id) => {
+        switchMap((id) => {
           const subtask = this.state.get('subtask');
           if (subtask == null) return of(undefined);
           return this.subtaskFacade.updateAssignUser(id, subtask);
@@ -253,17 +240,7 @@ export class TaskDialogSubtaskContentComponent implements OnInit {
         filter((isDone) => {
           return isDone !== this.state.get('subtask')?.isDone;
         }),
-        tap((isDone) => {
-          this.state.set('subtask', ({ subtask }) => {
-            return subtask == null
-              ? subtask
-              : {
-                  ...subtask,
-                  isDone,
-                };
-          });
-        }),
-        exhaustMap((isDone) => {
+        switchMap((isDone) => {
           const subtask = this.state.get('subtask');
           if (subtask == null) return of(undefined);
           return this.subtaskFacade.updateIsDoone(isDone, subtask);
@@ -272,8 +249,8 @@ export class TaskDialogSubtaskContentComponent implements OnInit {
     );
     this.state.hold(
       this.onChangedWorkTimeSec$.pipe(
-        updateWorkTimeSecState(this.state, 'subtask'),
-        exhaustMap(({ current, updated }) => {
+        mapToUpdatedWorkTimeSecState(this.state, 'subtask'),
+        switchMap(({ current, updated }) => {
           console.log(current, updated);
           return this.subtaskFacade.updateWorkTimeSec(
             updated.workTimeSec,
@@ -285,41 +262,33 @@ export class TaskDialogSubtaskContentComponent implements OnInit {
     );
     this.state.hold(
       this.onChangedScheduledTimeSec$.pipe(
-        updateScheduledTimeSecState(this.state, 'subtask'),
-        exhaustMap(({ updated, current }) => {
+        filter((sec) => {
+          return sec !== this.state.get('subtask')?.scheduledTimeSec;
+        }),
+        switchMap((sec) => {
           const subtask = this.state.get('subtask');
           if (subtask == null) return of(undefined);
-          return this.subtaskFacade.updateScheduledTimeSec(
-            updated.scheduledTimeSec,
-            current
-          );
+          return this.subtaskFacade.updateScheduledTimeSec(sec, subtask);
         })
       )
     );
     this.state.hold(
       this.onClickedPlay$.pipe(
-        exhaustMap(() => {
+        switchMap(() => {
           const subtask = this.state.get('subtask');
           if (subtask == null) return of(undefined);
           const now = new Date();
-          this.state.set('subtask', (state) => {
-            const subtask = state.subtask;
-            return subtask == null
-              ? subtask
-              : {
-                  ...subtask,
-                  workStartDateTimestamp: now.valueOf(),
-                };
-          });
           return this.subtaskFacade.startTracking(now, subtask);
         })
       )
     );
     this.state.hold(
       this.onClickedPause$.pipe(
-        updateStateOnPause(this.state, 'subtask'),
-        exhaustMap(({ updated }) => {
-          return this.subtaskFacade.stopTracking(updated);
+        switchMap(() => {
+          const subtask = this.state.get('subtask');
+          if (subtask == null) return of(undefined);
+          const now = new Date();
+          return this.subtaskFacade.stopTracking(now, subtask);
         })
       )
     );
