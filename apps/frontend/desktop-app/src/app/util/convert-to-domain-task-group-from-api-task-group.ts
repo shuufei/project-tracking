@@ -23,5 +23,9 @@ export const convertToDomainTaskGroupFromApiTaskGroup = (
       },
     },
     tasks: taskGroup.tasks.map(convertToDomainTaskFromApiTask),
+    workTimeSec: taskGroup.tasks.reduce(
+      (acc, curr) => acc + curr.workTimeSec,
+      0
+    ),
   };
 };
