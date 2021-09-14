@@ -35,7 +35,14 @@
         <ng-container *ngIf="state.taskGroup">
           <ng-container *ngIf="!state.isEditableTitleAndDesc; else editMode">
             <h2 class="text-l1 text-black-default leading-normal">
-              {{ state.taskGroup.title }}
+              <ng-container *ngIf="state.taskGroup.title; else placeholder">
+                {{ state.taskGroup.title }}
+              </ng-container>
+              <ng-template #placeholder>
+                <span class="text-black-light3"
+                  >タスクグループ名が指定されていません</span
+                >
+              </ng-template>
             </h2>
             <pre class="mt-2 text-black-default leading-normal text-s2">{{
               state.taskGroup.description
