@@ -67,7 +67,7 @@
         class="w-full"
         [trackingTimeSec]="state.subtask?.workTimeSec || 0"
         [scheduledTimeSec]="state.subtask?.scheduledTimeSec || 0"
-        [isTracking]="state.subtask?.workStartDateTimestamp ? true : false"
+        [isTracking]="state.subtask.workStartDateTimestamp != null"
         (clickedPlay)="onClickedPlay$.next()"
         (clickedPause)="onClickedPause$.next()"
         (changedTrackingTimeSec)="onChangedWorkTimeSec$.next($event)"

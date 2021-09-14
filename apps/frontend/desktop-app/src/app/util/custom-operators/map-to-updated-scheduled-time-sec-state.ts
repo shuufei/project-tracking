@@ -1,11 +1,11 @@
 import { RxState } from '@rx-angular/state';
 import { OperatorFunction, pipe } from 'rxjs';
 import { filter, map, tap, withLatestFrom } from 'rxjs/operators';
-import { nonNullable } from '../non-nullable';
+import { nonNullable } from './non-nullable';
 
 type Key = 'task' | 'subtask' | 'taskGroup';
 
-export const updateScheduledTimeSecState = <
+export const mapToUpdatedScheduledTimeSecState = <
   T extends {
     scheduledTimeSec?: number;
   }

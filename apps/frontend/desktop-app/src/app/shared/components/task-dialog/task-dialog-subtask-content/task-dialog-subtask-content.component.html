@@ -39,7 +39,14 @@
               (changedCheck)="onChangedCheck$.next($event)"
             ></ui-checkbox>
             <h2 class="text-l1 text-black-default leading-normal ml-2">
-              {{ state.subtask.title }}
+              <ng-container *ngIf="state.subtask.title; else placeholder">
+                {{ state.subtask.title }}
+              </ng-container>
+              <ng-template #placeholder>
+                <span class="text-black-light3"
+                  >サブタスク名が指定されていません</span
+                >
+              </ng-template>
             </h2>
           </div>
           <pre class="mt-2 text-black-default leading-normal text-s2">{{

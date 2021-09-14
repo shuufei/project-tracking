@@ -14,5 +14,6 @@ export const convertToDomainSubtaskFromApiSubtask = (
     workTimeSec: subtask.workTimeSec,
     assignUser: subtask.assign ?? undefined,
     createdAt: subtask.createdAt,
+    workStartDateTimestamp: subtask.workStartDateTimestamp,
   };
 };

@@ -20,16 +20,15 @@ import {
   exhaustMap,
   filter,
   map,
-  pairwise,
-  startWith,
+  mergeMap,
   switchMap,
-  tap,
   withLatestFrom,
 } from 'rxjs/operators';
 import { convertToDomainTaskFromApiTask } from '../../../../util/convert-to-domain-task-from-api-task';
+import { mapToUpdatedScheduledTimeSecState } from '../../../../util/custom-operators/map-to-updated-scheduled-time-sec-state';
+import { mapToUpdatedWorkTimeSecState } from '../../../../util/custom-operators/map-to-updated-work-time-sec-state';
 import { nonNullable } from '../../../../util/custom-operators/non-nullable';
 import { sortSubtasks } from '../../../../util/custom-operators/sort-subtasks';
-import { updateScheduledTimeSecState } from '../../../../util/custom-operators/state-updators/update-scheduled-time-sec-state';
 import { SubtaskFacadeService } from '../../../facade/subtask-facade/subtask-facade.service';
 import { TaskFacadeService } from '../../../facade/task-facade/task-facade.service';
 import {
@@ -219,18 +218,9 @@ export class TaskDialogTaskContentComponent implements OnInit {
           })
         )
     );
-    this.state.connect('task', this.onClickedAddSubtask$, (state) => {
-      const task = state.task;
-      return task == null
-        ? task
-        : {
-            ...task,
-            subtasks: [...task.subtasks],
-          };
-    });
     this.state.hold(
       this.onClickedAddSubtask$.pipe(
-        exhaustMap(() => {
+        mergeMap(() => {
           const task = this.state.get('task');
           if (task == null) {
             return of(undefined);
@@ -245,20 +235,7 @@ export class TaskDialogTaskContentComponent implements OnInit {
     });
     this.state.hold(
       this.onClickedUpdateTitleAndDescButton$.pipe(
-        tap(() => {
-          this.state.set('task', (state) => {
-            const task = state.task;
-            const editState = state.editState;
-            return task == null || editState == null
-              ? task
-              : {
-                  ...task,
-                  title: editState.title,
-                  description: editState.description,
-                };
-          });
-        }),
-        exhaustMap(() => {
+        switchMap(() => {
           const task = this.state.get('task');
           const editState = this.state.get('editState');
           if (task == null || editState == null) return of(undefined);
@@ -275,13 +252,9 @@ export class TaskDialogTaskContentComponent implements OnInit {
         filter((id) => {
           return id !== this.state.get('task')?.assignUser?.id;
         }),
-        exhaustMap((id) => {
+        switchMap((id) => {
           const task = this.state.get('task');
           if (task == null) return of(undefined);
-          this.state.set('task', (state) => {
-            const user = state.users.find((v) => v.id === id);
-            return { ...task, assignUser: user };
-          });
           return this.taskFacadeService.updateAssignUser(id, task);
         })
       )
@@ -291,18 +264,7 @@ export class TaskDialogTaskContentComponent implements OnInit {
         filter((status) => {
           return status !== this.state.get('task')?.status;
         }),
-        tap((status) => {
-          this.state.set('task', (state) => {
-            const task = state.task;
-            return task == null
-              ? task
-              : {
-                  ...task,
-                  status,
-                };
-          });
-        }),
-        exhaustMap((status) => {
+        switchMap((status) => {
           const task = this.state.get('task');
           if (task == null) return of(undefined);
           return this.taskFacadeService.updateStatus(status, task);
@@ -314,35 +276,17 @@ export class TaskDialogTaskContentComponent implements OnInit {
         filter((boardId) => {
           return boardId !== this.state.get('task')?.board.id;
         }),
-        exhaustMap((boardId) => {
+        switchMap((boardId) => {
           const task = this.state.get('task');
           if (task == null) return of(undefined);
-          this.state.set('task', (state) => {
-            const board = state.boards.find((v) => v.id === boardId);
-            return board != null
-              ? {
-                  ...task,
-                  board: { ...task.board, id: board.id, name: board.name },
-                }
-              : task;
-          });
           return this.taskFacadeService.updateBoard(boardId, task);
         })
       )
     );
     this.state.hold(
       this.onClickedPlay$.pipe(
-        exhaustMap(() => {
+        switchMap(() => {
           const now = new Date();
-          this.state.set('task', (state) => {
-            const task = state.task;
-            return task == null
-              ? task
-              : {
-                  ...task,
-                  workStartDateTimestamp: now.valueOf(),
-                };
-          });
           const task = this.state.get('task');
           if (task == null) return of(undefined);
           return this.taskFacadeService.startTracking(now, task);
@@ -351,72 +295,30 @@ export class TaskDialogTaskContentComponent implements OnInit {
     );
     this.state.hold(
       this.onClickedPause$.pipe(
-        exhaustMap(() => {
+        switchMap(() => {
           const task = this.state.get('task');
           if (task == null) return of(undefined);
-          const start = task.workStartDateTimestamp;
-          const currentWorkTimeSec = task.workTimeSec;
-          if (start == null || currentWorkTimeSec == null) return of(undefined);
           const now = new Date();
-          const diffTimeMilliSec = now.valueOf() - start;
-          const updatedWorkTimeSec =
-            currentWorkTimeSec + Math.ceil(diffTimeMilliSec / 1000);
-          this.state.set('task', (state) => {
-            const task = state.task;
-            return task == null
-              ? task
-              : {
-                  ...task,
-                  workTimeSec: updatedWorkTimeSec,
-                  workStartDateTimestamp: undefined,
-                };
-          });
           return this.taskFacadeService.stopTracking(now, task);
         })
       )
     );
     this.state.hold(
       this.onChangedWorkTimeSec$.pipe(
-        startWith(this.state.get('task')?.workTimeSec ?? 0),
-        pairwise(),
-        filter(([prev, sec]) => {
-          const diff = sec - prev;
-          const isChangedByCtrlBtn = diff > 1;
-          const isTracking =
-            this.state.get('task')?.workStartDateTimestamp != null;
-          return isChangedByCtrlBtn || !isTracking;
-        }),
-        map(([, current]) => current),
-        filter((sec) => {
-          return sec !== this.state.get('task')?.workTimeSec;
-        }),
-        exhaustMap((sec) => {
-          const task = this.state.get('task');
-          if (task == null) return of(undefined);
-          const workStartDateTimestamp =
-            task.workStartDateTimestamp && new Date().valueOf();
-          this.state.set('task', (state) => {
-            const task = state.task;
-            return task == null
-              ? task
-              : {
-                  ...task,
-                  workTimeSec: sec,
-                  workStartDateTimestamp,
-                };
-          });
+        mapToUpdatedWorkTimeSecState(this.state, 'task'),
+        switchMap(({ updated, current }) => {
           return this.taskFacadeService.updateWorkTimeSec(
-            sec,
-            workStartDateTimestamp,
-            task
+            updated.workTimeSec,
+            updated.workStartDateTimestamp,
+            current
           );
         })
       )
     );
     this.state.hold(
       this.onChangedScheduledTimeSec$.pipe(
-        updateScheduledTimeSecState(this.state, 'task'),
-        exhaustMap(({ updated, current }) => {
+        mapToUpdatedScheduledTimeSecState(this.state, 'task'),
+        switchMap(({ updated, current }) => {
           return this.taskFacadeService.updateScheduledTimeSec(
             updated.scheduledTimeSec,
             current

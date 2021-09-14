@@ -14,6 +14,7 @@ export type TaskGroup = Pick<
     project: Pick<Project, 'id' | 'name'>;
   };
   assignUser?: User;
+  workTimeSec?: number;
   tasks: Task[];
 };
 

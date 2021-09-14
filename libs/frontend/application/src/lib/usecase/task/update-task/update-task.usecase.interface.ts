@@ -21,17 +21,13 @@ export const UPDATE_TASK_USECASE = new InjectionToken<IUpdateTaskUsecase>(
 
 export type UpdateTaskResponse = Pick<
   Task,
-  | 'id'
-  | 'title'
-  | 'description'
-  | 'status'
-  | 'workTimeSec'
-  | 'scheduledTimeSec'
-  | 'workStartDateTimestamp'
-  | 'subtasksOrder'
+  'id' | 'title' | 'status' | 'workTimeSec' | 'subtasksOrder'
 > & {
   __typename: 'Task';
-  assign?: Partial<User> & { __typename: 'User' };
+  description: NonNullable<Task['description']> | null;
+  scheduledTimeSec: NonNullable<Task['scheduledTimeSec']> | null;
+  workStartDateTimestamp: NonNullable<Task['workStartDateTimestamp']> | null;
+  assign: (Partial<User> & { __typename: 'User' }) | null;
   board: Partial<Board> & { __typename: 'Board' };
-  taskGroup: Partial<TaskGroup> & { __typename: 'TaskGroup' };
+  taskGroup: (Partial<TaskGroup> & { __typename: 'TaskGroup' }) | null;
 };

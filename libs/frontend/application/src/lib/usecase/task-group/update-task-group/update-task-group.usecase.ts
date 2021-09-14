@@ -17,14 +17,14 @@ export class UpdateTaskGroupUsecase implements IUpdateTaskGroupUsecase {
       __typename: 'TaskGroup',
       id: input.id,
       title: input.title,
-      description: input.description,
+      description: input.description ?? null,
       status: input.status,
-      scheduledTimeSec: input.scheduledTimeSec,
+      scheduledTimeSec: input.scheduledTimeSec ?? null,
       tasksOrder: input.tasksOrder,
       assign:
         input.assignUserId != null
           ? { id: input.assignUserId, __typename: 'User' }
-          : undefined,
+          : null,
       board: {
         id: input.boardId,
         __typename: 'Board',

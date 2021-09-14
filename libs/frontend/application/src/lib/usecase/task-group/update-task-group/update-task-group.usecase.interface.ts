@@ -20,9 +20,11 @@ export const UPDATE_TASK_GROUP_USECASE = new InjectionToken<IUpdateTaskGroupUsec
 
 export type UpdateTaskGroupResponse = Pick<
   TaskGroup,
-  'id' | 'title' | 'description' | 'status' | 'scheduledTimeSec' | 'tasksOrder'
+  'id' | 'title' | 'status' | 'tasksOrder'
 > & {
+  description: NonNullable<TaskGroup['description']> | null;
+  scheduledTimeSec: NonNullable<TaskGroup['scheduledTimeSec']> | null;
   __typename: 'TaskGroup';
-  assign?: { id: User['id']; __typename: 'User' };
+  assign: { id: User['id']; __typename: 'User' } | null;
   board: { id: Board['id']; __typename: 'Board' };
 };

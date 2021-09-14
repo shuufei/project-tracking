@@ -5,14 +5,13 @@ import {
   map,
   pairwise,
   startWith,
-  tap,
   withLatestFrom,
 } from 'rxjs/operators';
-import { nonNullable } from '../non-nullable';
+import { nonNullable } from './non-nullable';
 
 type Key = 'task' | 'subtask' | 'taskGroup';
 
-export const updateWorkTimeSecState = <
+export const mapToUpdatedWorkTimeSecState = <
   T extends {
     workTimeSec: number;
     workStartDateTimestamp?: number;
@@ -46,9 +45,6 @@ export const updateWorkTimeSecState = <
         updated: { ...currentKeyObj, workTimeSec: sec, workStartDateTimestamp },
         current: currentKeyObj,
       };
-    }),
-    tap(({ updated }) => {
-      state.set(key, () => updated);
     })
   );
 };

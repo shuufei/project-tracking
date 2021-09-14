@@ -16,6 +16,7 @@ import {
   UpdateSubtaskInput,
   User,
 } from '@bison/shared/schema';
+import { of } from 'rxjs';
 
 @Injectable()
 export class SubtaskFacadeService {
@@ -85,10 +86,18 @@ export class SubtaskFacadeService {
     });
   }
 
-  stopTracking(updatedSubtask: Subtask) {
-    const input = this.generateUpdateInputBase(updatedSubtask);
+  stopTracking(now: Date, currentSubtask: Subtask) {
+    const start = currentSubtask.workStartDateTimestamp;
+    const currentWorkTimeSec = currentSubtask.workTimeSec;
+    if (start == null || currentWorkTimeSec == null) return of(undefined);
+    const diffTimeMilliSec = now.valueOf() - start;
+    const updatedWorkTimeSec =
+      currentWorkTimeSec + Math.ceil(diffTimeMilliSec / 1000);
+    const input = this.generateUpdateInputBase(currentSubtask);
     return this.updateSubtaskUsecase.execute({
       ...input,
+      workTimeSec: updatedWorkTimeSec,
+      workStartDateTimestamp: undefined,
     });
   }
 
