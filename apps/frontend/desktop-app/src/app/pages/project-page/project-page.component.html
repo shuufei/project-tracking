@@ -12,9 +12,11 @@
         <ui-project-navigation
           [project]="project"
           [boards]="project.boards"
-          (clickedCreateBoard)="isOpenedBoardCreateDialog$.next(true)"
+          (clickedCreateBoard)="
+            onClickedBoardCreateButton$.next({ project: project })
+          "
           (clickedDeleteProject)="
-            onClickedDeleteProjectButton$.next({
+            onClickedProjectDeleteButton$.next({
               project: project
             })
           "
@@ -29,7 +31,7 @@
       </ng-container>
       <button
         class="inline-flex items-center text-s3 text-black-light2 font-medium px-3 py-1 cursor-pointer focus:outline-none focus:shadow-outline_primary rounded-s mt-4"
-        (click)="isOpenedProjectCreateDialog$.next(true)"
+        (click)="isOpenedProjectCreateSheet$.next(true)"
       >
         <ui-icon
           class="mr-1"
@@ -44,9 +46,8 @@
   </div>
 
   <bis-project-delete-dialog
-    [project]="state.projectDeleteDialog.project"
-    [isOpen$]="isOpenProjectDeleteDialog$"
-    (closed)="onClosedProjectDeleteDialog$.next()"
+    [project]="state.projectDeleteDialogState?.project"
+    [isOpen$]="isOpenedProjectDeleteDialog$.asObservable()"
   ></bis-project-delete-dialog>
 
   <bis-board-delete-dialog
@@ -57,6 +58,11 @@
   ></bis-board-delete-dialog>
 
   <bis-project-create-sheet
-    [isOpened$]="isOpenedProjectCreateDialog$.asObservable()"
+    [isOpened$]="isOpenedProjectCreateSheet$.asObservable()"
   ></bis-project-create-sheet>
+
+  <bis-board-create-sheet
+    [project]="state.boardCreateSheetState?.project"
+    [isOpened$]="isOpenedBoardCreateSheet$.asObservable()"
+  ></bis-board-create-sheet>
 </ng-container>

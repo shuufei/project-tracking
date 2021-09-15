@@ -38,6 +38,7 @@ export class BoardCreateSheetComponent implements OnInit {
   set project(value: State['project']) {
     this.state.set('project', () => value);
   }
+  @Input() isOpened$ = new Subject<boolean>().asObservable();
 
   /**
    * State
@@ -73,6 +74,7 @@ export class BoardCreateSheetComponent implements OnInit {
       };
     });
     this.state.connect('isSheetOpen', this.onOpenedSheet$, () => true);
+    this.state.connect('isSheetOpen', this.isOpened$);
     this.state.connect(this.onClosedeSheet$, () => {
       return {
         boardName: '',
