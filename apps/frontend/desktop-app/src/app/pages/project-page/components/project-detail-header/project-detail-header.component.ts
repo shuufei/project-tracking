@@ -65,8 +65,7 @@ export class ProjectDetailHeaderComponent implements OnInit {
       switchMap((projectId) => {
         return this.apolloDataQuery.queryProject(
           { name: PROJECT_FRAGMENT_NAME, fields: PROJECT_FIELDS },
-          projectId,
-          { fetchPolicy: 'cache-only' }
+          projectId
         );
       }),
       map((response) => response?.data?.project),

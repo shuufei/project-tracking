@@ -19,13 +19,13 @@ import {
 } from '../../shared/fragments/project-fragment';
 import { convertToFrontendDomainProjectFromApiProject } from '../../util/convert-to-frontend-domain-project-from-api-project';
 import { nonNullable } from '../../util/custom-operators/non-nullable';
-import { ME_FIELDS } from './components/project-create-sheet/project-create-sheet.component';
 
-export const VIEWER_FIELDS = gql`
-  ${ME_FIELDS}
+const VIEWER_FIELDS = gql`
   ${PROJECT_FIELDS}
   fragment ViewerPartsInProjectListPage on User {
-    ...MePartsInProjectCreateSheet
+    id
+    name
+    icon
     projects {
       ...${PROJECT_FRAGMENT_NAME}
     }

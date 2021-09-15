@@ -3,30 +3,22 @@ import { NgModule } from '@angular/core';
 import {
   ApolloDataQuery,
   APOLLO_DATA_QUERY,
-  CreateProjectUsecase,
-  CREATE_PROJECT_USECASE,
-  UpdateProjectMembersUsecase,
-  UPDATE_PROJECT_MEMBERS_USECASE,
 } from '@bison/frontend/application';
 import {
   ButtonModule,
   HeaderModule,
   IconModule,
-  MultiUserSelectPopupModule,
   ProjectCardModule,
-  SheetFooterModule,
-  SheetModule,
   UserIconModule,
   UserSelectPopupModule,
 } from '@bison/frontend/ui';
+import { ProjectCreateSheetModule } from '../../shared/components/project-create-sheet/project-create-sheet.module';
 import { ProjectDeleteDialogModule } from '../../shared/components/project-delete-dialog/project-delete-dialog.module';
-import { ProjectPropertyEditFormModule } from '../../shared/components/project-property-edit-form/project-property-edit-form.module';
-import { ProjectCreateSheetComponent } from './components/project-create-sheet/project-create-sheet.component';
 import { ProjectListPageRoutingModule } from './project-list-page-routing.module';
 import { ProjectListPageComponent } from './project-list-page.component';
 
 @NgModule({
-  declarations: [ProjectListPageComponent, ProjectCreateSheetComponent],
+  declarations: [ProjectListPageComponent],
   imports: [
     CommonModule,
     ProjectListPageRoutingModule,
@@ -35,26 +27,15 @@ import { ProjectListPageComponent } from './project-list-page.component';
     UserIconModule,
     ProjectCardModule,
     HeaderModule,
-    SheetModule,
-    SheetFooterModule,
     UserSelectPopupModule,
-    ProjectPropertyEditFormModule,
     ProjectDeleteDialogModule,
-    MultiUserSelectPopupModule,
+    ProjectCreateSheetModule,
   ],
   exports: [ProjectListPageComponent],
   providers: [
     {
-      provide: CREATE_PROJECT_USECASE,
-      useClass: CreateProjectUsecase,
-    },
-    {
       provide: APOLLO_DATA_QUERY,
       useClass: ApolloDataQuery,
-    },
-    {
-      provide: UPDATE_PROJECT_MEMBERS_USECASE,
-      useClass: UpdateProjectMembersUsecase,
     },
   ],
 })
