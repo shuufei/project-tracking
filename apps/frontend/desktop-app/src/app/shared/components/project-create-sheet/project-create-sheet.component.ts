@@ -25,9 +25,9 @@ import { TuiNotification, TuiNotificationsService } from '@taiga-ui/core';
 import { gql } from 'apollo-angular';
 import { merge, Observable, Subject } from 'rxjs';
 import { exhaustMap, filter, map, switchMap } from 'rxjs/operators';
-import { ChangedPropertyEvent } from '../../../../shared/components/project-property-edit-form/project-property-edit-form.component';
-import { convertToApiColorFromDomainColor } from '../../../../util/convert-to-api-color-from-domain-color';
-import { nonNullable } from '../../../../util/custom-operators/non-nullable';
+import { convertToApiColorFromDomainColor } from '../../../util/convert-to-api-color-from-domain-color';
+import { nonNullable } from '../../../util/custom-operators/non-nullable';
+import { ChangedPropertyEvent } from '..//project-property-edit-form/project-property-edit-form.component';
 
 export const ME_FIELDS = gql`
   fragment MePartsInProjectCreateSheet on User {
@@ -153,10 +153,7 @@ export class ProjectCreateSheetComponent implements OnInit {
 
   private queryMe$() {
     return this.apolloDataQuery
-      .queryViewer(
-        { name: 'MePartsInProjectCreateSheet', fields: ME_FIELDS },
-        { fetchPolicy: 'cache-first' }
-      )
+      .queryViewer({ name: 'MePartsInProjectCreateSheet', fields: ME_FIELDS })
       .pipe(
         filter((response): response is ApolloQueryResult<{
           viewer: ApiUser;

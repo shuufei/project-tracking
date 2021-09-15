@@ -16,7 +16,7 @@ import {
   UserIconModule,
 } from '@bison/frontend/ui';
 import { TuiNotificationsModule } from '@taiga-ui/core';
-import { ProjectPropertyEditFormModule } from '../../../../shared/components/project-property-edit-form/project-property-edit-form.module';
+import { ProjectPropertyEditFormModule } from '../project-property-edit-form/project-property-edit-form.module';
 import { ProjectCreateSheetComponent } from './project-create-sheet.component';
 
 @NgModule({

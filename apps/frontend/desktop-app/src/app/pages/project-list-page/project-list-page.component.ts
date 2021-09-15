@@ -13,13 +13,13 @@ import { RxState } from '@rx-angular/state';
 import { gql } from 'apollo-angular';
 import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { ME_FIELDS } from '../../shared/components/project-create-sheet/project-create-sheet.component';
 import {
   PROJECT_FIELDS,
   PROJECT_FRAGMENT_NAME,
 } from '../../shared/fragments/project-fragment';
 import { convertToFrontendDomainProjectFromApiProject } from '../../util/convert-to-frontend-domain-project-from-api-project';
 import { nonNullable } from '../../util/custom-operators/non-nullable';
-import { ME_FIELDS } from './components/project-create-sheet/project-create-sheet.component';
 
 export const VIEWER_FIELDS = gql`
   ${ME_FIELDS}

@@ -12,8 +12,8 @@ import {
   UserIconModule,
   UserSelectPopupModule,
 } from '@bison/frontend/ui';
+import { ProjectCreateSheetModule } from '../../shared/components/project-create-sheet/project-create-sheet.module';
 import { ProjectDeleteDialogModule } from '../../shared/components/project-delete-dialog/project-delete-dialog.module';
-import { ProjectCreateSheetModule } from './components/project-create-sheet/project-create-sheet.module';
 import { ProjectListPageRoutingModule } from './project-list-page-routing.module';
 import { ProjectListPageComponent } from './project-list-page.component';
 
