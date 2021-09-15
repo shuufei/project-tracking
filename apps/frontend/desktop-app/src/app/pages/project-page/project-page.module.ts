@@ -24,6 +24,7 @@ import { BoardCreateSheetModule } from '../../shared/components/board-create-she
 import { BoardDeleteDialogModule } from '../../shared/components/board-delete-dialog/board-delete-dialog.module';
 import { BoardUpdateSheetModule } from '../../shared/components/board-update-sheet/board-update-sheet.module';
 import { ProjectAdminUpdateSheetModule } from '../../shared/components/project-admin-update-sheet/project-admin-update-sheet.module';
+import { ProjectCreateSheetModule } from '../../shared/components/project-create-sheet/project-create-sheet.module';
 import { ProjectDeleteDialogModule } from '../../shared/components/project-delete-dialog/project-delete-dialog.module';
 import { ProjectMemberUpdateSheetModule } from '../../shared/components/project-member-update-sheet/project-member-update-sheet.module';
 import { ProjectPropertyEditFormModule } from '../../shared/components/project-property-edit-form/project-property-edit-form.module';
@@ -56,7 +57,6 @@ import { ProjectPageComponent } from './project-page.component';
     SheetFooterModule,
     UserIconModule,
     TuiNotificationsModule,
-    BoardCreateSheetModule,
     BoardUpdateSheetModule,
     BoardDeleteDialogModule,
     ProjectUpdateSheetModule,
@@ -77,6 +77,8 @@ import { ProjectPageComponent } from './project-page.component';
     ProjectMemberUpdateSheetModule,
     BoardUpdateSheetModule,
     BoardDeleteDialogModule,
+    IconModule,
+    ProjectCreateSheetModule,
   ],
   exports: [ProjectPageComponent],
   providers: [

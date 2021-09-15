@@ -30,9 +30,12 @@ import {
 import { convertToFrontendDomainProjectFromApiProject } from '../../util/convert-to-frontend-domain-project-from-api-project';
 import { nonNullable } from '../../util/custom-operators/non-nullable';
 
-export const VIEWER_FIELDS = gql`
+const VIEWER_FIELDS = gql`
   ${PROJECT_FIELDS}
   fragment ViewerPartsInProjectPage on User {
+    id
+    name
+    icon
     projects {
       ...${PROJECT_FRAGMENT_NAME}
     }
@@ -66,13 +69,11 @@ export class ProjectPageComponent
     'boardDeleteDialog',
     'isOpen'
   );
+  readonly isOpenedProjectCreateDialog$ = new Subject<boolean>();
+  readonly isOpenedBoardCreateDialog$ = new Subject<boolean>();
 
-  // TODO: ボード編集
-  // TODO: ボード作成
-  // プロジェクト削除
   readonly onClickedDeleteProjectButton$ = new Subject<DeleteProject>();
   readonly onClosedProjectDeleteDialog$ = new Subject<void>();
-  // ボード削除
   readonly onClickedDeleteBoardButton$ = new Subject<DeleteBoard>();
   readonly onClosedBoardDeleteDialog$ = new Subject<void>();
 

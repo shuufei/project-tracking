@@ -12,13 +12,12 @@
         <ui-project-navigation
           [project]="project"
           [boards]="project.boards"
-          (clickedCreateBoard)="(null)"
+          (clickedCreateBoard)="isOpenedBoardCreateDialog$.next(true)"
           (clickedDeleteProject)="
             onClickedDeleteProjectButton$.next({
               project: project
             })
           "
-          (clickedEditBoard)="(null)"
           (clickedDeleteBoard)="
             onClickedDeleteBoardButton$.next({
               project: project,
@@ -28,6 +27,18 @@
           [ngClass]="[isFirst ? '' : 'mt-4']"
         ></ui-project-navigation>
       </ng-container>
+      <button
+        class="inline-flex items-center text-s3 text-black-light2 font-medium px-3 py-1 cursor-pointer focus:outline-none focus:shadow-outline_primary rounded-s mt-4"
+        (click)="isOpenedProjectCreateDialog$.next(true)"
+      >
+        <ui-icon
+          class="mr-1"
+          size="s"
+          icon="plus"
+          color="primary-light1"
+        ></ui-icon
+        >プロジェクトを作成
+      </button>
     </aside>
     <div class="mt-1 flex-1"><router-outlet></router-outlet></div>
   </div>
@@ -44,4 +55,8 @@
     [isOpen$]="isOpenBoardDeleteDialog$"
     (closed)="onClosedBoardDeleteDialog$.next()"
   ></bis-board-delete-dialog>
+
+  <bis-project-create-sheet
+    [isOpened$]="isOpenedProjectCreateDialog$.asObservable()"
+  ></bis-project-create-sheet>
 </ng-container>
