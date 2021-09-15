@@ -39,7 +39,7 @@ const VIEWER_FIELDS = gql`
 type State = {
   projects: Project[];
   projectDeleteDialogState?: { project: Project };
-  boardDeleteDialog: Partial<DeleteBoard> & { isOpen: boolean };
+  boardDeleteDialogState?: { project: Project; board: Board };
   boardCreateSheetState?: { project: Project };
 };
 
@@ -56,18 +56,17 @@ export class ProjectPageComponent
   @ViewChild('sideNav') sideNav?: ElementRef<HTMLElement>;
 
   readonly state$ = this.state.select();
-  readonly isOpenBoardDeleteDialog$ = this.state.select(
-    'boardDeleteDialog',
-    'isOpen'
-  );
   readonly isOpenedProjectCreateSheet$ = new Subject<boolean>();
-  readonly isOpenedBoardCreateSheet$ = new Subject<boolean>();
   readonly isOpenedProjectDeleteDialog$ = new Subject<boolean>();
+  readonly isOpenedBoardCreateSheet$ = new Subject<boolean>();
+  readonly isOpenedBoardDeleteDialog$ = new Subject<boolean>();
 
-  readonly onClickedProjectDeleteButton$ = new Subject<DeleteProject>();
-  readonly onClickedDeleteBoardButton$ = new Subject<DeleteBoard>();
-  readonly onClosedBoardDeleteDialog$ = new Subject<void>();
+  readonly onClickedProjectDeleteButton$ = new Subject<{ project: Project }>();
   readonly onClickedBoardCreateButton$ = new Subject<{ project: Project }>();
+  readonly onClickedBoardDeleteButton$ = new Subject<{
+    project: Project;
+    board: Board;
+  }>();
 
   private readonly afterViewChecked$ = new Subject();
   private readonly onDestroy$ = new Subject();
@@ -88,24 +87,7 @@ export class ProjectPageComponent
   ngOnInit() {
     this.state.set({
       projects: [],
-      boardDeleteDialog: { isOpen: false },
     });
-    this.state.connect(
-      'boardDeleteDialog',
-      this.onClickedDeleteBoardButton$,
-      (_, event) => ({
-        project: event.project,
-        board: event.board,
-        isOpen: true,
-      })
-    );
-    this.state.connect(
-      'boardDeleteDialog',
-      this.onClosedBoardDeleteDialog$,
-      () => ({
-        isOpen: false,
-      })
-    );
     this.state.hold(this.onHeaderHeightChanged$);
     this.state.connect(
       'projects',
@@ -142,6 +124,17 @@ export class ProjectPageComponent
         })
       )
     );
+    this.state.hold(
+      this.onClickedBoardDeleteButton$.pipe(
+        tap(({ project, board }) => {
+          this.state.set('boardDeleteDialogState', () => ({
+            project,
+            board,
+          }));
+          this.isOpenedBoardDeleteDialog$.next(true);
+        })
+      )
+    );
   }
 
   ngAfterViewChecked() {
@@ -160,6 +153,3 @@ export class ProjectPageComponent
     this.sideNav.nativeElement.style.top = `${headerHeight}px`;
   }
 }
-
-type DeleteProject = { project: Project };
-type DeleteBoard = { project: Project; board: Board };

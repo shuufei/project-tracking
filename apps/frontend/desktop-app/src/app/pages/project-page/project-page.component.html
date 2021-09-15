@@ -21,7 +21,7 @@
             })
           "
           (clickedDeleteBoard)="
-            onClickedDeleteBoardButton$.next({
+            onClickedBoardDeleteButton$.next({
               project: project,
               board: $event
             })
@@ -45,24 +45,23 @@
     <div class="mt-1 flex-1"><router-outlet></router-outlet></div>
   </div>
 
+  <bis-project-create-sheet
+    [isOpened$]="isOpenedProjectCreateSheet$.asObservable()"
+  ></bis-project-create-sheet>
+
   <bis-project-delete-dialog
     [project]="state.projectDeleteDialogState?.project"
     [isOpen$]="isOpenedProjectDeleteDialog$.asObservable()"
   ></bis-project-delete-dialog>
 
-  <bis-board-delete-dialog
-    [project]="state.boardDeleteDialog.project"
-    [board]="state.boardDeleteDialog.board"
-    [isOpen$]="isOpenBoardDeleteDialog$"
-    (closed)="onClosedBoardDeleteDialog$.next()"
-  ></bis-board-delete-dialog>
-
-  <bis-project-create-sheet
-    [isOpened$]="isOpenedProjectCreateSheet$.asObservable()"
-  ></bis-project-create-sheet>
-
   <bis-board-create-sheet
     [project]="state.boardCreateSheetState?.project"
     [isOpened$]="isOpenedBoardCreateSheet$.asObservable()"
   ></bis-board-create-sheet>
+
+  <bis-board-delete-dialog
+    [project]="state.boardDeleteDialogState?.project"
+    [board]="state.boardDeleteDialogState?.board"
+    [isOpened$]="isOpenedBoardDeleteDialog$.asObservable()"
+  ></bis-board-delete-dialog>
 </ng-container>
