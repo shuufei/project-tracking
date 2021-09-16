@@ -54,7 +54,11 @@
       </div>
 
       <ng-container
-        *ngFor="let taskGroup of taskGroups; first as first; trackBy: trackById"
+        *ngFor="
+          let taskGroup of state.taskGroups;
+          first as first;
+          trackBy: trackById
+        "
       >
         <div [class.mt-2]="!first">
           <div class="bg-white px-3 pt-2 pb-3 rounded-s">
@@ -65,20 +69,42 @@
                 >
                   {{ taskGroup.title }}
                 </h3>
-                <ui-time-label class="mr-6"></ui-time-label>
+                <ui-tracking-log-change-button
+                  class="mr-6"
+                  [trackingTimeSec]="taskGroup.workTimeSec || 0"
+                  [plannedTimeSec]="taskGroup.scheduledTimeSec || 0"
+                  (changedPlannedTimeSec)="
+                    onChangedTaskGroupScheduledTime$.next([$event, taskGroup])
+                  "
+                ></ui-tracking-log-change-button>
               </div>
               <div class="flex items-center">
-                <span class="text-black-light2 text-s4 font-medium p-0.5 mr-3">
-                  {{ taskGroup.status }}
-                </span>
-                <ui-user-icon
+                <div
+                  #statusTriggerEl
+                  class="flex flex-col cursor-pointer p-0.5 mr-3"
+                >
+                  <span class="text-black-light2 text-s4 font-medium">
+                    {{ taskGroup.status }}
+                  </span>
+                  <ui-status-select-popup
+                    [triggerEl]="statusTriggerEl"
+                    [currentStatus]="taskGroup.status"
+                    (changedStatus)="
+                      onChangedTaskGroupStatus$.next([$event, taskGroup])
+                    "
+                  ></ui-status-select-popup>
+                </div>
+                <ui-assign-change-button
                   class="w-5 h-5"
-                  [src]="taskGroup.assignUser?.icon"
-                ></ui-user-icon>
+                  [users]="state.users"
+                  [selectedUserId]="taskGroup.assignUser?.id"
+                  (selectedUser)="
+                    onChangedTaskGroupAssignUser$.next([$event, taskGroup])
+                  "
+                ></ui-assign-change-button>
               </div>
-              <!-- TODO: トラッキングタイマー表示 -->
             </div>
-            <div class="flex gap-x-5 bg-primary-light3 p-2 rounded-s">
+            <div class="flex gap-x-1 bg-primary-light3 rounded-s">
               <ng-container
                 *ngFor="
                   let item of taskGroup.tasks | keyvalue: noOpCompare;
@@ -86,17 +112,13 @@
                 "
               >
                 <div
-                  class="w-1/4"
+                  class="w-1/4 p-2"
                   cdkDropList
                   [cdkDropListData]="item.value"
-                  (cdkDropListDropped)="drop($event)"
+                  (cdkDropListDropped)="onDrop$.next([$event, taskGroup])"
                 >
-                  <div
-                    *ngFor="let task of item.value"
-                    class="drag-item mb-1"
-                    cdkDrag
-                  >
-                    <bis-task-card [task]="task"></bis-task-card>
+                  <div *ngFor="let task of item.value" class="mb-1" cdkDrag>
+                    <bis-task-card [taskId]="task.id"></bis-task-card>
                   </div>
                   <ng-container *ngIf="first">
                     <div class="relative">
@@ -139,25 +161,25 @@
       </ng-container>
 
       <div class="mt-2">
-        <div class="flex gap-x-5 bg-primary-light3 px-5 rounded-s">
+        <div class="flex gap-x-5 bg-primary-light3 px-3 rounded-s">
           <ng-container
             *ngFor="
-              let item of soloTasks | keyvalue: noOpCompare;
+              let item of state.soloTasks | keyvalue: noOpCompare;
               first as first
             "
           >
             <div
-              class="w-1/4"
+              class="w-1/4 p-2"
               cdkDropList
               [cdkDropListData]="item.value"
-              (cdkDropListDropped)="drop($event)"
+              (cdkDropListDropped)="onDrop$.next([$event])"
             >
               <div
                 *ngFor="let task of item.value; trackBy: trackById"
-                class="drag-item mb-1"
+                class="mb-1"
                 cdkDrag
               >
-                <bis-task-card [task]="task"></bis-task-card>
+                <bis-task-card [taskId]="task.id"></bis-task-card>
               </div>
               <ng-container *ngIf="first">
                 <div class="relative">

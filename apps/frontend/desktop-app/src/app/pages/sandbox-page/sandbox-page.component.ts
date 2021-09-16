@@ -8,7 +8,7 @@ import {
   Subtask as ApiSubtask,
   Task as ApiTask,
   TaskGroup as ApiTaskGroup,
-  User as ApiUser
+  User as ApiUser,
 } from '@bison/shared/schema';
 import { convertToDomainTaskFromApiTask } from '../../util/convert-to-domain-task-from-api-task';
 
@@ -119,6 +119,6 @@ export class SandboxPageComponent {
       } as ApiSubtask,
     ],
     project: {} as ApiProject,
-    createdAt: new Date().valueOf()
+    createdAt: new Date().valueOf(),
   } as ApiTask);
 }
