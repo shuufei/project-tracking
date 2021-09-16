@@ -12,15 +12,16 @@
         <ui-project-navigation
           [project]="project"
           [boards]="project.boards"
-          (clickedCreateBoard)="(null)"
+          (clickedCreateBoard)="
+            onClickedBoardCreateButton$.next({ project: project })
+          "
           (clickedDeleteProject)="
-            onClickedDeleteProjectButton$.next({
+            onClickedProjectDeleteButton$.next({
               project: project
             })
           "
-          (clickedEditBoard)="(null)"
           (clickedDeleteBoard)="
-            onClickedDeleteBoardButton$.next({
+            onClickedBoardDeleteButton$.next({
               project: project,
               board: $event
             })
@@ -28,20 +29,39 @@
           [ngClass]="[isFirst ? '' : 'mt-4']"
         ></ui-project-navigation>
       </ng-container>
+      <button
+        class="inline-flex items-center text-s3 text-black-light2 font-medium px-3 py-1 cursor-pointer focus:outline-none focus:shadow-outline_primary rounded-s mt-4"
+        (click)="isOpenedProjectCreateSheet$.next(true)"
+      >
+        <ui-icon
+          class="mr-1"
+          size="s"
+          icon="plus"
+          color="primary-light1"
+        ></ui-icon
+        >プロジェクトを作成
+      </button>
     </aside>
     <div class="mt-1 flex-1"><router-outlet></router-outlet></div>
   </div>
 
+  <bis-project-create-sheet
+    [isOpened$]="isOpenedProjectCreateSheet$.asObservable()"
+  ></bis-project-create-sheet>
+
   <bis-project-delete-dialog
-    [project]="state.projectDeleteDialog.project"
-    [isOpen$]="isOpenProjectDeleteDialog$"
-    (closed)="onClosedProjectDeleteDialog$.next()"
+    [project]="state.projectDeleteDialogState?.project"
+    [isOpen$]="isOpenedProjectDeleteDialog$.asObservable()"
   ></bis-project-delete-dialog>
 
+  <bis-board-create-sheet
+    [project]="state.boardCreateSheetState?.project"
+    [isOpened$]="isOpenedBoardCreateSheet$.asObservable()"
+  ></bis-board-create-sheet>
+
   <bis-board-delete-dialog
-    [project]="state.boardDeleteDialog.project"
-    [board]="state.boardDeleteDialog.board"
-    [isOpen$]="isOpenBoardDeleteDialog$"
-    (closed)="onClosedBoardDeleteDialog$.next()"
+    [project]="state.boardDeleteDialogState?.project"
+    [board]="state.boardDeleteDialogState?.board"
+    [isOpened$]="isOpenedBoardDeleteDialog$.asObservable()"
   ></bis-board-delete-dialog>
 </ng-container>

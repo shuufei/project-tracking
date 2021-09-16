@@ -5,7 +5,6 @@ import {
   Input,
   OnInit,
 } from '@angular/core';
-import { ApolloQueryResult } from '@apollo/client/core';
 import {
   APOLLO_DATA_QUERY,
   CREATE_PROJECT_USECASE,
@@ -18,18 +17,17 @@ import { Color, User } from '@bison/shared/domain';
 import {
   CreateProjectInput,
   UpdateProjectMembersInput,
-  User as ApiUser,
 } from '@bison/shared/schema';
 import { RxState } from '@rx-angular/state';
 import { TuiNotification, TuiNotificationsService } from '@taiga-ui/core';
 import { gql } from 'apollo-angular';
 import { merge, Observable, Subject } from 'rxjs';
-import { exhaustMap, filter, map, switchMap } from 'rxjs/operators';
-import { ChangedPropertyEvent } from '../../../../shared/components/project-property-edit-form/project-property-edit-form.component';
-import { convertToApiColorFromDomainColor } from '../../../../util/convert-to-api-color-from-domain-color';
-import { nonNullable } from '../../../../util/custom-operators/non-nullable';
+import { exhaustMap, map, switchMap } from 'rxjs/operators';
+import { convertToApiColorFromDomainColor } from '../../../util/convert-to-api-color-from-domain-color';
+import { nonNullable } from '../../../util/custom-operators/non-nullable';
+import { ChangedPropertyEvent } from '..//project-property-edit-form/project-property-edit-form.component';
 
-export const ME_FIELDS = gql`
+const ME_FIELDS = gql`
   fragment MePartsInProjectCreateSheet on User {
     id
     name
@@ -42,28 +40,6 @@ const USER_FIELDS = gql`
     id
     name
     icon
-  }
-`;
-
-const PROJECT_FIELDS = gql`
-  fragment ProjectPartsOnProjectCreateSheet on Project {
-    id
-    name
-    description
-    color
-    admin {
-      id
-      name
-      icon
-    }
-    members {
-      id
-      name
-      icon
-    }
-    boards {
-      id
-    }
   }
 `;
 
@@ -86,6 +62,7 @@ type State = {
 })
 export class ProjectCreateSheetComponent implements OnInit {
   @Input() triggerEl?: HTMLElement;
+  @Input() isOpened$ = new Subject<boolean>().asObservable();
 
   /**
    * State
@@ -140,6 +117,7 @@ export class ProjectCreateSheetComponent implements OnInit {
       )
     );
     this.state.connect('isSheetOpen', this.onOpenedSheet$, () => true);
+    this.state.connect('isSheetOpen', this.isOpened$);
     this.state.connect(this.onClosedeSheet$, () => {
       return {
         color: 'Gray',
@@ -153,16 +131,8 @@ export class ProjectCreateSheetComponent implements OnInit {
 
   private queryMe$() {
     return this.apolloDataQuery
-      .queryViewer(
-        { name: 'MePartsInProjectCreateSheet', fields: ME_FIELDS },
-        { fetchPolicy: 'cache-first' }
-      )
+      .queryViewer({ name: 'MePartsInProjectCreateSheet', fields: ME_FIELDS })
       .pipe(
-        filter((response): response is ApolloQueryResult<{
-          viewer: ApiUser;
-        }> => {
-          return response.data.viewer != null;
-        }),
         map((response) => response.data?.viewer),
         nonNullable(),
         map((viewer) => {

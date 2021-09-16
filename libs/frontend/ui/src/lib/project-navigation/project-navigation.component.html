@@ -1,4 +1,8 @@
-<ui-nav-project-item *ngIf="project" [isOpen]="isOpen" [projectName]="project.name" [color]="project.color"
+<ui-nav-project-item
+  *ngIf="project"
+  [isOpen]="isOpen"
+  [projectName]="project.name"
+  [color]="project.color"
   [routerLinkPath]="[
     '/projects',
     project.id,
@@ -8,23 +12,41 @@
         header: ['detail']
       }
     }
-  ]" (clickedOpenToggle)="isOpen = !isOpen" (clickedDelete)="clickedDeleteProject.emit(project)">
+  ]"
+  (clickedOpenToggle)="isOpen = !isOpen"
+  (clickedDelete)="clickedDeleteProject.emit(project)"
+>
   <div class="ml-2">
-    <ui-nav-board-item *ngFor="let board of boards" class="my-2" [boardName]="board.name" [routerLinkPath]="[
-        '/projects',
-        project.id,
-        {
-          outlets: {
-            primary: ['boards', board.id],
-            header: ['boards', board.id]
+    <ng-container *ngFor="let board of boards; first as isFirst">
+      <ui-nav-board-item
+        class="mt-2"
+        [boardName]="board.name"
+        [routerLinkPath]="[
+          '/projects',
+          project.id,
+          {
+            outlets: {
+              primary: ['boards', board.id],
+              header: ['boards', board.id]
+            }
           }
-        }
-      ]" (clickedEdit)="clickedEditBoard.emit(board)" (clickedDelete)="clickedDeleteBoard.emit(board)">
-    </ui-nav-board-item>
-    <span class="inline-flex items-center text-s3 text-black-light2 font-medium px-3 py-1 cursor-pointer"
-      (click)="clickedCreateBoard.emit()">
-      <ui-icon class="mr-1" size="s" icon="plus" color="primary-light1"></ui-icon>
+        ]"
+        (clickedDelete)="clickedDeleteBoard.emit(board)"
+      >
+      </ui-nav-board-item>
+    </ng-container>
+
+    <button
+      class="inline-flex items-center text-s3 text-black-light2 font-medium px-3 py-1 cursor-pointer mt-2 focus:outline-none focus:shadow-outline_primary rounded-s"
+      (click)="clickedCreateBoard.emit()"
+    >
+      <ui-icon
+        class="mr-1"
+        size="s"
+        icon="plus"
+        color="primary-light1"
+      ></ui-icon>
       ボードを作成
-    </span>
+    </button>
   </div>
 </ui-nav-project-item>

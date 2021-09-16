@@ -15,14 +15,8 @@ import {
 import { Board, Project } from '@bison/frontend/domain';
 import { RxState } from '@rx-angular/state';
 import { gql } from 'apollo-angular';
-import { merge, Subject } from 'rxjs';
-import {
-  debounceTime,
-  distinctUntilChanged,
-  map,
-  takeUntil,
-  tap,
-} from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, map, tap } from 'rxjs/operators';
 import {
   PROJECT_FIELDS,
   PROJECT_FRAGMENT_NAME,
@@ -30,9 +24,12 @@ import {
 import { convertToFrontendDomainProjectFromApiProject } from '../../util/convert-to-frontend-domain-project-from-api-project';
 import { nonNullable } from '../../util/custom-operators/non-nullable';
 
-export const VIEWER_FIELDS = gql`
+const VIEWER_FIELDS = gql`
   ${PROJECT_FIELDS}
   fragment ViewerPartsInProjectPage on User {
+    id
+    name
+    icon
     projects {
       ...${PROJECT_FRAGMENT_NAME}
     }
@@ -41,8 +38,9 @@ export const VIEWER_FIELDS = gql`
 
 type State = {
   projects: Project[];
-  projectDeleteDialog: Partial<DeleteProject> & { isOpen: boolean };
-  boardDeleteDialog: Partial<DeleteBoard> & { isOpen: boolean };
+  projectDeleteDialogState?: { project: Project };
+  boardDeleteDialogState?: { project: Project; board: Board };
+  boardCreateSheetState?: { project: Project };
 };
 
 @Component({
@@ -58,23 +56,17 @@ export class ProjectPageComponent
   @ViewChild('sideNav') sideNav?: ElementRef<HTMLElement>;
 
   readonly state$ = this.state.select();
-  readonly isOpenProjectDeleteDialog$ = this.state.select(
-    'projectDeleteDialog',
-    'isOpen'
-  );
-  readonly isOpenBoardDeleteDialog$ = this.state.select(
-    'boardDeleteDialog',
-    'isOpen'
-  );
+  readonly isOpenedProjectCreateSheet$ = new Subject<boolean>();
+  readonly isOpenedProjectDeleteDialog$ = new Subject<boolean>();
+  readonly isOpenedBoardCreateSheet$ = new Subject<boolean>();
+  readonly isOpenedBoardDeleteDialog$ = new Subject<boolean>();
 
-  // TODO: ボード編集
-  // TODO: ボード作成
-  // プロジェクト削除
-  readonly onClickedDeleteProjectButton$ = new Subject<DeleteProject>();
-  readonly onClosedProjectDeleteDialog$ = new Subject<void>();
-  // ボード削除
-  readonly onClickedDeleteBoardButton$ = new Subject<DeleteBoard>();
-  readonly onClosedBoardDeleteDialog$ = new Subject<void>();
+  readonly onClickedProjectDeleteButton$ = new Subject<{ project: Project }>();
+  readonly onClickedBoardCreateButton$ = new Subject<{ project: Project }>();
+  readonly onClickedBoardDeleteButton$ = new Subject<{
+    project: Project;
+    board: Board;
+  }>();
 
   private readonly afterViewChecked$ = new Subject();
   private readonly onDestroy$ = new Subject();
@@ -95,61 +87,8 @@ export class ProjectPageComponent
   ngOnInit() {
     this.state.set({
       projects: [],
-      projectDeleteDialog: { isOpen: false },
-      boardDeleteDialog: { isOpen: false },
     });
-    this.state.connect(
-      'projectDeleteDialog',
-      this.onClickedDeleteProjectButton$,
-      (_, event) => ({
-        project: event.project,
-        isOpen: true,
-      })
-    );
-    this.state.connect(
-      'projectDeleteDialog',
-      this.onClosedProjectDeleteDialog$,
-      () => ({ isOpen: false })
-    );
-    this.state.connect(
-      'boardDeleteDialog',
-      this.onClickedDeleteBoardButton$,
-      (_, event) => ({
-        project: event.project,
-        board: event.board,
-        isOpen: true,
-      })
-    );
-    this.state.connect(
-      'boardDeleteDialog',
-      this.onClosedBoardDeleteDialog$,
-      () => ({
-        isOpen: false,
-      })
-    );
-    merge(this.onHeaderHeightChanged$)
-      .pipe(takeUntil(this.onDestroy$))
-      .subscribe();
-    this.setupEventHandler();
-  }
-
-  ngAfterViewChecked() {
-    this.afterViewChecked$.next();
-  }
-
-  ngOnDestroy() {
-    this.onDestroy$.next();
-  }
-
-  private setSideNavOffset() {
-    if (!this.header || !this.sideNav) {
-      return;
-    }
-    const headerHeight = this.header.nativeElement.offsetHeight;
-    this.sideNav.nativeElement.style.top = `${headerHeight}px`;
-  }
-
-  private setupEventHandler() {
+    this.state.hold(this.onHeaderHeightChanged$);
     this.state.connect(
       'projects',
       this.apolloDataQuery
@@ -169,8 +108,48 @@ export class ProjectPageComponent
           })
         )
     );
+    this.state.hold(
+      this.onClickedBoardCreateButton$.pipe(
+        tap(({ project }) => {
+          this.state.set('boardCreateSheetState', () => ({ project }));
+          this.isOpenedBoardCreateSheet$.next(true);
+        })
+      )
+    );
+    this.state.hold(
+      this.onClickedProjectDeleteButton$.pipe(
+        tap(({ project }) => {
+          this.state.set('projectDeleteDialogState', () => ({ project }));
+          this.isOpenedProjectDeleteDialog$.next(true);
+        })
+      )
+    );
+    this.state.hold(
+      this.onClickedBoardDeleteButton$.pipe(
+        tap(({ project, board }) => {
+          this.state.set('boardDeleteDialogState', () => ({
+            project,
+            board,
+          }));
+          this.isOpenedBoardDeleteDialog$.next(true);
+        })
+      )
+    );
+  }
+
+  ngAfterViewChecked() {
+    this.afterViewChecked$.next();
+  }
+
+  ngOnDestroy() {
+    this.onDestroy$.next();
+  }
+
+  private setSideNavOffset() {
+    if (!this.header || !this.sideNav) {
+      return;
+    }
+    const headerHeight = this.header.nativeElement.offsetHeight;
+    this.sideNav.nativeElement.style.top = `${headerHeight}px`;
   }
 }
-
-type DeleteProject = { project: Project };
-type DeleteBoard = { project: Project; board: Board };
