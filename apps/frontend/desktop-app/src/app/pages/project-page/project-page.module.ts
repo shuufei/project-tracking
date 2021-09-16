@@ -6,6 +6,7 @@ import {
   APOLLO_DATA_QUERY,
 } from '@bison/frontend/application';
 import {
+  AssignChangeButtonModule,
   BoardItemModule,
   ButtonModule,
   ColorIconModule,
@@ -17,6 +18,8 @@ import {
   ProjectNavigationModule,
   SheetFooterModule,
   SheetModule,
+  StatusSelectPopupModule,
+  TrackingLogChangeButtonModule,
   UserIconModule,
 } from '@bison/frontend/ui';
 import { TuiNotificationsModule } from '@taiga-ui/core';
@@ -30,6 +33,8 @@ import { ProjectPropertyEditFormModule } from '../../shared/components/project-p
 import { ProjectUpdateSheetModule } from '../../shared/components/project-update-sheet/project-update-sheet.module';
 import { TaskCardModule } from '../../shared/components/task-card/task-card.module';
 import { TaskDialogModule } from '../../shared/components/task-dialog/task-dialog.module';
+import { TaskFacadeModule } from '../../shared/facade/task-facade/task-facade.module';
+import { TaskGroupFacadeModule } from '../../shared/facade/task-group-facade/task-group-facade.module';
 import { BoardDetailHeaderComponent } from './components/board-detail-header/board-detail-header.component';
 import { BoardDetailComponent } from './components/board-detail/board-detail.component';
 import { ProjectDetailHeaderComponent } from './components/project-detail-header/project-detail-header.component';
@@ -71,12 +76,16 @@ import { ProjectPageComponent } from './project-page.component';
     TaskCardModule,
     DragDropModule,
     ProjectDeleteDialogModule,
-    BoardDeleteDialogModule,
     ColorIconModule,
     BoardItemModule,
     ProjectMemberUpdateSheetModule,
     BoardUpdateSheetModule,
     BoardDeleteDialogModule,
+    TrackingLogChangeButtonModule,
+    TaskGroupFacadeModule,
+    TaskFacadeModule,
+    StatusSelectPopupModule,
+    AssignChangeButtonModule,
   ],
   exports: [ProjectPageComponent],
   providers: [
