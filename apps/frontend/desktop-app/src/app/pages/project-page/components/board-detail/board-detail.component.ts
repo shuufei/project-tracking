@@ -20,7 +20,7 @@ import { BoardTasksOrderItem, Id, Status } from '@bison/shared/domain';
 import { RxState } from '@rx-angular/state';
 import { gql } from 'apollo-angular';
 import { forkJoin, Observable, Subject } from 'rxjs';
-import { concatMap, filter, map, switchMap, tap } from 'rxjs/operators';
+import { concatMap, map, switchMap, tap } from 'rxjs/operators';
 import { TaskFacadeService } from '../../../../shared/facade/task-facade/task-facade.service';
 import { TaskGroupFacadeService } from '../../../../shared/facade/task-group-facade/task-group-facade.service';
 import {
@@ -107,46 +107,6 @@ export class BoardDetailComponent implements OnInit {
   private setupEventHandler() {
     this.state.connect('board', this.queryBoard$());
     this.state.connect('users', this.queryUsers$());
-
-    this.state.hold(
-      this.onChangedTaskGroupStatus$.pipe(
-        switchMap(([status, taskGroup]) => {
-          const uiTaskGroup: UiTaskGroup = {
-            ...taskGroup,
-            tasks: this.concatTasks(taskGroup.tasks),
-          };
-          return this.taskGroupFacadeService.updateStatus(status, uiTaskGroup);
-        })
-      )
-    );
-
-    this.state.hold(
-      this.onChangedTaskGroupAssignUser$.pipe(
-        filter(([id, taskGroup]) => id !== taskGroup.assignUser?.id),
-        switchMap(([id, taskGroup]) => {
-          const uiTaskGroup: UiTaskGroup = {
-            ...taskGroup,
-            tasks: this.concatTasks(taskGroup.tasks),
-          };
-          return this.taskGroupFacadeService.updateAssignUser(id, uiTaskGroup);
-        })
-      )
-    );
-
-    this.state.hold(
-      this.onChangedTaskGroupScheduledTime$.pipe(
-        switchMap(([timeSec, taskGroup]) => {
-          const uiTaskGroup: UiTaskGroup = {
-            ...taskGroup,
-            tasks: this.concatTasks(taskGroup.tasks),
-          };
-          return this.taskGroupFacadeService.updateScheduledTimeSec(
-            timeSec,
-            uiTaskGroup
-          );
-        })
-      )
-    );
 
     this.state.hold(
       this.onDrop$.pipe(

@@ -34,6 +34,7 @@ import { ProjectPropertyEditFormModule } from '../../shared/components/project-p
 import { ProjectUpdateSheetModule } from '../../shared/components/project-update-sheet/project-update-sheet.module';
 import { TaskCardModule } from '../../shared/components/task-card/task-card.module';
 import { TaskDialogModule } from '../../shared/components/task-dialog/task-dialog.module';
+import { TaskGroupCardModule } from '../../shared/components/task-group-card/task-group-card.module';
 import { TaskFacadeModule } from '../../shared/facade/task-facade/task-facade.module';
 import { TaskGroupFacadeModule } from '../../shared/facade/task-group-facade/task-group-facade.module';
 import { BoardDetailHeaderComponent } from './components/board-detail-header/board-detail-header.component';
@@ -85,6 +86,7 @@ import { ProjectPageComponent } from './project-page.component';
     StatusSelectPopupModule,
     AssignChangeButtonModule,
     ProjectCreateSheetModule,
+    TaskGroupCardModule,
   ],
   exports: [ProjectPageComponent],
   providers: [
