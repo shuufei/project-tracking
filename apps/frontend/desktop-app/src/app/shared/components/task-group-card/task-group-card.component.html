@@ -37,71 +37,54 @@
         </div>
       </div>
       <div class="flex gap-x-1 bg-primary-light3 rounded-s">
-        <ng-container *ngIf="todoTasks$ | async as todoTasks">
-          <div class="w-1/4 p-2" cdkDropList [cdkDropListData]="todoTasks">
-            <!-- (cdkDropListDropped)="onDrop$.next([$event, taskGroup])" -->
-            <div *ngFor="let task of todoTasks" class="mb-1" cdkDrag>
-              <bis-task-card [taskId]="task.id"></bis-task-card>
-            </div>
-            <div class="relative">
-              <button
-                #taskGroupAddingTriggerEl
-                class="flex items-center justify-center w-full py-2 mt-1 focus:outline-none focus:shadow-outline_primary"
-              >
-                <ui-icon class="mr-1" icon="plus" size="s"></ui-icon>
-                <span class="text-s4 font-medium leading-normal">
-                  タスクを追加
-                </span>
-              </button>
-              <ui-popup
-                [triggerEl]="taskGroupAddingTriggerEl"
-                [isCloseWhenPopupAction]="true"
-              >
-                <div class="menu-items">
-                  <ui-menu-item
-                    [itemName]="'タスクグループを追加'"
-                    [color]="'primary'"
-                    [icon]="'plus'"
-                    (clickedItem)="(null)"
-                  ></ui-menu-item>
-                  <ui-menu-item
-                    class="mt-2"
-                    [itemName]="'タスクを追加'"
-                    [color]="'primary'"
-                    [icon]="'plus'"
-                    (clickedItem)="(null)"
-                  ></ui-menu-item>
-                </div>
-              </ui-popup>
-            </div>
-          </div>
-        </ng-container>
-        <ng-container *ngIf="inprogressTasks$ | async as inprogressTasks">
+        <ng-container
+          *ngFor="
+            let item of state.taskGroup.tasks | keyvalue: noOpCompare;
+            first as first
+          "
+        >
           <div
             class="w-1/4 p-2"
             cdkDropList
-            [cdkDropListData]="inprogressTasks"
+            [cdkDropListData]="item.value"
+            (cdkDropListDropped)="onDrop$.next($event)"
           >
-            <!-- (cdkDropListDropped)="onDrop$.next([$event, taskGroup])" -->
-            <div *ngFor="let task of inprogressTasks" class="mb-1" cdkDrag>
+            <div *ngFor="let task of item.value" class="mb-1" cdkDrag>
               <bis-task-card [taskId]="task.id"></bis-task-card>
             </div>
-          </div>
-        </ng-container>
-        <ng-container *ngIf="confirmTasks$ | async as confirmTasks">
-          <div class="w-1/4 p-2" cdkDropList [cdkDropListData]="confirmTasks">
-            <!-- (cdkDropListDropped)="onDrop$.next([$event, taskGroup])" -->
-            <div *ngFor="let task of confirmTasks" class="mb-1" cdkDrag>
-              <bis-task-card [taskId]="task.id"></bis-task-card>
-            </div>
-          </div>
-        </ng-container>
-        <ng-container *ngIf="doneTasks$ | async as doneTasks">
-          <div class="w-1/4 p-2" cdkDropList [cdkDropListData]="doneTasks">
-            <!-- (cdkDropListDropped)="onDrop$.next([$event, taskGroup])" -->
-            <div *ngFor="let task of doneTasks" class="mb-1" cdkDrag>
-              <bis-task-card [taskId]="task.id"></bis-task-card>
-            </div>
+            <ng-container *ngIf="first">
+              <div class="relative">
+                <button
+                  #taskGroupAddingTriggerEl
+                  class="flex items-center justify-center w-full py-2 mt-1"
+                >
+                  <ui-icon class="mr-1" icon="plus" size="s"></ui-icon>
+                  <span class="text-s4 font-medium leading-normal">
+                    タスクを追加
+                  </span>
+                </button>
+                <ui-popup
+                  [triggerEl]="taskGroupAddingTriggerEl"
+                  [isCloseWhenPopupAction]="true"
+                >
+                  <div class="menu-items">
+                    <ui-menu-item
+                      [itemName]="'タスクグループを追加'"
+                      [color]="'primary'"
+                      [icon]="'plus'"
+                      (clickedItem)="(null)"
+                    ></ui-menu-item>
+                    <ui-menu-item
+                      class="mt-2"
+                      [itemName]="'タスクを追加'"
+                      [color]="'primary'"
+                      [icon]="'plus'"
+                      (clickedItem)="(null)"
+                    ></ui-menu-item>
+                  </div>
+                </ui-popup>
+              </div>
+            </ng-container>
           </div>
         </ng-container>
       </div>
