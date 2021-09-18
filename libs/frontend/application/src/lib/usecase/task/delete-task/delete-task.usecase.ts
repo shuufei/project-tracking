@@ -81,7 +81,7 @@ export class DeleteTaskUsecase implements IDeleteTaskUsecase {
           fragment: gql`
             fragment Board on Board {
               id
-              tasks {
+              soloTasks {
                 id
               }
             }
@@ -91,7 +91,7 @@ export class DeleteTaskUsecase implements IDeleteTaskUsecase {
           cache.modify({
             id: cache.identify(board),
             fields: {
-              tasks(taskRefs: Reference[], { readField }) {
+              soloTasks(taskRefs: Reference[], { readField }) {
                 return taskRefs.filter(
                   (ref) => readField('id', ref) !== input.id
                 );
