@@ -75,12 +75,7 @@
               first as first
             "
           >
-            <div
-              class="w-1/4 p-2"
-              cdkDropList
-              [cdkDropListData]="item.value"
-              (cdkDropListDropped)="onDrop$.next($event)"
-            >
+            <div class="w-1/4 p-2" cdkDropList [cdkDropListData]="item.value">
               <div
                 *ngFor="let task of item.value; trackBy: trackById"
                 class="mb-1"
