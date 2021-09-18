@@ -1,6 +1,6 @@
 <ng-container *ngIf="state$ | async as state">
   <ng-container *ngIf="state.taskGroup">
-    <div class="bg-white px-3 pt-2 pb-3 rounded-s">
+    <div class="bg-white px-3 pt-2 pb-3 rounded-s task-group-card-content">
       <div class="mb-2">
         <div class="flex mb-2">
           <h3
@@ -8,14 +8,50 @@
           >
             {{ state.taskGroup.title }}
           </h3>
-          <ui-scheduled-time-sec-change-button
-            class="mr-6"
-            [workTimeSec]="state.taskGroup.workTimeSec || 0"
-            [scheduledTimeSec]="state.taskGroup.scheduledTimeSec || 0"
-            (changedScheduledTimeSec)="
-              onChangedTaskGroupScheduledTime$.next($event)
-            "
-          ></ui-scheduled-time-sec-change-button>
+          <div class="ml-2 flex">
+            <ui-scheduled-time-sec-change-button
+              [workTimeSec]="state.taskGroup.workTimeSec || 0"
+              [scheduledTimeSec]="state.taskGroup.scheduledTimeSec || 0"
+              (changedScheduledTimeSec)="
+                onChangedTaskGroupScheduledTime$.next($event)
+              "
+            ></ui-scheduled-time-sec-change-button>
+            <div class="relative ml-2">
+              <button
+                #menuPopupTrigger
+                class="menu-trigger invisible ml-2 p-1 focus:outline-none focus:shadow-outline_primary rounded-s"
+              >
+                <ui-icon
+                  [icon]="'more-horizontal'"
+                  [size]="'s'"
+                  [color]="'primary-light2'"
+                  [hoverColor]="'primary'"
+                >
+                </ui-icon>
+              </button>
+              <ui-popup
+                [triggerEl]="menuPopupTrigger"
+                [isCloseWhenPopupAction]="true"
+              >
+                <div class="menu-items">
+                  <ui-menu-item
+                    class="mt-2"
+                    [itemName]="'別のボードに移動'"
+                    [color]="'primary'"
+                    [icon]="'arrow-right'"
+                    (clickedItem)="(null)"
+                  ></ui-menu-item>
+                  <ui-menu-item
+                    class="mt-2"
+                    [itemName]="'削除'"
+                    [color]="'warn'"
+                    [icon]="'trash-2'"
+                    (clickedItem)="(null)"
+                  ></ui-menu-item>
+                </div>
+              </ui-popup>
+            </div>
+          </div>
         </div>
         <div class="flex items-center">
           <div #statusTriggerEl class="flex flex-col cursor-pointer p-0.5 mr-3">

@@ -1,5 +1,9 @@
 :host {
   display: block;
+  &:hover {
+    cursor: pointer;
+    box-shadow: var(--bison-box-shadow-m);
+  }
 }
 
 .cdk-drag-placeholder {
@@ -16,4 +20,20 @@
 
 .cdk-drop-list-dragging .drag-item:not(.cdk-drag-placeholder) {
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.task-group-card-content {
+  &:hover {
+    .menu-trigger {
+      visibility: visible;
+    }
+  }
+}
+
+.menu-trigger {
+  line-height: 0;
+}
+
+.menu-items {
+  min-width: 180px;
 }

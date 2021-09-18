@@ -22,16 +22,20 @@ import { TaskGroupCardComponent } from './task-group-card.component';
   declarations: [TaskGroupCardComponent],
   imports: [
     CommonModule,
+    // frontend/desktop-app components
+    TaskCardModule,
+    // frontend/desktop-app facade
+    TaskGroupFacadeModule,
+    TaskFacadeModule,
+    // frontend/ui components
     ScheduledTimeSecChangeButtonModule,
     StatusSelectPopupModule,
     AssignChangeButtonModule,
-    TaskCardModule,
     IconModule,
     PopupModule,
     MenuItemModule,
+    // Angular CDK
     DragDropModule,
-    TaskGroupFacadeModule,
-    TaskFacadeModule,
   ],
   exports: [TaskGroupCardComponent],
   providers: [
