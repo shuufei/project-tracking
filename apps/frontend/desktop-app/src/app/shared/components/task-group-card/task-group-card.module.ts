@@ -7,6 +7,8 @@ import {
 } from '@bison/frontend/application';
 import {
   AssignChangeButtonModule,
+  BoardSelectPopupModule,
+  DeleteConfirmPopupModule,
   IconModule,
   MenuItemModule,
   PopupModule,
@@ -34,6 +36,8 @@ import { TaskGroupCardComponent } from './task-group-card.component';
     IconModule,
     PopupModule,
     MenuItemModule,
+    DeleteConfirmPopupModule,
+    BoardSelectPopupModule,
     // Angular CDK
     DragDropModule,
   ],

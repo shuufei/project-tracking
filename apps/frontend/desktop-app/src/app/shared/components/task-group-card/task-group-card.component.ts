@@ -15,11 +15,11 @@ import {
   IApolloDataQuery,
 } from '@bison/frontend/application';
 import { Task, TaskGroup } from '@bison/frontend/domain';
-import { User } from '@bison/frontend/ui';
+import { Board as UiBoard, User } from '@bison/frontend/ui';
 import { Board, BoardTasksOrderItem, Id, Status } from '@bison/shared/domain';
 import { RxState } from '@rx-angular/state';
 import { gql } from 'apollo-angular';
-import { forkJoin, Observable, Subject } from 'rxjs';
+import { forkJoin, Observable, of, Subject } from 'rxjs';
 import {
   concatMap,
   filter,
@@ -44,10 +44,21 @@ const USER_FIELDS = gql`
   }
 `;
 
+const PROJECT_FIELDS = gql`
+  fragment ProjectPartsInTaskGroupCard on Project {
+    id
+    boards {
+      id
+      name
+    }
+  }
+`;
+
 type State = {
   taskGroupId?: TaskGroup['id'];
   taskGroup?: TaskGroupWithCategorizedTasks;
   users: User[];
+  boards: UiBoard[];
 };
 
 @Component({
@@ -75,6 +86,10 @@ export class TaskGroupCardComponent implements OnInit {
   readonly onChangedTaskGroupStatus$ = new Subject<TaskGroup['status']>();
   readonly onChangedTaskGroupAssignUser$ = new Subject<User['id']>();
   readonly onChangedTaskGroupScheduledTime$ = new Subject<number>();
+  readonly onClickedDeleteMenu$ = new Subject<boolean>();
+  readonly onClickedSelectBoardMenu$ = new Subject<boolean>();
+  readonly onSelectedBoard$ = new Subject<Board['id']>();
+  readonly onDelete$ = new Subject<void>();
 
   constructor(
     private state: RxState<State>,
@@ -82,7 +97,7 @@ export class TaskGroupCardComponent implements OnInit {
     private taskGroupFacadeService: TaskGroupFacadeService,
     private taskFacadeService: TaskFacadeService
   ) {
-    this.state.set({ users: [] });
+    this.state.set({ users: [], boards: [] });
   }
 
   ngOnInit(): void {
@@ -100,6 +115,7 @@ export class TaskGroupCardComponent implements OnInit {
         })
       )
     );
+    this.state.connect('boards', this.queryBoards$());
     this.state.connect(
       'users',
       this.apolloDataQuery
@@ -231,6 +247,31 @@ export class TaskGroupCardComponent implements OnInit {
         })
       )
     );
+
+    this.state.hold(
+      this.onSelectedBoard$.pipe(
+        filter((boardId) => {
+          return boardId !== this.state.get('taskGroup')?.board.id;
+        }),
+        switchMap((boardId) => {
+          const taskGroup = this.state.get('taskGroup');
+          if (taskGroup == null) return of(undefined);
+          return this.taskGroupFacadeService.updateBoard(
+            boardId,
+            this.convertToTaskGroupFromTaskGroupWithCategorizedTasks(taskGroup)
+          );
+        })
+      )
+    );
+
+    this.state.hold(
+      this.onDelete$.pipe(
+        withLatestFrom(this.state.select('taskGroupId').pipe(nonNullable())),
+        switchMap(([, taskGroupId]) => {
+          return this.taskGroupFacadeService.delete(taskGroupId);
+        })
+      )
+    );
   }
 
   // keyvalueパイプが勝手にソートするのを防ぐ
@@ -255,6 +296,29 @@ export class TaskGroupCardComponent implements OnInit {
       nonNullable(),
       map((taskGroup) => {
         return convertToDomainTaskGroupFromApiTaskGroup(taskGroup);
+      })
+    );
+  }
+
+  private queryBoards$() {
+    return this.state.select('taskGroup').pipe(
+      nonNullable(),
+      map((taskGroup) => taskGroup.board.project.id),
+      switchMap((projectId) => {
+        return this.apolloDataQuery.queryProject(
+          { name: 'ProjectPartsInTaskGroupCard', fields: PROJECT_FIELDS },
+          projectId
+        );
+      }),
+      map((response) => response.data?.project?.boards),
+      nonNullable(),
+      map((boards) => {
+        return boards.map((board) => {
+          return {
+            id: board.id,
+            name: board.name,
+          };
+        });
       })
     );
   }

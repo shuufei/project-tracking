@@ -35,21 +35,32 @@
               >
                 <div class="menu-items">
                   <ui-menu-item
-                    class="mt-2"
                     [itemName]="'別のボードに移動'"
                     [color]="'primary'"
                     [icon]="'arrow-right'"
-                    (clickedItem)="(null)"
+                    (clickedItem)="onClickedSelectBoardMenu$.next(true)"
                   ></ui-menu-item>
                   <ui-menu-item
                     class="mt-2"
                     [itemName]="'削除'"
                     [color]="'warn'"
                     [icon]="'trash-2'"
-                    (clickedItem)="(null)"
+                    (clickedItem)="onClickedDeleteMenu$.next(true)"
                   ></ui-menu-item>
                 </div>
               </ui-popup>
+              <ui-delete-confirm-popup
+                [isOpened$]="onClickedDeleteMenu$.asObservable()"
+                (delete)="onDelete$.next()"
+                (click)="$event.stopPropagation()"
+              ></ui-delete-confirm-popup>
+              <ui-board-select-popup
+                [isOpened$]="onClickedSelectBoardMenu$.asObservable()"
+                [boards]="state.boards"
+                [selectedBoardId]="state.taskGroup.board.id"
+                (selectBoard)="onSelectedBoard$.next($event)"
+                (click)="$event.stopPropagation()"
+              ></ui-board-select-popup>
             </div>
           </div>
         </div>
