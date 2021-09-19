@@ -97,13 +97,18 @@
             (cdkDropListDropped)="onDrop$.next($event)"
           >
             <div *ngFor="let task of item.value" class="mb-1" cdkDrag>
-              <bis-task-card [taskId]="task.id"></bis-task-card>
+              <bis-task-card
+                [taskId]="task.id"
+                (click)="$event.stopPropagation(); clickTask.emit(task.id)"
+                (clickedSubtask)="clickSubtask.emit($event.id)"
+              ></bis-task-card>
             </div>
             <ng-container *ngIf="first">
               <div class="relative">
                 <button
                   #taskGroupAddingTriggerEl
-                  class="flex items-center justify-center w-full py-2 mt-1"
+                  class="flex items-center justify-center w-full py-2 mt-1 focus:outline-none focus:shadow-outline_primary rounded-s"
+                  (click)="$event.stopPropagation()"
                 >
                   <ui-icon class="mr-1" icon="plus" size="s"></ui-icon>
                   <span class="text-s4 font-medium leading-normal">

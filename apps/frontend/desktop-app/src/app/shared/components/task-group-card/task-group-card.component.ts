@@ -6,15 +6,17 @@ import {
 import {
   ChangeDetectionStrategy,
   Component,
+  EventEmitter,
   Inject,
   Input,
   OnInit,
+  Output,
 } from '@angular/core';
 import {
   APOLLO_DATA_QUERY,
   IApolloDataQuery,
 } from '@bison/frontend/application';
-import { Task, TaskGroup } from '@bison/frontend/domain';
+import { Subtask, Task, TaskGroup } from '@bison/frontend/domain';
 import { Board as UiBoard, User } from '@bison/frontend/ui';
 import { Board, BoardTasksOrderItem, Id, Status } from '@bison/shared/domain';
 import { RxState } from '@rx-angular/state';
@@ -73,6 +75,8 @@ export class TaskGroupCardComponent implements OnInit {
   set taskGroupId(value: State['taskGroupId']) {
     this.state.set('taskGroupId', () => value);
   }
+  @Output() clickTask = new EventEmitter<Task['id']>();
+  @Output() clickSubtask = new EventEmitter<Subtask['id']>();
 
   /**
    * State

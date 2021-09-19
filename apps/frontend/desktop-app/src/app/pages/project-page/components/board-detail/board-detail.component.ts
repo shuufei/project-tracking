@@ -9,12 +9,14 @@ import {
   APOLLO_DATA_QUERY,
   IApolloDataQuery,
 } from '@bison/frontend/application';
-import { Board, Task, TaskGroup } from '@bison/frontend/domain';
+import { Board, Subtask, Task, TaskGroup } from '@bison/frontend/domain';
 import { User } from '@bison/frontend/ui';
 import { Id, Status } from '@bison/shared/domain';
 import { RxState } from '@rx-angular/state';
 import { gql } from 'apollo-angular';
+import { Subject } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
+import { TaskDialogService } from '../../../../shared/components/task-dialog/task-dialog.service';
 import {
   BOARD_FIELDS,
   BOARD_FRAGMENT_NAME,
@@ -55,10 +57,15 @@ export class BoardDetailComponent implements OnInit {
     nonNullable()
   );
 
+  readonly onClickTaskGroup$ = new Subject<TaskGroup['id']>();
+  readonly onClickTask$ = new Subject<Task['id']>();
+  readonly onClickSubask$ = new Subject<Subtask['id']>();
+
   constructor(
     private state: RxState<State>,
     private route: ActivatedRoute,
-    @Inject(APOLLO_DATA_QUERY) private apolloDataQuery: IApolloDataQuery
+    @Inject(APOLLO_DATA_QUERY) private apolloDataQuery: IApolloDataQuery,
+    private taskDialogService: TaskDialogService
   ) {
     this.state.set({
       taskGroups: [],
@@ -69,6 +76,39 @@ export class BoardDetailComponent implements OnInit {
 
   ngOnInit() {
     this.setupEventHandler();
+    this.state.hold(
+      this.onClickTaskGroup$.pipe(
+        tap((v) => {
+          this.taskDialogService.pushContent({
+            id: v,
+            type: 'TaskGroup',
+          });
+          this.taskDialogService.open();
+        })
+      )
+    );
+    this.state.hold(
+      this.onClickTask$.pipe(
+        tap((v) => {
+          this.taskDialogService.pushContent({
+            id: v,
+            type: 'Task',
+          });
+          this.taskDialogService.open();
+        })
+      )
+    );
+    this.state.hold(
+      this.onClickSubask$.pipe(
+        tap((v) => {
+          this.taskDialogService.pushContent({
+            id: v,
+            type: 'Subtask',
+          });
+          this.taskDialogService.open();
+        })
+      )
+    );
   }
 
   trackById(_: number, item: { id: Id }) {
@@ -92,11 +132,9 @@ export class BoardDetailComponent implements OnInit {
             boardId
           )
           .pipe(
-            map((response) => {
-              const { board } = response.data;
-              if (!board) {
-                return;
-              }
+            map((response) => response.data?.board),
+            nonNullable(),
+            map((board) => {
               return convertToDomainBoardFromApiBoard(board);
             }),
             tap((board) => {

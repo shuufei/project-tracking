@@ -66,6 +66,9 @@
           <div [class.mt-2]="!first">
             <bis-task-group-card
               [taskGroupId]="taskGroup.id"
+              (click)="onClickTaskGroup$.next(taskGroup.id)"
+              (clickTask)="onClickTask$.next($event)"
+              (clickSubtask)="onClickSubask$.next($event)"
             ></bis-task-group-card>
           </div>
         </ng-container>
@@ -84,7 +87,11 @@
                   class="mb-1"
                   cdkDrag
                 >
-                  <bis-task-card [taskId]="task.id"></bis-task-card>
+                  <bis-task-card
+                    [taskId]="task.id"
+                    (click)="onClickTask$.next(task.id)"
+                    (clickedSubtask)="onClickSubask$.next($event.id)"
+                  ></bis-task-card>
                 </div>
                 <ng-container *ngIf="first">
                   <div class="relative">
@@ -126,4 +133,6 @@
       </div>
     </section>
   </main>
+
+  <bis-task-dialog class="z-50"></bis-task-dialog>
 </ng-container>
