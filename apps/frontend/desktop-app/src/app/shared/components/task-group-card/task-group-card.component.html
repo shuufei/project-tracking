@@ -3,11 +3,20 @@
     <div class="bg-white px-3 pt-2 pb-3 rounded-s task-group-card-content">
       <div class="mb-2">
         <div class="flex mb-2">
-          <h3
-            class="flex-grow text-black-default text-s2 font-medium leading-normal"
-          >
-            {{ state.taskGroup.title }}
-          </h3>
+          <ng-container *ngIf="!state.taskGroup.title; else readonlyMode">
+            <ui-text-field
+              class="text-s2 text-black-default font-medium w-full"
+              (click)="$event.stopPropagation()"
+              (keypressEnter)="onChangedTitle$.next($event)"
+            ></ui-text-field>
+          </ng-container>
+          <ng-template #readonlyMode>
+            <h3
+              class="flex-grow text-black-default text-s2 font-medium leading-normal"
+            >
+              {{ state.taskGroup.title }}
+            </h3>
+          </ng-template>
           <div class="ml-2 flex">
             <ui-scheduled-time-sec-change-button
               [workTimeSec]="state.taskGroup.workTimeSec || 0"

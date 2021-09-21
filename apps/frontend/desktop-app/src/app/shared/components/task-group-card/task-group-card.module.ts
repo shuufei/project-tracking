@@ -14,6 +14,7 @@ import {
   PopupModule,
   ScheduledTimeSecChangeButtonModule,
   StatusSelectPopupModule,
+  TextFieldModule,
 } from '@bison/frontend/ui';
 import { TaskFacadeModule } from '../../facade/task-facade/task-facade.module';
 import { TaskGroupFacadeModule } from '../../facade/task-group-facade/task-group-facade.module';
@@ -38,6 +39,7 @@ import { TaskGroupCardComponent } from './task-group-card.component';
     MenuItemModule,
     DeleteConfirmPopupModule,
     BoardSelectPopupModule,
+    TextFieldModule,
     // Angular CDK
     DragDropModule,
   ],
