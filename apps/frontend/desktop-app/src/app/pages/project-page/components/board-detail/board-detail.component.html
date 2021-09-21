@@ -113,7 +113,7 @@
                           [itemName]="'タスクグループを追加'"
                           [color]="'primary'"
                           [icon]="'plus'"
-                          (clickedItem)="(null)"
+                          (clickedItem)="onClickCreateTaskGroup$.next()"
                         ></ui-menu-item>
                         <ui-menu-item
                           class="mt-2"

@@ -4,7 +4,9 @@ import { NgModule } from '@angular/core';
 import {
   ApolloDataQuery,
   APOLLO_DATA_QUERY,
+  CreateTaskGroupUsecase,
   CreateTaskOnBoardUsecase,
+  CREATE_TASK_GROUP_USECASE,
   CREATE_TASK_ON_BOARD_USECASE,
 } from '@bison/frontend/application';
 import {
@@ -99,6 +101,10 @@ import { ProjectPageComponent } from './project-page.component';
     {
       provide: CREATE_TASK_ON_BOARD_USECASE,
       useClass: CreateTaskOnBoardUsecase,
+    },
+    {
+      provide: CREATE_TASK_GROUP_USECASE,
+      useClass: CreateTaskGroupUsecase,
     },
   ],
 })

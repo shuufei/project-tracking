@@ -7,8 +7,10 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import {
   APOLLO_DATA_QUERY,
+  CREATE_TASK_GROUP_USECASE,
   CREATE_TASK_ON_BOARD_USECASE,
   IApolloDataQuery,
+  ICreateTaskGroupUsecase,
   ICreateTaskOnBoardUsecase,
 } from '@bison/frontend/application';
 import { Board, Subtask, Task, TaskGroup } from '@bison/frontend/domain';
@@ -71,7 +73,9 @@ export class BoardDetailComponent implements OnInit {
     @Inject(APOLLO_DATA_QUERY) private apolloDataQuery: IApolloDataQuery,
     private taskDialogService: TaskDialogService,
     @Inject(CREATE_TASK_ON_BOARD_USECASE)
-    private createTaskOnBoardUsecase: ICreateTaskOnBoardUsecase
+    private createTaskOnBoardUsecase: ICreateTaskOnBoardUsecase,
+    @Inject(CREATE_TASK_GROUP_USECASE)
+    private createTaskGroupUsecase: ICreateTaskGroupUsecase
   ) {
     this.state.set({
       taskGroups: [],
@@ -125,6 +129,22 @@ export class BoardDetailComponent implements OnInit {
               description: '',
               assignUserId: undefined,
               boardId: board.id,
+            },
+            board.projectId
+          );
+        })
+      )
+    );
+    this.state.hold(
+      this.onClickCreateTaskGroup$.pipe(
+        withLatestFrom(this.state.select('board').pipe(nonNullable())),
+        switchMap(([, board]) => {
+          return this.createTaskGroupUsecase.execute(
+            {
+              title: '',
+              description: '',
+              boardId: board.id,
+              scheduledTimeSec: 0,
             },
             board.projectId
           );
