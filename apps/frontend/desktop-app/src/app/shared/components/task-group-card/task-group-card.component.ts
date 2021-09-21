@@ -95,6 +95,7 @@ export class TaskGroupCardComponent implements OnInit {
   readonly onSelectedBoard$ = new Subject<Board['id']>();
   readonly onDelete$ = new Subject<void>();
   readonly onChangedTitle$ = new Subject<TaskGroup['title']>();
+  readonly onClickedCreateTask$ = new Subject<void>();
 
   constructor(
     private state: RxState<State>,
@@ -288,6 +289,23 @@ export class TaskGroupCardComponent implements OnInit {
             title,
             taskGroup.description,
             this.convertToTaskGroupFromTaskGroupWithCategorizedTasks(taskGroup)
+          );
+        })
+      )
+    );
+
+    this.state.hold(
+      this.onClickedCreateTask$.pipe(
+        withLatestFrom(this.state.select('taskGroup').pipe(nonNullable())),
+        switchMap(([, taskGroup]) => {
+          return this.taskFacadeService.createOnTaskGroup(
+            '',
+            '',
+            undefined,
+            taskGroup.id,
+            0,
+            taskGroup.board.project.id,
+            taskGroup.board.id
           );
         })
       )
