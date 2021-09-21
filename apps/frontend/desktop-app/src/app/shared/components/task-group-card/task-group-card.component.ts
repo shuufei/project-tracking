@@ -109,12 +109,13 @@ export class TaskGroupCardComponent implements OnInit {
       'taskGroup',
       this.queryTaskGroup$().pipe(
         map((taskGroup) => {
+          const sortedTasks = this.sortTasksByStatusAndOrder(
+            taskGroup.tasks,
+            taskGroup.tasksOrder
+          );
           return {
             ...taskGroup,
-            tasks: this.sortTasksByStatusAndOrder(
-              taskGroup.tasks,
-              taskGroup.tasksOrder
-            ),
+            tasks: sortedTasks,
           };
         })
       )

@@ -4,6 +4,8 @@ import { NgModule } from '@angular/core';
 import {
   ApolloDataQuery,
   APOLLO_DATA_QUERY,
+  CreateTaskOnBoardUsecase,
+  CREATE_TASK_ON_BOARD_USECASE,
 } from '@bison/frontend/application';
 import {
   AssignChangeButtonModule,
@@ -93,6 +95,10 @@ import { ProjectPageComponent } from './project-page.component';
     {
       provide: APOLLO_DATA_QUERY,
       useClass: ApolloDataQuery,
+    },
+    {
+      provide: CREATE_TASK_ON_BOARD_USECASE,
+      useClass: CreateTaskOnBoardUsecase,
     },
   ],
 })

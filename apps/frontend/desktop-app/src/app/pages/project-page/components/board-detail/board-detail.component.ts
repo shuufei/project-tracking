@@ -7,7 +7,9 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import {
   APOLLO_DATA_QUERY,
+  CREATE_TASK_ON_BOARD_USECASE,
   IApolloDataQuery,
+  ICreateTaskOnBoardUsecase,
 } from '@bison/frontend/application';
 import { Board, Subtask, Task, TaskGroup } from '@bison/frontend/domain';
 import { User } from '@bison/frontend/ui';
@@ -15,7 +17,7 @@ import { Id, Status } from '@bison/shared/domain';
 import { RxState } from '@rx-angular/state';
 import { gql } from 'apollo-angular';
 import { Subject } from 'rxjs';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { map, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { TaskDialogService } from '../../../../shared/components/task-dialog/task-dialog.service';
 import {
   BOARD_FIELDS,
@@ -60,12 +62,16 @@ export class BoardDetailComponent implements OnInit {
   readonly onClickTaskGroup$ = new Subject<TaskGroup['id']>();
   readonly onClickTask$ = new Subject<Task['id']>();
   readonly onClickSubask$ = new Subject<Subtask['id']>();
+  readonly onClickCreateTaskGroup$ = new Subject<void>();
+  readonly onClickCreateTask$ = new Subject<void>();
 
   constructor(
     private state: RxState<State>,
     private route: ActivatedRoute,
     @Inject(APOLLO_DATA_QUERY) private apolloDataQuery: IApolloDataQuery,
-    private taskDialogService: TaskDialogService
+    private taskDialogService: TaskDialogService,
+    @Inject(CREATE_TASK_ON_BOARD_USECASE)
+    private createTaskOnBoardUsecase: ICreateTaskOnBoardUsecase
   ) {
     this.state.set({
       taskGroups: [],
@@ -109,6 +115,27 @@ export class BoardDetailComponent implements OnInit {
         })
       )
     );
+    this.state.hold(
+      this.onClickCreateTask$.pipe(
+        withLatestFrom(this.state.select('board').pipe(nonNullable())),
+        switchMap(([, board]) => {
+          return this.createTaskOnBoardUsecase.excute(
+            {
+              title: '',
+              description: '',
+              assignUserId: undefined,
+              boardId: board.id,
+            },
+            board.projectId
+          );
+        })
+      )
+    );
+  }
+
+  // keyvalueパイプが勝手にソートするのを防ぐ
+  noOpCompare() {
+    return 0;
   }
 
   trackById(_: number, item: { id: Id }) {
@@ -142,12 +169,13 @@ export class BoardDetailComponent implements OnInit {
                 return;
               }
               this.state.set('taskGroups', () => board.taskGroups);
-              this.state.set('soloTasks', () =>
-                this.sortTasksByStatusAndOrder(
+              this.state.set('soloTasks', () => {
+                const sorted = this.sortTasksByStatusAndOrder(
                   board.soloTasks,
                   board.tasksOrder
-                )
-              );
+                );
+                return sorted;
+              });
             })
           );
       })

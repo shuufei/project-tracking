@@ -120,7 +120,7 @@
                           [itemName]="'タスクを追加'"
                           [color]="'primary'"
                           [icon]="'plus'"
-                          (clickedItem)="(null)"
+                          (clickedItem)="onClickCreateTask$.next()"
                         ></ui-menu-item>
                       </div>
                     </ui-popup>
