@@ -8,7 +8,13 @@ import { Task } from '../task/task';
 
 export type TaskGroup = Pick<
   DomainTaskGroup,
-  'id' | 'title' | 'description' | 'scheduledTimeSec' | 'status' | 'tasksOrder'
+  | 'id'
+  | 'title'
+  | 'description'
+  | 'scheduledTimeSec'
+  | 'status'
+  | 'tasksOrder'
+  | 'createdAt'
 > & {
   board: Pick<Board, 'id' | 'name' | 'description'> & {
     project: Pick<Project, 'id' | 'name'>;

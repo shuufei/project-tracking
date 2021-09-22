@@ -1,3 +1,4 @@
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -12,10 +13,13 @@ import {
   IApolloDataQuery,
   ICreateTaskGroupUsecase,
   ICreateTaskOnBoardUsecase,
+  IUpdateBoardUsecase,
+  UPDATE_BOARD_USECASE,
 } from '@bison/frontend/application';
 import { Board, Subtask, Task, TaskGroup } from '@bison/frontend/domain';
 import { User } from '@bison/frontend/ui';
-import { Id, Status } from '@bison/shared/domain';
+import { BoardTasksOrderItem, Id, Status } from '@bison/shared/domain';
+import { UpdateBoardInput } from '@bison/shared/schema';
 import { RxState } from '@rx-angular/state';
 import { gql } from 'apollo-angular';
 import { Subject } from 'rxjs';
@@ -25,6 +29,7 @@ import {
   BOARD_FIELDS,
   BOARD_FRAGMENT_NAME,
 } from '../../../../shared/fragments/board-fragment';
+import { convertToApiTaskTypeFromDomainTaskType } from '../../../../util/convert-to-api-task-type-from-domain-task-type';
 import { convertToDomainBoardFromApiBoard } from '../../../../util/convert-to-domain-board-from-api-board';
 import { nonNullable } from '../../../../util/custom-operators/non-nullable';
 
@@ -66,6 +71,7 @@ export class BoardDetailComponent implements OnInit {
   readonly onClickSubask$ = new Subject<Subtask['id']>();
   readonly onClickCreateTaskGroup$ = new Subject<void>();
   readonly onClickCreateTask$ = new Subject<void>();
+  readonly onDropTaskGroup$ = new Subject<CdkDragDrop<TaskGroup>>();
 
   constructor(
     private state: RxState<State>,
@@ -75,7 +81,9 @@ export class BoardDetailComponent implements OnInit {
     @Inject(CREATE_TASK_ON_BOARD_USECASE)
     private createTaskOnBoardUsecase: ICreateTaskOnBoardUsecase,
     @Inject(CREATE_TASK_GROUP_USECASE)
-    private createTaskGroupUsecase: ICreateTaskGroupUsecase
+    private createTaskGroupUsecase: ICreateTaskGroupUsecase,
+    @Inject(UPDATE_BOARD_USECASE)
+    private updateBoardUsecase: IUpdateBoardUsecase
   ) {
     this.state.set({
       taskGroups: [],
@@ -151,6 +159,42 @@ export class BoardDetailComponent implements OnInit {
         })
       )
     );
+    this.state.hold(
+      this.onDropTaskGroup$.pipe(
+        withLatestFrom(
+          this.state.select('board').pipe(nonNullable()),
+          this.state.select('taskGroups').pipe(nonNullable())
+        ),
+        map(([dropEvent, board, taskGroups]) => {
+          const taskGroupsOrder: BoardTasksOrderItem[] = taskGroups.map(
+            (taskGroup) => ({
+              taskId: taskGroup.id,
+              type: 'TaskGroup',
+            })
+          );
+          const tasksOrder = board.tasksOrder.filter((v) => v.type === 'Task');
+          moveItemInArray(
+            taskGroupsOrder,
+            dropEvent.previousIndex,
+            dropEvent.currentIndex
+          );
+          return [[...taskGroupsOrder, ...tasksOrder], board] as const;
+        }),
+        switchMap(([tasksOrder, board]) => {
+          const input: UpdateBoardInput = {
+            id: board.id,
+            name: board.name,
+            description: board.description,
+            projectId: board.projectId,
+            tasksOrder: tasksOrder.map((v) => ({
+              taskId: v.taskId,
+              type: convertToApiTaskTypeFromDomainTaskType(v.type),
+            })),
+          };
+          return this.updateBoardUsecase.execute(input);
+        })
+      )
+    );
   }
 
   // keyvalueパイプが勝手にソートするのを防ぐ
@@ -188,7 +232,9 @@ export class BoardDetailComponent implements OnInit {
               if (!board) {
                 return;
               }
-              this.state.set('taskGroups', () => board.taskGroups);
+              this.state.set('taskGroups', () => {
+                return this.sortTaskGroups(board.taskGroups, board.tasksOrder);
+              });
               this.state.set('soloTasks', () => {
                 const sorted = this.sortTasksByStatusAndOrder(
                   board.soloTasks,
@@ -221,6 +267,26 @@ export class BoardDetailComponent implements OnInit {
           });
         })
       );
+  }
+
+  private sortTaskGroups(
+    taskGroups: TaskGroup[],
+    tasksOrder: Board['tasksOrder']
+  ): TaskGroup[] {
+    const taskGroupsOrder = tasksOrder.filter((v) => v.type === 'TaskGroup');
+    const sortedByOrder = taskGroupsOrder
+      .map((orderItem) =>
+        taskGroups.find((taskGroup) => taskGroup.id === orderItem.taskId)
+      )
+      .filter((v): v is NonNullable<typeof v> => v != null);
+    const remainedTaskGroups = taskGroups
+      .filter((taskGroup) => {
+        return !sortedByOrder.find((v) => v.id === taskGroup.id);
+      })
+      .sort((v1, v2) => {
+        return v1.createdAt - v2.createdAt;
+      });
+    return [...sortedByOrder, ...remainedTaskGroups];
   }
 
   private sortTasksByStatusAndOrder(

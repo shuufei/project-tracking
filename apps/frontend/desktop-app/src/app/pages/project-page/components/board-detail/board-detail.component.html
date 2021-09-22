@@ -55,7 +55,11 @@
         </ng-container>
       </div>
 
-      <div class="px-3 pb-7">
+      <div
+        class="px-3 pb-7"
+        cdkDropList
+        (cdkDropListDropped)="onDropTaskGroup$.next($event)"
+      >
         <ng-container
           *ngFor="
             let taskGroup of state.taskGroups;
@@ -63,7 +67,7 @@
             trackBy: trackById
           "
         >
-          <div [class.mt-2]="!first">
+          <div [class.mt-2]="!first" cdkDrag>
             <bis-task-group-card
               [taskGroupId]="taskGroup.id"
               (click)="onClickTaskGroup$.next(taskGroup.id)"

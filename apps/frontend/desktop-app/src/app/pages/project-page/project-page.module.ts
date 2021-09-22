@@ -8,6 +8,8 @@ import {
   CreateTaskOnBoardUsecase,
   CREATE_TASK_GROUP_USECASE,
   CREATE_TASK_ON_BOARD_USECASE,
+  UpdateBoardUsecase,
+  UPDATE_BOARD_USECASE,
 } from '@bison/frontend/application';
 import {
   AssignChangeButtonModule,
@@ -105,6 +107,10 @@ import { ProjectPageComponent } from './project-page.component';
     {
       provide: CREATE_TASK_GROUP_USECASE,
       useClass: CreateTaskGroupUsecase,
+    },
+    {
+      provide: UPDATE_BOARD_USECASE,
+      useClass: UpdateBoardUsecase,
     },
   ],
 })
