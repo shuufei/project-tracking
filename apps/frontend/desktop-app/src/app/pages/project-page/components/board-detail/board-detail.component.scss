@@ -27,3 +27,9 @@
   // header分
   top: 60px;
 }
+
+.solo-tasks {
+  .cdk-drop-list-dragging {
+    background-color: var(--bison-primary-light2);
+  }
+}
