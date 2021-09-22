@@ -56,7 +56,7 @@
       </div>
 
       <div
-        class="px-3 pb-7"
+        class="px-3 pb-4"
         cdkDropList
         (cdkDropListDropped)="onDropTaskGroup$.next($event)"
       >
@@ -79,7 +79,7 @@
 
         <div class="mt-2">
           <div
-            class="flex gap-x-5 bg-primary-light3 px-3 rounded-s solo-tasks"
+            class="flex gap-x-1 bg-primary-light3 px-3 rounded-s solo-tasks"
             cdkDropListGroup
           >
             <ng-container
@@ -88,7 +88,12 @@
                 first as first
               "
             >
-              <div class="w-1/4 p-2" cdkDropList [cdkDropListData]="item.value">
+              <div
+                class="w-1/4 p-2"
+                cdkDropList
+                [cdkDropListData]="item.value"
+                (cdkDropListDropped)="onDropSoloTask$.next($event)"
+              >
                 <div
                   *ngFor="let task of item.value; trackBy: trackById"
                   class="mb-1"

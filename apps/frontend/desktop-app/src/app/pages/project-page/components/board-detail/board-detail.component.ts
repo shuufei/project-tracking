@@ -1,4 +1,8 @@
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import {
+  CdkDragDrop,
+  moveItemInArray,
+  transferArrayItem,
+} from '@angular/cdk/drag-drop';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -22,9 +26,10 @@ import { BoardTasksOrderItem, Id, Status } from '@bison/shared/domain';
 import { UpdateBoardInput } from '@bison/shared/schema';
 import { RxState } from '@rx-angular/state';
 import { gql } from 'apollo-angular';
-import { Subject } from 'rxjs';
+import { merge, Observable, Subject } from 'rxjs';
 import { map, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { TaskDialogService } from '../../../../shared/components/task-dialog/task-dialog.service';
+import { TaskFacadeService } from '../../../../shared/facade/task-facade/task-facade.service';
 import {
   BOARD_FIELDS,
   BOARD_FRAGMENT_NAME,
@@ -71,7 +76,8 @@ export class BoardDetailComponent implements OnInit {
   readonly onClickSubask$ = new Subject<Subtask['id']>();
   readonly onClickCreateTaskGroup$ = new Subject<void>();
   readonly onClickCreateTask$ = new Subject<void>();
-  readonly onDropTaskGroup$ = new Subject<CdkDragDrop<TaskGroup>>();
+  readonly onDropTaskGroup$ = new Subject<CdkDragDrop<TaskGroup[]>>();
+  readonly onDropSoloTask$ = new Subject<CdkDragDrop<TaskGroup['tasks']>>();
 
   constructor(
     private state: RxState<State>,
@@ -83,7 +89,8 @@ export class BoardDetailComponent implements OnInit {
     @Inject(CREATE_TASK_GROUP_USECASE)
     private createTaskGroupUsecase: ICreateTaskGroupUsecase,
     @Inject(UPDATE_BOARD_USECASE)
-    private updateBoardUsecase: IUpdateBoardUsecase
+    private updateBoardUsecase: IUpdateBoardUsecase,
+    private taskFacadeService: TaskFacadeService
   ) {
     this.state.set({
       taskGroups: [],
@@ -156,6 +163,84 @@ export class BoardDetailComponent implements OnInit {
             },
             board.projectId
           );
+        })
+      )
+    );
+    this.state.hold(
+      this.onDropSoloTask$.pipe(
+        withLatestFrom(
+          this.state.select('soloTasks').pipe(nonNullable()),
+          this.state.select('taskGroups').pipe(nonNullable()),
+          this.state.select('board').pipe(nonNullable())
+        ),
+        map(([dropEvent, soloTasks, taskGroups, board]) => {
+          const task =
+            dropEvent.previousContainer.data[dropEvent.previousIndex];
+          let newStatus: Status | undefined;
+          if (dropEvent.previousContainer === dropEvent.container) {
+            moveItemInArray(
+              dropEvent.container.data,
+              dropEvent.previousIndex,
+              dropEvent.currentIndex
+            );
+          } else {
+            // 移動先ステータスを見つける
+            const statusIdx = Object.values(soloTasks).findIndex(
+              (list) => list === dropEvent.container.data
+            );
+            if (statusIdx === -1) {
+              throw new Error('status was not found.');
+            }
+            newStatus = Object.keys(soloTasks)[statusIdx] as Status;
+            // ステータス更新
+            dropEvent.previousContainer.data.splice(
+              dropEvent.previousIndex,
+              1,
+              {
+                ...task,
+                status: newStatus,
+              }
+            );
+
+            transferArrayItem(
+              dropEvent.previousContainer.data,
+              dropEvent.container.data,
+              dropEvent.previousIndex,
+              dropEvent.currentIndex
+            );
+          }
+          const soloTasksOrder: BoardTasksOrderItem[] = ([] as Task[])
+            .concat(...Object.values(soloTasks))
+            .map((task) => ({
+              taskId: task.id,
+              type: 'Task',
+            }));
+          const taskGroupsOrder: BoardTasksOrderItem[] = taskGroups.map(
+            (taskGroup) => ({
+              taskId: taskGroup.id,
+              type: 'TaskGroup',
+            })
+          );
+          const tasksOrder = [...soloTasksOrder, ...taskGroupsOrder];
+          return [task, newStatus, tasksOrder, board] as const;
+        }),
+        switchMap(([task, newStatus, tasksOrder, board]) => {
+          const updates: Observable<unknown>[] = [];
+          const input: UpdateBoardInput = {
+            id: board.id,
+            name: board.name,
+            description: board.description,
+            projectId: board.projectId,
+            tasksOrder: tasksOrder.map((v) => ({
+              taskId: v.taskId,
+              type: convertToApiTaskTypeFromDomainTaskType(v.type),
+            })),
+          };
+          updates.push(this.updateBoardUsecase.execute(input));
+          if (newStatus) {
+            updates.push(this.taskFacadeService.updateStatus(newStatus, task));
+          }
+          return merge(...updates);
         })
       )
     );
