@@ -20,7 +20,7 @@
             <ng-container *ngIf="first">
               <button
                 #boardAddingTriggerEl
-                class="absolute top-0 bottom-0 m-auto cursor-pointer"
+                class="absolute top-0 bottom-0 m-auto cursor-pointer rounded-s focus:outline-none focus:shadow-outline_primary"
               >
                 <ui-icon style="display: inline" icon="plus" size="s"></ui-icon>
               </button>
@@ -34,14 +34,20 @@
                     [itemName]="'タスクグループを追加'"
                     [color]="'primary'"
                     [icon]="'plus'"
-                    (clickedItem)="(null)"
+                    (clickedItem)="
+                      onClickCreateTaskGroup$.next({
+                        shouldScrollToBottom: true
+                      })
+                    "
                   ></ui-menu-item>
                   <ui-menu-item
                     class="mt-2"
                     [itemName]="'タスクを追加'"
                     [color]="'primary'"
                     [icon]="'plus'"
-                    (clickedItem)="(null)"
+                    (clickedItem)="
+                      onClickCreateTask$.next({ shouldScrollToBottom: true })
+                    "
                   ></ui-menu-item>
                 </div>
               </ui-popup>
@@ -81,6 +87,7 @@
           <div
             class="flex gap-x-1 bg-primary-light3 px-3 rounded-s solo-tasks"
             cdkDropListGroup
+            #taskList
           >
             <ng-container
               *ngFor="
@@ -109,7 +116,7 @@
                   <div class="relative">
                     <button
                       #soloTasksAddingTriggerEl
-                      class="flex items-center justify-center w-full py-2 mt-1"
+                      class="flex items-center justify-center w-full py-2 mt-1 rounded-s focus:outline-none focus:shadow-outline_primary"
                     >
                       <ui-icon class="mr-1" icon="plus" size="s"></ui-icon>
                       <span class="text-s4 font-medium leading-normal">
@@ -125,14 +132,14 @@
                           [itemName]="'タスクグループを追加'"
                           [color]="'primary'"
                           [icon]="'plus'"
-                          (clickedItem)="onClickCreateTaskGroup$.next()"
+                          (clickedItem)="onClickCreateTaskGroup$.next({})"
                         ></ui-menu-item>
                         <ui-menu-item
                           class="mt-2"
                           [itemName]="'タスクを追加'"
                           [color]="'primary'"
                           [icon]="'plus'"
-                          (clickedItem)="onClickCreateTask$.next()"
+                          (clickedItem)="onClickCreateTask$.next({})"
                         ></ui-menu-item>
                       </div>
                     </ui-popup>

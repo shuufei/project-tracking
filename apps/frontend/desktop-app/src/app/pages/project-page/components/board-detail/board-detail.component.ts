@@ -6,8 +6,10 @@ import {
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   Inject,
   OnInit,
+  ViewChild,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
@@ -63,6 +65,7 @@ type State = {
   providers: [RxState],
 })
 export class BoardDetailComponent implements OnInit {
+  @ViewChild('taskList') taskListEl?: ElementRef;
   readonly statuses: Status[] = ['TODO', 'INPROGRESS', 'CONFIRM', 'DONE'];
 
   readonly state$ = this.state.select();
@@ -74,8 +77,12 @@ export class BoardDetailComponent implements OnInit {
   readonly onClickTaskGroup$ = new Subject<TaskGroup['id']>();
   readonly onClickTask$ = new Subject<Task['id']>();
   readonly onClickSubask$ = new Subject<Subtask['id']>();
-  readonly onClickCreateTaskGroup$ = new Subject<void>();
-  readonly onClickCreateTask$ = new Subject<void>();
+  readonly onClickCreateTaskGroup$ = new Subject<{
+    shouldScrollToBottom?: boolean;
+  }>();
+  readonly onClickCreateTask$ = new Subject<{
+    shouldScrollToBottom?: boolean;
+  }>();
   readonly onDropTaskGroup$ = new Subject<CdkDragDrop<TaskGroup[]>>();
   readonly onDropSoloTask$ = new Subject<CdkDragDrop<TaskGroup['tasks']>>();
 
@@ -137,7 +144,10 @@ export class BoardDetailComponent implements OnInit {
     this.state.hold(
       this.onClickCreateTask$.pipe(
         withLatestFrom(this.state.select('board').pipe(nonNullable())),
-        switchMap(([, board]) => {
+        switchMap(([event, board]) => {
+          if (event.shouldScrollToBottom) {
+            this.scrollToTaskListTop();
+          }
           return this.createTaskOnBoardUsecase.excute(
             {
               title: '',
@@ -153,7 +163,10 @@ export class BoardDetailComponent implements OnInit {
     this.state.hold(
       this.onClickCreateTaskGroup$.pipe(
         withLatestFrom(this.state.select('board').pipe(nonNullable())),
-        switchMap(([, board]) => {
+        switchMap(([event, board]) => {
+          if (event.shouldScrollToBottom) {
+            this.scrollToTaskListTop();
+          }
           return this.createTaskGroupUsecase.execute(
             {
               title: '',
@@ -406,6 +419,20 @@ export class BoardDetailComponent implements OnInit {
     };
     tasks.forEach((task) => sortedTasks[task.status].push(task));
     return sortedTasks;
+  }
+
+  // TODO: scroll前の位置によって、scroll後の位置が不自然になる
+  private scrollToTaskListTop() {
+    if (this.taskListEl?.nativeElement == null) {
+      return;
+    }
+    const taskList = this.taskListEl.nativeElement as HTMLElement;
+    const rect = taskList.getBoundingClientRect();
+    const top = rect.top;
+    const taskGroupCardMinHeight = 134;
+    const buffer = 12 + 96;
+    const y = top + taskGroupCardMinHeight + buffer;
+    window.scrollTo(0, y);
   }
 }
 
