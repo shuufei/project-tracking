@@ -92,7 +92,11 @@
           ></ui-assign-change-button>
         </div>
       </div>
-      <div class="flex gap-x-1 bg-primary-light3 rounded-s" cdkDropListGroup>
+      <div
+        class="flex gap-x-1 bg-primary-light3 rounded-s cursor-default"
+        cdkDropListGroup
+        (click)="$event.stopPropagation()"
+      >
         <ng-container
           *ngFor="
             let item of state.taskGroup.tasks | keyvalue: noOpCompare;
