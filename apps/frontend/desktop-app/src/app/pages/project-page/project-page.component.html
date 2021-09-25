@@ -5,42 +5,76 @@
   </div>
 
   <div class="flex items-start mb-3">
-    <aside #sideNav style="width: 240px" class="sticky flex-shrink-0 p-3 z-20">
-      <ng-container
-        *ngFor="let project of (state$ | async).projects; first as isFirst"
-      >
-        <ui-project-navigation
-          [project]="project"
-          [boards]="project.boards"
-          (clickedCreateBoard)="
-            onClickedBoardCreateButton$.next({ project: project })
+    <aside #sideNav class="sticky flex-shrink-0 px-3 pb-3 z-20">
+      <div class="flex justify-start py-1 ml-2 mb-2">
+        <div
+          class="inline-block"
+          [uiTooltip]="
+            state.isOpenedNavigation
+              ? 'ナビゲーションを非表示'
+              : 'ナビゲーションを表示'
           "
-          (clickedDeleteProject)="
-            onClickedProjectDeleteButton$.next({
-              project: project
-            })
-          "
-          (clickedDeleteBoard)="
-            onClickedBoardDeleteButton$.next({
-              project: project,
-              board: $event
-            })
-          "
-          [ngClass]="[isFirst ? '' : 'mt-4']"
-        ></ui-project-navigation>
+          uiTooltipDirection="right"
+        >
+          <button
+            class="p-1 focus:outline-none focus:shadow-outline_primary rounded-s close-nav-button text-s3 text-primary-light1 hover:text-primary flex items-center bg-primary-light3"
+            (click)="
+              state.isOpenedNavigation
+                ? onClickedCloseNavButton$.next()
+                : onClickedOpenNavButton$.next()
+            "
+          >
+            <ui-icon
+              [icon]="
+                state.isOpenedNavigation ? 'chevrons-left' : 'chevrons-right'
+              "
+              size="s"
+              color="primary"
+            ></ui-icon>
+          </button>
+        </div>
+      </div>
+      <ng-container *ngIf="state.isOpenedNavigation">
+        <div style="width: 240px">
+          <ng-container
+            *ngFor="let project of (state$ | async).projects; first as isFirst"
+          >
+            <ui-project-navigation
+              [project]="project"
+              [boards]="project.boards"
+              (clickedCreateBoard)="
+                onClickedBoardCreateButton$.next({ project: project })
+              "
+              (clickedDeleteProject)="
+                onClickedProjectDeleteButton$.next({
+                  project: project
+                })
+              "
+              (clickedDeleteBoard)="
+                onClickedBoardDeleteButton$.next({
+                  project: project,
+                  board: $event
+                })
+              "
+              [ngClass]="[isFirst ? '' : 'mt-4']"
+            ></ui-project-navigation>
+          </ng-container>
+          <div>
+            <button
+              class="inline-flex items-center text-s3 text-black-light2 font-medium px-3 py-1 cursor-pointer focus:outline-none focus:shadow-outline_primary rounded-s mt-4"
+              (click)="isOpenedProjectCreateSheet$.next(true)"
+            >
+              <ui-icon
+                class="mr-1"
+                size="s"
+                icon="plus"
+                color="primary-light1"
+              ></ui-icon
+              >プロジェクトを作成
+            </button>
+          </div>
+        </div>
       </ng-container>
-      <button
-        class="inline-flex items-center text-s3 text-black-light2 font-medium px-3 py-1 cursor-pointer focus:outline-none focus:shadow-outline_primary rounded-s mt-4"
-        (click)="isOpenedProjectCreateSheet$.next(true)"
-      >
-        <ui-icon
-          class="mr-1"
-          size="s"
-          icon="plus"
-          color="primary-light1"
-        ></ui-icon
-        >プロジェクトを作成
-      </button>
     </aside>
     <div class="mt-1 flex-1"><router-outlet></router-outlet></div>
   </div>

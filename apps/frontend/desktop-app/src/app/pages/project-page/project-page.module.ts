@@ -25,6 +25,7 @@ import {
   SheetFooterModule,
   SheetModule,
   StatusSelectPopupModule,
+  TooltipModule,
   TrackingLogChangeButtonModule,
   UserIconModule,
 } from '@bison/frontend/ui';
@@ -93,6 +94,7 @@ import { ProjectPageComponent } from './project-page.component';
     AssignChangeButtonModule,
     ProjectCreateSheetModule,
     TaskGroupCardModule,
+    TooltipModule,
   ],
   exports: [ProjectPageComponent],
   providers: [
