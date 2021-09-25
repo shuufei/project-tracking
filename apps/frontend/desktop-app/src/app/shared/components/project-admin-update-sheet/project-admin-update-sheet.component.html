@@ -3,6 +3,8 @@
   [zindex]="100"
   [title]="'プロジェクト 管理者を変更'"
   [isOpen$]="isOpenedSheet$.asObservable()"
+  (opened)="onOpenedSheet$.next()"
+  (closed)="onClosedeSheet$.next()"
 >
   <ng-container *ngIf="state$ | async as state">
     <div class="sheet-content">

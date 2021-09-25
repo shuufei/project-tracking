@@ -22,7 +22,7 @@ import { RxState } from '@rx-angular/state';
 import { TuiNotification, TuiNotificationsService } from '@taiga-ui/core';
 import { gql } from 'apollo-angular';
 import { merge, Observable, Subject } from 'rxjs';
-import { exhaustMap, map, switchMap } from 'rxjs/operators';
+import { exhaustMap, filter, map, switchMap } from 'rxjs/operators';
 import { convertToApiColorFromDomainColor } from '../../../util/convert-to-api-color-from-domain-color';
 import { nonNullable } from '../../../util/custom-operators/non-nullable';
 import { ChangedPropertyEvent } from '..//project-property-edit-form/project-property-edit-form.component';
@@ -94,7 +94,7 @@ export class ProjectCreateSheetComponent implements OnInit {
   ngOnInit(): void {
     this.state.set({
       color: 'Gray',
-      isSheetOpen: true,
+      isSheetOpen: false,
     });
     this.state.connect(this.onChangedProjectProperty$, (state, event) => {
       return {
@@ -104,8 +104,24 @@ export class ProjectCreateSheetComponent implements OnInit {
         color: event.color,
       };
     });
-    this.state.connect('me', this.queryMe$());
-    this.state.connect('users', this.queryUsers$());
+    this.state.connect(
+      'me',
+      this.state.select('isSheetOpen').pipe(
+        filter((v) => v),
+        switchMap(() => {
+          return this.queryMe$();
+        })
+      )
+    );
+    this.state.connect(
+      'users',
+      this.state.select('isSheetOpen').pipe(
+        filter((v) => v),
+        switchMap(() => {
+          return this.queryUsers$();
+        })
+      )
+    );
     this.state.connect('members', this.onSelectedMembers$, (state, userIds) => {
       return userIds
         .map((id) => state.users.find((v) => v.id === id))
