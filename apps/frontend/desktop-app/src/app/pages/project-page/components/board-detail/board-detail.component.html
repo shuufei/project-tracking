@@ -8,17 +8,19 @@
       class="whitespace-pre-wrap text-s3 font-medium leading-normal px-2"
     >{{ state.board?.description }}</p>
     <section
-      class="flex flex-col flex-grow mt-5 p-3 pb-7 bg-primary-light3 rounded-s"
+      class="flex flex-col flex-grow mt-5 bg-primary-light3 rounded-s"
       cdkDropListGroup
     >
       <!-- TODO: 中心からずれてるので修正 -->
-      <div class="flex w-full mb-3">
+      <div
+        class="flex w-full bg-primary-light3 py-2 px-3 z-10 rounded-s status-row"
+      >
         <ng-container *ngFor="let status of statuses; first as first">
           <div class="flex w-1/4 px-2" [class.relative]="first">
             <ng-container *ngIf="first">
               <button
                 #boardAddingTriggerEl
-                class="absolute top-0 bottom-0 m-auto cursor-pointer"
+                class="absolute top-0 bottom-0 m-auto cursor-pointer rounded-s focus:outline-none focus:shadow-outline_primary"
               >
                 <ui-icon style="display: inline" icon="plus" size="s"></ui-icon>
               </button>
@@ -32,14 +34,20 @@
                     [itemName]="'タスクグループを追加'"
                     [color]="'primary'"
                     [icon]="'plus'"
-                    (clickedItem)="(null)"
+                    (clickedItem)="
+                      onClickCreateTaskGroup$.next({
+                        shouldScrollToBottom: true
+                      })
+                    "
                   ></ui-menu-item>
                   <ui-menu-item
                     class="mt-2"
                     [itemName]="'タスクを追加'"
                     [color]="'primary'"
                     [icon]="'plus'"
-                    (clickedItem)="(null)"
+                    (clickedItem)="
+                      onClickCreateTask$.next({ shouldScrollToBottom: true })
+                    "
                   ></ui-menu-item>
                 </div>
               </ui-popup>
@@ -53,171 +61,97 @@
         </ng-container>
       </div>
 
-      <ng-container
-        *ngFor="
-          let taskGroup of state.taskGroups;
-          first as first;
-          trackBy: trackById
-        "
+      <div
+        class="px-3 pb-4"
+        cdkDropList
+        (cdkDropListDropped)="onDropTaskGroup$.next($event)"
       >
-        <div [class.mt-2]="!first">
-          <div class="bg-white px-3 pt-2 pb-3 rounded-s">
-            <div class="mb-2">
-              <div class="flex mb-2">
-                <h3
-                  class="flex-grow text-black-default text-s2 font-medium leading-normal"
-                >
-                  {{ taskGroup.title }}
-                </h3>
-                <ui-tracking-log-change-button
-                  class="mr-6"
-                  [trackingTimeSec]="taskGroup.workTimeSec || 0"
-                  [plannedTimeSec]="taskGroup.scheduledTimeSec || 0"
-                  (changedPlannedTimeSec)="
-                    onChangedTaskGroupScheduledTime$.next([$event, taskGroup])
-                  "
-                ></ui-tracking-log-change-button>
-              </div>
-              <div class="flex items-center">
-                <div
-                  #statusTriggerEl
-                  class="flex flex-col cursor-pointer p-0.5 mr-3"
-                >
-                  <span class="text-black-light2 text-s4 font-medium">
-                    {{ taskGroup.status }}
-                  </span>
-                  <ui-status-select-popup
-                    [triggerEl]="statusTriggerEl"
-                    [currentStatus]="taskGroup.status"
-                    (changedStatus)="
-                      onChangedTaskGroupStatus$.next([$event, taskGroup])
-                    "
-                  ></ui-status-select-popup>
-                </div>
-                <ui-assign-change-button
-                  class="w-5 h-5"
-                  [users]="state.users"
-                  [selectedUserId]="taskGroup.assignUser?.id"
-                  (selectedUser)="
-                    onChangedTaskGroupAssignUser$.next([$event, taskGroup])
-                  "
-                ></ui-assign-change-button>
-              </div>
-            </div>
-            <div class="flex gap-x-1 bg-primary-light3 rounded-s">
-              <ng-container
-                *ngFor="
-                  let item of taskGroup.tasks | keyvalue: noOpCompare;
-                  first as first
-                "
-              >
-                <div
-                  class="w-1/4 p-2"
-                  cdkDropList
-                  [cdkDropListData]="item.value"
-                  (cdkDropListDropped)="onDrop$.next([$event, taskGroup])"
-                >
-                  <div *ngFor="let task of item.value" class="mb-1" cdkDrag>
-                    <bis-task-card [taskId]="task.id"></bis-task-card>
-                  </div>
-                  <ng-container *ngIf="first">
-                    <div class="relative">
-                      <button
-                        #taskGroupAddingTriggerEl
-                        class="flex items-center justify-center w-full py-2 mt-1"
-                      >
-                        <ui-icon class="mr-1" icon="plus" size="s"></ui-icon>
-                        <span class="text-s4 font-medium leading-normal">
-                          タスクを追加
-                        </span>
-                      </button>
-                      <ui-popup
-                        [triggerEl]="taskGroupAddingTriggerEl"
-                        [isCloseWhenPopupAction]="true"
-                      >
-                        <div class="menu-items">
-                          <ui-menu-item
-                            [itemName]="'タスクグループを追加'"
-                            [color]="'primary'"
-                            [icon]="'plus'"
-                            (clickedItem)="(null)"
-                          ></ui-menu-item>
-                          <ui-menu-item
-                            class="mt-2"
-                            [itemName]="'タスクを追加'"
-                            [color]="'primary'"
-                            [icon]="'plus'"
-                            (clickedItem)="(null)"
-                          ></ui-menu-item>
-                        </div>
-                      </ui-popup>
-                    </div>
-                  </ng-container>
-                </div>
-              </ng-container>
-            </div>
+        <ng-container
+          *ngFor="
+            let taskGroup of state.taskGroups;
+            first as first;
+            trackBy: trackById
+          "
+        >
+          <div [class.mt-2]="!first" cdkDrag>
+            <bis-task-group-card
+              [taskGroupId]="taskGroup.id"
+              (click)="onClickTaskGroup$.next(taskGroup.id)"
+              (clickTask)="onClickTask$.next($event)"
+              (clickSubtask)="onClickSubask$.next($event)"
+            ></bis-task-group-card>
           </div>
-        </div>
-      </ng-container>
+        </ng-container>
 
-      <div class="mt-2">
-        <div class="flex gap-x-5 bg-primary-light3 px-3 rounded-s">
-          <ng-container
-            *ngFor="
-              let item of state.soloTasks | keyvalue: noOpCompare;
-              first as first
-            "
+        <div class="mt-2">
+          <div
+            class="flex gap-x-1 bg-primary-light3 px-3 rounded-s solo-tasks"
+            cdkDropListGroup
+            #taskList
           >
-            <div
-              class="w-1/4 p-2"
-              cdkDropList
-              [cdkDropListData]="item.value"
-              (cdkDropListDropped)="onDrop$.next([$event])"
+            <ng-container
+              *ngFor="
+                let item of state.soloTasks | keyvalue: noOpCompare;
+                first as first
+              "
             >
               <div
-                *ngFor="let task of item.value; trackBy: trackById"
-                class="mb-1"
-                cdkDrag
+                class="w-1/4 p-2"
+                cdkDropList
+                [cdkDropListData]="item.value"
+                (cdkDropListDropped)="onDropSoloTask$.next($event)"
               >
-                <bis-task-card [taskId]="task.id"></bis-task-card>
-              </div>
-              <ng-container *ngIf="first">
-                <div class="relative">
-                  <button
-                    #soloTasksAddingTriggerEl
-                    class="flex items-center justify-center w-full py-2 mt-1"
-                  >
-                    <ui-icon class="mr-1" icon="plus" size="s"></ui-icon>
-                    <span class="text-s4 font-medium leading-normal">
-                      タスクを追加
-                    </span>
-                  </button>
-                  <ui-popup
-                    [triggerEl]="soloTasksAddingTriggerEl"
-                    [isCloseWhenPopupAction]="true"
-                  >
-                    <div class="menu-items">
-                      <ui-menu-item
-                        [itemName]="'タスクグループを追加'"
-                        [color]="'primary'"
-                        [icon]="'plus'"
-                        (clickedItem)="(null)"
-                      ></ui-menu-item>
-                      <ui-menu-item
-                        class="mt-2"
-                        [itemName]="'タスクを追加'"
-                        [color]="'primary'"
-                        [icon]="'plus'"
-                        (clickedItem)="(null)"
-                      ></ui-menu-item>
-                    </div>
-                  </ui-popup>
+                <div
+                  *ngFor="let task of item.value; trackBy: trackById"
+                  class="mb-1"
+                  cdkDrag
+                >
+                  <bis-task-card
+                    [taskId]="task.id"
+                    (click)="onClickTask$.next(task.id)"
+                    (clickedSubtask)="onClickSubask$.next($event.id)"
+                  ></bis-task-card>
                 </div>
-              </ng-container>
-            </div>
-          </ng-container>
+                <ng-container *ngIf="first">
+                  <div class="relative">
+                    <button
+                      #soloTasksAddingTriggerEl
+                      class="flex items-center justify-center w-full py-2 mt-1 rounded-s focus:outline-none focus:shadow-outline_primary"
+                    >
+                      <ui-icon class="mr-1" icon="plus" size="s"></ui-icon>
+                      <span class="text-s4 font-medium leading-normal">
+                        タスクを追加
+                      </span>
+                    </button>
+                    <ui-popup
+                      [triggerEl]="soloTasksAddingTriggerEl"
+                      [isCloseWhenPopupAction]="true"
+                    >
+                      <div class="menu-items">
+                        <ui-menu-item
+                          [itemName]="'タスクグループを追加'"
+                          [color]="'primary'"
+                          [icon]="'plus'"
+                          (clickedItem)="onClickCreateTaskGroup$.next({})"
+                        ></ui-menu-item>
+                        <ui-menu-item
+                          class="mt-2"
+                          [itemName]="'タスクを追加'"
+                          [color]="'primary'"
+                          [icon]="'plus'"
+                          (clickedItem)="onClickCreateTask$.next({})"
+                        ></ui-menu-item>
+                      </div>
+                    </ui-popup>
+                  </div>
+                </ng-container>
+              </div>
+            </ng-container>
+          </div>
         </div>
       </div>
     </section>
   </main>
+
+  <bis-task-dialog class="z-50"></bis-task-dialog>
 </ng-container>

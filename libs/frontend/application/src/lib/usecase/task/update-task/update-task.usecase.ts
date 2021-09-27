@@ -32,10 +32,13 @@ export class UpdateTaskUsecase implements IUpdateTaskUsecase {
         id: input.boardId,
         __typename: 'Board',
       },
-      taskGroup: {
-        id: input.taskGroupId,
-        __typename: 'TaskGroup',
-      },
+      taskGroup:
+        input.taskGroupId != null
+          ? {
+              id: input.taskGroupId,
+              __typename: 'TaskGroup',
+            }
+          : null,
       __typename: 'Task',
     };
     return this.apollo.mutate<{ updateTask: UpdateTaskResponse }>({

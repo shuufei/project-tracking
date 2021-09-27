@@ -18,7 +18,7 @@ import { RxState } from '@rx-angular/state';
 import { TuiNotification, TuiNotificationsService } from '@taiga-ui/core';
 import { gql } from 'apollo-angular';
 import { merge, Observable, of, Subject } from 'rxjs';
-import { catchError, exhaustMap, map } from 'rxjs/operators';
+import { catchError, exhaustMap, filter, map, switchMap } from 'rxjs/operators';
 import { convertToApiColorFromDomainColor } from '../../../util/convert-to-api-color-from-domain-color';
 
 const USER_FIELDS = gql`
@@ -43,6 +43,7 @@ export const PROJECT_PARTS = gql`
 type State = {
   project?: Project;
   users: User[];
+  isSheetOpen: boolean;
 };
 
 @Component({
@@ -70,6 +71,8 @@ export class ProjectAdminUpdateSheetComponent implements OnInit {
    */
   readonly onSelectedUser$ = new Subject<User['id']>();
   readonly onClickedUpdate$ = new Subject<void>();
+  readonly onClosedeSheet$ = new Subject<void>();
+  readonly onOpenedSheet$ = new Subject<void>();
 
   constructor(
     private state: RxState<State>,
@@ -81,11 +84,20 @@ export class ProjectAdminUpdateSheetComponent implements OnInit {
   ) {
     this.state.set({
       users: [],
+      isSheetOpen: false,
     });
   }
 
   ngOnInit(): void {
-    this.state.connect('users', this.queryUsers$());
+    this.state.connect(
+      'users',
+      this.state.select('isSheetOpen').pipe(
+        filter((v) => v),
+        switchMap(() => {
+          return this.queryUsers$();
+        })
+      )
+    );
     this.state.connect('project', this.onSelectedUser$, (state, userId) => {
       const user = state.users.find((v) => v.id === userId);
       return user == null
@@ -94,6 +106,12 @@ export class ProjectAdminUpdateSheetComponent implements OnInit {
             ...state.project,
             admin: user,
           };
+    });
+    this.state.connect('isSheetOpen', this.onOpenedSheet$, () => true);
+    this.state.connect(this.onClosedeSheet$, () => {
+      return {
+        isSheetOpen: false,
+      };
     });
     this.state.hold(
       this.onClickedUpdate$.pipe(

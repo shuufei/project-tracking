@@ -6,27 +6,37 @@ import {
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   Inject,
   OnInit,
+  ViewChild,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
   APOLLO_DATA_QUERY,
+  CREATE_TASK_GROUP_USECASE,
+  CREATE_TASK_ON_BOARD_USECASE,
   IApolloDataQuery,
+  ICreateTaskGroupUsecase,
+  ICreateTaskOnBoardUsecase,
+  IUpdateBoardUsecase,
+  UPDATE_BOARD_USECASE,
 } from '@bison/frontend/application';
-import { Board, Task, TaskGroup as UiTaskGroup } from '@bison/frontend/domain';
+import { Board, Subtask, Task, TaskGroup } from '@bison/frontend/domain';
 import { User } from '@bison/frontend/ui';
 import { BoardTasksOrderItem, Id, Status } from '@bison/shared/domain';
+import { UpdateBoardInput } from '@bison/shared/schema';
 import { RxState } from '@rx-angular/state';
 import { gql } from 'apollo-angular';
-import { forkJoin, Observable, Subject } from 'rxjs';
-import { concatMap, filter, map, switchMap, tap } from 'rxjs/operators';
+import { merge, Observable, Subject } from 'rxjs';
+import { map, switchMap, tap, withLatestFrom } from 'rxjs/operators';
+import { TaskDialogService } from '../../../../shared/components/task-dialog/task-dialog.service';
 import { TaskFacadeService } from '../../../../shared/facade/task-facade/task-facade.service';
-import { TaskGroupFacadeService } from '../../../../shared/facade/task-group-facade/task-group-facade.service';
 import {
   BOARD_FIELDS,
   BOARD_FRAGMENT_NAME,
 } from '../../../../shared/fragments/board-fragment';
+import { convertToApiTaskTypeFromDomainTaskType } from '../../../../util/convert-to-api-task-type-from-domain-task-type';
 import { convertToDomainBoardFromApiBoard } from '../../../../util/convert-to-domain-board-from-api-board';
 import { nonNullable } from '../../../../util/custom-operators/non-nullable';
 
@@ -55,6 +65,7 @@ type State = {
   providers: [RxState],
 })
 export class BoardDetailComponent implements OnInit {
+  @ViewChild('taskList') taskListEl?: ElementRef;
   readonly statuses: Status[] = ['TODO', 'INPROGRESS', 'CONFIRM', 'DONE'];
 
   readonly state$ = this.state.select();
@@ -63,25 +74,29 @@ export class BoardDetailComponent implements OnInit {
     nonNullable()
   );
 
-  /**
-   * Event
-   */
-  readonly onDrop$ = new Subject<
-    [CdkDragDrop<Task[]>, TaskGroup | undefined]
-  >();
-  readonly onChangedTaskGroupStatus$ = new Subject<[Status, TaskGroup]>();
-  readonly onChangedTaskGroupAssignUser$ = new Subject<
-    [User['id'] | undefined, TaskGroup]
-  >();
-  readonly onChangedTaskGroupScheduledTime$ = new Subject<
-    [number, TaskGroup]
-  >();
+  readonly onClickTaskGroup$ = new Subject<TaskGroup['id']>();
+  readonly onClickTask$ = new Subject<Task['id']>();
+  readonly onClickSubask$ = new Subject<Subtask['id']>();
+  readonly onClickCreateTaskGroup$ = new Subject<{
+    shouldScrollToBottom?: boolean;
+  }>();
+  readonly onClickCreateTask$ = new Subject<{
+    shouldScrollToBottom?: boolean;
+  }>();
+  readonly onDropTaskGroup$ = new Subject<CdkDragDrop<TaskGroup[]>>();
+  readonly onDropSoloTask$ = new Subject<CdkDragDrop<TaskGroup['tasks']>>();
 
   constructor(
     private state: RxState<State>,
     private route: ActivatedRoute,
     @Inject(APOLLO_DATA_QUERY) private apolloDataQuery: IApolloDataQuery,
-    private taskGroupFacadeService: TaskGroupFacadeService,
+    private taskDialogService: TaskDialogService,
+    @Inject(CREATE_TASK_ON_BOARD_USECASE)
+    private createTaskOnBoardUsecase: ICreateTaskOnBoardUsecase,
+    @Inject(CREATE_TASK_GROUP_USECASE)
+    private createTaskGroupUsecase: ICreateTaskGroupUsecase,
+    @Inject(UPDATE_BOARD_USECASE)
+    private updateBoardUsecase: IUpdateBoardUsecase,
     private taskFacadeService: TaskFacadeService
   ) {
     this.state.set({
@@ -93,10 +108,191 @@ export class BoardDetailComponent implements OnInit {
 
   ngOnInit() {
     this.setupEventHandler();
-  }
+    this.state.hold(
+      this.onClickTaskGroup$.pipe(
+        tap((v) => {
+          this.taskDialogService.pushContent({
+            id: v,
+            type: 'TaskGroup',
+          });
+          this.taskDialogService.open();
+        })
+      )
+    );
+    this.state.hold(
+      this.onClickTask$.pipe(
+        tap((v) => {
+          this.taskDialogService.pushContent({
+            id: v,
+            type: 'Task',
+          });
+          this.taskDialogService.open();
+        })
+      )
+    );
+    this.state.hold(
+      this.onClickSubask$.pipe(
+        tap((v) => {
+          this.taskDialogService.pushContent({
+            id: v,
+            type: 'Subtask',
+          });
+          this.taskDialogService.open();
+        })
+      )
+    );
+    this.state.hold(
+      this.onClickCreateTask$.pipe(
+        withLatestFrom(this.state.select('board').pipe(nonNullable())),
+        switchMap(([event, board]) => {
+          if (event.shouldScrollToBottom) {
+            this.scrollToTaskListTop();
+          }
+          return this.createTaskOnBoardUsecase.excute(
+            {
+              title: '',
+              description: '',
+              assignUserId: undefined,
+              boardId: board.id,
+            },
+            board.projectId
+          );
+        })
+      )
+    );
+    this.state.hold(
+      this.onClickCreateTaskGroup$.pipe(
+        withLatestFrom(this.state.select('board').pipe(nonNullable())),
+        switchMap(([event, board]) => {
+          if (event.shouldScrollToBottom) {
+            this.scrollToTaskListTop();
+          }
+          return this.createTaskGroupUsecase.execute(
+            {
+              title: '',
+              description: '',
+              boardId: board.id,
+              scheduledTimeSec: 0,
+            },
+            board.projectId
+          );
+        })
+      )
+    );
+    this.state.hold(
+      this.onDropSoloTask$.pipe(
+        withLatestFrom(
+          this.state.select('soloTasks').pipe(nonNullable()),
+          this.state.select('taskGroups').pipe(nonNullable()),
+          this.state.select('board').pipe(nonNullable())
+        ),
+        map(([dropEvent, soloTasks, taskGroups, board]) => {
+          const task =
+            dropEvent.previousContainer.data[dropEvent.previousIndex];
+          let newStatus: Status | undefined;
+          if (dropEvent.previousContainer === dropEvent.container) {
+            moveItemInArray(
+              dropEvent.container.data,
+              dropEvent.previousIndex,
+              dropEvent.currentIndex
+            );
+          } else {
+            // 移動先ステータスを見つける
+            const statusIdx = Object.values(soloTasks).findIndex(
+              (list) => list === dropEvent.container.data
+            );
+            if (statusIdx === -1) {
+              throw new Error('status was not found.');
+            }
+            newStatus = Object.keys(soloTasks)[statusIdx] as Status;
+            // ステータス更新
+            dropEvent.previousContainer.data.splice(
+              dropEvent.previousIndex,
+              1,
+              {
+                ...task,
+                status: newStatus,
+              }
+            );
 
-  trackById(_: number, item: { id: Id }) {
-    return item.id;
+            transferArrayItem(
+              dropEvent.previousContainer.data,
+              dropEvent.container.data,
+              dropEvent.previousIndex,
+              dropEvent.currentIndex
+            );
+          }
+          const soloTasksOrder: BoardTasksOrderItem[] = ([] as Task[])
+            .concat(...Object.values(soloTasks))
+            .map((task) => ({
+              taskId: task.id,
+              type: 'Task',
+            }));
+          const taskGroupsOrder: BoardTasksOrderItem[] = taskGroups.map(
+            (taskGroup) => ({
+              taskId: taskGroup.id,
+              type: 'TaskGroup',
+            })
+          );
+          const tasksOrder = [...soloTasksOrder, ...taskGroupsOrder];
+          return [task, newStatus, tasksOrder, board] as const;
+        }),
+        switchMap(([task, newStatus, tasksOrder, board]) => {
+          const updates: Observable<unknown>[] = [];
+          const input: UpdateBoardInput = {
+            id: board.id,
+            name: board.name,
+            description: board.description,
+            projectId: board.projectId,
+            tasksOrder: tasksOrder.map((v) => ({
+              taskId: v.taskId,
+              type: convertToApiTaskTypeFromDomainTaskType(v.type),
+            })),
+          };
+          updates.push(this.updateBoardUsecase.execute(input));
+          if (newStatus) {
+            updates.push(this.taskFacadeService.updateStatus(newStatus, task));
+          }
+          return merge(...updates);
+        })
+      )
+    );
+    this.state.hold(
+      this.onDropTaskGroup$.pipe(
+        withLatestFrom(
+          this.state.select('board').pipe(nonNullable()),
+          this.state.select('taskGroups').pipe(nonNullable())
+        ),
+        map(([dropEvent, board, taskGroups]) => {
+          const taskGroupsOrder: BoardTasksOrderItem[] = taskGroups.map(
+            (taskGroup) => ({
+              taskId: taskGroup.id,
+              type: 'TaskGroup',
+            })
+          );
+          const tasksOrder = board.tasksOrder.filter((v) => v.type === 'Task');
+          moveItemInArray(
+            taskGroupsOrder,
+            dropEvent.previousIndex,
+            dropEvent.currentIndex
+          );
+          return [[...taskGroupsOrder, ...tasksOrder], board] as const;
+        }),
+        switchMap(([tasksOrder, board]) => {
+          const input: UpdateBoardInput = {
+            id: board.id,
+            name: board.name,
+            description: board.description,
+            projectId: board.projectId,
+            tasksOrder: tasksOrder.map((v) => ({
+              taskId: v.taskId,
+              type: convertToApiTaskTypeFromDomainTaskType(v.type),
+            })),
+          };
+          return this.updateBoardUsecase.execute(input);
+        })
+      )
+    );
   }
 
   // keyvalueパイプが勝手にソートするのを防ぐ
@@ -104,138 +300,13 @@ export class BoardDetailComponent implements OnInit {
     return 0;
   }
 
+  trackById(_: number, item: { id: Id }) {
+    return item.id;
+  }
+
   private setupEventHandler() {
     this.state.connect('board', this.queryBoard$());
     this.state.connect('users', this.queryUsers$());
-
-    this.state.hold(
-      this.onChangedTaskGroupStatus$.pipe(
-        switchMap(([status, taskGroup]) => {
-          const uiTaskGroup: UiTaskGroup = {
-            ...taskGroup,
-            tasks: this.concatTasks(taskGroup.tasks),
-          };
-          return this.taskGroupFacadeService.updateStatus(status, uiTaskGroup);
-        })
-      )
-    );
-
-    this.state.hold(
-      this.onChangedTaskGroupAssignUser$.pipe(
-        filter(([id, taskGroup]) => id !== taskGroup.assignUser?.id),
-        switchMap(([id, taskGroup]) => {
-          const uiTaskGroup: UiTaskGroup = {
-            ...taskGroup,
-            tasks: this.concatTasks(taskGroup.tasks),
-          };
-          return this.taskGroupFacadeService.updateAssignUser(id, uiTaskGroup);
-        })
-      )
-    );
-
-    this.state.hold(
-      this.onChangedTaskGroupScheduledTime$.pipe(
-        switchMap(([timeSec, taskGroup]) => {
-          const uiTaskGroup: UiTaskGroup = {
-            ...taskGroup,
-            tasks: this.concatTasks(taskGroup.tasks),
-          };
-          return this.taskGroupFacadeService.updateScheduledTimeSec(
-            timeSec,
-            uiTaskGroup
-          );
-        })
-      )
-    );
-
-    this.state.hold(
-      this.onDrop$.pipe(
-        // TODO: リファクタ
-        map(([event, taskGroup]) => {
-          //FIXME: 他のタスクグループにも移動できてしまう。
-          let newTaskGroup: UiTaskGroup | undefined;
-          let newStatus: Status | undefined;
-          let newTasksOrder: TaskGroup['tasksOrder'] = [];
-          const task = event.previousContainer.data[event.previousIndex];
-          if (event.previousContainer === event.container) {
-            moveItemInArray(
-              event.container.data,
-              event.previousIndex,
-              event.currentIndex
-            );
-          } else {
-            const tasks = taskGroup
-              ? taskGroup.tasks
-              : this.state.get('soloTasks');
-            // 移動先ステータスを見つける
-            const statusIdx = Object.values(tasks).findIndex(
-              (list) => list === event.container.data
-            );
-            if (statusIdx === -1) {
-              throw new Error('status was not found.');
-            }
-            newStatus = Object.keys(tasks)[statusIdx] as Status;
-
-            // ステータス更新
-            event.previousContainer.data.splice(event.previousIndex, 1, {
-              ...task,
-              status: newStatus,
-            });
-
-            transferArrayItem(
-              event.previousContainer.data,
-              event.container.data,
-              event.previousIndex,
-              event.currentIndex
-            );
-          }
-
-          if (taskGroup) {
-            // タスクグループのすべてのタスクを一つの配列にしてtasksOrderを求める
-            const allTasks = this.concatTasks(taskGroup.tasks);
-            newTasksOrder = allTasks.map((task) => task.id);
-
-            // タスクの順番更新
-            this.state.set('taskGroups', ({ taskGroups }) => {
-              const taskGroupIdx = taskGroups.indexOf(taskGroup);
-              if (taskGroupIdx === -1) {
-                throw new Error('taskGroup was not found.');
-              }
-              return [
-                ...taskGroups.slice(0, taskGroupIdx),
-                { ...taskGroup, tasksOrder: newTasksOrder },
-                ...taskGroups.slice(taskGroupIdx + 1),
-              ];
-            });
-
-            newTaskGroup = {
-              ...taskGroup,
-              tasksOrder: newTasksOrder,
-              tasks: allTasks,
-            };
-          }
-
-          return [newTaskGroup, task, newStatus, newTasksOrder] as const;
-        }),
-        concatMap(([newTaskGroup, task, newStatus, newTasksOrder]) => {
-          // TODO: 楽観的更新を検討する
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const updates: Observable<any>[] = [];
-          if (newStatus) {
-            updates.push(this.taskFacadeService.updateStatus(newStatus, task));
-          }
-          if (newTaskGroup) {
-            updates.push(
-              this.taskGroupFacadeService.updateTasksOrder(
-                newTasksOrder,
-                newTaskGroup
-              )
-            );
-          }
-          return forkJoin(updates);
-        })
-      )
-    );
   }
 
   private queryBoard$() {
@@ -250,30 +321,25 @@ export class BoardDetailComponent implements OnInit {
             boardId
           )
           .pipe(
-            map((response) => {
-              const { board } = response.data;
-              if (!board) {
-                return;
-              }
+            map((response) => response.data?.board),
+            nonNullable(),
+            map((board) => {
               return convertToDomainBoardFromApiBoard(board);
             }),
             tap((board) => {
               if (!board) {
                 return;
               }
-              this.state.set('taskGroups', () =>
-                board.taskGroups.map((v) => ({
-                  ...v,
-                  tasks: this.sortTasksByStatusAndOrder(v.tasks, v.tasksOrder),
-                }))
-              );
-
-              this.state.set('soloTasks', () =>
-                this.sortTasksByStatusAndOrder(
+              this.state.set('taskGroups', () => {
+                return this.sortTaskGroups(board.taskGroups, board.tasksOrder);
+              });
+              this.state.set('soloTasks', () => {
+                const sorted = this.sortTasksByStatusAndOrder(
                   board.soloTasks,
                   board.tasksOrder
-                )
-              );
+                );
+                return sorted;
+              });
             })
           );
       })
@@ -301,24 +367,34 @@ export class BoardDetailComponent implements OnInit {
       );
   }
 
+  private sortTaskGroups(
+    taskGroups: TaskGroup[],
+    tasksOrder: Board['tasksOrder']
+  ): TaskGroup[] {
+    const taskGroupsOrder = tasksOrder.filter((v) => v.type === 'TaskGroup');
+    const sortedByOrder = taskGroupsOrder
+      .map((orderItem) =>
+        taskGroups.find((taskGroup) => taskGroup.id === orderItem.taskId)
+      )
+      .filter((v): v is NonNullable<typeof v> => v != null);
+    const remainedTaskGroups = taskGroups
+      .filter((taskGroup) => {
+        return !sortedByOrder.find((v) => v.id === taskGroup.id);
+      })
+      .sort((v1, v2) => {
+        return v1.createdAt - v2.createdAt;
+      });
+    return [...sortedByOrder, ...remainedTaskGroups];
+  }
+
   private sortTasksByStatusAndOrder(
     tasks: Task[],
-    tasksOrder: TaskGroup['tasksOrder'] | Board['tasksOrder']
+    tasksOrder: Board['tasksOrder']
   ): Tasks {
     // tasksOrderに従ってソート、tasksOrderに存在しない場合はcreatedAtによる昇順ソート
     if (tasksOrder.length > 0) {
-      const isBoardTasksOrder = (
-        order: typeof tasksOrder
-      ): order is BoardTasksOrderItem[] => typeof order[0] === 'object';
-
-      let getOrder: (task: Task) => number;
-      if (isBoardTasksOrder(tasksOrder)) {
-        getOrder = (task) =>
-          tasksOrder.findIndex((order) => order.taskId === task.id);
-      } else {
-        getOrder = (task) =>
-          tasksOrder.findIndex((taskId) => taskId === task.id);
-      }
+      const getOrder: (task: Task) => number = (task) =>
+        tasksOrder.findIndex((order) => order.taskId === task.id);
       tasks.sort((a, b) => {
         const aOrder = getOrder(a);
         const bOrder = getOrder(b);
@@ -345,11 +421,19 @@ export class BoardDetailComponent implements OnInit {
     return sortedTasks;
   }
 
-  private concatTasks(tasks: Tasks): Task[] {
-    return ([] as Task[]).concat(...Object.values(tasks));
+  // TODO: scroll前の位置によって、scroll後の位置が不自然になる
+  private scrollToTaskListTop() {
+    if (this.taskListEl?.nativeElement == null) {
+      return;
+    }
+    const taskList = this.taskListEl.nativeElement as HTMLElement;
+    const rect = taskList.getBoundingClientRect();
+    const top = rect.top;
+    const taskGroupCardMinHeight = 134;
+    const buffer = 12 + 96;
+    const y = top + taskGroupCardMinHeight + buffer;
+    window.scrollTo(0, y);
   }
 }
 
 type Tasks = { [key in Status]: Task[] };
-
-type TaskGroup = Omit<UiTaskGroup, 'tasks'> & { tasks: Tasks };

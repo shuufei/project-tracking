@@ -41,6 +41,7 @@ type State = {
   projectDeleteDialogState?: { project: Project };
   boardDeleteDialogState?: { project: Project; board: Board };
   boardCreateSheetState?: { project: Project };
+  isOpenedNavigation: boolean;
 };
 
 @Component({
@@ -55,22 +56,28 @@ export class ProjectPageComponent
   @ViewChild('header') header?: ElementRef<HTMLElement>;
   @ViewChild('sideNav') sideNav?: ElementRef<HTMLElement>;
 
+  /**
+   * State
+   */
   readonly state$ = this.state.select();
   readonly isOpenedProjectCreateSheet$ = new Subject<boolean>();
   readonly isOpenedProjectDeleteDialog$ = new Subject<boolean>();
   readonly isOpenedBoardCreateSheet$ = new Subject<boolean>();
   readonly isOpenedBoardDeleteDialog$ = new Subject<boolean>();
 
+  /**
+   * Event
+   */
   readonly onClickedProjectDeleteButton$ = new Subject<{ project: Project }>();
   readonly onClickedBoardCreateButton$ = new Subject<{ project: Project }>();
   readonly onClickedBoardDeleteButton$ = new Subject<{
     project: Project;
     board: Board;
   }>();
-
+  readonly onClickedOpenNavButton$ = new Subject<void>();
+  readonly onClickedCloseNavButton$ = new Subject<void>();
   private readonly afterViewChecked$ = new Subject();
   private readonly onDestroy$ = new Subject();
-
   private readonly onHeaderHeightChanged$ = this.afterViewChecked$.pipe(
     map(() => this.header?.nativeElement.offsetHeight ?? 0),
     distinctUntilChanged(),
@@ -82,12 +89,14 @@ export class ProjectPageComponent
   constructor(
     private state: RxState<State>,
     @Inject(APOLLO_DATA_QUERY) private apolloDataQuery: IApolloDataQuery
-  ) {}
-
-  ngOnInit() {
+  ) {
     this.state.set({
       projects: [],
+      isOpenedNavigation: true,
     });
+  }
+
+  ngOnInit() {
     this.state.hold(this.onHeaderHeightChanged$);
     this.state.connect(
       'projects',
@@ -107,6 +116,16 @@ export class ProjectPageComponent
             );
           })
         )
+    );
+    this.state.connect(
+      'isOpenedNavigation',
+      this.onClickedOpenNavButton$,
+      () => true
+    );
+    this.state.connect(
+      'isOpenedNavigation',
+      this.onClickedCloseNavButton$,
+      () => false
     );
     this.state.hold(
       this.onClickedBoardCreateButton$.pipe(

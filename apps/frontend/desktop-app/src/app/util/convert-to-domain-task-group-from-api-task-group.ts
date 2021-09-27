@@ -27,5 +27,6 @@ export const convertToDomainTaskGroupFromApiTaskGroup = (
       (acc, curr) => acc + curr.workTimeSec,
       0
     ),
+    createdAt: taskGroup.createdAt,
   };
 };

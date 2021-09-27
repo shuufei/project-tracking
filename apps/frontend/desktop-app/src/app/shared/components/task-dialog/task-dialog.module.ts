@@ -33,7 +33,6 @@ import { TaskDialogTaskContentComponent } from './task-dialog-task-content/task-
 import { TaskDialogTaskGroupContentComponent } from './task-dialog-task-group-content/task-dialog-task-group-content.component';
 import { TaskDialogComponent } from './task-dialog.component';
 import {
-  TaskDialogService,
   TaskDialogServiceState,
   TASK_DIALOG_SERVICE_STATE,
 } from './task-dialog.service';
@@ -75,7 +74,6 @@ import {
       provide: APOLLO_DATA_QUERY,
       useClass: ApolloDataQuery,
     },
-    TaskDialogService,
     {
       provide: TASK_DIALOG_SERVICE_STATE,
       useFactory: () => new RxState<TaskDialogServiceState>(),

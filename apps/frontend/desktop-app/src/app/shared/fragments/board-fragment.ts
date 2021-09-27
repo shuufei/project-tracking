@@ -15,6 +15,7 @@ export const BOARD_FIELDS = gql`
     description
     project {
       id
+      name
     }
     soloTasks {
       ...${TASK_FRAGMENT_NAME}

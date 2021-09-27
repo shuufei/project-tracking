@@ -43,7 +43,6 @@
           [users]="state.users"
           [selectedUserId]="state.task?.assignUser?.id || undefined"
           (selectedUser)="onChangedAssignUser$.next($event)"
-          (click)="$event.stopPropagation()"
         ></ui-assign-change-button>
       </div>
     </ui-task-card>

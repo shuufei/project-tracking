@@ -39,17 +39,12 @@ export class PopupComponent implements OnInit {
     .pipe(
       filter((isOpen) => isOpen),
       tap(() => {
-        if (this.triggerEl === undefined) {
-          return;
-        }
-        const triggerRect = this.triggerEl.getBoundingClientRect();
+        const element = this.elementRef.nativeElement as HTMLElement;
+        const triggerRect = element.getBoundingClientRect();
         const leftSpace = triggerRect.x;
-        // TODO: windowをDI経由で利用するようにする
         const rightSpace =
           window.innerWidth - (triggerRect.x + triggerRect.width);
-        (this.elementRef.nativeElement as HTMLElement).style[
-          leftSpace > rightSpace ? 'right' : 'left'
-        ] = '0';
+        element.style[leftSpace > rightSpace ? 'right' : 'left'] = '0';
       })
     );
 

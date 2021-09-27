@@ -1,0 +1,139 @@
+<ng-container *ngIf="state$ | async as state">
+  <ng-container *ngIf="state.taskGroup">
+    <div class="bg-white px-3 pt-2 pb-3 rounded-s task-group-card-content">
+      <div class="mb-2">
+        <div class="flex mb-2">
+          <ng-container *ngIf="!state.taskGroup.title; else readonlyMode">
+            <ui-text-field
+              class="text-s2 text-black-default font-medium w-full"
+              (click)="$event.stopPropagation()"
+              (keypressEnter)="onChangedTitle$.next($event)"
+            ></ui-text-field>
+          </ng-container>
+          <ng-template #readonlyMode>
+            <h3
+              class="flex-grow text-black-default text-s2 font-medium leading-normal"
+            >
+              {{ state.taskGroup.title }}
+            </h3>
+          </ng-template>
+          <div class="ml-2 flex">
+            <ui-scheduled-time-sec-change-button
+              [workTimeSec]="state.taskGroup.workTimeSec || 0"
+              [scheduledTimeSec]="state.taskGroup.scheduledTimeSec || 0"
+              (changedScheduledTimeSec)="
+                onChangedTaskGroupScheduledTime$.next($event)
+              "
+            ></ui-scheduled-time-sec-change-button>
+            <div class="relative ml-2">
+              <button
+                #menuPopupTrigger
+                class="menu-trigger invisible ml-2 p-1 focus:outline-none focus:shadow-outline_primary rounded-s"
+              >
+                <ui-icon
+                  [icon]="'more-horizontal'"
+                  [size]="'s'"
+                  [color]="'primary-light2'"
+                  [hoverColor]="'primary'"
+                >
+                </ui-icon>
+              </button>
+              <ui-popup
+                [triggerEl]="menuPopupTrigger"
+                [isCloseWhenPopupAction]="true"
+              >
+                <div class="menu-items">
+                  <ui-menu-item
+                    [itemName]="'別のボードに移動'"
+                    [color]="'primary'"
+                    [icon]="'arrow-right'"
+                    (clickedItem)="onClickedSelectBoardMenu$.next(true)"
+                  ></ui-menu-item>
+                  <ui-menu-item
+                    class="mt-2"
+                    [itemName]="'削除'"
+                    [color]="'warn'"
+                    [icon]="'trash-2'"
+                    (clickedItem)="onClickedDeleteMenu$.next(true)"
+                  ></ui-menu-item>
+                </div>
+              </ui-popup>
+              <ui-delete-confirm-popup
+                [isOpened$]="onClickedDeleteMenu$.asObservable()"
+                (delete)="onDelete$.next()"
+                (click)="$event.stopPropagation()"
+              ></ui-delete-confirm-popup>
+              <ui-board-select-popup
+                [isOpened$]="onClickedSelectBoardMenu$.asObservable()"
+                [boards]="state.boards"
+                [selectedBoardId]="state.taskGroup.board.id"
+                (selectBoard)="onSelectedBoard$.next($event)"
+                (click)="$event.stopPropagation()"
+              ></ui-board-select-popup>
+            </div>
+          </div>
+        </div>
+        <div class="flex items-center">
+          <div #statusTriggerEl class="flex flex-col cursor-pointer p-0.5 mr-3">
+            <span class="text-black-light2 text-s4 font-medium">
+              {{ state.taskGroup.status }}
+            </span>
+            <ui-status-select-popup
+              [triggerEl]="statusTriggerEl"
+              [currentStatus]="state.taskGroup.status"
+              (changedStatus)="onChangedTaskGroupStatus$.next($event)"
+            ></ui-status-select-popup>
+          </div>
+          <ui-assign-change-button
+            class="w-5 h-5"
+            [users]="state.users"
+            [selectedUserId]="state.taskGroup.assignUser?.id"
+            (selectedUser)="onChangedTaskGroupAssignUser$.next($event)"
+          ></ui-assign-change-button>
+        </div>
+      </div>
+      <div
+        class="flex gap-x-1 bg-primary-light3 rounded-s cursor-default"
+        cdkDropListGroup
+        (click)="$event.stopPropagation()"
+      >
+        <ng-container
+          *ngFor="
+            let item of state.taskGroup.tasks | keyvalue: noOpCompare;
+            first as first
+          "
+        >
+          <div
+            class="w-1/4 p-2"
+            cdkDropList
+            [cdkDropListData]="item.value"
+            (cdkDropListDropped)="onDrop$.next($event)"
+          >
+            <div *ngFor="let task of item.value" class="mb-1" cdkDrag>
+              <bis-task-card
+                [taskId]="task.id"
+                (click)="$event.stopPropagation(); clickTask.emit(task.id)"
+                (clickedSubtask)="clickSubtask.emit($event.id)"
+              ></bis-task-card>
+            </div>
+            <ng-container *ngIf="first">
+              <div class="relative">
+                <button
+                  class="flex items-center justify-center w-full py-2 mt-1 focus:outline-none focus:shadow-outline_primary rounded-s"
+                  (click)="
+                    $event.stopPropagation(); onClickedCreateTask$.next()
+                  "
+                >
+                  <ui-icon class="mr-1" icon="plus" size="s"></ui-icon>
+                  <span class="text-s4 font-medium leading-normal">
+                    タスクを追加
+                  </span>
+                </button>
+              </div>
+            </ng-container>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </ng-container>
+</ng-container>

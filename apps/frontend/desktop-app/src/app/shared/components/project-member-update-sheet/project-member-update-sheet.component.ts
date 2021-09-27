@@ -18,22 +18,13 @@ import { RxState } from '@rx-angular/state';
 import { TuiNotificationsService } from '@taiga-ui/core';
 import { gql } from 'apollo-angular';
 import { combineLatest, merge, Observable, Subject } from 'rxjs';
-import { exhaustMap, map } from 'rxjs/operators';
+import { exhaustMap, filter, map, switchMap } from 'rxjs/operators';
 
 const USER_FIELDS = gql`
   fragment UserPartsInProjectMemberUpdateSheet on User {
     id
     name
     icon
-  }
-`;
-
-const PROJECT_FIELDS = gql`
-  fragment ProjectPartsInProjectMemberUpdateSheet on Project {
-    id
-    members {
-      id
-    }
   }
 `;
 
@@ -96,11 +87,21 @@ export class ProjectMemberUpdateSheetComponent implements OnInit {
     @Inject(TuiNotificationsService)
     private readonly notificationsService: TuiNotificationsService
   ) {
-    this.state.set({});
+    this.state.set({
+      isSheetOpen: false,
+    });
   }
 
   ngOnInit(): void {
-    this.state.connect('users', this.queryUsers$());
+    this.state.connect(
+      'users',
+      this.state.select('isSheetOpen').pipe(
+        filter((v) => v),
+        switchMap(() => {
+          return this.queryUsers$();
+        })
+      )
+    );
     this.state.connect('memberIds', this.onSelectedMembers$, (_, userIds) => {
       return userIds;
     });

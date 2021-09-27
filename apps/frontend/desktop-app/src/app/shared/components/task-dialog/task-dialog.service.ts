@@ -8,7 +8,7 @@ export type TaskDialogServiceState = {
   contentHistory: DialogContent[];
 };
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class TaskDialogService {
   readonly state$ = this.state.select();
   readonly isOpened$ = this.state.select('isOpened');
