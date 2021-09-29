@@ -45,6 +45,7 @@ export class BoardDeleteDialogComponent implements OnInit {
   @Input() isOpened$ = new Subject<boolean>();
   @Output() opened = new EventEmitter<void>();
   @Output() closed = new EventEmitter<void>();
+  @Output() delete = new EventEmitter<void>();
 
   readonly state$ = this.state.select();
   readonly isOpenDialog$ = this.state.select('isOpen');
@@ -90,6 +91,7 @@ export class BoardDeleteDialogComponent implements OnInit {
       id: state.board.id,
     };
     this.state.set('isOpen', () => false);
+    this.delete.emit();
     return merge(
       this.deleteBoardUsecase.execute(input),
       this.notificationsService.show('ボードを削除しました', {
