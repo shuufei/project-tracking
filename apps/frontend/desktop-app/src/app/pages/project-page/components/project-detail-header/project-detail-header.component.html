@@ -1,24 +1,16 @@
 <ng-container *ngIf="state$ | async as state">
   <ui-header>
     <div left>
-      <div class="text-s4 text-black-light2 flex items-center flex-nowrap">
-        <a
-          routerLink="projects"
-          class="cursor-pointer focus:outline-none focus:shadow-outline_primary"
-          >プロジェクト一覧</a
-        >
-        <span class="mx-1"> / </span>
-        <span class="project-name whitespace-nowrap">{{
-          state.project?.name
-        }}</span>
-      </div>
-      <button
-        class="mt-1 py-1 px-2 text-s3 flex items-center focus:outline-none focus:shadow-outline_primary rounded-s"
+      <ui-breadcrumb
+        [breadcrumbs]="[
+          { text: 'プロジェクト一覧', routerLink: '/projects' },
+          { text: state.project?.name || '' }
+        ]"
+      ></ui-breadcrumb>
+      <ui-back-button
+        class="inline-block mt-1"
         routerLink="/projects"
-      >
-        <ui-icon icon="arrow-left" size="s"></ui-icon>
-        <span class="ml-1">戻る</span>
-      </button>
+      ></ui-back-button>
     </div>
     <h1
       center

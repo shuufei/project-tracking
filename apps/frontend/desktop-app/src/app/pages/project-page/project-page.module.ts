@@ -13,7 +13,9 @@ import {
 } from '@bison/frontend/application';
 import {
   AssignChangeButtonModule,
+  BackButtonModule,
   BoardItemModule,
+  BreadcrumbModule,
   ButtonModule,
   ColorIconModule,
   HeaderModule,
@@ -95,6 +97,8 @@ import { ProjectPageComponent } from './project-page.component';
     ProjectCreateSheetModule,
     TaskGroupCardModule,
     TooltipModule,
+    BreadcrumbModule,
+    BackButtonModule,
   ],
   exports: [ProjectPageComponent],
   providers: [
