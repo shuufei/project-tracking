@@ -2,8 +2,10 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { AdjustButtonModule } from './adjust-button/adjust-button.module';
 import { AssignChangeButtonModule } from './assign-change-button/assign-change-button.module';
+import { BackButtonModule } from './back-button/back-button.module';
 import { BoardItemModule } from './board-item/board-item.module';
 import { BoardSelectPopupModule } from './board-select-popup/board-select-popup.module';
+import { BreadcrumbModule } from './breadcrumb/breadcrumb.module';
 import { ButtonModule } from './button/button.module';
 import { CheckboxModule } from './checkbox/checkbox.module';
 import { ColorIconModule } from './color-icon/color-icon.module';
@@ -76,6 +78,8 @@ import { UserSelectPopupModule } from './user-select-popup/user-select-popup.mod
     MultiUserSelectPopupModule,
     AdjustButtonModule,
     PlannedTimeControllerModule,
+    BreadcrumbModule,
+    BackButtonModule,
   ],
 })
 export class SharedUiModule {}

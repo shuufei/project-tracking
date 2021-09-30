@@ -1,0 +1,17 @@
+<div class="text-s4 text-black-light2 flex items-center flex-nowrap">
+  <ng-container *ngFor="let breadcrumb of breadcrumbs; last as last">
+    <ng-container *ngIf="breadcrumb.routerLink; else notLink">
+      <a
+        [routerLink]="breadcrumb.routerLink"
+        [relativeTo]="relativeTo"
+        class="breadcrumb whitespace-nowrap cursor-pointer focus:outline-none focus:shadow-outline_primary"
+      >
+        {{ breadcrumb.text }}
+      </a>
+    </ng-container>
+    <ng-template #notLink>
+      <span class="breadcrumb whitespace-nowrap">{{ breadcrumb.text }}</span>
+    </ng-template>
+    <span *ngIf="!last" class="mx-1"> / </span>
+  </ng-container>
+</div>

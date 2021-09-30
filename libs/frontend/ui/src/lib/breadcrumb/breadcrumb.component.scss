@@ -1,0 +1,9 @@
+:host {
+  display: block;
+}
+
+.breadcrumb {
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

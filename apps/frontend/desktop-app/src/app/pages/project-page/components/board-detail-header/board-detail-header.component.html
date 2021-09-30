@@ -1,7 +1,37 @@
 <ng-container *ngIf="state$ | async as state">
   <ui-header class="bg-white">
-    <!-- TODO: パンくずリストと戻るボタンはプロジェクト詳細画面と共通 -->
-    <div left class="font-medium">TODO</div>
+    <div left>
+      <ui-breadcrumb
+        [breadcrumbs]="[
+          { text: 'プロジェクト一覧', routerLink: '/projects' },
+          {
+            text: state.project?.name || '',
+            routerLink: [
+              {
+                outlets: {
+                  primary: 'detail',
+                  header: 'detail'
+                }
+              }
+            ]
+          },
+          { text: state.board?.name || '' }
+        ]"
+        [relativeTo]="route.parent"
+      ></ui-breadcrumb>
+      <ui-back-button
+        class="inline-block mt-1"
+        [routerLink]="[
+          {
+            outlets: {
+              primary: 'detail',
+              header: 'detail'
+            }
+          }
+        ]"
+        [relativeTo]="route.parent"
+      ></ui-back-button>
+    </div>
     <h1
       center
       class="text-center text-s1 text-black-default font-medium m-0 leading-normal"
@@ -10,7 +40,7 @@
         style="border-bottom-width: 1.5px"
         class="pb-1 border-solid border-primary-default"
       >
-        {{ state.boardName }}
+        {{ state.board?.name }}
       </span>
     </h1>
     <div right class="flex items-center justify-end">
@@ -29,16 +59,26 @@
               itemName="編集"
               color="basic"
               icon="edit-2"
-              (clickedItem)="(null)"
+              (clickedItem)="isOpenedUpdateBoardSheet$.next(true)"
             ></ui-menu-item>
             <ui-menu-item
               itemName="削除"
               color="warn"
               icon="trash-2"
-              (clickedItem)="(null)"
+              (clickedItem)="isOpenedDeleteBoardDialog$.next(true)"
             ></ui-menu-item>
           </div>
         </ui-popup>
+        <bis-board-update-sheet
+          [isOpened$]="isOpenedUpdateBoardSheet$"
+          [boardId]="state.board?.id"
+        ></bis-board-update-sheet>
+        <bis-board-delete-dialog
+          [isOpened$]="isOpenedDeleteBoardDialog$"
+          [project]="state.project"
+          [board]="state.board"
+          (delete)="onDeleteBoard$.next()"
+        ></bis-board-delete-dialog>
       </div>
       <!-- TODO: レポートシート表示 -->
       <button
