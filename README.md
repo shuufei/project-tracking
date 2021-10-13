@@ -1,5 +1,60 @@
 # Bison
 
+## 開発環境構築
+
+### Node.js 環境のセットアップ
+
+1. 下記を参考に nvm をインストール  
+   https://github.com/nvm-sh/nvm#installing-and-updating
+1. 下記コマンドを実行し、nvm で 14.16.0 を install
+   ```
+   > nvm install 14.16.0
+   ```
+1. bison リポジトリのルートディレクトリ直下で下記コマンドを実行し、node の version を 14.16.0 にする
+   ```
+   > nvm use
+   ```
+
+### 依存 package のインストール
+
+下記コマンドで依存 package をインストールする。
+
+```
+> npm install
+```
+
+### DynamoDB Local のセットアップ
+
+1. 下記を参考に DynamoDB Local をダウンロードし、ローカルにて DynamoDB Local を実行する  
+   https://docs.aws.amazon.com/ja_jp/amazondynamodb/latest/developerguide/DynamoDBLocal.DownloadingAndRunning.html
+1. 下記コマンドを実行し、ローカルで起動している DynamoDB Local にテーブルの作成とテストデータの登録を行う
+   ```
+   > npm run db:init
+   ```
+
+#### Docker 上で DynamoDB Local を起動する場合
+
+1. bison リポジトリのルートディレクトリ直下で下記コマンドを実行し、Docker イメージをビルドする
+   ```
+   > docker build -t dynamodb-local ./construction/dynamodb/local
+   ```
+1. 下記コマンドを実行し、dynamodb-local コンテナを起動する
+   ```
+   > docker run -p 8000:8000 -d dynamodb-local:latest
+   ```
+1. 下記コマンドを実行し、ローカルで起動している DynamoDB Local にテーブルの作成とテストデータの登録を行う
+   ```
+   > npm run db:init
+   ```
+
+#### DynamoDB Local のデータを GUI で確認する
+
+下記コマンドを実行し、ブラウザで localhost:8001 にアクセスすると、DynamoDB Local に作成されているテーブルやデータを確認することができる。
+
+```
+> npm run dynamodb-admin
+```
+
 ## Frontend Desktop App
 
 ### Serve
