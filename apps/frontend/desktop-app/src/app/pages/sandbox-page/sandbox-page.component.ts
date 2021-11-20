@@ -2,13 +2,13 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Project, Task } from '@bison/frontend/domain';
 import { Board, COLOR } from '@bison/shared/domain';
 import {
-  Board as ApiBoard,
-  Project as ApiProject,
-  Status,
-  Subtask as ApiSubtask,
-  Task as ApiTask,
-  TaskGroup as ApiTaskGroup,
-  User as ApiUser,
+    Board as ApiBoard,
+    Project as ApiProject,
+    Status,
+    Subtask as ApiSubtask,
+    Task as ApiTask,
+    TaskGroup as ApiTaskGroup,
+    User as ApiUser
 } from '@bison/shared/schema';
 import { convertToDomainTaskFromApiTask } from '../../util/convert-to-domain-task-from-api-task';
 
@@ -65,7 +65,7 @@ export class SandboxPageComponent {
     } as ApiBoard,
     assign: {
       id: 'user0005',
-      name: '太田 尚樹',
+      name: '田中 太郎',
       icon: undefined,
     } as ApiUser,
     taskGroup: {
@@ -86,7 +86,7 @@ export class SandboxPageComponent {
         } as ApiTask,
         assign: {
           id: 'user0005',
-          name: '太田 尚樹',
+          name: '田中 太郎',
           icon: undefined,
         } as ApiUser,
       } as ApiSubtask,
@@ -102,7 +102,7 @@ export class SandboxPageComponent {
         } as ApiTask,
         assign: {
           id: 'user0005',
-          name: '太田 尚樹',
+          name: '田中 太郎',
           icon: undefined,
         } as ApiUser,
       } as ApiSubtask,

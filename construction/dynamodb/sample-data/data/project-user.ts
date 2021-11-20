@@ -3,7 +3,7 @@ export const idpUserId_HirokazuMotegi = 'idpuser0001';
 export const user_HirokazuMotegi = {
   PK: `User-${userId_HirokazuMotegi}`,
   SK: `User-${userId_HirokazuMotegi}`,
-  'User-name': '茂木 洋和',
+  'User-name': '佐藤 健',
   'User-idpUserId': idpUserId_HirokazuMotegi,
   type: 'user',
 };
@@ -13,7 +13,7 @@ export const idpUserId_KentaToshima = 'idpuser0002';
 export const user_KentaToshima = {
   PK: `User-${userId_KentaToshima}`,
   SK: `User-${userId_KentaToshima}`,
-  'User-name': '戸嶋 健太',
+  'User-name': '酒井 健太',
   'User-idpUserId': idpUserId_KentaToshima,
   type: 'user',
 };
@@ -23,7 +23,7 @@ export const idpUserId_RyoutaYamaura = 'idpuser0003';
 export const user_RyoutaYamaura = {
   PK: `User-${userId_RyoutaYamaura}`,
   SK: `User-${userId_RyoutaYamaura}`,
-  'User-name': '山浦 諒太',
+  'User-name': '宮下 遥',
   'User-idpUserId': idpUserId_RyoutaYamaura,
   type: 'user',
 };
@@ -33,7 +33,7 @@ export const idpUserId_KeitaSakai = 'idpuser0004';
 export const user_KeitaSakai = {
   PK: `User-${userId_KeitaSakai}`,
   SK: `User-${userId_KeitaSakai}`,
-  'User-name': '酒井 渓太',
+  'User-name': '澤部 祐',
   'User-idpUserId': idpUserId_KeitaSakai,
   type: 'user',
 };
@@ -43,7 +43,7 @@ export const idpUserId_NaokiOota = 'idpuser0005';
 export const user_NaokiOota = {
   PK: `User-${userId_NaokiOota}`,
   SK: `User-${userId_NaokiOota}`,
-  'User-name': '太田 尚樹',
+  'User-name': '田中 太郎',
   'User-idpUserId': idpUserId_NaokiOota,
   type: 'user',
 };
